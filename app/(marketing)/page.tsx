@@ -805,12 +805,8 @@ function CTASection() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-6xl font-display leading-tight">
             Ready to transform your{" "}
-            <span className="text-gradient-lime italic">commerce?</span>
+            <span className="text-gradient-lime italic">business?</span>
           </h2>
-          <p className="mt-6 text-lg text-[var(--text-secondary)]">
-            Join hundreds of retailers already using OpenPeople.ai to automate
-            operations and grow revenue.
-          </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/signup" className="btn-primary">
               Start your free trial
