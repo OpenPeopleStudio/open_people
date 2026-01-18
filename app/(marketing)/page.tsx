@@ -792,9 +792,6 @@ function PricingSection() {
 function CTASection() {
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--electric-lime)]/5 via-[var(--electric-cyan)]/5 to-[var(--electric-violet)]/5" />
-      <div className="glow-lime top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
 
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
@@ -962,21 +959,21 @@ function Footer() {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function Starfield() {
-  // Generate random stars
-  const stars = Array.from({ length: 150 }, (_, i) => ({
+  // Generate distant stars - smaller sizes for depth
+  const stars = Array.from({ length: 200 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    size: Math.random() * 2 + 0.5,
-    opacity: Math.random() * 0.7 + 0.3,
-    duration: Math.random() * 3 + 2,
-    delay: Math.random() * 5,
+    size: Math.random() * 1.2 + 0.3, // Smaller: 0.3-1.5px (was 0.5-2.5px)
+    opacity: Math.random() * 0.5 + 0.2, // Dimmer: 0.2-0.7 (was 0.3-1.0)
+    duration: Math.random() * 2 + 1, // Faster twinkle: 1-3s (was 2-5s)
+    delay: Math.random() * 3,
   }));
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
       {/* Base dark gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a12] via-[var(--void)] to-[#0a0a12]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#050508] via-[var(--void)] to-[#050508]" />
       
       {/* Stars */}
       <svg className="absolute inset-0 w-full h-full">
@@ -996,22 +993,6 @@ function Starfield() {
           />
         ))}
       </svg>
-
-      {/* Subtle nebula effect */}
-      <div 
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-[0.03]"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,107,53,0.4) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-      <div 
-        className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full opacity-[0.02]"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,140,66,0.3) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
     </div>
   );
 }
