@@ -11,6 +11,7 @@ OpenPeople.ai is a multi-tenant SaaS platform that provides modular AI-powered p
 - **Cloud Storage** (Cloudflare R2) - Zero-egress file storage with versioning and CDN
 - **Email** (Resend) - Transactional email with templates and domain management
 - **Experiments & Feature Flags** - A/B testing and progressive rollouts
+- **Notifications** (Twilio) - SMS, in-app, and push notifications with preferences
 
 ### Core Features
 
@@ -24,6 +25,7 @@ OpenPeople.ai is a multi-tenant SaaS platform that provides modular AI-powered p
 - **Database**: Supabase (PostgreSQL + Realtime)
 - **Storage**: Cloudflare R2
 - **Email**: Resend
+- **SMS**: Twilio
 - **Styling**: Tailwind CSS
 - **Deployment**: Vercel
 
@@ -69,25 +71,29 @@ open_people/
 │   │   └── admin/          # Tenant admin dashboard
 │   │       ├── storage/    # Cloud storage management
 │   │       ├── email/      # Email management
-│   │       └── experiments/# A/B testing dashboard
+│   │       ├── experiments/# A/B testing dashboard
+│   │       └── notifications/ # Notification management
 │   ├── super-admin/        # Platform admin dashboard
 │   │   ├── tenants/        # Tenant management
 │   │   ├── storage/        # Storage add-on metrics
 │   │   ├── email/          # Email add-on metrics
 │   │   ├── experiments/    # Experiments add-on metrics
+│   │   ├── notifications/  # Notifications add-on metrics
 │   │   ├── analytics/      # Platform analytics
 │   │   ├── billing/        # Revenue overview
 │   │   └── settings/       # Platform settings
 │   └── api/                # API routes
 │       ├── storage/        # Storage API
 │       ├── email/          # Email API
-│       └── experiments/    # Experiments API
+│       ├── experiments/    # Experiments API
+│       └── notifications/  # Notifications API
 ├── components/             # Shared UI components
 ├── lib/                    # Utilities and helpers
 │   ├── supabase/           # Supabase clients
 │   ├── storage/            # R2 storage client
 │   ├── email/              # Resend email client
 │   ├── experiments/        # Experiments SDK
+│   ├── notifications/      # Notifications client
 │   └── tenant.ts           # Tenant resolution
 ├── supabase/              # Database migrations
 └── types/                 # TypeScript definitions
@@ -203,6 +209,72 @@ const variant = sdk.getVariant('pricing_test');
 - `GET /api/experiments/flags` - List feature flags
 - `POST /api/experiments/flags` - Create feature flag
 
+### Notifications
+
+SMS via Twilio, in-app notifications, and push (coming soon).
+
+**Pricing**: $0-249/month
+- Free: 50 SMS/month, 500 in-app/month
+- Starter ($29/mo): 1K SMS, 10K in-app, 5K push
+- Pro ($99/mo): 10K SMS, 100K in-app, 50K push
+- Enterprise ($249/mo): Unlimited
+
+**Environment Variables**:
+```env
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_FROM_NUMBER=+1234567890
+```
+
+**Usage**:
+
+```typescript
+import { sendSMS, sendInAppNotification } from '@/lib/notifications/client';
+
+// Send SMS
+await sendSMS('+1234567890', 'Your order has shipped!');
+
+// Send SMS with template
+await sendSMS('+1234567890', '', {
+  templateId: 'order-confirmation',
+  templateVariables: {
+    name: 'John',
+    order_number: '12345',
+  },
+});
+
+// Send in-app notification
+await sendInAppNotification(
+  'user-uuid',
+  'New Message',
+  'You have a new message from support.',
+  { actionUrl: '/messages' }
+);
+```
+
+**Inbox API**:
+
+```typescript
+import { fetchInbox, markAsRead, markAllAsRead } from '@/lib/notifications/client';
+
+// Fetch user's notifications
+const { notifications, unread } = await fetchInbox({ unreadOnly: true });
+
+// Mark as read
+await markAsRead(['notif-id-1', 'notif-id-2']);
+
+// Mark all as read
+await markAllAsRead();
+```
+
+**API Endpoints**:
+- `POST /api/notifications/send` - Send SMS or in-app notification
+- `GET /api/notifications/inbox` - Fetch user's in-app notifications
+- `PUT /api/notifications/inbox` - Mark notifications as read
+- `GET /api/notifications/preferences` - Fetch user preferences
+- `PUT /api/notifications/preferences` - Update user preferences
+- `POST /api/notifications/webhooks?provider=twilio` - Twilio status callbacks
+
 ## Environment Variables
 
 Required environment variables:
@@ -224,6 +296,11 @@ RESEND_API_KEY=re_xxxxxxxxxxxx
 RESEND_WEBHOOK_SECRET=whsec_xxxxxxxxxxxx
 DEFAULT_FROM_EMAIL=noreply@mail.openpeople.ai
 DEFAULT_FROM_NAME=OpenPeople
+
+# Twilio (Notifications)
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_FROM_NUMBER=+1234567890
 
 # Deployment
 NEXT_PUBLIC_ROOT_DOMAIN=openpeople.ai
