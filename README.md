@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OpenPeople.ai
+
+AI-powered commerce infrastructure for ambitious retail brands.
+
+## Overview
+
+OpenPeople.ai is a multi-tenant SaaS platform that provides:
+
+- **AI Inventory Intelligence** - Predictive stock management, restock alerts, pricing optimization
+- **Intelligent Customer Chat** - 24/7 AI-powered sales conversations with human handoff
+- **Predictive Analytics** - Demand forecasting, trend detection, customer insights
+- **Multi-Tenant Platform** - Unlimited storefronts with isolated data and custom domains
+- **Flexible Payments** - Stripe cards + NOWPayments crypto
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Database**: Supabase (PostgreSQL + Realtime)
+- **Styling**: Tailwind CSS
+- **Deployment**: Vercel
+- **AI**: OpenAI GPT-4
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+- Supabase project
+- Vercel account (for deployment)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/open_people.git
+cd open_people
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.local.example .env.local
+# Edit .env.local with your values
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the marketing site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+open_people/
+├── app/
+│   ├── (marketing)/      # Public marketing pages (coming soon)
+│   │   ├── page.tsx      # Landing page
+│   │   ├── pricing/      # Pricing page
+│   │   └── signup/       # Self-service signup
+│   ├── (platform)/       # Tenant application (from 709exclusive)
+│   └── super-admin/      # Platform admin dashboard
+├── components/           # Shared UI components
+├── lib/                  # Utilities and helpers
+├── supabase/            # Database migrations
+└── types/               # TypeScript definitions
+```
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
+OpenPeople.ai uses a multi-tenant architecture where:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Marketing site** (`openpeople.ai`, `www.openpeople.ai`) - Public landing pages
+2. **Tenant sites** (`{slug}.openpeople.ai` or custom domains) - Individual storefronts
+3. **Super admin** (`app.openpeople.ai`) - Platform management
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Domain routing is handled in middleware, with tenant resolution based on:
+- Custom domain lookup (highest priority)
+- Subdomain extraction
+- Default tenant fallback
 
-## Deploy on Vercel
+## Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See `.env.local.example` for all required variables.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The project is configured for Vercel deployment:
+
+```bash
+# Deploy to Vercel
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+## Related Projects
+
+- [709exclusive](https://github.com/yourusername/709exclusive) - The original multi-tenant codebase
+
+## License
+
+Proprietary - All rights reserved
