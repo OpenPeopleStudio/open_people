@@ -207,7 +207,7 @@ function HeroSection() {
               Trusted by forward-thinking businesses
             </p>
             <div className="flex items-center justify-center gap-12 md:gap-16 opacity-60">
-              {["709exclusive", "Snōw White Laundry"].map((name) => (
+              {["709exclusive", "snōw white laundry"].map((name) => (
                 <span
                   key={name}
                   className="text-lg font-semibold text-[var(--text-muted)]"
