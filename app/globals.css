@@ -19,12 +19,12 @@
   --text-muted: #64748b;
   --text-inverse: #05070a;
 
-  /* Electric accent spectrum */
-  --electric-lime: #c4f542;
-  --electric-lime-dim: #a3cc35;
-  --electric-cyan: #22d3ee;
-  --electric-violet: #a78bfa;
-  --electric-rose: #fb7185;
+  /* Mars orange accent spectrum */
+  --electric-lime: #ff6b35;
+  --electric-lime-dim: #e55a2b;
+  --electric-cyan: #ff8c42;
+  --electric-violet: #ffa726;
+  --electric-rose: #ff5722;
 
   /* Semantic */
   --success: #4ade80;
@@ -34,8 +34,8 @@
   /* Borders & effects */
   --border-subtle: rgba(148, 163, 184, 0.1);
   --border-medium: rgba(148, 163, 184, 0.2);
-  --glow-lime: rgba(196, 245, 66, 0.4);
-  --glow-cyan: rgba(34, 211, 238, 0.3);
+  --glow-lime: rgba(255, 107, 53, 0.4);
+  --glow-cyan: rgba(255, 140, 66, 0.3);
 
   /* Typography */
   --font-display: "Instrument Serif", Georgia, serif;
