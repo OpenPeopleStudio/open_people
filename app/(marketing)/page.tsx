@@ -204,20 +204,17 @@ function HeroSection() {
           {/* Social proof */}
           <div className="mt-16 pt-8 border-t border-[var(--border-subtle)] animate-fade-in delay-300">
             <p className="text-sm text-[var(--text-muted)] mb-4">
-              Trusted by forward-thinking retailers
+              Trusted by forward-thinking businesses
             </p>
-            <div className="flex items-center justify-center gap-8 md:gap-12 opacity-50">
-              {/* Placeholder logos - replace with actual client logos */}
-              {["709exclusive", "StreetHeat", "SoleVault", "KicksLab"].map(
-                (name) => (
-                  <span
-                    key={name}
-                    className="text-lg font-semibold text-[var(--text-muted)]"
-                  >
-                    {name}
-                  </span>
-                )
-              )}
+            <div className="flex items-center justify-center gap-12 md:gap-16 opacity-60">
+              {["709exclusive", "Snōw White Laundry"].map((name) => (
+                <span
+                  key={name}
+                  className="text-lg font-semibold text-[var(--text-muted)]"
+                >
+                  {name}
+                </span>
+              ))}
             </div>
           </div>
         </div>
