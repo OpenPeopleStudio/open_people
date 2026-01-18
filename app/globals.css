@@ -291,8 +291,13 @@ body {
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.1; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .animate-float {
@@ -317,6 +322,10 @@ body {
 
 .animate-twinkle {
   animation: twinkle ease-in-out infinite;
+}
+
+.animate-orbit {
+  animation: orbit linear infinite;
 }
 
 /* Staggered delays */

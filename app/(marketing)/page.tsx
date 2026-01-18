@@ -960,13 +960,14 @@ function Footer() {
 
 function Starfield() {
   // Generate distant stars - smaller sizes for depth
-  const stars = Array.from({ length: 200 }, (_, i) => ({
+  const stars = Array.from({ length: 250 }, (_, i) => ({
     id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 1.2 + 0.3, // Smaller: 0.3-1.5px (was 0.5-2.5px)
-    opacity: Math.random() * 0.5 + 0.2, // Dimmer: 0.2-0.7 (was 0.3-1.0)
-    duration: Math.random() * 2 + 1, // Faster twinkle: 1-3s (was 2-5s)
+    // Position stars in a circular pattern from center
+    angle: Math.random() * 360,
+    distance: Math.random() * 60 + 20, // 20-80% from center
+    size: Math.random() * 1 + 0.3,
+    opacity: Math.random() * 0.5 + 0.2,
+    twinkleDuration: Math.random() * 4 + 2,
     delay: Math.random() * 3,
   }));
 
@@ -975,21 +976,48 @@ function Starfield() {
       {/* Base dark gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#050508] via-[var(--void)] to-[#050508]" />
       
-      {/* Stars */}
-      <svg className="absolute inset-0 w-full h-full">
-        {stars.map((star) => (
+      {/* Orbiting star container */}
+      <div 
+        className="absolute inset-0 animate-orbit"
+        style={{ 
+          animationDuration: '300s',
+          transformOrigin: '50% 50%',
+        }}
+      >
+        <svg className="absolute inset-0 w-full h-full">
+          {stars.map((star) => {
+            // Convert polar to cartesian coordinates
+            const x = 50 + star.distance * Math.cos((star.angle * Math.PI) / 180);
+            const y = 50 + star.distance * Math.sin((star.angle * Math.PI) / 180);
+            return (
+              <circle
+                key={star.id}
+                cx={`${x}%`}
+                cy={`${y}%`}
+                r={star.size}
+                fill="white"
+                opacity={star.opacity}
+                className="animate-twinkle"
+                style={{
+                  animationDuration: `${star.twinkleDuration}s`,
+                  animationDelay: `${star.delay}s`,
+                }}
+              />
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Static background stars (very distant, don't orbit) */}
+      <svg className="absolute inset-0 w-full h-full opacity-30">
+        {Array.from({ length: 100 }, (_, i) => (
           <circle
-            key={star.id}
-            cx={`${star.x}%`}
-            cy={`${star.y}%`}
-            r={star.size}
+            key={`bg-${i}`}
+            cx={`${Math.random() * 100}%`}
+            cy={`${Math.random() * 100}%`}
+            r={Math.random() * 0.5 + 0.2}
             fill="white"
-            opacity={star.opacity}
-            className="animate-twinkle"
-            style={{
-              animationDuration: `${star.duration}s`,
-              animationDelay: `${star.delay}s`,
-            }}
+            opacity={Math.random() * 0.3 + 0.1}
           />
         ))}
       </svg>
