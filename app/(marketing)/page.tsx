@@ -650,7 +650,7 @@ function PricingSection() {
   const plans = [
     {
       name: "Starter",
-      price: "$49",
+      price: "$99",
       period: "/month",
       description: "Perfect for solo operators and small shops",
       features: [
@@ -665,7 +665,7 @@ function PricingSection() {
     },
     {
       name: "Pro",
-      price: "$149",
+      price: "$199",
       period: "/month",
       description: "For growing businesses ready to scale",
       features: [

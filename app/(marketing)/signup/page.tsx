@@ -39,7 +39,7 @@ const plans: {
   {
     id: "starter",
     name: "Starter",
-    price: "$49",
+    price: "$99",
     period: "/month",
     description: "Perfect for solo operators",
     features: [
@@ -52,7 +52,7 @@ const plans: {
   {
     id: "pro",
     name: "Pro",
-    price: "$149",
+    price: "$199",
     period: "/month",
     description: "For growing businesses",
     features: [
