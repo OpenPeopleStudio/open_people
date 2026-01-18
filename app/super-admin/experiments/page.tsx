@@ -105,15 +105,18 @@ async function getExperimentMetrics() {
     .order("created_at", { ascending: false })
     .limit(5);
 
-  const recentSubscriptions = (recentSubs || []).map((sub) => ({
-    id: sub.id,
-    tenant_name: Array.isArray(sub.tenant)
-      ? sub.tenant[0]?.name || "Unknown"
-      : sub.tenant?.name || "Unknown",
-    tier: sub.tier,
-    status: sub.status,
-    created_at: sub.created_at,
-  }));
+  const recentSubscriptions = (recentSubs || []).map((sub) => {
+    const tenant = sub.tenant as { name: string } | { name: string }[] | null;
+    return {
+      id: sub.id,
+      tenant_name: Array.isArray(tenant)
+        ? tenant[0]?.name || "Unknown"
+        : tenant?.name || "Unknown",
+      tier: sub.tier,
+      status: sub.status,
+      created_at: sub.created_at,
+    };
+  });
 
   // Total counts
   const { count: totalExperimentsCount } = await supabase

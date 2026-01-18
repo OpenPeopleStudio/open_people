@@ -143,9 +143,10 @@ async function getRecentActivity() {
   });
 
   (recentDomains || []).forEach((domain) => {
-    const tenantName = Array.isArray(domain.tenant)
-      ? domain.tenant[0]?.name
-      : domain.tenant?.name;
+    const tenant = domain.tenant as { name: string } | { name: string }[] | null;
+    const tenantName = Array.isArray(tenant)
+      ? tenant[0]?.name
+      : tenant?.name;
     if (tenantName && domain.verified_at) {
       activities.push({
         action: `Domain ${domain.domain} verified`,

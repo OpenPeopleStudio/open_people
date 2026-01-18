@@ -59,27 +59,35 @@ export async function GET(request: NextRequest) {
 
     // Format for SDK
     const config: SDKConfig = {
-      experiments: (experiments || []).map((exp) => ({
-        id: exp.id,
-        key: exp.key,
-        type: exp.type as "ab_test" | "multivariate" | "feature_flag",
-        status: exp.status as "running",
-        rollout_percentage: exp.rollout_percentage,
-        variants: (exp.experiment_variants || []).map((v) => ({
-          id: v.id,
-          key: v.key,
-          weight: v.weight,
-          is_control: v.is_control,
-        })),
-        audience_rules: exp.audiences?.rules || undefined,
-      })),
-      flags: (flags || []).map((flag) => ({
-        id: flag.id,
-        key: flag.key,
-        enabled: flag.enabled,
-        rollout_percentage: flag.rollout_percentage,
-        audience_rules: flag.audiences?.rules || undefined,
-      })),
+      experiments: (experiments || []).map((exp) => {
+        const audiences = exp.audiences as { rules: unknown } | { rules: unknown }[] | null;
+        const audienceRules = Array.isArray(audiences) ? audiences[0]?.rules : audiences?.rules;
+        return {
+          id: exp.id,
+          key: exp.key,
+          type: exp.type as "ab_test" | "multivariate" | "feature_flag",
+          status: exp.status as "running",
+          rollout_percentage: exp.rollout_percentage,
+          variants: (exp.experiment_variants || []).map((v) => ({
+            id: v.id,
+            key: v.key,
+            weight: v.weight,
+            is_control: v.is_control,
+          })),
+          audience_rules: audienceRules as SDKConfig["experiments"][0]["audience_rules"],
+        };
+      }),
+      flags: (flags || []).map((flag) => {
+        const audiences = flag.audiences as { rules: unknown } | { rules: unknown }[] | null;
+        const audienceRules = Array.isArray(audiences) ? audiences[0]?.rules : audiences?.rules;
+        return {
+          id: flag.id,
+          key: flag.key,
+          enabled: flag.enabled,
+          rollout_percentage: flag.rollout_percentage,
+          audience_rules: audienceRules as SDKConfig["flags"][0]["audience_rules"],
+        };
+      }),
     };
 
     return NextResponse.json(config);

@@ -101,10 +101,10 @@ async function getStorageData(tenantId: string) {
   return {
     subscription: subscription || { tier: "free", status: "active", current_period_end: null },
     stats: {
-      total_storage_bytes: stats.totalStorageBytes || stats.total_storage_bytes || 0,
-      total_files: stats.totalFiles || stats.total_files || 0,
-      total_buckets: stats.totalBuckets || stats.total_buckets || 0,
-      bandwidth_this_month: stats.bandwidthThisMonth || stats.bandwidth_this_month || 0,
+      total_storage_bytes: stats.totalStorageBytes || (stats as Record<string, number>).total_storage_bytes || 0,
+      total_files: stats.totalFiles || (stats as Record<string, number>).total_files || 0,
+      total_buckets: stats.totalBuckets || (stats as Record<string, number>).total_buckets || 0,
+      bandwidth_this_month: stats.bandwidthThisMonth || (stats as Record<string, number>).bandwidth_this_month || 0,
     },
     buckets: bucketsWithCounts,
     recentFiles: (recentFiles || []).map((f) => ({

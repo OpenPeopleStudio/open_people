@@ -161,7 +161,7 @@ export function NotificationsDashboard({
       name: template.name,
       slug: template.slug,
       channel: template.channel,
-      subject: template.subject || "",
+      subject: "subject" in template ? template.subject || "" : "",
       body: template.body,
       variables: template.variables,
     });

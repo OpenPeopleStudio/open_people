@@ -87,19 +87,28 @@ export async function sendEmail(
     const to = Array.isArray(request.to) ? request.to : [request.to];
 
     // Send via Resend
-    const { data, error } = await resend.emails.send({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const emailPayload: any = {
       from: fromAddress,
       to,
       subject,
-      html: html || undefined,
-      text: text || undefined,
       cc: request.cc,
       bcc: request.bcc,
       replyTo: request.replyTo,
       tags: request.tags
         ? Object.entries(request.tags).map(([name, value]) => ({ name, value }))
         : undefined,
-    });
+    };
+
+    // Add content (html or text)
+    if (html) {
+      emailPayload.html = html;
+    }
+    if (text) {
+      emailPayload.text = text;
+    }
+
+    const { data, error } = await resend.emails.send(emailPayload);
 
     if (error) {
       console.error("Resend error:", error);
