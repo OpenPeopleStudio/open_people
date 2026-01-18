@@ -41,12 +41,12 @@ const plans: {
     name: "Starter",
     price: "$99",
     period: "/month",
-    description: "Perfect for solo operators",
+    description: "Your first step into AI",
     features: [
-      "1 storefront",
-      "Up to 500 products",
-      "AI inventory alerts",
-      "Basic analytics",
+      "Core AI tools",
+      "Full data ownership",
+      "Basic customization",
+      "Community access",
     ],
   },
   {
@@ -54,13 +54,13 @@ const plans: {
     name: "Pro",
     price: "$199",
     period: "/month",
-    description: "For growing businesses",
+    description: "For teams ready to grow",
     features: [
-      "5 storefronts",
-      "Unlimited products",
-      "Full AI suite",
-      "AI chat assistant",
+      "Complete AI toolkit",
+      "Advanced customization",
+      "Resource pooling",
       "Priority support",
+      "Team collaboration",
     ],
     popular: true,
   },
@@ -69,12 +69,12 @@ const plans: {
     name: "Enterprise",
     price: "Custom",
     period: "",
-    description: "For large operations",
+    description: "Unique requirements",
     features: [
-      "Unlimited storefronts",
+      "Everything in Pro",
       "Custom AI training",
-      "Dedicated support",
-      "SLA guarantee",
+      "Dedicated partner",
+      "On-premise options",
     ],
   },
 ];
@@ -285,7 +285,7 @@ export default function SignupPage() {
                     Choose your plan
                   </h1>
                   <p className="text-[var(--text-secondary)]">
-                    Start with a 14-day free trial. No credit card required.
+                    Start with a 14-day free trial. Your data stays yours from day one.
                   </p>
                 </div>
 
@@ -391,7 +391,7 @@ export default function SignupPage() {
                     Tell us about your business
                   </h1>
                   <p className="text-[var(--text-secondary)]">
-                    This will be used to set up your storefront.
+                    We want to understand your goals so we can help you prepare for the future.
                   </p>
                 </div>
 
