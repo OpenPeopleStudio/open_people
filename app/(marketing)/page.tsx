@@ -155,9 +155,9 @@ function HeroSection() {
 
           {/* Subhead */}
           <p className="mt-8 text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed animate-slide-up delay-100">
-            Transform your retail business with intelligent inventory
-            management, AI-powered customer chat, and predictive analytics.
-            Built for ambitious brands ready to scale.
+            Tailored AI solutions for businesses across every industry. We help
+            you align your operations with intelligent automation, so you can
+            focus on what matters most—growing your business.
           </p>
 
           {/* CTAs */}
