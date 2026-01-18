@@ -1,16 +1,20 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Super Admin — OpenPeople.ai",
-  description: "Platform administration dashboard",
-};
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Super Admin Layout
+   Platform administration shell with navigation
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 const navItems = [
   {
     href: "/super-admin",
     label: "Dashboard",
     icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+    exact: true,
   },
   {
     href: "/super-admin/tenants",
@@ -18,14 +22,14 @@ const navItems = [
     icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
   },
   {
-    href: "/super-admin/billing",
-    label: "Billing",
-    icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z",
-  },
-  {
     href: "/super-admin/analytics",
     label: "Analytics",
     icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
+  },
+  {
+    href: "/super-admin/billing",
+    label: "Billing",
+    icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z",
   },
   {
     href: "/super-admin/settings",
@@ -39,14 +43,29 @@ export default function SuperAdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const isActive = (href: string, exact?: boolean) => {
+    if (exact) return pathname === href;
+    return pathname.startsWith(href);
+  };
+
   return (
     <div className="min-h-screen bg-[var(--void)] flex">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-[var(--border-subtle)] flex flex-col">
+      <aside
+        className={`${
+          sidebarCollapsed ? "w-16" : "w-64"
+        } border-r border-[var(--border-subtle)] flex flex-col transition-all duration-200`}
+      >
         {/* Logo */}
-        <div className="h-16 flex items-center px-6 border-b border-[var(--border-subtle)]">
-          <Link href="/super-admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--electric-lime)] flex items-center justify-center">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-[var(--border-subtle)]">
+          <Link
+            href="/super-admin"
+            className={`flex items-center gap-2 ${sidebarCollapsed ? "justify-center" : ""}`}
+          >
+            <div className="w-8 h-8 rounded-lg bg-[var(--electric-lime)] flex items-center justify-center shrink-0">
               <svg
                 className="w-4 h-4 text-[var(--void)]"
                 fill="none"
@@ -61,27 +80,24 @@ export default function SuperAdminLayout({
                 />
               </svg>
             </div>
-            <div>
-              <span className="text-sm font-semibold text-[var(--text-primary)]">
-                OpenPeople
-              </span>
-              <span className="block text-xs text-[var(--text-muted)]">
-                Super Admin
-              </span>
-            </div>
+            {!sidebarCollapsed && (
+              <div>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">
+                  OpenPeople
+                </span>
+                <span className="block text-xs text-[var(--electric-lime)]">
+                  Super Admin
+                </span>
+              </div>
+            )}
           </Link>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
+          {!sidebarCollapsed && (
+            <button
+              onClick={() => setSidebarCollapsed(true)}
+              className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -90,30 +106,87 @@ export default function SuperAdminLayout({
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d={item.icon}
+                  d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
                 />
               </svg>
-              {item.label}
-            </Link>
-          ))}
+            </button>
+          )}
+        </div>
+
+        {/* Expand button when collapsed */}
+        {sidebarCollapsed && (
+          <button
+            onClick={() => setSidebarCollapsed(false)}
+            className="mx-auto mt-4 p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13 5l7 7-7 7M5 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        )}
+
+        {/* Navigation */}
+        <nav className="flex-1 p-3 space-y-1">
+          {navItems.map((item) => {
+            const active = isActive(item.href, item.exact);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                  active
+                    ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)]"
+                } ${sidebarCollapsed ? "justify-center" : ""}`}
+                title={sidebarCollapsed ? item.label : undefined}
+              >
+                <svg
+                  className="w-5 h-5 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d={item.icon}
+                  />
+                </svg>
+                {!sidebarCollapsed && item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* User section */}
-        <div className="p-4 border-t border-[var(--border-subtle)]">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
-              <span className="text-xs font-medium text-[var(--text-secondary)]">
-                SA
-              </span>
+        <div className="p-3 border-t border-[var(--border-subtle)]">
+          <div
+            className={`flex items-center gap-3 px-3 py-2 ${sidebarCollapsed ? "justify-center" : ""}`}
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--electric-lime)] to-[var(--electric-cyan)] flex items-center justify-center shrink-0">
+              <span className="text-xs font-bold text-[var(--void)]">SA</span>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-[var(--text-primary)] truncate">
-                Super Admin
-              </p>
-              <p className="text-xs text-[var(--text-muted)] truncate">
-                admin@openpeople.ai
-              </p>
-            </div>
+            {!sidebarCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-[var(--text-primary)] truncate">
+                  Super Admin
+                </p>
+                <p className="text-xs text-[var(--text-muted)] truncate">
+                  Platform Owner
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </aside>
