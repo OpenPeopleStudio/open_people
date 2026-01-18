@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NavBar from "@/components/NavBar";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    OpenPeople.ai Landing Page
@@ -40,89 +41,7 @@ export default function Home() {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function Navigation() {
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50">
-      <div className="container">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg bg-[var(--electric-lime)] flex items-center justify-center transition-transform group-hover:scale-105">
-              <svg
-                className="w-5 h-5 text-[var(--void)]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-            <span className="text-xl font-semibold text-[var(--text-primary)]">
-              OpenPeople<span className="text-[var(--electric-lime)]">.ai</span>
-            </span>
-          </Link>
-
-          {/* Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link
-              href="#features"
-              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              Features
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              How it works
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/docs"
-              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              Docs
-            </Link>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="hidden sm:inline-flex text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors px-4 py-2"
-            >
-              Sign in
-            </Link>
-            <Link href="/signup" className="btn-primary text-sm">
-              Get started
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
+  return <NavBar />;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
