@@ -40,26 +40,35 @@ export default function LoginPage() {
         // Fetch user's tenant to redirect appropriately
         const { data: profile } = await supabase
           .from("709_profiles")
-          .select("tenant_id, tenants(slug)")
+          .select("tenant_id")
           .eq("id", data.user.id)
           .single();
 
-        if (profile?.tenants) {
-          const tenant = profile.tenants as { slug: string };
-          const ROOT_DOMAIN =
-            process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai";
-          const protocol =
-            process.env.NODE_ENV === "production" ? "https" : "http";
-          const tenantDomain =
-            ROOT_DOMAIN === "localhost"
-              ? `${tenant.slug}.localhost:3000`
-              : `${tenant.slug}.${ROOT_DOMAIN}`;
+        if (profile?.tenant_id) {
+          // Fetch tenant slug
+          const { data: tenant } = await supabase
+            .from("tenants")
+            .select("slug")
+            .eq("id", profile.tenant_id)
+            .single();
 
-          window.location.href = `${protocol}://${tenantDomain}/admin`;
-        } else {
-          // No tenant found - redirect to signup
-          router.push("/signup");
+          if (tenant?.slug) {
+            const ROOT_DOMAIN =
+              process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai";
+            const protocol =
+              process.env.NODE_ENV === "production" ? "https" : "http";
+            const tenantDomain =
+              ROOT_DOMAIN === "localhost"
+                ? `${tenant.slug}.localhost:3000`
+                : `${tenant.slug}.${ROOT_DOMAIN}`;
+
+            window.location.href = `${protocol}://${tenantDomain}/admin`;
+            return;
+          }
         }
+        
+        // No tenant found - redirect to signup
+        router.push("/signup");
       }
     } catch (err) {
       console.error("Login error:", err);
