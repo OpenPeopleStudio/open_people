@@ -8,13 +8,8 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="min-h-screen bg-[var(--void)] relative overflow-hidden">
-      {/* Background grid */}
-      <div className="fixed inset-0 bg-grid pointer-events-none" />
-
-      {/* Ambient glows */}
-      <div className="glow-lime top-[-200px] left-[-200px] opacity-30 animate-pulse-glow" />
-      <div className="glow-cyan top-[40%] right-[-300px] opacity-20 animate-pulse-glow delay-200" />
-      <div className="glow-lime bottom-[-200px] left-[30%] opacity-20 animate-pulse-glow delay-400" />
+      {/* Starfield background */}
+      <Starfield />
 
       {/* Navigation */}
       <Navigation />
@@ -869,7 +864,7 @@ function Footer() {
               </span>
             </Link>
             <p className="mt-4 text-sm text-[var(--text-muted)] max-w-xs">
-              AI-powered commerce infrastructure for ambitious retail brands.
+              Tailored AI solutions for businesses across every industry.
             </p>
           </div>
 
@@ -959,5 +954,64 @@ function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Starfield Background
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function Starfield() {
+  // Generate random stars
+  const stars = Array.from({ length: 150 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 2 + 0.5,
+    opacity: Math.random() * 0.7 + 0.3,
+    duration: Math.random() * 3 + 2,
+    delay: Math.random() * 5,
+  }));
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      {/* Base dark gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a12] via-[var(--void)] to-[#0a0a12]" />
+      
+      {/* Stars */}
+      <svg className="absolute inset-0 w-full h-full">
+        {stars.map((star) => (
+          <circle
+            key={star.id}
+            cx={`${star.x}%`}
+            cy={`${star.y}%`}
+            r={star.size}
+            fill="white"
+            opacity={star.opacity}
+            className="animate-twinkle"
+            style={{
+              animationDuration: `${star.duration}s`,
+              animationDelay: `${star.delay}s`,
+            }}
+          />
+        ))}
+      </svg>
+
+      {/* Subtle nebula effect */}
+      <div 
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-[0.03]"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,107,53,0.4) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+        }}
+      />
+      <div 
+        className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full opacity-[0.02]"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,140,66,0.3) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }}
+      />
+    </div>
   );
 }
