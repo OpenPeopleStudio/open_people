@@ -277,7 +277,10 @@ type HeaderSource = Pick<Headers, "get">;
 export const getTenantFromHeaders = cache(
   async (headerStore: HeaderSource): Promise<TenantContextValue | null> => {
     const host =
-      headerStore.get("x-forwarded-host") || headerStore.get("host") || "";
+      headerStore.get("x-forwarded-host") ||
+      headerStore.get("host") ||
+      headerStore.get("x-tenant-host") || // Fallback to middleware-set header if present
+      "";
     return resolveTenantByHost(host);
   }
 );
@@ -313,7 +316,10 @@ export async function getTenantForUser(userId: string): Promise<TenantContextVal
 export const getRouteFromHeaders = cache(
   async (headerStore: HeaderSource): Promise<RouteResolution> => {
     const host =
-      headerStore.get("x-forwarded-host") || headerStore.get("host") || "";
+      headerStore.get("x-forwarded-host") ||
+      headerStore.get("host") ||
+      headerStore.get("x-tenant-host") || // Fallback to middleware-set header if present
+      "";
     return resolveRoute(host);
   }
 );
