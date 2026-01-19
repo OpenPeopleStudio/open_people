@@ -10,7 +10,7 @@
 
 create table if not exists vault_spaces (
   id uuid primary key default gen_random_uuid(),
-  owner_id uuid references "709_profiles"(id) on delete cascade not null,
+  owner_id uuid references auth.users(id) on delete cascade not null,
   name text not null default 'My Vault',
   
   -- Encryption key verification (not the actual key!)
@@ -57,11 +57,12 @@ create table if not exists vault_encryption_keys (
   -- Status
   is_active boolean default true,
   created_at timestamptz default now(),
-  rotated_at timestamptz,
-  
-  -- Only one active key per vault
-  unique(vault_id) where is_active = true
+  rotated_at timestamptz
 );
+
+-- Only one active key per vault (partial unique index)
+create unique index if not exists idx_vault_encryption_keys_one_active 
+  on vault_encryption_keys(vault_id) where is_active = true;
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- Vault Folders
@@ -268,7 +269,7 @@ create table if not exists vault_audit_log (
   resource_id uuid,
   
   -- Actor info
-  performed_by uuid references "709_profiles"(id) on delete set null,
+  performed_by uuid references auth.users(id) on delete set null,
   
   -- Request metadata
   ip_address inet,
@@ -462,7 +463,7 @@ create or replace function is_super_admin()
 returns boolean as $$
 begin
   return exists (
-    select 1 from "709_profiles" 
+    select 1 from profiles 
     where id = auth.uid() and role = 'super_admin'
   );
 end;

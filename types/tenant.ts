@@ -17,6 +17,15 @@ export type TenantFeatureFlags = {
   ai_inventory?: boolean;
   ai_chat?: boolean;
   ai_analytics?: boolean;
+  // Admin modules
+  notes?: boolean;
+  workflows?: boolean;
+  knowledge?: boolean;
+  api_keys?: boolean;
+  vault?: boolean;
+  email?: boolean;
+  notifications?: boolean;
+  experiments?: boolean;
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════

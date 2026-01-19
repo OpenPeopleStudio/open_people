@@ -39,7 +39,7 @@ create policy "Users can view their tenant usage"
   on tenant_usage for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -74,7 +74,7 @@ create policy "Users can view their own tenant"
   on tenants for select
   using (
     id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -83,7 +83,7 @@ create policy "Users can view their tenant domains"
   on tenant_domains for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -92,6 +92,6 @@ create policy "Owners can view tenant billing"
   on tenant_billing for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid() and role = 'owner'
+      select tenant_id from profiles where id = auth.uid() and role = 'owner'
     )
   );

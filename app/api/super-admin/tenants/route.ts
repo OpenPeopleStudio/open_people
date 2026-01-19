@@ -1,4 +1,4 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createSupabaseServer();
+    // Use service role for admin operations (auth admin + cross-tenant writes)
+    const supabase = await createSupabaseAdmin();
 
     // Check if slug is already taken
     const { data: existingTenant } = await supabase

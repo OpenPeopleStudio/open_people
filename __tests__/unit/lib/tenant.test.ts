@@ -45,9 +45,19 @@ describe('getRouteType', () => {
       expect(getRouteType('acme.openpeople.ai')).toBe('tenant');
     });
     
+    it('returns tenant for mars.openpeople.ai (internal workspace)', () => {
+      // Mars is the Open People internal tenant
+      expect(getRouteType('mars.openpeople.ai')).toBe('tenant');
+    });
+    
     it('returns tenant for subdomain.localhost', () => {
       expect(getRouteType('demo.localhost')).toBe('tenant');
       expect(getRouteType('demo.localhost:3000')).toBe('tenant');
+    });
+    
+    it('returns tenant for mars.localhost (development)', () => {
+      expect(getRouteType('mars.localhost')).toBe('tenant');
+      expect(getRouteType('mars.localhost:3000')).toBe('tenant');
     });
     
     it('returns tenant for custom domains', () => {

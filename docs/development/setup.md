@@ -55,6 +55,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
 
+### 5. Access Different Contexts
+
+| URL | Context | Purpose |
+|-----|---------|---------|
+| `localhost:3000` | Marketing | Public marketing site |
+| `app.localhost:3000` | Super Admin | Platform administration |
+| `mars.localhost:3000` | Internal Tenant | Open People workspace |
+| `demo.localhost:3000` | Demo Tenant | Customer demo environment |
+
 ## ⚙️ Environment Configuration
 
 ### Required Environment Variables
@@ -121,6 +130,12 @@ NEXT_PUBLIC_SUPER_ADMIN_DOMAIN=app.yourdomain.com
    ```bash
    supabase db reset
    ```
+
+5. **Seed the Mars Tenant** (for internal workspace)
+   ```bash
+   node scripts/seed-mars-tenant.js
+   ```
+   This creates the `mars` tenant with all features enabled and a tenant owner user.
 
 ### Local PostgreSQL (Alternative)
 
@@ -190,13 +205,27 @@ open_people/
 ├── app/                    # Next.js app directory
 │   ├── (marketing)/       # Public marketing pages
 │   ├── (platform)/        # Tenant application
+│   │   └── admin/         # Tenant admin workspace
+│   │       ├── layout.tsx # Sidebar navigation
+│   │       ├── page.tsx   # Dashboard
+│   │       ├── vault/     # Encrypted vault
+│   │       ├── keys/      # API key management
+│   │       ├── notes/     # Notes & templates
+│   │       ├── chat/      # AI chat & settings
+│   │       ├── knowledge/ # Facts & documents
+│   │       └── workflows/ # Projects & tasks
 │   ├── super-admin/       # Platform admin
 │   └── api/               # API routes
 ├── components/            # Shared React components
+│   └── workspace/         # Reusable workspace components
+│       ├── notes/         # NotesListView
+│       └── chat/          # ChatView
 ├── lib/                   # Utility libraries
 │   ├── supabase/         # Supabase client
 │   ├── storage/          # R2 storage client
 │   └── tenant.ts         # Tenant resolution
+├── scripts/              # Setup and maintenance scripts
+│   └── seed-mars-tenant.js # Mars tenant seeding
 ├── supabase/             # Database migrations
 ├── types/                # TypeScript definitions
 ├── docs/                 # Documentation
@@ -337,7 +366,82 @@ npm install next@latest react@latest react-dom@latest
 - Follow the [CHANGELOG](../CHANGELOG.md) for release notes
 - Subscribe to [GitHub releases](../../releases)
 
+## 🏢 Tenant Admin Development
+
+### Accessing the Tenant Admin
+
+The tenant admin interface is available at `/admin` on any tenant subdomain:
+
+```bash
+# Local development
+http://mars.localhost:3000/admin
+
+# Production
+https://mars.openpeople.ai/admin
+```
+
+### Feature Gating
+
+Tenant features are controlled via `tenant.settings.features`:
+
+```typescript
+interface TenantFeatures {
+  admin: boolean;       // Dashboard access
+  storage: boolean;     // Cloud storage
+  notifications: boolean;
+  email: boolean;
+  vault: boolean;       // Encrypted vault
+  notes: boolean;       // Notes & templates
+  ai_chat: boolean;     // AI assistant
+  knowledge: boolean;   // Knowledge base
+  api_keys: boolean;    // API key management
+  workflows: boolean;   // Projects & tasks
+  experiments: boolean;
+  ai_inventory: boolean;
+  ai_analytics: boolean;
+}
+```
+
+### Shared Components
+
+When building tenant UI that should also work for super-admin, use the shared components pattern:
+
+```typescript
+// components/workspace/notes/NotesListView.tsx
+interface NotesListViewProps {
+  basePath: string; // "/super-admin" or "/admin"
+}
+
+// Tenant page
+import { NotesListView } from "@/components/workspace/notes/NotesListView";
+export default function TenantNotesPage() {
+  return <NotesListView basePath="/admin" />;
+}
+
+// Super-admin page  
+export default function SuperAdminNotesPage() {
+  return <NotesListView basePath="/super-admin" />;
+}
+```
+
+### API Route Access Control
+
+API routes that should be accessible to tenant users must check for allowed roles:
+
+```typescript
+// Before (super-admin only)
+if (profile.role !== "super_admin") {
+  return NextResponse.json({ error: "Access denied" }, { status: 403 });
+}
+
+// After (tenant users allowed)
+const allowedRoles = ["super_admin", "owner", "admin"];
+if (!profile || !allowedRoles.includes(profile.role)) {
+  return NextResponse.json({ error: "Access denied" }, { status: 403 });
+}
+```
+
 ---
 
-**Last Updated**: January 18, 2026
+**Last Updated**: January 19, 2026
 **Environment**: Development

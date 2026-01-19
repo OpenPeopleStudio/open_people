@@ -1,4 +1,5 @@
 import { stripe } from '@/lib/stripe'
+import Stripe from 'stripe'
 import { createSupabaseServer } from '../lib/supabaseServer'
 import { headers } from 'next/headers'
 import { sendOrderConfirmation } from '@/lib/email'
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
   // Handle subscription lifecycle events
   if (event.type === 'customer.subscription.created' ||
       event.type === 'customer.subscription.updated') {
-    const subscription = event.data.object as any
+    const subscription = event.data.object as Stripe.Subscription
     const tenantId = subscription.metadata?.tenant_id
 
     if (tenantId) {
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
       })
     }
   } else if (event.type === 'customer.subscription.deleted') {
-    const subscription = event.data.object as any
+    const subscription = event.data.object as Stripe.Subscription
     const tenantId = subscription.metadata?.tenant_id
 
     if (tenantId) {

@@ -83,7 +83,13 @@ interface Tenant {
 Platform (OpenPeople.ai)
 │
 ├── Super Admins (tenant_id = NULL)
-│   └── Can manage all tenants
+│   └── Can manage all tenants via app.openpeople.ai
+│
+├── Mars (slug: 'mars') - Internal Tenant
+│   ├── URL: mars.openpeople.ai
+│   ├── Purpose: Open People internal workspace
+│   ├── Features: All modules enabled
+│   └── Owner: mars@tomlane.space
 │
 ├── Tenant A (tenant_id = uuid-a)
 │   ├── Owner
@@ -96,6 +102,15 @@ Platform (OpenPeople.ai)
     ├── Admins
     └── Members
 ```
+
+### Internal Tenant (Mars)
+
+The `mars` tenant serves as Open People's internal workspace for:
+- **Feature Testing**: Test new features before rolling out to customers
+- **Business Operations**: Conduct internal Open People operations
+- **Dogfooding**: Use the platform as a real tenant would
+
+This tenant has all enterprise features enabled and operates independently from super-admin privileges.
 
 ---
 
@@ -198,8 +213,20 @@ CREATE POLICY "super_admin_access"
 | Root domain | Marketing | `openpeople.ai` |
 | `www` subdomain | Marketing | `www.openpeople.ai` |
 | `app` subdomain | Super Admin | `app.openpeople.ai` |
+| `mars` subdomain | Internal Tenant | `mars.openpeople.ai` |
 | Tenant subdomain | Tenant | `acme.openpeople.ai` |
 | Custom domain | Tenant | `store.acme.com` |
+
+### Development Routing
+
+For local development, use these patterns:
+
+| Pattern | Type | Example |
+|---------|------|---------|
+| Root localhost | Marketing | `localhost:3000` |
+| `app` subdomain | Super Admin | `app.localhost:3000` |
+| `mars` subdomain | Internal Tenant | `mars.localhost:3000` |
+| Tenant subdomain | Tenant | `demo.localhost:3000` |
 
 ### Resolution Priority
 
@@ -306,6 +333,22 @@ const ROLE_PERMISSIONS = {
   customer: ['data:read', 'data:write:own'],
 };
 ```
+
+### Module Access by Role
+
+The following modules are accessible to tenant owners and admins (in addition to super admins):
+
+| Module | Owner | Admin | Member | Notes |
+|--------|-------|-------|--------|-------|
+| Notes | ✅ | ✅ | ❌ | Personal knowledge management |
+| API Keys | ✅ | ✅ | ❌ | Integration management |
+| Encrypted Vault | ✅ | ✅ | ❌ | Personal secure storage |
+| AI Chat | ✅ | ✅ | ❌ | AI assistant conversations |
+| Knowledge Base | ✅ | ✅ | ❌ | Facts and documents |
+| Workflows | ✅ | ✅ | ❌ | Projects and tasks |
+| Cloud Storage | ✅ | ✅ | ✅ | File storage (tenant-scoped) |
+| Notifications | ✅ | ✅ | ✅ | Push/email/SMS |
+| Email | ✅ | ✅ | ❌ | Transactional email |
 
 ### User Onboarding Flow
 
@@ -569,5 +612,33 @@ describe('RLS Policies', () => {
 
 ---
 
-**Last Updated**: January 18, 2026
+---
+
+## Tenant Admin Interface
+
+Tenants access their workspace at `/admin` with a feature-gated navigation sidebar:
+
+```
+Tenant Admin (/admin)
+├── Dashboard          # Overview stats and quick actions
+├── Encrypted Vault    # Personal secure file storage
+├── Cloud Storage      # Tenant file storage
+├── API Keys          # Integration key management
+├── Notes             # Personal knowledge management
+│   ├── Templates     # Note templates
+│   └── Graph         # Knowledge graph visualization
+├── AI Chat           # AI assistant
+│   ├── Profile       # AI interaction preferences
+│   └── Settings      # AI provider configuration
+├── Knowledge         # Facts and documents
+├── Workflows         # Projects and tasks
+├── Email             # Transactional email
+└── Notifications     # Push/email/SMS settings
+```
+
+Navigation items are dynamically shown/hidden based on `tenant.settings.features`.
+
+---
+
+**Last Updated**: January 19, 2026
 **Platform Version**: v0.1.0

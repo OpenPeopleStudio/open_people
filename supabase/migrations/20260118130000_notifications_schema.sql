@@ -44,7 +44,7 @@ create table if not exists notification_deliveries (
   template_id uuid references notification_templates(id) on delete set null,
   channel text not null check (channel in ('sms', 'in_app', 'push', 'email')),
   recipient text not null,
-  recipient_user_id uuid references "709_profiles"(id) on delete set null,
+  recipient_user_id uuid references auth.users(id) on delete set null,
   subject text,
   body text not null,
   status text not null default 'queued' check (status in ('queued', 'sent', 'delivered', 'failed', 'read')),
@@ -60,7 +60,7 @@ create table if not exists notification_deliveries (
 -- User notification preferences
 create table if not exists user_notification_preferences (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid references "709_profiles"(id) on delete cascade not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
   tenant_id uuid references tenants(id) on delete cascade not null,
   channel text not null check (channel in ('sms', 'in_app', 'push', 'email')),
   enabled boolean default true,
@@ -75,7 +75,7 @@ create table if not exists user_notification_preferences (
 create table if not exists in_app_notifications (
   id uuid primary key default gen_random_uuid(),
   tenant_id uuid references tenants(id) on delete cascade not null,
-  user_id uuid references "709_profiles"(id) on delete cascade not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
   title text not null,
   body text not null,
   action_url text,
@@ -137,7 +137,7 @@ create policy "Users can view their notification subscription"
   on notification_subscriptions for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -147,7 +147,7 @@ create policy "Users can manage their notification templates"
   on notification_templates for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -157,7 +157,7 @@ create policy "Users can view their notification deliveries"
   on notification_deliveries for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -184,7 +184,7 @@ create policy "Users can view their notification usage"
   on notification_usage for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 

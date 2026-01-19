@@ -106,13 +106,11 @@ CREATE TABLE IF NOT EXISTS activity_ledger (
   user_agent TEXT,
   
   -- Timestamps
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Partitioning support
-  tenant_month TEXT GENERATED ALWAYS AS (
-    COALESCE(tenant_id::TEXT, 'system') || '_' || to_char(created_at, 'YYYY_MM')
-  ) STORED
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Note: Removed generated column tenant_month due to immutability requirements.
+-- Use the index below for time-based partitioning queries instead.
 
 -- Activity ledger indexes
 CREATE INDEX idx_activity_ledger_tenant_time ON activity_ledger(tenant_id, created_at DESC);
@@ -544,7 +542,7 @@ CREATE POLICY "knowledge_chunks_owner" ON knowledge_chunks
 -- Citations: through chunks
 CREATE POLICY "knowledge_citations_owner" ON knowledge_citations
   FOR ALL USING (
-    chunk_id IN (SELECT id FROM knowledge_chunks kc
+    chunk_id IN (SELECT kc.id FROM knowledge_chunks kc
       JOIN knowledge_documents kd ON kc.document_id = kd.id
       WHERE kd.owner_id = auth.uid())
   );

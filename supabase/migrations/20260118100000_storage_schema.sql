@@ -40,7 +40,7 @@ create table if not exists storage_files (
   etag text,
   metadata jsonb default '{}',
   is_public boolean default false,
-  uploaded_by uuid references "709_profiles"(id) on delete set null,
+  uploaded_by uuid references auth.users(id) on delete set null,
   created_at timestamptz default now(),
   updated_at timestamptz default now(),
   deleted_at timestamptz, -- soft delete for versioning
@@ -87,7 +87,7 @@ create policy "Users can view their storage subscription"
   on storage_subscriptions for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -97,7 +97,7 @@ create policy "Users can view their storage buckets"
   on storage_buckets for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -106,7 +106,7 @@ create policy "Users can create storage buckets"
   on storage_buckets for insert
   with check (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -115,7 +115,7 @@ create policy "Users can update their storage buckets"
   on storage_buckets for update
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -124,7 +124,7 @@ create policy "Users can delete their storage buckets"
   on storage_buckets for delete
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -134,7 +134,7 @@ create policy "Users can view their storage files"
   on storage_files for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
     or is_public = true
   );
@@ -144,7 +144,7 @@ create policy "Users can create storage files"
   on storage_files for insert
   with check (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -153,7 +153,7 @@ create policy "Users can update their storage files"
   on storage_files for update
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -162,7 +162,7 @@ create policy "Users can delete their storage files"
   on storage_files for delete
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -172,7 +172,7 @@ create policy "Users can view their storage usage"
   on storage_usage for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -223,7 +223,7 @@ begin
   return query
   select
     coalesce(sum(f.size) filter (where f.deleted_at is null), 0)::bigint as total_storage_bytes,
-    count(f.id)::integer filter (where f.deleted_at is null) as total_files,
+    (count(f.id) filter (where f.deleted_at is null))::integer as total_files,
     (select count(*)::integer from storage_buckets where tenant_id = p_tenant_id) as total_buckets,
     coalesce(
       (select bandwidth_bytes from storage_usage 

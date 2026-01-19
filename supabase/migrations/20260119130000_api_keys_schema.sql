@@ -89,7 +89,7 @@ CREATE OR REPLACE FUNCTION is_super_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM profiles
     WHERE id = auth.uid()
     AND role = 'super_admin'
     AND tenant_id IS NULL
@@ -114,7 +114,7 @@ CREATE POLICY "api_keys_insert" ON api_keys
       -- Super admins can create any scope
       is_super_admin()
       -- Tenant users can only create tenant-scoped keys for their tenant
-      OR (scope = 'tenant' AND tenant_id = (SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid()))
+      OR (scope = 'tenant' AND tenant_id = (SELECT tenant_id FROM profiles WHERE id = auth.uid()))
     )
   );
 

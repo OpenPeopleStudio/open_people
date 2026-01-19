@@ -113,7 +113,7 @@ create policy "Users can view their email subscription"
   on email_subscriptions for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -123,7 +123,7 @@ create policy "Users can view their email domains"
   on email_domains for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -132,7 +132,7 @@ create policy "Users can manage their email domains"
   on email_domains for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -142,7 +142,7 @@ create policy "Users can view their email templates"
   on email_templates for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -151,7 +151,7 @@ create policy "Users can manage their email templates"
   on email_templates for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -161,7 +161,7 @@ create policy "Users can view their email logs"
   on email_logs for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -171,7 +171,7 @@ create policy "Users can view their email usage"
   on email_usage for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 

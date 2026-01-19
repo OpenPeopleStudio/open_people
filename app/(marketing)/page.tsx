@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import NavBar from "@/components/NavBar";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -881,17 +884,50 @@ function Footer() {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function Starfield() {
-  // Generate distant stars - smaller sizes for depth
-  const stars = Array.from({ length: 250 }, (_, i) => ({
-    id: i,
-    // Position stars in a circular pattern from center
-    angle: Math.random() * 360,
-    distance: Math.random() * 60 + 20, // 20-80% from center
-    size: Math.random() * 1 + 0.3,
-    opacity: Math.random() * 0.5 + 0.2,
-    twinkleDuration: Math.random() * 4 + 2,
-    delay: Math.random() * 3,
-  }));
+  const [stars, setStars] = useState<Array<{
+    id: number;
+    angle: number;
+    distance: number;
+    size: number;
+    opacity: number;
+    twinkleDuration: number;
+    delay: number;
+  }>>([]);
+
+  const [bgStars, setBgStars] = useState<Array<{
+    id: number;
+    cx: number;
+    cy: number;
+    r: number;
+    opacity: number;
+  }>>([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Generate distant stars - smaller sizes for depth
+      const newStars = Array.from({ length: 250 }, (_, i) => ({
+        id: i,
+        // Position stars in a circular pattern from center
+        angle: Math.random() * 360,
+        distance: Math.random() * 60 + 20, // 20-80% from center
+        size: Math.random() * 1 + 0.3,
+        opacity: Math.random() * 0.5 + 0.2,
+        twinkleDuration: Math.random() * 4 + 2,
+        delay: Math.random() * 3,
+      }));
+      setStars(newStars);
+
+      const newBgStars = Array.from({ length: 100 }, (_, i) => ({
+        id: i,
+        cx: Math.random() * 100,
+        cy: Math.random() * 100,
+        r: Math.random() * 0.5 + 0.2,
+        opacity: Math.random() * 0.3 + 0.1,
+      }));
+      setBgStars(newBgStars);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -932,14 +968,14 @@ function Starfield() {
 
       {/* Static background stars (very distant, don't orbit) */}
       <svg className="absolute inset-0 w-full h-full opacity-30">
-        {Array.from({ length: 100 }, (_, i) => (
+        {bgStars.map((star) => (
           <circle
-            key={`bg-${i}`}
-            cx={`${Math.random() * 100}%`}
-            cy={`${Math.random() * 100}%`}
-            r={Math.random() * 0.5 + 0.2}
+            key={`bg-${star.id}`}
+            cx={`${star.cx}%`}
+            cy={`${star.cy}%`}
+            r={star.r}
             fill="white"
-            opacity={Math.random() * 0.3 + 0.1}
+            opacity={star.opacity}
           />
         ))}
       </svg>

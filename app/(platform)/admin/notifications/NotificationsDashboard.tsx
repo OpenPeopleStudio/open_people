@@ -155,7 +155,7 @@ export function NotificationsDashboard({
     }
   };
 
-  const useDefaultTemplate = (key: keyof typeof DEFAULT_NOTIFICATION_TEMPLATES) => {
+  const applyDefaultTemplate = (key: keyof typeof DEFAULT_NOTIFICATION_TEMPLATES) => {
     const template = DEFAULT_NOTIFICATION_TEMPLATES[key];
     setTemplateForm({
       name: template.name,
@@ -500,7 +500,7 @@ export function NotificationsDashboard({
                 {Object.keys(DEFAULT_NOTIFICATION_TEMPLATES).map((key) => (
                   <button
                     key={key}
-                    onClick={() => useDefaultTemplate(key as keyof typeof DEFAULT_NOTIFICATION_TEMPLATES)}
+                    onClick={() => applyDefaultTemplate(key as keyof typeof DEFAULT_NOTIFICATION_TEMPLATES)}
                     className="px-3 py-1 text-xs rounded-full bg-[var(--surface-2)] text-[var(--text-secondary)] hover:bg-[var(--surface-3)] transition-colors"
                   >
                     {DEFAULT_NOTIFICATION_TEMPLATES[key as keyof typeof DEFAULT_NOTIFICATION_TEMPLATES].name}

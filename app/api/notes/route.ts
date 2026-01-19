@@ -17,15 +17,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
-    // Check if super admin
+    // Get profile to check permissions (super_admin, owner, or admin can access notes)
     const { data: profile } = await supabase
       .from("709_profiles")
-      .select("role")
+      .select("role, tenant_id")
       .eq("id", user.id)
       .single();
     
-    if (profile?.role !== "super_admin") {
-      return NextResponse.json({ error: "Super admin access required" }, { status: 403 });
+    const allowedRoles = ["super_admin", "owner", "admin"];
+    if (!profile || !allowedRoles.includes(profile.role)) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
     
     // Parse filters
@@ -101,15 +102,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
-    // Check if super admin
+    // Get profile to check permissions (super_admin, owner, or admin can create notes)
     const { data: profile } = await supabase
       .from("709_profiles")
-      .select("role")
+      .select("role, tenant_id")
       .eq("id", user.id)
       .single();
     
-    if (profile?.role !== "super_admin") {
-      return NextResponse.json({ error: "Super admin access required" }, { status: 403 });
+    const allowedRoles = ["super_admin", "owner", "admin"];
+    if (!profile || !allowedRoles.includes(profile.role)) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
     
     // Parse body

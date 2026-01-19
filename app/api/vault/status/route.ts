@@ -19,16 +19,17 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Check if user is super admin
+    // Get profile to check permissions (super_admin, owner, or admin can access vault)
     const { data: profile } = await supabase
       .from("709_profiles")
-      .select("role")
+      .select("role, tenant_id")
       .eq("id", user.id)
       .single();
     
-    if (profile?.role !== "super_admin") {
+    const allowedRoles = ["super_admin", "owner", "admin"];
+    if (!profile || !allowedRoles.includes(profile.role)) {
       return NextResponse.json(
-        { error: "Only super admins can access vaults" },
+        { error: "Access denied" },
         { status: 403 }
       );
     }

@@ -81,7 +81,7 @@ create table if not exists exposure_events (
   experiment_id uuid references experiments(id) on delete cascade,
   flag_id uuid references feature_flags(id) on delete cascade,
   variant_id uuid references experiment_variants(id) on delete set null,
-  user_id uuid references "709_profiles"(id) on delete set null,
+  user_id uuid references auth.users(id) on delete set null,
   anonymous_id text,
   session_id text,
   attributes jsonb default '{}',
@@ -94,7 +94,7 @@ create table if not exists conversion_events (
   tenant_id uuid references tenants(id) on delete cascade not null,
   experiment_id uuid references experiments(id) on delete cascade not null,
   variant_id uuid references experiment_variants(id) on delete set null not null,
-  user_id uuid references "709_profiles"(id) on delete set null,
+  user_id uuid references auth.users(id) on delete set null,
   anonymous_id text,
   event_name text not null,
   event_value numeric,
@@ -158,7 +158,7 @@ create policy "Users can view their experiment subscription"
   on experiment_subscriptions for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -168,7 +168,7 @@ create policy "Users can manage their audiences"
   on audiences for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -178,7 +178,7 @@ create policy "Users can manage their experiments"
   on experiments for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -189,7 +189,7 @@ create policy "Users can manage experiment variants"
   using (
     experiment_id in (
       select id from experiments where tenant_id in (
-        select tenant_id from "709_profiles" where id = auth.uid()
+        select tenant_id from profiles where id = auth.uid()
       )
     )
   );
@@ -200,7 +200,7 @@ create policy "Users can manage their feature flags"
   on feature_flags for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -210,7 +210,7 @@ create policy "Users can view their exposure events"
   on exposure_events for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -220,7 +220,7 @@ create policy "Users can view their conversion events"
   on conversion_events for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 
@@ -230,7 +230,7 @@ create policy "Users can view their experiment usage"
   on experiment_usage for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from profiles where id = auth.uid()
     )
   );
 

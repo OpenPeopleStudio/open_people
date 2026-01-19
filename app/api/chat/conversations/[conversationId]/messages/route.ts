@@ -4,8 +4,11 @@ import OpenAI from "openai";
 import { generateEmbedding, extractMemories, summarizeMemory } from "@/lib/ai-chat/memory";
 import { buildContext, buildSystemPrompt, truncateContext } from "@/lib/ai-chat/context";
 import { buildPersonalizedPrompt } from "@/lib/ai-profile/personalization";
+import { chatCompletion, getProviderById, getDefaultProvider, estimateCost } from "@/lib/ai/providers";
 import type { SendMessageRequest, AIMessageSource } from "@/types/ai-chat";
 import type { AIUserProfile, AIUserGoal } from "@/types/ai-profile";
+import type { AIProviderConfig, UserAISettings } from "@/types/ai-providers";
+import { PROVIDER_TEMPLATES } from "@/types/ai-providers";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -131,8 +134,8 @@ export async function POST(
         );
     }
     
-    // 8. Build messages array for OpenAI
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    // 8. Build messages array for AI
+    const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
       { role: "system", content: fullSystemPrompt },
     ];
     
@@ -147,18 +150,134 @@ export async function POST(
     // Add current message
     messages.push({ role: "user", content });
     
-    // 9. Call OpenAI
+    // 9. Get user's AI provider settings
+    const { data: aiSettingsData } = await supabase
+      .from("user_ai_settings")
+      .select("settings")
+      .eq("user_id", user.id)
+      .single();
+    
+    const aiSettings = aiSettingsData?.settings as UserAISettings | undefined;
+    
+    // Determine which provider to use
+    let providerConfig: AIProviderConfig | undefined;
+    let useOpenAIDirect = true;
+    
+    if (aiSettings?.providers && aiSettings.providers.length > 0) {
+      // Check if conversation specifies a provider via model name
+      const modelName = conversation.model || "gpt-4o";
+      
+      // Find provider by checking if model is in their available models
+      providerConfig = aiSettings.providers.find(p => 
+        p.isEnabled && (
+          p.availableModels.includes(modelName) ||
+          p.defaultModel === modelName ||
+          modelName.startsWith("local-") ||
+          modelName.startsWith("llm-")
+        )
+      );
+      
+      // If no specific provider found, use default
+      if (!providerConfig) {
+        providerConfig = getDefaultProvider(aiSettings.providers);
+      }
+      
+      // Check if we should use a non-OpenAI provider
+      if (providerConfig && providerConfig.type !== "openai") {
+        useOpenAIDirect = false;
+      }
+    }
+    
+    // 10. Call AI (either OpenAI directly or via provider abstraction)
     const startTime = Date.now();
+    let assistantContent: string;
+    let usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number } | undefined;
+    let providerUsed = "openai";
+    let estimatedCost = 0;
     
-    const completion = await openai.chat.completions.create({
-      model: conversation.model || "gpt-4o",
-      messages,
-      temperature: conversation.temperature || 0.7,
-      max_tokens: 4000,
-    });
-    
-    const assistantContent = completion.choices[0].message.content || "";
-    const usage = completion.usage;
+    if (useOpenAIDirect) {
+      // Use OpenAI directly (existing behavior)
+      const completion = await openai.chat.completions.create({
+        model: conversation.model || "gpt-4o",
+        messages: messages as OpenAI.Chat.ChatCompletionMessageParam[],
+        temperature: conversation.temperature || 0.7,
+        max_tokens: 4000,
+      });
+      
+      assistantContent = completion.choices[0].message.content || "";
+      usage = completion.usage ? {
+        prompt_tokens: completion.usage.prompt_tokens,
+        completion_tokens: completion.usage.completion_tokens,
+        total_tokens: completion.usage.total_tokens,
+      } : undefined;
+      
+      // Estimate cost for OpenAI
+      if (usage) {
+        const openaiConfig = PROVIDER_TEMPLATES.openai;
+        estimatedCost = estimateCost(
+          openaiConfig as AIProviderConfig,
+          usage.prompt_tokens,
+          usage.completion_tokens
+        );
+      }
+    } else if (providerConfig) {
+      // Use the configured provider (LLM Studio, Ollama, etc.)
+      try {
+        const completion = await chatCompletion(providerConfig, {
+          model: conversation.model || providerConfig.defaultModel,
+          messages,
+          temperature: conversation.temperature || 0.7,
+          max_tokens: 4000,
+        });
+        
+        assistantContent = completion.choices[0]?.message.content || "";
+        usage = completion.usage;
+        providerUsed = providerConfig.name;
+        
+        // Calculate cost (will be 0 for local models)
+        if (usage) {
+          estimatedCost = estimateCost(providerConfig, usage.prompt_tokens, usage.completion_tokens);
+        }
+      } catch (providerError) {
+        console.error(`Provider ${providerConfig.name} failed:`, providerError);
+        
+        // Fallback to OpenAI if enabled
+        if (aiSettings?.fallbackToOpenAI) {
+          console.log("Falling back to OpenAI...");
+          const completion = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: messages as OpenAI.Chat.ChatCompletionMessageParam[],
+            temperature: conversation.temperature || 0.7,
+            max_tokens: 4000,
+          });
+          
+          assistantContent = completion.choices[0].message.content || "";
+          usage = completion.usage ? {
+            prompt_tokens: completion.usage.prompt_tokens,
+            completion_tokens: completion.usage.completion_tokens,
+            total_tokens: completion.usage.total_tokens,
+          } : undefined;
+          providerUsed = "openai (fallback)";
+        } else {
+          throw providerError;
+        }
+      }
+    } else {
+      // No provider configured, use OpenAI
+      const completion = await openai.chat.completions.create({
+        model: conversation.model || "gpt-4o",
+        messages: messages as OpenAI.Chat.ChatCompletionMessageParam[],
+        temperature: conversation.temperature || 0.7,
+        max_tokens: 4000,
+      });
+      
+      assistantContent = completion.choices[0].message.content || "";
+      usage = completion.usage ? {
+        prompt_tokens: completion.usage.prompt_tokens,
+        completion_tokens: completion.usage.completion_tokens,
+        total_tokens: completion.usage.total_tokens,
+      } : undefined;
+    }
     
     // 10. Save assistant message
     const { data: assistantMessage, error: assistantMsgError } = await supabase
@@ -206,6 +325,8 @@ export async function POST(
         files: contextResult.sources.filter(s => s.type === "file").length,
         memories: contextResult.sources.filter(s => s.type === "memory").length,
       },
+      provider: providerUsed,
+      estimated_cost: estimatedCost,
       duration_ms: Date.now() - startTime,
     });
     

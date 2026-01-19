@@ -17,7 +17,17 @@ OpenPeople.ai is a multi-tenant SaaS platform that provides modular AI-powered p
 
 - **Multi-Tenant Platform** - Unlimited storefronts with isolated data and custom domains
 - **Super Admin Console** - Platform-wide management and analytics
+- **Tenant Admin Workspace** - Full-featured workspace for tenant owners
 - **Self-Service Signup** - Automated tenant provisioning
+
+### Workspace Features (Available to Tenant Owners)
+
+- **Encrypted Vault** - Zero-knowledge encrypted file storage
+- **Notes** - Personal knowledge management with templates and graph view
+- **AI Chat** - AI assistant with context and memory
+- **Knowledge Base** - Facts and document management
+- **API Keys** - Integration key management
+- **Workflows** - Projects and task management
 
 ## Tech Stack
 
@@ -58,6 +68,29 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the marketing site.
 
+### Development URLs
+
+| URL | Purpose |
+|-----|---------|
+| `localhost:3000` | Marketing site |
+| `app.localhost:3000` | Super admin console |
+| `mars.localhost:3000` | Internal tenant (Open People workspace) |
+| `demo.localhost:3000` | Demo tenant |
+
+### Seeding the Mars Tenant
+
+To set up the internal Open People workspace:
+
+```bash
+# Apply database migrations
+supabase db push
+
+# Seed the mars tenant and owner user
+node scripts/seed-mars-tenant.js
+```
+
+Then access `mars.localhost:3000/admin` to use the workspace.
+
 ## Project Structure
 
 ```
@@ -68,7 +101,15 @@ open_people/
 │   │   ├── login/          # Login page
 │   │   └── signup/         # Self-service signup
 │   ├── (platform)/         # Tenant application
-│   │   └── admin/          # Tenant admin dashboard
+│   │   └── admin/          # Tenant admin workspace
+│   │       ├── layout.tsx  # Sidebar navigation
+│   │       ├── page.tsx    # Dashboard
+│   │       ├── vault/      # Encrypted vault
+│   │       ├── keys/       # API key management
+│   │       ├── notes/      # Notes, templates, graph
+│   │       ├── chat/       # AI chat, profile, settings
+│   │       ├── knowledge/  # Facts and documents
+│   │       ├── workflows/  # Projects and tasks
 │   │       ├── storage/    # Cloud storage management
 │   │       ├── email/      # Email management
 │   │       ├── experiments/# A/B testing dashboard
@@ -88,6 +129,9 @@ open_people/
 │       ├── experiments/    # Experiments API
 │       └── notifications/  # Notifications API
 ├── components/             # Shared UI components
+│   └── workspace/          # Reusable workspace components
+│       ├── notes/          # NotesListView
+│       └── chat/           # ChatView
 ├── lib/                    # Utilities and helpers
 │   ├── supabase/           # Supabase clients
 │   ├── storage/            # R2 storage client
@@ -95,6 +139,8 @@ open_people/
 │   ├── experiments/        # Experiments SDK
 │   ├── notifications/      # Notifications client
 │   └── tenant.ts           # Tenant resolution
+├── scripts/               # Setup and maintenance
+│   └── seed-mars-tenant.js # Mars tenant seeding
 ├── supabase/              # Database migrations
 └── types/                 # TypeScript definitions
 ```
@@ -106,11 +152,21 @@ OpenPeople.ai uses a multi-tenant architecture where:
 1. **Marketing site** (`openpeople.ai`, `www.openpeople.ai`) - Public landing pages
 2. **Tenant sites** (`{slug}.openpeople.ai` or custom domains) - Individual storefronts
 3. **Super admin** (`app.openpeople.ai`) - Platform management
+4. **Internal tenant** (`mars.openpeople.ai`) - Open People's own workspace
 
 Domain routing is handled in middleware, with tenant resolution based on:
 - Custom domain lookup (highest priority)
 - Subdomain extraction
 - Default tenant fallback
+
+### Tenant Admin
+
+Each tenant has access to a full workspace at `/admin` with feature-gated modules:
+- Dashboard with stats and quick actions
+- All enabled product add-ons
+- Personal tools (vault, notes, AI chat, knowledge, workflows)
+
+Access is controlled by user role (`owner`, `admin`) and tenant feature flags.
 
 ## Product Add-ons
 
