@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+    }
+    
+    .header {
+      padding: 16px;
+      border-bottom: 1px solid #262626;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: #c8ff00;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo svg {
+      width: 18px;
+      height: 18px;
+      color: #0a0a0a;
+    }
+    
+    .title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .subtitle {
+      font-size: 11px;
+      color: #737373;
+    }
+    
+    .content {
+      padding: 16px;
+    }
+    
+    .dropzone {
+      border: 2px dashed #404040;
+      border-radius: 12px;
+      padding: 32px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .dropzone:hover, .dropzone.dragover {
+      border-color: #c8ff00;
+      background: rgba(200, 255, 0, 0.05);
+    }
+    
+    .dropzone-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background: #171717;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .dropzone-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #737373;
+    }
+    
+    .dropzone-text {
+      font-size: 13px;
+      color: #a3a3a3;
+      margin-bottom: 4px;
+    }
+    
+    .dropzone-hint {
+      font-size: 11px;
+      color: #525252;
+    }
+    
+    .upload-input {
+      display: none;
+    }
+    
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: none;
+    }
+    
+    .status.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+    
+    .status.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    .status.loading {
+      display: block;
+      background: rgba(200, 255, 0, 0.05);
+      border: 1px solid rgba(200, 255, 0, 0.1);
+      color: #c8ff00;
+    }
+    
+    .footer {
+      padding: 12px 16px;
+      border-top: 1px solid #262626;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .config-status {
+      font-size: 11px;
+      color: #525252;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .config-status.configured {
+      color: #22c55e;
+    }
+    
+    .config-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    
+    .options-link {
+      font-size: 11px;
+      color: #c8ff00;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .options-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+      </svg>
+    </div>
+    <div>
+      <div class="title">Vault Upload</div>
+      <div class="subtitle">Encrypted file storage</div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+        </svg>
+      </div>
+      <div class="dropzone-text">Drop file or click to upload</div>
+      <div class="dropzone-hint">Files are encrypted before upload</div>
+    </div>
+    
+    <input type="file" id="fileInput" class="upload-input" />
+    
+    <div class="status" id="status"></div>
+  </div>
+  
+  <div class="footer">
+    <div class="config-status" id="configStatus">Not configured</div>
+    <a class="options-link" id="optionsLink">Settings</a>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

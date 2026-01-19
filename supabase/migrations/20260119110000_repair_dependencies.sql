@@ -68,6 +68,18 @@ create policy "Super admins can manage all profiles"
   on profiles for all
   using (public.is_super_admin());
 
+-- Allow users to create their own profile (for signup flow)
+drop policy if exists "Users can create own profile" on profiles;
+create policy "Users can create own profile"
+  on profiles for insert
+  with check (id = auth.uid());
+
+-- Allow service role to bypass RLS
+drop policy if exists "Service role bypass profiles" on profiles;
+create policy "Service role bypass profiles"
+  on profiles for all
+  using (auth.jwt() ->> 'role' = 'service_role');
+
 -- 4) Tenants RLS policies
 alter table public.tenants enable row level security;
 
@@ -83,6 +95,18 @@ drop policy if exists "Super admins can manage tenants" on tenants;
 create policy "Super admins can manage tenants"
   on tenants for all
   using (public.is_super_admin());
+
+-- Allow authenticated users to create tenants (for signup flow)
+drop policy if exists "Authenticated users can create tenants" on tenants;
+create policy "Authenticated users can create tenants"
+  on tenants for insert
+  with check (auth.uid() is not null);
+
+-- Allow service role to bypass RLS (for admin operations)
+drop policy if exists "Service role bypass" on tenants;
+create policy "Service role bypass"
+  on tenants for all
+  using (auth.jwt() ->> 'role' = 'service_role');
 
 -- 5) Tenant domains RLS policies (if table exists)
 do $$
@@ -146,6 +170,9 @@ begin
 end $$;
 
 -- 9) Ensure tenants exist with short slugs (709, swl)
+-- Temporarily disable RLS on tenants for seeding
+alter table tenants disable row level security;
+
 -- Update existing slugs if they exist
 update tenants set slug = '709' where slug = '709exclusive';
 update tenants set slug = 'swl' where slug = 'snowwhitlaundry';
@@ -175,3 +202,6 @@ values (
   )
 )
 on conflict (slug) do update set status = 'active', updated_at = now();
+
+-- Re-enable RLS on tenants
+alter table tenants enable row level security;

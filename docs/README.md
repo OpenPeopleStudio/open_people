@@ -34,15 +34,16 @@ This documentation is organized into several key sections to help you understand
 
 ### 🛠️ Development Resources
 - **[Contributing Guidelines](./development/contributing.md)** - How to contribute to the platform
+- **[Testing Strategy](./development/testing.md)** - Testing approaches and guidelines (unit, integration, E2E)
 - **[Code Standards](./development/standards.md)** - Coding conventions and best practices
-- **[Testing Strategy](./development/testing.md)** - Testing approaches and guidelines
 - **[CI/CD Pipeline](./development/cicd.md)** - Build, test, and deployment automation
 
 ### 🚢 Deployment & Operations
+- **[Deployment Overview](./deployment/overview.md)** - Production deployment guide
 - **[Infrastructure](./deployment/infrastructure.md)** - Infrastructure as code and cloud setup
 - **[Monitoring](./deployment/monitoring.md)** - Production monitoring and alerting
 - **[Backup & Recovery](./deployment/backup.md)** - Data backup and disaster recovery
-- **[Scaling](./deployment/scaling.md)** - Performance optimization and scaling strategies
+- **[Scaling & Performance](./deployment/scaling.md)** - Performance optimization and scaling strategies
 
 ### 🔒 Security & Compliance
 - **[Security Overview](./security/overview.md)** - Security principles and practices
@@ -53,27 +54,27 @@ This documentation is organized into several key sections to help you understand
 ### ❓ Support & Troubleshooting
 - **[FAQ](./support/faq.md)** - Frequently asked questions
 - **[Troubleshooting](./support/troubleshooting.md)** - Common issues and solutions
-- **[Support](./support/support.md)** - Getting help and support channels
+- **[Getting Help](./support/support.md)** - Support channels and resources
 
 ## 🎯 Development Priority
 
 Based on the current platform state, here are the key documentation priorities:
 
-### **Phase 1 - Foundation** (Immediate Priority)
+### **Phase 1 - Foundation** ✅ Complete
 - ✅ [Feature Specifications](./features/README.md) - Core feature documentation
-- 🔄 **API Documentation** - REST API endpoints and SDK usage
-- 🔄 **Development Setup** - Local development and contribution guidelines
-- 🔄 **Architecture Documentation** - System design and data flows
+- ✅ [API Documentation](./api/overview.md) - REST API endpoints and SDK usage
+- ✅ [Development Setup](./development/setup.md) - Local development and contribution guidelines
+- ✅ [Architecture Documentation](./architecture/overview.md) - System design and data flows
 
-### **Phase 2 - Operations** (High Priority)
-- 🔄 **Deployment Guide** - Production deployment procedures
-- 🔄 **Security Documentation** - Security practices and compliance
-- 🔄 **Monitoring Setup** - Production monitoring and alerting
+### **Phase 2 - Operations** ✅ Complete
+- ✅ [Deployment Guide](./deployment/overview.md) - Production deployment procedures
+- ✅ [Security Documentation](./security/overview.md) - Security practices and compliance
+- ✅ [Monitoring Setup](./deployment/monitoring.md) - Production monitoring and alerting
 
-### **Phase 3 - Advanced** (Medium Priority)
-- 🔄 **Testing Documentation** - Testing strategies and automation
-- 🔄 **Troubleshooting Guide** - Common issues and debugging
-- 🔄 **Performance Optimization** - Scaling and optimization guides
+### **Phase 3 - Advanced** ✅ Complete
+- ✅ [Testing Documentation](./development/testing.md) - Testing strategies and automation
+- ✅ [Troubleshooting Guide](./support/troubleshooting.md) - Common issues and debugging
+- ✅ [Performance Optimization](./deployment/scaling.md) - Scaling and optimization guides
 
 ## 📊 Current Status
 
@@ -81,13 +82,13 @@ Based on the current platform state, here are the key documentation priorities:
 |-------------------|--------|----------|
 | Feature Specifications | ✅ Complete | 25+ detailed feature specs |
 | Platform Overview | ✅ Complete | Main README with tech stack |
-| API Documentation | 🚧 In Progress | Core endpoints documented |
-| Development Setup | 🚧 In Progress | Basic setup documented |
-| Architecture Docs | 📋 Planned | System design diagrams needed |
-| Security & Compliance | 📋 Planned | Framework established |
-| Deployment & Ops | 📋 Planned | Vercel/Supabase deployment |
-| Testing Strategy | 📋 Planned | Unit/integration testing |
-| Troubleshooting | 📋 Planned | FAQ and common issues |
+| API Documentation | ✅ Complete | Core endpoints, auth, governance |
+| Development Setup | ✅ Complete | Full setup and contributing guides |
+| Architecture Docs | ✅ Complete | System design, database, multi-tenancy |
+| Security & Compliance | ✅ Complete | Security, compliance, privacy |
+| Deployment & Ops | ✅ Complete | Deployment, infra, monitoring, backup, scaling |
+| Testing Strategy | ✅ Complete | Unit, integration, E2E, performance testing |
+| Troubleshooting | ✅ Complete | FAQ and troubleshooting guide |
 
 ## 🤝 Contributing to Documentation
 

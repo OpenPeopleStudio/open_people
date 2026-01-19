@@ -37,15 +37,32 @@ export default function LoginPage() {
       }
 
       if (data.user) {
-        // Fetch user's tenant to redirect appropriately
+        // Fetch user's profile to redirect appropriately
         const { data: profile } = await supabase
-          .from("709_profiles")
-          .select("tenant_id")
+          .from("profiles")
+          .select("tenant_id, role")
           .eq("id", data.user.id)
           .single();
 
+        const ROOT_DOMAIN =
+          process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai";
+        const SUPER_ADMIN_DOMAIN =
+          process.env.NEXT_PUBLIC_SUPER_ADMIN_DOMAIN || `app.${ROOT_DOMAIN}`;
+        const protocol =
+          process.env.NODE_ENV === "production" ? "https" : "http";
+
+        // Super admin (tenant_id = null) -> redirect to app.openpeople.ai
+        if (profile?.role === "super_admin" || !profile?.tenant_id) {
+          const adminDomain =
+            ROOT_DOMAIN === "localhost"
+              ? "app.localhost:3000"
+              : SUPER_ADMIN_DOMAIN;
+          window.location.href = `${protocol}://${adminDomain}`;
+          return;
+        }
+
+        // Regular user with tenant -> redirect to tenant subdomain
         if (profile?.tenant_id) {
-          // Fetch tenant slug
           const { data: tenant } = await supabase
             .from("tenants")
             .select("slug")
@@ -53,10 +70,6 @@ export default function LoginPage() {
             .single();
 
           if (tenant?.slug) {
-            const ROOT_DOMAIN =
-              process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai";
-            const protocol =
-              process.env.NODE_ENV === "production" ? "https" : "http";
             const tenantDomain =
               ROOT_DOMAIN === "localhost"
                 ? `${tenant.slug}.localhost:3000`
@@ -67,7 +80,7 @@ export default function LoginPage() {
           }
         }
         
-        // No tenant found - redirect to signup
+        // No profile found - redirect to signup
         router.push("/signup");
       }
     } catch (err) {
