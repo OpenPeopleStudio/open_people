@@ -46,6 +46,7 @@ async function seedSuperAdmin() {
   const email = 'tom@openpeople.ai';
   const password = 'TempPass123!'; // This should be changed after first login
   const fullName = 'Tom';
+  const superAdminRole = 'super_admin';
 
   try {
     console.log(`🌱 Seeding super admin user: ${email}`);
@@ -92,9 +93,10 @@ async function seedSuperAdmin() {
       const { error: updateError } = await supabase
         .from('709_profiles')
         .update({
-          role: 'owner',
+          role: superAdminRole,
           full_name: fullName,
           updated_at: new Date().toISOString(),
+          tenant_id: null, // Super admin is global
         })
         .eq('id', userId);
 
@@ -110,8 +112,9 @@ async function seedSuperAdmin() {
         .from('709_profiles')
         .insert({
           id: userId,
-          role: 'owner',
+          role: superAdminRole,
           full_name: fullName,
+          tenant_id: null, // Super admin is global
         });
 
       if (profileError) {

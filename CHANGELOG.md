@@ -1,0 +1,180 @@
+# Changelog
+
+All notable changes to OpenPeople.ai will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- Initial public release preparation
+- Multi-tenant SaaS platform foundation
+- AI alignment and governance features
+- Comprehensive documentation scaffolding
+- Development setup and contribution guidelines
+
+### Changed
+- Migrated to Next.js 16 App Router
+- Updated Supabase integration patterns
+- Enhanced TypeScript coverage across codebase
+
+### Fixed
+- Various bug fixes and performance improvements
+
+## [0.1.0] - 2026-01-18
+
+### Added
+- **Core Platform Features**
+  - Multi-tenant architecture with isolated data
+  - Super admin console for platform management
+  - Self-service tenant signup and onboarding
+  - Custom domain support for white-labeling
+
+- **Product Add-ons**
+  - **Cloud Storage**: Zero-egress file storage via Cloudflare R2
+  - **Email Service**: Transactional email via Resend with templates
+  - **Experiments**: A/B testing and feature flags framework
+  - **Notifications**: SMS and in-app notifications via Twilio
+
+- **AI Governance Foundation**
+  - AI model registry system
+  - Basic audit logging framework
+  - Tenant and user management
+  - API key management
+
+- **Technical Infrastructure**
+  - Next.js 16 with App Router
+  - Supabase for database and real-time features
+  - Tailwind CSS for styling
+  - Comprehensive TypeScript coverage
+  - Vercel deployment configuration
+
+- **Documentation**
+  - Complete feature specifications in `/docs/features/`
+  - API documentation scaffolding
+  - Development setup guides
+  - Contribution guidelines
+
+### Changed
+- Initial platform architecture established
+- Database schema designed for multi-tenancy
+- Authentication flow implemented
+
+### Deprecated
+- N/A (initial release)
+
+### Removed
+- N/A (initial release)
+
+### Fixed
+- N/A (initial release)
+
+### Security
+- Basic authentication and authorization implemented
+- Multi-tenant data isolation enforced
+- API key security measures in place
+
+## [0.0.1] - 2025-12-01
+
+### Added
+- Project initialization
+- Basic Next.js setup with TypeScript
+- Supabase project configuration
+- Initial directory structure
+- Development environment setup
+
+### Changed
+- Repository created and configured
+
+---
+
+## Version Numbering
+
+OpenPeople.ai follows [Semantic Versioning](https://semver.org/):
+
+- **MAJOR** version for incompatible API changes
+- **MINOR** version for backwards-compatible functionality additions
+- **PATCH** version for backwards-compatible bug fixes
+
+## Release Types
+
+- **Major Releases**: Significant new features, breaking changes
+- **Minor Releases**: New features, enhancements (backwards compatible)
+- **Patch Releases**: Bug fixes, security updates, documentation
+- **Pre-releases**: Alpha, beta, release candidates for testing
+
+## Release Cadence
+
+- **Major Releases**: Quarterly (Q1, Q4)
+- **Minor Releases**: Monthly
+- **Patch Releases**: As needed (weekly/bi-weekly)
+- **Pre-releases**: As features are ready
+
+## Release Process
+
+### Pre-release Checklist
+- [ ] All tests passing (unit, integration, e2e)
+- [ ] Code review completed
+- [ ] Security audit passed
+- [ ] Documentation updated
+- [ ] Migration guides written (for breaking changes)
+- [ ] Performance benchmarks met
+- [ ] Accessibility compliance verified
+
+### Release Steps
+1. **Branch Creation**: Create release branch from `main`
+2. **Version Bump**: Update version in `package.json`
+3. **Changelog Update**: Document all changes since last release
+4. **Testing**: Run full test suite and manual QA
+5. **Tag Creation**: Create Git tag with version number
+6. **Deployment**: Deploy to staging environment
+7. **Final Verification**: Test critical paths in staging
+8. **Production Deployment**: Merge to `main` and deploy
+9. **Announcement**: Update release notes and notify stakeholders
+
+## Upcoming Releases
+
+### v0.2.0 (Target: February 2026)
+- AI audit logging implementation
+- Content moderation pipeline
+- Basic AI model registry UI
+- Enhanced tenant management
+
+### v0.3.0 (Target: March 2026)
+- Safety and compliance features
+- Bias detection monitoring
+- PII detection and redaction
+- Human-in-the-loop workflows
+
+### v0.4.0 (Target: April 2026)
+- Advanced AI governance features
+- Performance monitoring dashboards
+- Cost analytics and reporting
+- Integration APIs
+
+### v1.0.0 (Target: Q2 2026)
+- Production-ready AI alignment platform
+- Complete feature set implementation
+- Enterprise security and compliance
+- Multi-cloud deployment support
+
+## Support Policy
+
+- **Current Version**: Full support and security updates
+- **Previous Version**: Security updates only (3 months)
+- **Older Versions**: No support (upgrade recommended)
+
+## Breaking Changes Policy
+
+Breaking changes will be:
+- Clearly documented in release notes
+- Announced 30 days in advance for major releases
+- Accompanied by migration guides
+- Tested for backwards compatibility where possible
+
+---
+
+*This changelog is maintained by the OpenPeople.ai team. For the latest updates, see [GitHub Releases](https://github.com/OpenPeopleStudio/open_people/releases).*
+
+*Last updated: January 18, 2026*

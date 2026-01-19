@@ -34,16 +34,17 @@ BEGIN
     -- Update existing profile
     UPDATE "709_profiles"
     SET
-      role = 'owner',
+      role = 'super_admin',
       full_name = COALESCE(full_name, 'Tom'),
+      tenant_id = NULL, -- super admin is global
       updated_at = NOW()
     WHERE id = user_id;
 
     RAISE NOTICE 'Updated tom@openpeople.ai to super admin role';
   ELSE
     -- Create new profile
-    INSERT INTO "709_profiles" (id, role, full_name)
-    VALUES (user_id, 'owner', 'Tom');
+    INSERT INTO "709_profiles" (id, role, full_name, tenant_id)
+    VALUES (user_id, 'super_admin', 'Tom', NULL);
 
     RAISE NOTICE 'Created super admin profile for tom@openpeople.ai';
   END IF;
