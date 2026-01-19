@@ -1,0 +1,51 @@
+{
+  "name": "709exclusive",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "smoke:checkout": "node scripts/smoke/checkout-reservation.mjs",
+    "migrate:privacy": "supabase db push --include-all",
+    "migrate:privacy:local": "supabase db reset",
+    "verify:deployment": "bash scripts/verify-deployment.sh",
+    "audit:tenant-isolation": "npx tsx scripts/audit-tenant-isolation.ts",
+    "db:types": "supabase gen types typescript --local > types/supabase.ts"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.1",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.90.1",
+    "@types/stripe": "^8.0.416",
+    "dotenv": "^17.2.3",
+    "html5-qrcode": "^2.3.8",
+    "leaflet": "^1.9.4",
+    "next": "16.1.1",
+    "octokit": "^5.0.5",
+    "openai": "^6.16.0",
+    "postmark": "^4.0.5",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-leaflet": "^5.0.0",
+    "react-markdown": "^10.1.0",
+    "resend": "^6.7.0",
+    "stripe": "^20.1.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "sneaks-api": "^1.2.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

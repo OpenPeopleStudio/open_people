@@ -1,0 +1,17 @@
+{
+  "name": "709 Support",
+  "short_name": "Support",
+  "description": "Customer support for 709 Exclusive",
+  "start_url": "/account",
+  "display": "standalone",
+  "background_color": "#0E0E0E",
+  "theme_color": "#0E0E0E",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

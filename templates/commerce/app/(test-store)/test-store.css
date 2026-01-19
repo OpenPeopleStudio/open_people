@@ -1,0 +1,73 @@
+/* ========================================
+   TEST STORE - LIGHT MODE MINIMAL THEME
+   Clean white background, minimal grid
+   ======================================== */
+
+.light-mode {
+  /* Override dark mode with light mode colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f4;
+  --bg-elevated: #ffffff;
+  
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #9ca3af;
+  
+  --border-primary: rgba(0, 0, 0, 0.08);
+  --border-secondary: rgba(0, 0, 0, 0.12);
+  --border-glow: rgba(0, 0, 0, 0.2);
+  
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  
+  /* Neutral accent for light mode */
+  --accent: #374151;
+  --accent-hover: #1f2937;
+}
+
+.light-mode body {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+/* Override form styles for light mode */
+.light-mode input,
+.light-mode select,
+.light-mode textarea {
+  background: #f8f9fa;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a1a1a;
+}
+
+.light-mode input::placeholder,
+.light-mode textarea::placeholder {
+  color: #9ca3af;
+}
+
+.light-mode input:focus,
+.light-mode select:focus,
+.light-mode textarea:focus {
+  border-color: #374151;
+  box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+  background: #ffffff;
+}
+
+/* Override scrollbar for light mode */
+.light-mode ::-webkit-scrollbar-track {
+  background: #f1f3f4;
+}
+
+.light-mode ::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.light-mode ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Override selection for light mode */
+.light-mode ::selection {
+  background: #374151;
+  color: #fff;
+}

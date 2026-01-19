@@ -19,6 +19,89 @@ export type TenantFeatureFlags = {
   ai_analytics?: boolean;
 };
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   White-label Configuration Types
+   Extended settings for multi-tenant commerce customization
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+export type TenantContact = {
+  email?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  region?: string;
+  country?: string;
+};
+
+export type TenantSocial = {
+  instagram?: string;
+  twitter?: string;
+  tiktok?: string;
+  facebook?: string;
+  youtube?: string;
+};
+
+export type TenantSearch = {
+  placeholder?: string;
+  popular_terms?: string[];
+  featured_keywords?: string[];
+};
+
+export type TenantLegal = {
+  company_name?: string;
+  privacy_url?: string;
+  terms_url?: string;
+  copyright_text?: string;
+};
+
+export type TenantEmailConfig = {
+  from_name?: string;
+  from_email?: string;
+  support_email?: string;
+  orders_email?: string;
+  reply_to?: string;
+};
+
+export type TenantRegional = {
+  ship_from_city?: string;
+  ship_from_region?: string;
+  ship_from_country?: string;
+  ship_from_coordinates?: [number, number];
+  local_delivery_postal_prefixes?: string[];
+  phone_country_code?: string;
+  timezone?: string;
+};
+
+export type TenantStorefront = {
+  product_term_singular?: string;
+  product_term_plural?: string;
+  brand_term?: string;
+  category_term?: string;
+};
+
+export type TenantPWA = {
+  app_name?: string;
+  app_short_name?: string;
+  app_description?: string;
+  theme_color?: string;
+  background_color?: string;
+};
+
+export type TenantPolicyPage = {
+  enabled?: boolean;
+  title?: string;
+  content?: string;
+  last_updated?: string;
+};
+
+export type TenantPolicies = {
+  shipping?: TenantPolicyPage;
+  returns?: TenantPolicyPage;
+  authenticity?: TenantPolicyPage;
+  privacy?: TenantPolicyPage;
+  terms?: TenantPolicyPage;
+};
+
 export type TenantThemeColors = {
   bg_primary?: string;
   bg_secondary?: string;
@@ -113,6 +196,17 @@ export type TenantSettings = {
   features?: TenantFeatureFlags;
   integrations?: TenantIntegrations;
   commerce?: TenantCommerce;
+  // White-label customization
+  contact?: TenantContact;
+  social?: TenantSocial;
+  search?: TenantSearch;
+  legal?: TenantLegal;
+  // Advanced white-label
+  email?: TenantEmailConfig;
+  regional?: TenantRegional;
+  storefront?: TenantStorefront;
+  pwa?: TenantPWA;
+  policies?: TenantPolicies;
 };
 
 export type TenantContextValue = {

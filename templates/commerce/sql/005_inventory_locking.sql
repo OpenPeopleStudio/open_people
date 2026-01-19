@@ -1,0 +1,3 @@
+-- This column is already added in 004_inventory_locking.sql
+-- alter table product_variants
+-- add column reserved integer default 0;

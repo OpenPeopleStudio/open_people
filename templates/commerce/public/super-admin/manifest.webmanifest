@@ -1,0 +1,17 @@
+{
+  "name": "709 Exclusive Super Admin",
+  "short_name": "Super Admin",
+  "description": "Super admin dashboard for 709 Exclusive platform",
+  "start_url": "/super-admin",
+  "display": "standalone",
+  "background_color": "#0E0E0E",
+  "theme_color": "#0E0E0E",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

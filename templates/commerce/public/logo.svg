@@ -1,0 +1,47 @@
+<svg width="200" height="60" viewBox="0 0 600 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Lock/Location Pin Icon -->
+  <g transform="translate(0, 10)">
+    <!-- Outer location pin shape in purple gradient -->
+    <path d="M 80 20 C 55 20 35 40 35 65 C 35 90 80 140 80 140 C 80 140 125 90 125 65 C 125 40 105 20 80 20 Z" fill="url(#gradient1)" stroke="white" stroke-width="8"/>
+    
+    <!-- Lock shackle (top arc) -->
+    <path d="M 60 60 C 60 50 68 42 80 42 C 92 42 100 50 100 60 L 100 70 L 60 70 Z" fill="none" stroke="white" stroke-width="7" stroke-linecap="round"/>
+    
+    <!-- Lock body -->
+    <rect x="55" y="70" width="50" height="35" rx="5" fill="#0D0D0D" stroke="white" stroke-width="6"/>
+    <text x="80" y="93" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">709</text>
+  </g>
+  
+  <!-- Text: 709exclusive -->
+  <text x="150" y="100" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="url(#textGradient)">709exclusive</text>
+  
+  <!-- Icons below text: Cart, Card, Bitcoin -->
+  <g transform="translate(150, 120)">
+    <!-- Shopping Cart -->
+    <path d="M 10 10 L 15 10 L 20 30 L 50 30 L 55 15 L 25 15" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="25" cy="38" r="3" fill="white"/>
+    <circle cx="45" cy="38" r="3" fill="white"/>
+    
+    <!-- Credit Card -->
+    <rect x="80" y="10" width="40" height="28" rx="4" fill="none" stroke="white" stroke-width="3"/>
+    <line x1="80" y1="18" x2="120" y2="18" stroke="white" stroke-width="3"/>
+    <line x1="85" y1="26" x2="100" y2="26" stroke="white" stroke-width="2"/>
+    
+    <!-- Bitcoin -->
+    <circle cx="160" cy="24" r="16" fill="none" stroke="white" stroke-width="3"/>
+    <path d="M 155 12 L 155 36 M 165 12 L 165 36" stroke="white" stroke-width="2"/>
+    <path d="M 152 18 L 162 18 C 165 18 167 20 167 23 C 167 26 165 28 162 28 L 152 28 L 152 18 M 152 28 L 164 28 C 167 28 169 30 169 33 C 169 36 167 38 164 38 L 152 38" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9D7FDB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7B5FBA;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9D7FDB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B89FE8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>
