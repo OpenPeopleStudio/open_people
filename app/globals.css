@@ -38,8 +38,8 @@
   --glow-cyan: rgba(255, 140, 66, 0.3);
 
   /* Typography */
-  --font-display: "Instrument Serif", Georgia, serif;
-  --font-body: "Geist", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "Geist Mono", "SF Mono", monospace;
 }
 
