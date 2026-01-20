@@ -9,6 +9,9 @@ export interface AIConversation {
   title: string | null;
   slug: string | null;
   
+  // Project context - notes/facts created from chat attach to this project
+  project_id: string | null;
+  
   system_prompt: string | null;
   model: string;
   temperature: number;
@@ -29,6 +32,13 @@ export interface AIConversation {
   created_at: string;
   updated_at: string;
   last_message_at: string | null;
+  
+  // Joined data
+  project?: {
+    id: string;
+    name: string;
+    color: string | null;
+  };
 }
 
 export interface AIMessage {
@@ -139,6 +149,7 @@ export interface AISavedPrompt {
 
 export interface CreateConversationRequest {
   title?: string;
+  project_id?: string;
   system_prompt?: string;
   model?: string;
   temperature?: number;

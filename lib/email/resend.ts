@@ -11,7 +11,7 @@ import type {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
-const DEFAULT_FROM_EMAIL = process.env.DEFAULT_FROM_EMAIL || "noreply@mail.openpeople.ai";
+const DEFAULT_FROM_EMAIL = process.env.DEFAULT_FROM_EMAIL || "noreply@openpeople.ai";
 const DEFAULT_FROM_NAME = process.env.DEFAULT_FROM_NAME || "OpenPeople";
 
 // Create Resend client
@@ -43,12 +43,12 @@ export function getDefaultSender(
   if (customDomain) {
     return `${tenantSlug}@${customDomain}`;
   }
-  return `${tenantSlug}@mail.openpeople.ai`;
+  return `${tenantSlug}@openpeople.ai`;
 }
 
 // Send an email
 export async function sendEmail(
-  tenantId: string,
+  tenantId: string | null,
   tenantSlug: string,
   request: SendEmailRequest,
   template?: EmailTemplate | null,
@@ -134,7 +134,7 @@ export async function sendEmail(
 
 // Send a batch of emails
 export async function sendBatchEmails(
-  tenantId: string,
+  tenantId: string | null,
   tenantSlug: string,
   requests: SendEmailRequest[],
   customDomain?: string
@@ -190,17 +190,36 @@ export async function verifyDomain(domain: string): Promise<{
       };
     }
 
-    // Extract DNS records from response
-    const dnsRecords = data?.records?.map((record) => ({
-      type: record.type,
-      name: record.name,
-      value: record.value,
-    })) || [];
+    // Extract DNS records from response with purpose mapping
+    const dnsRecords = data?.records?.map((record) => {
+      // Map Resend record names to purposes
+      let purpose = "verification";
+      const name = record.name.toLowerCase();
+      if (name.includes("_domainkey")) {
+        purpose = "dkim";
+      } else if (name.includes("_dmarc")) {
+        purpose = "verification";
+      } else if (record.type === "MX") {
+        purpose = "mx";
+      } else if (record.type === "TXT" && record.value?.includes("spf")) {
+        purpose = "spf";
+      } else if (name.includes("bounce") || name.includes("mail")) {
+        purpose = "return-path";
+      }
+
+      return {
+        type: record.type,
+        name: record.name,
+        value: record.value,
+        priority: record.priority,
+        purpose,
+      };
+    }) || [];
 
     return {
       success: true,
       domainId: data?.id,
-      dnsRecords,
+      dnsRecords: dnsRecords,
     };
   } catch (error) {
     console.error("Verify domain error:", error);

@@ -985,7 +985,6 @@ jobs:
 
 - [Development Setup](./setup.md)
 - [Contributing Guidelines](./contributing.md)
-- [CI/CD Pipeline](./cicd.md)
 
 ---
 

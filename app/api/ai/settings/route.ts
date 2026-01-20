@@ -19,11 +19,13 @@ export async function GET(request: NextRequest) {
     }
     
     // Get user's AI settings from their profile or a dedicated table
-    const { data: settings } = await supabase
+    const { data: settings, error: settingsError } = await supabase
       .from("user_ai_settings")
       .select("*")
       .eq("user_id", user.id)
       .single();
+    
+    console.log("AI settings fetch:", { found: !!settings, error: settingsError?.message, code: settingsError?.code });
     
     if (settings) {
       return NextResponse.json({ settings: settings.settings as UserAISettings });

@@ -8,6 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
    DELETE /api/storage/files - Delete file(s)
    ═══════════════════════════════════════════════════════════════════════════ */
 
+// Platform storage tenant for super-admin users
+const PLATFORM_TENANT_ID = "00000000-0000-0000-0000-000000000001";
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
@@ -22,14 +25,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user's tenant
+    // Get user's tenant (super-admin uses platform tenant)
     const { data: profile } = await supabase
       .from("709_profiles")
-      .select("tenant_id")
+      .select("tenant_id, role")
       .eq("id", user.id)
       .single();
 
-    if (!profile?.tenant_id) {
+    // Use platform tenant for super-admin, otherwise use user's tenant
+    const tenantId = profile?.role === "super_admin" 
+      ? PLATFORM_TENANT_ID 
+      : profile?.tenant_id;
+
+    if (!tenantId) {
       return NextResponse.json({ error: "No tenant found" }, { status: 403 });
     }
 
@@ -44,7 +52,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from("storage_files")
       .select("*, bucket:storage_buckets(name)", { count: "exact" })
-      .eq("tenant_id", profile.tenant_id)
+      .eq("tenant_id", tenantId)
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
@@ -54,7 +62,7 @@ export async function GET(request: NextRequest) {
       const { data: bucket } = await supabase
         .from("storage_buckets")
         .select("id")
-        .eq("tenant_id", profile.tenant_id)
+        .eq("tenant_id", tenantId)
         .eq("name", bucketName)
         .single();
 
@@ -106,14 +114,19 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user's tenant
+    // Get user's tenant (super-admin uses platform tenant)
     const { data: profile } = await supabase
       .from("709_profiles")
-      .select("tenant_id")
+      .select("tenant_id, role")
       .eq("id", user.id)
       .single();
 
-    if (!profile?.tenant_id) {
+    // Use platform tenant for super-admin, otherwise use user's tenant
+    const tenantId = profile?.role === "super_admin" 
+      ? PLATFORM_TENANT_ID 
+      : profile?.tenant_id;
+
+    if (!tenantId) {
       return NextResponse.json({ error: "No tenant found" }, { status: 403 });
     }
 
@@ -132,7 +145,7 @@ export async function DELETE(request: NextRequest) {
     const { data: files, error: filesError } = await supabase
       .from("storage_files")
       .select("id, key")
-      .eq("tenant_id", profile.tenant_id)
+      .eq("tenant_id", tenantId)
       .in("id", fileIds)
       .is("deleted_at", null);
 

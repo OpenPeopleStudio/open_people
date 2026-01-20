@@ -1,272 +1,65 @@
 # OpenPeople.ai API Documentation
 
-This section provides comprehensive documentation for the OpenPeople.ai REST API, SDKs, and integration endpoints.
+This repo exposes its API via **Next.js App Router route handlers** under `app/api/**/route.ts`. These endpoints are primarily used by the web app itself (browser + server components), but can also be called by external clients.
 
-## 🎯 API Overview
+## 🌐 Base URL
 
-OpenPeople.ai provides a comprehensive REST API that enables programmatic access to all platform features, including multi-tenant management, AI governance, analytics, and third-party integrations.
+- **Development**: `http://localhost:3000/api`
+- **Production**: the same origin as the app (for example `https://{tenant}.openpeople.ai/api`)
 
-### Key Features
-- **RESTful Design** - Consistent, resource-based API endpoints
-- **Multi-Tenant Support** - Automatic tenant isolation and context
-- **Real-time Updates** - WebSocket support for live data
-- **Comprehensive SDKs** - Client libraries for major languages
-- **Webhook Integration** - Event-driven architecture support
+## 🔐 Authentication (how it works in this codebase)
 
-## 🔐 Authentication
+Most endpoints authenticate with **Supabase Auth** by calling `supabase.auth.getUser()` on the server.
 
-All API requests require authentication using Bearer tokens or API keys.
+### Browser / same-origin calls (recommended)
 
-### Authentication Methods
+If you’re calling endpoints from the app, authentication is typically carried via **Supabase session cookies** automatically.
 
-#### 1. Bearer Token (Recommended)
+### External clients
+
+If you’re calling from outside the app (curl, backend service), send a Supabase **access token**:
+
 ```http
-Authorization: Bearer your_jwt_token_here
+Authorization: Bearer <supabase_access_token>
 ```
 
-#### 2. API Key
-```http
-X-API-Key: your_api_key_here
-```
+The token can be obtained using the Supabase JS client or Supabase Auth API (depending on your integration).
 
-### Token Types
+## 📋 Response shapes
 
-- **User Tokens**: For authenticated user operations
-- **Service Tokens**: For server-to-server communication
-- **Tenant Tokens**: For tenant-specific operations
+There is **no single global response envelope** today. Common patterns you’ll see:
 
-### Obtaining Tokens
+- `{ error: "..." }` with status `4xx/5xx`
+- `{ success: true, ... }` on successful actions (not universal)
 
-```bash
-# User authentication
-curl -X POST https://api.openpeople.ai/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "user@example.com", "password": "password"}'
+When documenting/consuming an endpoint, rely on the endpoint’s doc (below) or the route handler in `app/api/.../route.ts`.
 
-# Service token generation
-curl -X POST https://api.openpeople.ai/auth/service-token \
-  -H "X-API-Key: your_master_key" \
-  -d '{"tenant_id": "tenant-123", "scopes": ["read", "write"]}'
-```
+## 🧭 API map
 
-## 🌐 Base URLs
+### Core
+- **[Authentication](./core/auth.md)** - Supabase Auth usage and how API routes authorize
+- **[Tenants](./core/tenants.md)** - Tenant listing (super-admin) and domain status checks
+- **[Onboarding](./core/onboarding.md)** - Tenant onboarding record read/update
+- **[Profile](./core/profile.md)** - Current user profile + tenant-scoped settings
 
-| Environment | Base URL |
-|-------------|----------|
-| Production | `https://api.openpeople.ai` |
-| Staging | `https://api-staging.openpeople.ai` |
-| Development | `http://localhost:3000/api` |
+### Features / add-ons
+- **[AI Governance](./features/ai-governance.md)** - AI governance endpoints implemented in this repo
+- **[AI Workers](./features/ai-workers.md)** - Chief of Staff weekly planning, budgets, and worker architecture
+- **[Chat](./features/chat.md)** - Conversations, messages, memories, and action routes
+- **[Email](./features/email.md)** - Email accounts, inbox, messages, templates, domains, sending
+- **[Notes](./features/notes.md)** - Notes, versions, templates, graph, and API export
+- **[Notifications](./features/notifications.md)** - Events, templates, delivery logs, in-app inbox
+- **[Ops Worker](./features/ops-worker.md)** - Decision → propose tasks → commit (human approval)
+- **[Storage](./features/storage.md)** - Buckets, files, presigned upload/download
+- **[Workflows](./features/workflows.md)** - Projects + tasks (your operating system)
+- **[API Keys](./features/api-keys.md)** - Encrypted API keys (create/list/test/reveal)
+- **[Vault](./features/vault.md)** - Encrypted vault (folders/files/unlock/AI analysis)
 
-## 📋 API Response Format
+## 🆘 Support
 
-All API responses follow a consistent JSON structure:
-
-```json
-{
-  "success": true,
-  "data": { /* response data */ },
-  "meta": {
-    "timestamp": "2026-01-18T10:30:00Z",
-    "request_id": "req-123456",
-    "version": "v1"
-  },
-  "pagination": { /* pagination info if applicable */ }
-}
-```
-
-### Error Response Format
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid request parameters",
-    "details": { /* specific error details */ }
-  },
-  "meta": {
-    "timestamp": "2026-01-18T10:30:00Z",
-    "request_id": "req-123456"
-  }
-}
-```
-
-## 🔄 Rate Limiting
-
-API requests are rate limited based on your plan tier:
-
-| Plan | Requests/Minute | Requests/Hour |
-|------|-----------------|----------------|
-| Free | 100 | 1,000 |
-| Starter | 1,000 | 10,000 |
-| Pro | 10,000 | 100,000 |
-| Enterprise | Unlimited | Unlimited |
-
-Rate limit headers are included in all responses:
-```
-X-RateLimit-Limit: 1000
-X-RateLimit-Remaining: 999
-X-RateLimit-Reset: 1640995200
-```
-
-## 📚 API Sections
-
-### Core Platform APIs
-- **[Authentication](./core/auth.md)** - User and service authentication
-- **[Tenants](./core/tenants.md)** - Multi-tenant management
-- **[Users](./core/users.md)** - User management and profiles
-
-### Feature APIs
-- **[AI Governance](./features/ai-governance.md)** - AI model registry and audit logs
-- **[Safety & Compliance](./features/safety.md)** - Content moderation and PII detection
-- **[Analytics](./features/analytics.md)** - Usage analytics and reporting
-- **[Experiments](./features/experiments.md)** - A/B testing and feature flags
-
-### Integration APIs
-- **[Webhooks](./integrations/webhooks.md)** - Event subscriptions and delivery
-- **[Storage](./integrations/storage.md)** - File upload and management
-- **[Email](./integrations/email.md)** - Email sending and templates
-- **[Notifications](./integrations/notifications.md)** - SMS and push notifications
-
-### Administrative APIs
-- **[Super Admin](./admin/overview.md)** - Platform administration
-- **[Billing](./admin/billing.md)** - Subscription and payment management
-- **[Analytics](./admin/analytics.md)** - Platform-wide analytics
-
-## 🔧 SDKs and Libraries
-
-### Official SDKs
-
-#### JavaScript/TypeScript
-```bash
-npm install @openpeople/sdk
-```
-
-```typescript
-import { OpenPeople } from '@openpeople/sdk';
-
-const client = new OpenPeople({
-  apiKey: 'your_api_key',
-  baseUrl: 'https://api.openpeople.ai'
-});
-
-// Authenticate user
-const user = await client.auth.login('user@example.com', 'password');
-
-// Access tenant data
-const tenants = await client.tenants.list();
-```
-
-#### Python
-```bash
-pip install openpeople-sdk
-```
-
-```python
-from openpeople import OpenPeople
-
-client = OpenPeople(api_key='your_api_key')
-
-# List AI models
-models = client.ai_models.list(tenant_id='tenant-123')
-```
-
-#### Go
-```bash
-go get github.com/openpeople/go-sdk
-```
-
-```go
-import "github.com/openpeople/go-sdk"
-
-client := openpeople.NewClient("your_api_key")
-
-// Get audit logs
-logs, err := client.AuditLogs.List(context.Background(), &openpeople.ListOptions{
-    TenantID: "tenant-123",
-})
-```
-
-### Community SDKs
-- **PHP**: [openpeople/php-sdk](https://github.com/openpeople/php-sdk)
-- **Ruby**: [openpeople/ruby-sdk](https://github.com/openpeople/ruby-sdk)
-- **Java**: [openpeople/java-sdk](https://github.com/openpeople/java-sdk)
-
-## 🔄 Real-time Updates
-
-Subscribe to real-time updates using WebSockets:
-
-```javascript
-import { OpenPeopleRealtime } from '@openpeople/sdk';
-
-const realtime = new OpenPeopleRealtime({
-  apiKey: 'your_api_key',
-  tenantId: 'tenant-123'
-});
-
-// Subscribe to audit events
-realtime.subscribe('audit_logs', (event) => {
-  console.log('New audit event:', event);
-});
-
-// Subscribe to AI model changes
-realtime.subscribe('ai_models', (event) => {
-  console.log('Model updated:', event);
-});
-```
-
-## 📊 API Analytics
-
-Track API usage and performance through the admin dashboard or programmatically:
-
-```typescript
-// Get API usage statistics
-const usage = await client.analytics.apiUsage({
-  tenantId: 'tenant-123',
-  period: '30d'
-});
-
-console.log(`Requests: ${usage.requests.total}`);
-console.log(`Errors: ${usage.requests.errors}`);
-```
-
-## 🆘 Error Codes
-
-Common API error codes and their meanings:
-
-| Code | HTTP Status | Description |
-|------|-------------|-------------|
-| `VALIDATION_ERROR` | 400 | Invalid request parameters |
-| `UNAUTHORIZED` | 401 | Authentication required |
-| `FORBIDDEN` | 403 | Insufficient permissions |
-| `NOT_FOUND` | 404 | Resource not found |
-| `RATE_LIMITED` | 429 | Rate limit exceeded |
-| `INTERNAL_ERROR` | 500 | Server error |
-
-## 📞 Support
-
-Need help with the API?
-
-- **📖 API Documentation**: This comprehensive guide
-- **💬 Developer Community**: [GitHub Discussions](../../discussions)
-- **🐛 Report Issues**: [GitHub Issues](../../issues) with `api` label
-- **📧 Direct Support**: [api-support@openpeople.ai](mailto:api-support@openpeople.ai)
-
-## 🔄 API Versioning
-
-API versioning follows semantic versioning:
-
-- **v1** (Current): Initial stable release
-- **Breaking Changes**: New major version
-- **Additions**: Minor version bump
-- **Bug Fixes**: Patch version bump
-
-Specify version in request headers:
-```
-Accept-Version: v1
-```
+- **Docs issues**: [GitHub Issues](../../issues) with `documentation`
+- **API issues**: [GitHub Issues](../../issues) with `api`
 
 ---
 
-**API Version**: v1.0.0
-**Last Updated**: January 18, 2026
+**Last Updated**: January 20, 2026

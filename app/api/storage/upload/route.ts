@@ -2,11 +2,15 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { getUploadUrl, getTenantFileKey } from "@/lib/storage/r2";
 import { STORAGE_PLANS, canUploadFile } from "@/types/storage";
 import { NextRequest, NextResponse } from "next/server";
+import { notifyStorageQuotaWarning } from "@/lib/notifications/events";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Storage Upload API
    POST /api/storage/upload - Get presigned URL for file upload
    ═══════════════════════════════════════════════════════════════════════════ */
+
+// Platform storage tenant for super-admin users
+const PLATFORM_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,18 +26,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user's tenant
+    // Get user's tenant (super-admin uses platform tenant)
     const { data: profile } = await supabase
       .from("709_profiles")
-      .select("tenant_id")
+      .select("tenant_id, role")
       .eq("id", user.id)
       .single();
 
-    if (!profile?.tenant_id) {
+    // Use platform tenant for super-admin, otherwise use user's tenant
+    const tenantId = profile?.role === "super_admin" 
+      ? PLATFORM_TENANT_ID 
+      : profile?.tenant_id;
+
+    if (!tenantId) {
       return NextResponse.json({ error: "No tenant found" }, { status: 403 });
     }
-
-    const tenantId = profile.tenant_id;
 
     // Parse request body
     const body = await request.json();
@@ -80,6 +87,14 @@ export async function POST(request: NextRequest) {
     const uploadCheck = canUploadFile(currentUsage, size, plan);
     if (!uploadCheck.allowed) {
       return NextResponse.json({ error: uploadCheck.reason }, { status: 403 });
+    }
+
+    // Check if user is approaching quota - send warning at 80% usage
+    const usagePercentage = Math.round(((currentUsage + size) / plan.storageLimit) * 100);
+    if (usagePercentage >= 80 && usagePercentage < 100) {
+      notifyStorageQuotaWarning(tenantId, currentUsage + size, plan.storageLimit).catch((err) => {
+        console.error("Failed to send storage quota warning notification:", err);
+      });
     }
 
     // Check if bucket exists, create if not

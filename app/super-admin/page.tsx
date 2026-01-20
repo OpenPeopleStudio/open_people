@@ -1,5 +1,6 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
 import Link from "next/link";
+import { DemoSeedButton } from "./DemoSeedButton";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Super Admin Dashboard
@@ -26,34 +27,140 @@ type RecentTenant = {
   } | null;
 };
 
-async function getDashboardStats(): Promise<DashboardStats> {
+const DEMO_STATS: DashboardStats = {
+  totalTenants: 42,
+  activeTenants: 31,
+  trialingTenants: 9,
+  totalUsers: 286,
+  monthlyRevenue: 12637,
+  aiApiCalls: 184_200,
+};
+
+const DEMO_TENANTS: RecentTenant[] = [
+  {
+    id: "demo-tenant-1",
+    name: "Acme Capital",
+    slug: "acme",
+    status: "active",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+    billing: { plan: "pro" },
+  },
+  {
+    id: "demo-tenant-2",
+    name: "Northwind Labs",
+    slug: "northwind",
+    status: "trialing",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).toISOString(),
+    billing: { plan: "starter" },
+  },
+  {
+    id: "demo-tenant-3",
+    name: "Helios Ops",
+    slug: "helios",
+    status: "active",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6).toISOString(),
+    billing: { plan: "enterprise" },
+  },
+  {
+    id: "demo-tenant-4",
+    name: "Juniper & Co",
+    slug: "juniper",
+    status: "active",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 8).toISOString(),
+    billing: { plan: "starter" },
+  },
+  {
+    id: "demo-tenant-5",
+    name: "Keystone Ventures",
+    slug: "keystone",
+    status: "trialing",
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
+    billing: { plan: "pro" },
+  },
+];
+
+const DEMO_ACTIVITY: { action: string; tenant: string; time: string; type: string }[] = [
+  {
+    action: "New tenant created",
+    tenant: "Acme Capital",
+    time: new Date(Date.now() - 1000 * 60 * 18).toISOString(),
+    type: "tenant",
+  },
+  {
+    action: "Domain acme.openpeople.ai verified",
+    tenant: "Acme Capital",
+    time: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+    type: "domain",
+  },
+  {
+    action: "New tenant created",
+    tenant: "Northwind Labs",
+    time: new Date(Date.now() - 1000 * 60 * 60 * 7).toISOString(),
+    type: "tenant",
+  },
+  {
+    action: "Domain northwind.openpeople.ai verified",
+    tenant: "Northwind Labs",
+    time: new Date(Date.now() - 1000 * 60 * 60 * 22).toISOString(),
+    type: "domain",
+  },
+  {
+    action: "New tenant created",
+    tenant: "Helios Ops",
+    time: new Date(Date.now() - 1000 * 60 * 60 * 30).toISOString(),
+    type: "tenant",
+  },
+];
+
+async function getDashboardStats(opts?: { demoMode?: boolean }): Promise<DashboardStats> {
+  if (opts?.demoMode) return DEMO_STATS;
   const supabase = await createSupabaseServer();
 
   // Get tenant counts
-  const { count: totalTenants } = await supabase
+  const { count: totalTenants, error: totalTenantsError } = await supabase
     .from("tenants")
     .select("*", { count: "exact", head: true });
+  if (totalTenantsError) {
+    console.error("Get tenants count error:", totalTenantsError);
+    return DEMO_STATS;
+  }
 
-  const { count: activeTenants } = await supabase
+  const { count: activeTenants, error: activeTenantsError } = await supabase
     .from("tenants")
     .select("*", { count: "exact", head: true })
     .eq("status", "active");
+  if (activeTenantsError) {
+    console.error("Get active tenants count error:", activeTenantsError);
+    return DEMO_STATS;
+  }
 
-  const { count: trialingTenants } = await supabase
+  const { count: trialingTenants, error: trialingTenantsError } = await supabase
     .from("tenants")
     .select("*", { count: "exact", head: true })
     .eq("status", "trialing");
+  if (trialingTenantsError) {
+    console.error("Get trialing tenants count error:", trialingTenantsError);
+    return DEMO_STATS;
+  }
 
   // Get total users
-  const { count: totalUsers } = await supabase
+  const { count: totalUsers, error: totalUsersError } = await supabase
     .from("709_profiles")
     .select("*", { count: "exact", head: true });
+  if (totalUsersError) {
+    console.error("Get users count error:", totalUsersError);
+    return DEMO_STATS;
+  }
 
   // Get monthly revenue from billing
-  const { data: billingData } = await supabase
+  const { data: billingData, error: billingError } = await supabase
     .from("tenant_billing")
     .select("plan")
     .in("plan", ["starter", "pro", "enterprise"]);
+  if (billingError) {
+    console.error("Get billing error:", billingError);
+    return DEMO_STATS;
+  }
 
   // Calculate revenue based on plans
   const monthlyRevenue = (billingData || []).reduce((total, billing) => {
@@ -68,10 +175,14 @@ async function getDashboardStats(): Promise<DashboardStats> {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  const { data: usageData } = await supabase
+  const { data: usageData, error: usageError } = await supabase
     .from("tenant_usage")
     .select("ai_api_calls")
     .gte("period_start", startOfMonth.toISOString().split("T")[0]);
+  if (usageError) {
+    console.error("Get usage error:", usageError);
+    return DEMO_STATS;
+  }
 
   const aiApiCalls = (usageData || []).reduce(
     (total, usage) => total + (usage.ai_api_calls || 0),
@@ -88,10 +199,11 @@ async function getDashboardStats(): Promise<DashboardStats> {
   };
 }
 
-async function getRecentTenants(): Promise<RecentTenant[]> {
+async function getRecentTenants(opts?: { demoMode?: boolean }): Promise<RecentTenant[]> {
+  if (opts?.demoMode) return DEMO_TENANTS;
   const supabase = await createSupabaseServer();
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tenants")
     .select(
       `
@@ -106,29 +218,43 @@ async function getRecentTenants(): Promise<RecentTenant[]> {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  if (error) {
+    console.error("Get recent tenants error:", error);
+    return DEMO_TENANTS;
+  }
+
   return (data || []).map((tenant) => ({
     ...tenant,
     billing: Array.isArray(tenant.billing) ? tenant.billing[0] : tenant.billing,
   }));
 }
 
-async function getRecentActivity() {
+async function getRecentActivity(opts?: { demoMode?: boolean }) {
+  if (opts?.demoMode) return DEMO_ACTIVITY;
   const supabase = await createSupabaseServer();
 
   // Get recent tenants for activity feed
-  const { data: recentTenants } = await supabase
+  const { data: recentTenants, error: recentTenantsError } = await supabase
     .from("tenants")
     .select("name, created_at, status")
     .order("created_at", { ascending: false })
     .limit(10);
+  if (recentTenantsError) {
+    console.error("Get recent activity tenants error:", recentTenantsError);
+    return DEMO_ACTIVITY;
+  }
 
   // Get recent domain verifications
-  const { data: recentDomains } = await supabase
+  const { data: recentDomains, error: recentDomainsError } = await supabase
     .from("tenant_domains")
     .select("domain, verified_at, tenant:tenants(name)")
     .not("verified_at", "is", null)
     .order("verified_at", { ascending: false })
     .limit(5);
+  if (recentDomainsError) {
+    console.error("Get recent domains error:", recentDomainsError);
+    return DEMO_ACTIVITY;
+  }
 
   // Combine and sort activities
   const activities: { action: string; tenant: string; time: string; type: string }[] = [];
@@ -183,11 +309,21 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-export default async function SuperAdminDashboard() {
+type PageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default async function SuperAdminDashboard({ searchParams }: PageProps) {
+  const demoParam = searchParams?.demo;
+  const demoMode =
+    demoParam === "1" ||
+    demoParam === "true" ||
+    (Array.isArray(demoParam) && (demoParam.includes("1") || demoParam.includes("true")));
+
   const [stats, recentTenants, recentActivity] = await Promise.all([
-    getDashboardStats(),
-    getRecentTenants(),
-    getRecentActivity(),
+    getDashboardStats({ demoMode }),
+    getRecentTenants({ demoMode }),
+    getRecentActivity({ demoMode }),
   ]);
 
   const statCards = [
@@ -225,12 +361,17 @@ export default async function SuperAdminDashboard() {
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
-          Dashboard
-        </h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">
-          Platform overview and quick stats
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+              Dashboard
+            </h1>
+            <p className="text-sm text-[var(--text-muted)] mt-1">
+              Platform overview and quick stats
+            </p>
+          </div>
+          <DemoSeedButton demoMode={demoMode} />
+        </div>
       </div>
 
       {/* Stats grid */}

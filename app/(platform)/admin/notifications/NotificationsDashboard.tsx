@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   NotificationPlan,
   NotificationTemplate,
@@ -31,6 +31,7 @@ export function NotificationsDashboard({
 }: Props) {
   const [templates, setTemplates] = useState(initialTemplates);
   const [activeTab, setActiveTab] = useState<"send" | "templates" | "logs">("send");
+  const [myUserId, setMyUserId] = useState<string | null>(null);
 
   // Send form state
   const [sendChannel, setSendChannel] = useState<NotificationChannel>("sms");
@@ -53,6 +54,17 @@ export function NotificationsDashboard({
     variables: [] as string[],
   });
   const [savingTemplate, setSavingTemplate] = useState(false);
+
+  useEffect(() => {
+    // Fetch current user id to support "Send to me" for in-app notifications.
+    fetch("/api/profile")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        const id = data?.profile?.user_id;
+        if (typeof id === "string" && id.length > 0) setMyUserId(id);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSendNotification = async () => {
     if (!sendRecipient) {
@@ -291,6 +303,20 @@ export function NotificationsDashboard({
               <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                 {sendChannel === "sms" ? "Phone Number" : "User ID"}
               </label>
+              {sendChannel === "in_app" && myUserId && (
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Tip: for demos you can send to yourself.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSendRecipient(myUserId)}
+                    className="text-xs text-[var(--electric-lime)] hover:underline"
+                  >
+                    Send to me
+                  </button>
+                </div>
+              )}
               <input
                 type={sendChannel === "sms" ? "tel" : "text"}
                 value={sendRecipient}

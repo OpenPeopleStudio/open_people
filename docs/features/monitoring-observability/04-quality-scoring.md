@@ -2,7 +2,7 @@
 
 > **Priority:** P1 - High  
 > **Category:** Monitoring & Observability  
-> **Status:** Planned
+> **Status:** Implemented
 
 ## Overview
 
@@ -471,3 +471,97 @@ GET    /api/ai/quality/dashboard          # Dashboard data
 - Automated quality optimization suggestions
 - Predictive quality scoring
 - Cross-tenant insights (anonymized)
+
+## Loop Closure: Auto-Slice Explorer & Regression Gates
+
+### Auto-Slice Explorer
+
+The auto-slice explorer automatically identifies clusters of low-quality outputs by grouping them across multiple dimensions:
+
+- **Prompt Version**: Quality regression in specific prompt versions
+- **Model**: Quality differences between model providers/versions
+- **Application**: App-specific quality issues
+- **Topic**: Quality drops in specific topic clusters
+
+**API Endpoints:**
+
+```
+GET /api/ai/quality/slices         # List low-quality clusters
+POST /api/ai/jobs/quality-slices   # Background job to compute slices
+```
+
+**Query Parameters:**
+- `min_low_quality_rate`: Filter slices by minimum low-quality rate (default: 0.1)
+- `min_sample_count`: Minimum samples for statistical significance (default: 10)
+- `window_start`, `window_end`: Time window for analysis
+
+**Response:**
+```json
+{
+  "slices": [
+    {
+      "slice_key": {
+        "application_id": "customer-support",
+        "model_name": "gpt-4",
+        "prompt_version": 3
+      },
+      "low_quality_rate": 0.25,
+      "avg_quality_score": 0.62,
+      "sample_count": 150,
+      "dimension_averages": {
+        "relevance": 0.58,
+        "coherence": 0.75,
+        "helpfulness": 0.55
+      }
+    }
+  ]
+}
+```
+
+### Regression Gates
+
+Regression gates enforce quality requirements before deployments:
+
+**API Endpoints:**
+
+```
+GET /api/ai/quality/gates          # List configured gates
+POST /api/ai/quality/gates         # Create a new gate
+POST /api/ai/quality/gates/evaluate # Evaluate gates for deployment
+```
+
+**Gate Configuration:**
+```json
+{
+  "name": "Production Quality Gate",
+  "scope_type": "global",
+  "requirements": {
+    "min_quality_score": 0.7,
+    "max_low_quality_rate": 0.1,
+    "min_sample_count": 100,
+    "benchmark_ids": ["uuid-1", "uuid-2"],
+    "min_benchmark_pass_rate": 0.95
+  },
+  "on_failure": "block"
+}
+```
+
+**Integration with Approval Workflows:**
+
+Gates integrate with the policy evaluator via `evaluateDeploymentGates()`:
+
+```typescript
+import { evaluateDeploymentGates } from "@/lib/policy/evaluator";
+
+const result = await evaluateDeploymentGates(tenantId, {
+  type: "prompt_deploy",
+  promptId: "prompt-uuid",
+  promptVersion: 4,
+  deployedBy: userId,
+});
+
+if (!result.canProceed) {
+  // Block deployment, show failure reasons
+  console.log(result.blockingGates);
+}
+```

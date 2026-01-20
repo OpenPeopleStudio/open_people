@@ -16,30 +16,52 @@ const IV_LENGTH = 12;
 const AUTH_TAG_LENGTH = 16;
 const ENCODING = "base64";
 
+export class ApiKeysEncryptionConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ApiKeysEncryptionConfigError";
+  }
+}
+
 // Master key from environment (should be 32 bytes / 256 bits)
 function getMasterKey(): Buffer {
-  const key = process.env.API_KEYS_ENCRYPTION_KEY;
-  
+  const raw =
+    process.env.API_KEYS_ENCRYPTION_KEY ??
+    // Allow sharing a single master key across multiple encrypted credential types.
+    process.env.EMAIL_ENCRYPTION_KEY ??
+    "";
+
+  const key = raw.trim().replace(/^['"]|['"]$/g, "");
+
   if (!key) {
-    throw new Error("API_KEYS_ENCRYPTION_KEY environment variable is not set");
+    throw new ApiKeysEncryptionConfigError(
+      "Server encryption is not configured. Set API_KEYS_ENCRYPTION_KEY (32 bytes; e.g. `openssl rand -base64 32`) and restart the server."
+    );
   }
-  
-  // If key is base64 encoded
-  if (key.length === 44) {
-    return Buffer.from(key, "base64");
-  }
-  
-  // If key is hex encoded
-  if (key.length === 64) {
+
+  // Hex encoded (64 hex chars => 32 bytes)
+  if (/^[0-9a-fA-F]{64}$/.test(key)) {
     return Buffer.from(key, "hex");
   }
-  
-  // If key is raw (32 bytes)
+
+  // Base64 encoded (should decode to 32 bytes)
+  if (/^[A-Za-z0-9+/]+={0,2}$/.test(key)) {
+    try {
+      const buf = Buffer.from(key, "base64");
+      if (buf.length === 32) return buf;
+    } catch {
+      // fall through to error below
+    }
+  }
+
+  // Raw string (32 characters)
   if (key.length === 32) {
     return Buffer.from(key);
   }
-  
-  throw new Error("API_KEYS_ENCRYPTION_KEY must be 32 bytes (base64, hex, or raw)");
+
+  throw new ApiKeysEncryptionConfigError(
+    "API_KEYS_ENCRYPTION_KEY must decode to 32 bytes (base64, hex, or 32-char raw)."
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

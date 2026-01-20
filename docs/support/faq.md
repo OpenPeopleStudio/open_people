@@ -361,7 +361,7 @@ Yes, common integrations include:
 - **GitLab CI**: API integration
 - **Jenkins**: REST API calls
 
-See our [Integration documentation](../api/integrations/) for examples.
+See our [API overview](../api/overview.md) for the current `/api/*` endpoints.
 
 ---
 

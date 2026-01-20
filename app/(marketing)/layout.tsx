@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OpenPeople.ai — AI-Powered Commerce Infrastructure",
+  title: "OpenPeople.ai — Human-centric AI for business",
   description:
-    "Transform your retail business with AI-powered inventory management, intelligent chat, and predictive analytics. The modern platform for ambitious commerce brands.",
+    "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage. Your data stays safe, useful, and yours.",
 };
 
 export default function MarketingLayout({

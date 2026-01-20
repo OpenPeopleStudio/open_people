@@ -256,7 +256,6 @@ For new features, please include:
 - Translate to other languages
 
 ### Writing New Documentation
-- Follow the [documentation template](../templates/README.md)
 - Use clear, concise language
 - Include practical examples
 - Keep information up-to-date

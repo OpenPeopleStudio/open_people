@@ -26,6 +26,7 @@ export type TenantFeatureFlags = {
   email?: boolean;
   notifications?: boolean;
   experiments?: boolean;
+  storage?: boolean;
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════

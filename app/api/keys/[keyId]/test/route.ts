@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { decryptApiKey } from "@/lib/api-keys/encryption";
+import { ApiKeysEncryptionConfigError, decryptApiKey } from "@/lib/api-keys/encryption";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    POST /api/keys/[keyId]/test
@@ -41,6 +41,12 @@ export async function POST(
         iv: key.encryption_iv,
       });
     } catch (decryptError) {
+      if (decryptError instanceof ApiKeysEncryptionConfigError) {
+        return NextResponse.json(
+          { error: decryptError.message, code: "API_KEYS_ENCRYPTION_NOT_CONFIGURED" },
+          { status: 503 }
+        );
+      }
       console.error("Failed to decrypt key:", decryptError);
       return NextResponse.json({ error: "Failed to decrypt key" }, { status: 500 });
     }

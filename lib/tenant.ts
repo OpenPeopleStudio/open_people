@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { cache } from "react";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { TENANT_OVERRIDE_HEADER } from "@/lib/supabase/middleware";
 import type { TenantContextValue, TenantSettings } from "@/types/tenant";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -273,9 +274,23 @@ type HeaderSource = Pick<Headers, "get">;
 
 /**
  * Get tenant from headers (for Server Components)
+ * 
+ * Resolution order:
+ * 1. x-tenant-override header (set by middleware from cookie during onboarding)
+ * 2. Host-based resolution (subdomain, custom domain, etc.)
  */
 export const getTenantFromHeaders = cache(
   async (headerStore: HeaderSource): Promise<TenantContextValue | null> => {
+    // Check for tenant override (used during onboarding before subdomain is ready)
+    const tenantOverride = headerStore.get(TENANT_OVERRIDE_HEADER);
+    if (tenantOverride) {
+      const overrideTenant = await fetchTenantBySlug(tenantOverride);
+      if (overrideTenant) {
+        return overrideTenant;
+      }
+    }
+
+    // Standard host-based resolution
     const host =
       headerStore.get("x-forwarded-host") ||
       headerStore.get("host") ||

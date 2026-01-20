@@ -34,6 +34,12 @@ interface MemoryContext {
   similarity: number;
 }
 
+interface ProjectFact {
+  id: string;
+  fact: string;
+  fact_type: string;
+}
+
 /**
  * Build context string from conversation settings
  */
@@ -44,6 +50,47 @@ export async function buildContext(
 ): Promise<ContextResult> {
   const sources: AIMessageSource[] = [];
   let context = "";
+  
+  // 0. Add project context if set
+  if (conversation.project_id) {
+    const { data: project } = await supabase
+      .from("projects")
+      .select("name, description")
+      .eq("id", conversation.project_id)
+      .single();
+    
+    if (project) {
+      context += `## Current Project: ${project.name}\n`;
+      if (project.description) {
+        context += `${project.description}\n`;
+      }
+      context += "\n";
+      
+      // Get project-related facts
+      const { data: projectFacts } = await supabase
+        .from("knowledge_facts")
+        .select("id, fact, fact_type")
+        .eq("subject_type", "project")
+        .eq("subject_name", project.name)
+        .eq("is_active", true)
+        .eq("is_current", true)
+        .limit(10);
+      
+      if (projectFacts?.length) {
+        context += "### Project Facts\n";
+        for (const fact of projectFacts as ProjectFact[]) {
+          context += `- [${fact.fact_type}] ${fact.fact}\n`;
+          sources.push({
+            type: "memory",
+            id: fact.id,
+            title: `Project fact: ${fact.fact_type}`,
+            excerpt: fact.fact.slice(0, 200),
+          });
+        }
+        context += "\n";
+      }
+    }
+  }
   
   // 1. Add notes context
   if (conversation.attached_notes?.length > 0) {

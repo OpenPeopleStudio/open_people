@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openpeople.ai/schemas/events/envelope.json",
+  "title": "EventEnvelope",
+  "description": "Standard envelope for all platform events",
+  "type": "object",
+  "required": ["id", "type", "version", "occurred_at", "source", "data"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique event identifier (UUID v7 recommended for time-ordering)"
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^[a-z]+\\.[a-z_]+\\.[a-z_]+$",
+      "description": "Canonical event type (e.g., 'ai.request.completed')"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version (semver format)"
+    },
+    "tenant_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Tenant scope (null for platform-wide events)"
+    },
+    "actor_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "User or service that caused this event"
+    },
+    "correlation_id": {
+      "type": ["string", "null"],
+      "description": "Request/trace correlation identifier"
+    },
+    "causation_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "ID of the event that caused this event"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the event occurred (ISO 8601)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Service/component that emitted this event"
+    },
+    "data": {
+      "type": "object",
+      "description": "Event-specific payload"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional additional metadata"
+    }
+  },
+  "additionalProperties": false
+}

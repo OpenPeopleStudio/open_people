@@ -2,7 +2,7 @@
 
 > **Priority:** P1 - High  
 > **Category:** Monitoring & Observability  
-> **Status:** Planned
+> **Status:** Implemented
 
 ## Overview
 
@@ -419,3 +419,79 @@ POST   /api/ai/costs/export               # Export cost data
 - Recommendation engine
 - Savings tracking
 - Advanced forecasting
+
+## Loop Closure: Cost-Per-Outcome & Change Correlation
+
+### Cost-Per-Outcome Analytics
+
+Standard cost metrics (cost/request, cost/token) don't tell the full story. Cost-per-outcome metrics incorporate quality and feedback to show actual value:
+
+**Key Metrics:**
+- **Cost/Request**: Average cost of all requests (baseline)
+- **Cost/Success**: Average cost of successful outcomes (positive feedback or met criteria)
+- **Cost/High Quality**: Average cost of high-quality outputs (quality score >= 0.8)
+
+**API Endpoints:**
+
+```
+GET /api/ai/costs/outcomes         # Get cost-per-outcome summary
+```
+
+**Query Parameters:**
+- `days`: Time range (7, 30, 90)
+- `group_by`: Dimension to group by (application, model, prompt)
+
+**Response:**
+```json
+{
+  "summary": {
+    "total_cost_usd": "125.50",
+    "total_requests": 15000,
+    "avg_cost_per_request_usd": "0.0084",
+    "avg_cost_per_success_usd": "0.0095",
+    "avg_cost_per_high_quality_usd": "0.0102",
+    "success_rate": "78.5%"
+  }
+}
+```
+
+### Change Event Correlation ("What Changed?")
+
+When cost anomalies occur, the system correlates them with recent changes:
+
+**Change Types Tracked:**
+- `prompt_deploy`: Prompt version deployments
+- `model_change`: Model provider or version changes
+- `routing_change`: Request routing configuration changes
+- `cache_config`: Cache configuration changes
+- `feature_rollout`: New feature deployments
+
+**API Endpoints:**
+
+```
+GET /api/ai/costs/change-events    # List recent change events
+POST /api/ai/costs/change-events   # Record a change event
+POST /api/ai/jobs/cost-anomalies   # Background job for anomaly detection
+```
+
+**Correlation Logic:**
+
+The system calculates correlation scores based on:
+1. **Timing**: Changes closer to the anomaly score higher
+2. **Change Type**: Model changes correlate strongly with cost spikes
+3. **Dimension Match**: Changes affecting the same dimension as the anomaly
+
+**Example Correlation:**
+```json
+{
+  "anomaly_type": "spike",
+  "anomaly_timestamp": "2026-01-20T14:30:00Z",
+  "correlated_changes": [
+    {
+      "change_id": "uuid",
+      "correlation_score": 0.85,
+      "reason": "Model change from gpt-3.5 to gpt-4, 2 hours before spike"
+    }
+  ],
+  "root_cause_hypothesis": "Likely caused by: model change from gpt-3.5 to gpt-4"
+}

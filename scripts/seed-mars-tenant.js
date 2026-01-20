@@ -136,17 +136,23 @@ async function seedMarsTenant() {
       console.log('✅ User created successfully');
     }
 
-    // 3. Check if profile exists
-    const { data: existingProfile } = await supabase
+    // 3. Check if profile exists - use service role to bypass RLS
+    const { data: existingProfile, error: profileCheckError } = await supabase
       .from('profiles')
       .select('id, role, tenant_id')
       .eq('id', userId)
       .single();
 
+    console.log('   Existing profile check:', existingProfile ? 'Found' : 'Not found', profileCheckError?.message || '');
+
     if (existingProfile) {
-      // Update existing profile
+      // Update existing profile - use upsert to handle RLS
       console.log('📝 Updating existing profile...');
-      const { error: updateError } = await supabase
+      console.log('   Current role:', existingProfile.role);
+      console.log('   Current tenant_id:', existingProfile.tenant_id);
+      console.log('   Target tenant_id:', tenantId);
+      
+      const { data: updateData, error: updateError } = await supabase
         .from('profiles')
         .update({
           role: ownerRole,
@@ -155,17 +161,21 @@ async function seedMarsTenant() {
           tenant_id: tenantId,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
+        .select()
+        .single();
 
       if (updateError) {
+        console.error('   Update error:', updateError);
         throw new Error(`Failed to update profile: ${updateError.message}`);
       }
 
+      console.log('   Updated profile:', updateData);
       console.log('✅ Profile updated to tenant owner');
     } else {
       // Create new profile
       console.log('📝 Creating new profile...');
-      const { error: profileError } = await supabase
+      const { data: insertData, error: profileError } = await supabase
         .from('profiles')
         .insert({
           id: userId,
@@ -173,12 +183,16 @@ async function seedMarsTenant() {
           full_name: fullName,
           email: email,
           tenant_id: tenantId,
-        });
+        })
+        .select()
+        .single();
 
       if (profileError) {
+        console.error('   Insert error:', profileError);
         throw new Error(`Failed to create profile: ${profileError.message}`);
       }
 
+      console.log('   Created profile:', insertData);
       console.log('✅ Tenant owner profile created');
     }
 

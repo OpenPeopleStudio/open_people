@@ -241,13 +241,19 @@ export async function POST(request: NextRequest) {
 
       // ─────────────────────────────────────────────────────────────────────────
       // Success! Return redirect URL
+      // Redirect to pending page which will poll for domain readiness
       // ─────────────────────────────────────────────────────────────────────────
 
       const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-      const tenantDomain =
+      const marketingDomain =
         ROOT_DOMAIN === "localhost"
-          ? `${body.slug}.localhost:3000`
-          : `${body.slug}.${ROOT_DOMAIN}`;
+          ? "localhost:3000"
+          : ROOT_DOMAIN;
+
+      // Redirect to the pending page with slug and business name
+      const pendingUrl = new URL(`${protocol}://${marketingDomain}/onboarding/pending`);
+      pendingUrl.searchParams.set("slug", body.slug);
+      pendingUrl.searchParams.set("name", body.businessName.trim());
 
       return NextResponse.json({
         success: true,
@@ -256,7 +262,7 @@ export async function POST(request: NextRequest) {
           slug: body.slug,
           name: body.businessName,
         },
-        redirectUrl: `${protocol}://${tenantDomain}/admin/onboarding`,
+        redirectUrl: pendingUrl.toString(),
       });
     } catch (innerError) {
       // ─────────────────────────────────────────────────────────────────────────

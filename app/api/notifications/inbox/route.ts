@@ -86,6 +86,13 @@ export async function PUT(request: NextRequest) {
     const { notificationIds, markAllRead } = body;
 
     if (markAllRead) {
+      // Count how many will be marked as read (for accurate usage accounting)
+      const { count: unreadCountToMark } = await supabase
+        .from("in_app_notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("is_read", false);
+
       // Mark all as read
       const { error } = await supabase
         .from("in_app_notifications")
@@ -116,19 +123,12 @@ export async function PUT(request: NextRequest) {
         startOfMonth.setDate(1);
         startOfMonth.setHours(0, 0, 0, 0);
 
-        // Get count of newly read
-        const { count } = await supabase
-          .from("in_app_notifications")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", user.id)
-          .eq("is_read", true);
-
-        if (count && count > 0) {
+        if (unreadCountToMark && unreadCountToMark > 0) {
           await supabase.rpc("increment_notification_usage", {
             p_tenant_id: profile.tenant_id,
             p_period_start: startOfMonth.toISOString().split("T")[0],
             p_field: "in_app_read",
-            p_increment: count,
+            p_increment: unreadCountToMark,
           });
         }
       }
@@ -143,6 +143,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Count how many will be marked read (avoid double-counting already-read items)
+    const { count: unreadCountToMark } = await supabase
+      .from("in_app_notifications")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .in("id", notificationIds)
+      .eq("is_read", false);
+
     const { error } = await supabase
       .from("in_app_notifications")
       .update({
@@ -150,7 +158,8 @@ export async function PUT(request: NextRequest) {
         read_at: new Date().toISOString(),
       })
       .eq("user_id", user.id)
-      .in("id", notificationIds);
+      .in("id", notificationIds)
+      .eq("is_read", false);
 
     if (error) {
       console.error("Mark read error:", error);
@@ -172,12 +181,14 @@ export async function PUT(request: NextRequest) {
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
-      await supabase.rpc("increment_notification_usage", {
-        p_tenant_id: profile.tenant_id,
-        p_period_start: startOfMonth.toISOString().split("T")[0],
-        p_field: "in_app_read",
-        p_increment: notificationIds.length,
-      });
+      if (unreadCountToMark && unreadCountToMark > 0) {
+        await supabase.rpc("increment_notification_usage", {
+          p_tenant_id: profile.tenant_id,
+          p_period_start: startOfMonth.toISOString().split("T")[0],
+          p_field: "in_app_read",
+          p_increment: unreadCountToMark,
+        });
+      }
     }
 
     return NextResponse.json({ success: true });

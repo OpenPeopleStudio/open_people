@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
     const archived = searchParams.get("archived") === "true";
     const limit = parseInt(searchParams.get("limit") || "50");
     
-    // Fetch conversations
+    // Fetch conversations with project info
     let query = supabase
       .from("ai_conversations")
-      .select("*")
+      .select("*, project:projects(id, name, color)")
       .eq("owner_id", user.id)
       .eq("is_archived", archived)
       .order("is_pinned", { ascending: false })
@@ -63,6 +63,7 @@ export async function POST(request: NextRequest) {
     const body: CreateConversationRequest = await request.json();
     const {
       title,
+      project_id,
       system_prompt,
       model = "gpt-4o",
       temperature = 0.7,
@@ -72,12 +73,27 @@ export async function POST(request: NextRequest) {
       use_memory = true,
     } = body;
     
+    // Verify project ownership if provided
+    if (project_id) {
+      const { data: project } = await supabase
+        .from("projects")
+        .select("id")
+        .eq("id", project_id)
+        .eq("owner_id", user.id)
+        .single();
+      
+      if (!project) {
+        return NextResponse.json({ error: "Project not found" }, { status: 404 });
+      }
+    }
+    
     // Create conversation
     const { data: conversation, error: insertError } = await supabase
       .from("ai_conversations")
       .insert({
         owner_id: user.id,
         title,
+        project_id,
         system_prompt,
         model,
         temperature,
@@ -86,7 +102,7 @@ export async function POST(request: NextRequest) {
         attached_folders,
         use_memory,
       })
-      .select()
+      .select("*, project:projects(id, name, color)")
       .single();
     
     if (insertError) {

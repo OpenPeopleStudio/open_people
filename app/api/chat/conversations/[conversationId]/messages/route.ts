@@ -5,6 +5,7 @@ import { generateEmbedding, extractMemories, summarizeMemory } from "@/lib/ai-ch
 import { buildContext, buildSystemPrompt, truncateContext } from "@/lib/ai-chat/context";
 import { buildPersonalizedPrompt } from "@/lib/ai-profile/personalization";
 import { chatCompletion, getProviderById, getDefaultProvider, estimateCost } from "@/lib/ai/providers";
+import { extractFacts } from "@/lib/mlf/facts";
 import type { SendMessageRequest, AIMessageSource } from "@/types/ai-chat";
 import type { AIUserProfile, AIUserGoal } from "@/types/ai-profile";
 import type { AIProviderConfig, UserAISettings } from "@/types/ai-providers";
@@ -318,6 +319,31 @@ export async function POST(
         .catch(err => console.error("Failed to extract memories:", err));
     }
     
+    // 13. Extract suggested notes/facts (async but return in response)
+    let suggestions: {
+      notes: { title: string; content: string }[];
+      facts: { fact: string; fact_type: string }[];
+    } = { notes: [], facts: [] };
+    
+    try {
+      // Extract potential facts
+      const extractedFacts = await extractFacts(content, assistantContent);
+      suggestions.facts = extractedFacts.slice(0, 3).map(f => ({
+        fact: f.fact,
+        fact_type: f.fact_type,
+      }));
+      
+      // Generate note suggestion if the response is substantial
+      if (assistantContent.length > 200) {
+        const noteSuggestion = await extractNoteSuggestion(content, assistantContent);
+        if (noteSuggestion) {
+          suggestions.notes = [noteSuggestion];
+        }
+      }
+    } catch (err) {
+      console.error("Failed to extract suggestions:", err);
+    }
+    
     return NextResponse.json({
       message: assistantMessage,
       context_used: {
@@ -325,6 +351,7 @@ export async function POST(
         files: contextResult.sources.filter(s => s.type === "file").length,
         memories: contextResult.sources.filter(s => s.type === "memory").length,
       },
+      suggestions,
       provider: providerUsed,
       estimated_cost: estimatedCost,
       duration_ms: Date.now() - startTime,
@@ -392,5 +419,52 @@ async function extractAndStoreMemories(
     }
   } catch (error) {
     console.error("Memory extraction error:", error);
+  }
+}
+
+/**
+ * Extract note suggestion from conversation
+ */
+async function extractNoteSuggestion(
+  userMessage: string,
+  assistantResponse: string
+): Promise<{ title: string; content: string } | null> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `Analyze this conversation exchange. If there's valuable information worth saving as a note (e.g., a decision made, a plan, key insights, action items), suggest a note.
+
+Return JSON:
+{
+  "suggest_note": true/false,
+  "title": "Brief descriptive title",
+  "content": "The note content in markdown, summarizing the key information"
+}
+
+Only suggest notes for substantial, valuable content. Return {"suggest_note": false} if not noteworthy.`,
+        },
+        {
+          role: "user",
+          content: `User: ${userMessage}\n\nAssistant: ${assistantResponse}`,
+        },
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+      max_tokens: 500,
+    });
+    
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    if (result.suggest_note && result.title && result.content) {
+      return {
+        title: result.title,
+        content: result.content,
+      };
+    }
+    return null;
+  } catch {
+    return null;
   }
 }

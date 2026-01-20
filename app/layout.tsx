@@ -2,29 +2,34 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OpenPeople.ai — AI-Powered Commerce Infrastructure",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://openpeople.ai"),
+  title: "OpenPeople.ai — Human-centric AI for business",
   description:
-    "Transform your retail business with AI-powered inventory management, intelligent chat, and predictive analytics. The modern platform for ambitious commerce brands.",
+    "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage. Your data stays safe, useful, and yours.",
   keywords: [
-    "AI commerce",
-    "inventory management",
-    "retail AI",
-    "e-commerce platform",
+    "human-centric AI",
+    "AI team",
+    "AI workers",
+    "workflows",
+    "notes",
+    "email",
+    "secure storage",
+    "multi-tenant",
     "multi-tenant",
     "SaaS",
   ],
   openGraph: {
-    title: "OpenPeople.ai — AI-Powered Commerce Infrastructure",
+    title: "OpenPeople.ai — Human-centric AI for business",
     description:
-      "Transform your retail business with AI-powered inventory management, intelligent chat, and predictive analytics.",
+      "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "OpenPeople.ai — AI-Powered Commerce Infrastructure",
+    card: "summary",
+    title: "OpenPeople.ai — Human-centric AI for business",
     description:
-      "Transform your retail business with AI-powered inventory management, intelligent chat, and predictive analytics.",
+      "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage.",
   },
 };
 

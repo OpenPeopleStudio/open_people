@@ -2,6 +2,10 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { verifyDomain, checkDomainStatus, deleteDomain } from "@/lib/email/resend";
 import { EMAIL_PLANS } from "@/types/email";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  notifyEmailDomainVerified,
+  notifyEmailDomainVerificationFailed,
+} from "@/lib/notifications/events";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Domains API
@@ -59,6 +63,12 @@ export async function GET(request: NextRequest) {
                 dns_records: status.records,
               })
               .eq("id", domain.id);
+
+            // Send notification about domain verification
+            notifyEmailDomainVerified(profile.tenant_id, domain.domain).catch((err) => {
+              console.error("Failed to send domain verification notification:", err);
+            });
+
             return { ...domain, status: "verified", dns_records: status.records };
           }
           return { ...domain, dns_records: status.records || domain.dns_records };
@@ -143,6 +153,15 @@ export async function POST(request: NextRequest) {
     const result = await verifyDomain(domain);
 
     if (!result.success) {
+      // Notify about verification failure
+      notifyEmailDomainVerificationFailed(
+        profile.tenant_id,
+        domain,
+        result.error || "Unknown error"
+      ).catch((err) => {
+        console.error("Failed to send domain verification failure notification:", err);
+      });
+
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 

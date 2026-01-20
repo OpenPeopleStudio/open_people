@@ -211,6 +211,281 @@ export function getDefaultFromEmail(tenantSlug: string): string {
   return `${tenantSlug}@mail.openpeople.ai`;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Email Accounts Types
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Email provider types:
+ * - managed: DNS-only setup, we handle send/receive via our infrastructure
+ * - smtp: Custom SMTP only (send)
+ * - imap: Custom IMAP only (receive)
+ * - pop3: Custom POP3 (receive)
+ * - smtp_imap: Custom SMTP + IMAP (send & receive)
+ * - resend: Direct Resend API (send only, no inbox)
+ */
+export type EmailProvider = "managed" | "smtp" | "imap" | "pop3" | "resend" | "smtp_imap";
+
+/**
+ * Whether an account uses managed (DNS-only) or custom (SMTP/IMAP) setup
+ */
+export type EmailAccountMode = "managed" | "custom";
+
+/**
+ * DNS record required for managed email setup
+ */
+export type DNSRecord = {
+  type: "TXT" | "MX" | "CNAME";
+  name: string;
+  value: string;
+  priority?: number;  // For MX records
+  status: "pending" | "verified" | "failed";
+  purpose: "dkim" | "spf" | "mx" | "return-path" | "verification";
+};
+
+/**
+ * Managed domain configuration for DNS-only email setup
+ */
+export type ManagedEmailDomain = {
+  id: string;
+  tenant_id: string;
+  account_id: string;
+  domain: string;
+  status: "pending" | "verifying" | "verified" | "failed";
+  dns_records: DNSRecord[];
+  resend_domain_id?: string;
+  verified_at?: string;
+  last_check_at?: string;
+  error_message?: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type EmailAccount = {
+  id: string;
+  tenant_id: string;
+  name: string;
+  email_address: string;
+  is_default: boolean;
+  is_active: boolean;
+  provider: EmailProvider;
+  
+  // Mode: managed (DNS-only) or custom (SMTP/IMAP credentials)
+  mode: EmailAccountMode;
+  
+  // Managed domain ID (for managed mode)
+  managed_domain_id?: string;
+  
+  // SMTP settings (for custom mode)
+  smtp_host?: string;
+  smtp_port?: number;
+  smtp_secure?: boolean;
+  smtp_user?: string;
+  
+  // IMAP settings (for custom mode)
+  imap_host?: string;
+  imap_port?: number;
+  imap_secure?: boolean;
+  imap_user?: string;
+  
+  // POP3 settings (for custom mode)
+  pop3_host?: string;
+  pop3_port?: number;
+  pop3_secure?: boolean;
+  pop3_user?: string;
+  
+  // Resend settings
+  resend_api_key_id?: string;
+  resend_domain?: string;
+  
+  // Sync settings
+  sync_enabled: boolean;
+  sync_interval_minutes: number;
+  last_sync_at?: string;
+  last_sync_error?: string;
+  
+  created_at: string;
+  updated_at: string;
+};
+
+export type EmailAccountCreateRequest = {
+  name: string;
+  email_address: string;
+  is_default?: boolean;
+  provider: EmailProvider;
+  mode: EmailAccountMode;
+  
+  // Domain for managed mode (will generate DNS records)
+  domain?: string;
+  
+  // SMTP (for custom mode)
+  smtp_host?: string;
+  smtp_port?: number;
+  smtp_secure?: boolean;
+  smtp_user?: string;
+  smtp_password?: string;
+  
+  // IMAP (for custom mode)
+  imap_host?: string;
+  imap_port?: number;
+  imap_secure?: boolean;
+  imap_user?: string;
+  imap_password?: string;
+  
+  // POP3 (for custom mode)
+  pop3_host?: string;
+  pop3_port?: number;
+  pop3_secure?: boolean;
+  pop3_user?: string;
+  pop3_password?: string;
+  
+  // Resend
+  resend_api_key_id?: string;
+  resend_domain?: string;
+  
+  sync_enabled?: boolean;
+  sync_interval_minutes?: number;
+};
+
+/**
+ * Generate DNS records required for a managed email domain
+ */
+/**
+ * Generate fallback DNS records for managed email domains.
+ * These are only used if Resend doesn't return records.
+ * The actual DKIM record should come from Resend's API response.
+ */
+export function generateManagedDNSRecords(domain: string): Omit<DNSRecord, "status">[] {
+  return [
+    {
+      type: "TXT",
+      name: `_dmarc.${domain}`,
+      value: "v=DMARC1; p=quarantine; rua=mailto:dmarc@openpeople.ai",
+      purpose: "verification",
+    },
+    {
+      type: "TXT",
+      name: domain,
+      value: "v=spf1 include:amazonses.com include:resend.com ~all",
+      purpose: "spf",
+    },
+    // Note: MX and DKIM records should come from Resend's API.
+    // These are placeholders shown if Resend API fails.
+  ];
+}
+
+/**
+ * Check if an account is in managed mode
+ */
+export function isManagedAccount(account: EmailAccount): boolean {
+  return account.mode === "managed" || account.provider === "managed";
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Email Messages / Inbox Types
+// ═══════════════════════════════════════════════════════════════════════════
+
+export type EmailDirection = "inbound" | "outbound";
+
+export type EmailMessageStatus =
+  | "draft"
+  | "queued"
+  | "sending"
+  | "sent"
+  | "delivered"
+  | "received"
+  | "opened"
+  | "clicked"
+  | "bounced"
+  | "complained"
+  | "failed";
+
+export type EmailAddress = {
+  email: string;
+  name?: string;
+};
+
+export type EmailAttachmentMeta = {
+  filename: string;
+  content_type?: string;
+  size?: number;
+  storage_key?: string;
+};
+
+export type EmailMessage = {
+  id: string;
+  tenant_id: string;
+  account_id: string;
+  
+  message_id?: string;
+  provider_id?: string;
+  thread_id?: string;
+  in_reply_to?: string;
+  
+  direction: EmailDirection;
+  
+  from_address: string;
+  from_name?: string;
+  to_addresses: EmailAddress[];
+  cc_addresses?: EmailAddress[];
+  bcc_addresses?: EmailAddress[];
+  reply_to?: string;
+  
+  subject?: string;
+  body_text?: string;
+  body_html?: string;
+  body_preview?: string;
+  
+  attachments: EmailAttachmentMeta[];
+  has_attachments: boolean;
+  
+  status: EmailMessageStatus;
+  mailbox: string;
+  
+  is_read: boolean;
+  is_starred: boolean;
+  is_archived: boolean;
+  is_deleted: boolean;
+  is_spam: boolean;
+  
+  labels: string[];
+  
+  sent_at?: string;
+  received_at?: string;
+  opened_at?: string;
+  
+  error_message?: string;
+  raw_headers?: Record<string, string>;
+  
+  created_at: string;
+  updated_at: string;
+};
+
+export type EmailInboxStats = {
+  total_messages: number;
+  unread_messages: number;
+  starred_messages: number;
+  draft_messages: number;
+  sent_messages: number;
+  spam_messages: number;
+  archived_messages: number;
+};
+
+export type ComposeEmailRequest = {
+  account_id: string;
+  to: string | string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  body_html?: string;
+  body_text?: string;
+  reply_to?: string;
+  in_reply_to?: string;
+  thread_id?: string;
+  attachments?: { filename: string; content: string; content_type: string }[];
+  save_as_draft?: boolean;
+};
+
 // Pre-built template snippets
 export const DEFAULT_TEMPLATES = {
   welcome: {

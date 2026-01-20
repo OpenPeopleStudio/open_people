@@ -1,4 +1,4 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { parseTwilioStatus } from "@/lib/notifications/twilio";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -42,7 +42,8 @@ async function handleTwilioWebhook(request: NextRequest) {
       );
     }
 
-    const supabase = await createSupabaseServer();
+    // Twilio callbacks are unauthenticated; use service role to bypass RLS.
+    const supabase = await createSupabaseAdmin();
 
     // Find the delivery by provider_id
     const { data: delivery, error: findError } = await supabase

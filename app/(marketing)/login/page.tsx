@@ -38,44 +38,63 @@ export default function LoginPage() {
 
       if (data.user) {
         // Fetch user's profile to redirect appropriately
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("tenant_id, role")
           .eq("id", data.user.id)
           .single();
 
-        const ROOT_DOMAIN =
-          process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai";
-        const SUPER_ADMIN_DOMAIN =
-          process.env.NEXT_PUBLIC_SUPER_ADMIN_DOMAIN || `app.${ROOT_DOMAIN}`;
-        const protocol =
-          process.env.NODE_ENV === "production" ? "https" : "http";
+        // Detect if we're in local development by checking current hostname
+        const currentHost = window.location.hostname;
+        const isLocalDev = currentHost === "localhost" || currentHost.endsWith(".localhost");
+        
+        const ROOT_DOMAIN = isLocalDev 
+          ? "localhost:3000" 
+          : (process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai");
+        const protocol = isLocalDev ? "http" : "https";
 
-        // Super admin (tenant_id = null) -> redirect to app.openpeople.ai
+        // Super admin (tenant_id = null) -> redirect to app subdomain
         if (profile?.role === "super_admin" || !profile?.tenant_id) {
-          const adminDomain =
-            ROOT_DOMAIN === "localhost"
-              ? "app.localhost:3000"
-              : SUPER_ADMIN_DOMAIN;
+          const adminDomain = isLocalDev 
+            ? "app.localhost:3000" 
+            : (process.env.NEXT_PUBLIC_SUPER_ADMIN_DOMAIN || `app.${ROOT_DOMAIN}`);
           window.location.href = `${protocol}://${adminDomain}`;
           return;
         }
 
-        // Regular user with tenant -> redirect to tenant subdomain
+        // Regular user with tenant -> check if subdomain is ready
         if (profile?.tenant_id) {
           const { data: tenant } = await supabase
             .from("tenants")
-            .select("slug")
+            .select("slug, name")
             .eq("id", profile.tenant_id)
             .single();
 
           if (tenant?.slug) {
-            const tenantDomain =
-              ROOT_DOMAIN === "localhost"
-                ? `${tenant.slug}.localhost:3000`
-                : `${tenant.slug}.${ROOT_DOMAIN}`;
+            // Check if the subdomain is reachable
+            try {
+              const statusRes = await fetch(`/api/tenants/domain-status?slug=${encodeURIComponent(tenant.slug)}`);
+              const statusData = await statusRes.json();
 
-            window.location.href = `${protocol}://${tenantDomain}/admin`;
+              if (statusData.status === "ready") {
+                // Subdomain is ready - redirect directly
+                const tenantDomain = isLocalDev
+                  ? `${tenant.slug}.localhost:3000`
+                  : `${tenant.slug}.${ROOT_DOMAIN}`;
+                window.location.href = `${protocol}://${tenantDomain}/admin`;
+                return;
+              }
+            } catch {
+              // If status check fails, fall through to pending page
+            }
+
+            // Subdomain not ready - redirect to pending page
+            const pendingUrl = new URL(`${protocol}://${ROOT_DOMAIN}/onboarding/pending`);
+            pendingUrl.searchParams.set("slug", tenant.slug);
+            if (tenant.name) {
+              pendingUrl.searchParams.set("name", tenant.name);
+            }
+            window.location.href = pendingUrl.toString();
             return;
           }
         }

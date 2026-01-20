@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
    GET /api/storage/download/[fileId] - Get presigned URL for file download
    ═══════════════════════════════════════════════════════════════════════════ */
 
+// Platform storage tenant for super-admin users
+const PLATFORM_TENANT_ID = "00000000-0000-0000-0000-000000000001";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ fileId: string }> }
@@ -42,14 +45,19 @@ export async function GET(
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
 
-      // Check if user belongs to the same tenant
+      // Check if user belongs to the same tenant (super-admin can access platform tenant)
       const { data: profile } = await supabase
         .from("709_profiles")
-        .select("tenant_id")
+        .select("tenant_id, role")
         .eq("id", user.id)
         .single();
 
-      if (profile?.tenant_id !== file.tenant_id) {
+      // Super-admin can access platform tenant files
+      const userTenantId = profile?.role === "super_admin" 
+        ? PLATFORM_TENANT_ID 
+        : profile?.tenant_id;
+
+      if (userTenantId !== file.tenant_id) {
         return NextResponse.json({ error: "Access denied" }, { status: 403 });
       }
     }

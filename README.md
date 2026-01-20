@@ -29,6 +29,15 @@ OpenPeople.ai is a multi-tenant SaaS platform that provides modular AI-powered p
 - **API Keys** - Integration key management
 - **Workflows** - Projects and task management
 
+### AI Governance & Operations
+
+- **AI Cost Analytics** - Token usage tracking, budgets, and optimization recommendations
+- **Drift Detection** - Automated detection of model behavior changes with baselines
+- **Quality Scoring** - Automated evaluation of AI output quality across dimensions
+- **AI Workers** - Chief of Staff (weekly planning), Ops Worker (decision → tasks), and more
+- **HITL (Human-in-the-Loop)** - Review queues, risk evaluation, and QA sampling
+- **Policy Engine** - Rule-based content policies with preview and lint tools
+
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router)
@@ -113,7 +122,12 @@ open_people/
 │   │       ├── storage/    # Cloud storage management
 │   │       ├── email/      # Email management
 │   │       ├── experiments/# A/B testing dashboard
-│   │       └── notifications/ # Notification management
+│   │       ├── notifications/ # Notification management
+│   │       ├── ai/         # AI governance (costs, drift, quality)
+│   │       ├── hitl/       # Human-in-the-loop review
+│   │       ├── ops/        # Ops worker decisions
+│   │       ├── policies/   # Policy engine
+│   │       └── chief-of-staff/ # Weekly planning
 │   ├── super-admin/        # Platform admin dashboard
 │   │   ├── tenants/        # Tenant management
 │   │   ├── storage/        # Storage add-on metrics
@@ -127,7 +141,14 @@ open_people/
 │       ├── storage/        # Storage API
 │       ├── email/          # Email API
 │       ├── experiments/    # Experiments API
-│       └── notifications/  # Notifications API
+│       ├── notifications/  # Notifications API
+│       ├── ai/             # AI governance APIs (costs, drift, quality, jobs)
+│       ├── hitl/           # Human-in-the-loop APIs
+│       ├── ops/            # Ops worker APIs (ingest, propose, commit)
+│       ├── policies/       # Policy engine APIs (lint, preview, test)
+│       ├── events/         # Event system APIs
+│       ├── risk/           # Risk evaluation APIs
+│       └── v1/             # External API (OpenAI-compatible chat)
 ├── components/             # Shared UI components
 │   └── workspace/          # Reusable workspace components
 │       ├── notes/          # NotesListView
@@ -135,9 +156,18 @@ open_people/
 ├── lib/                    # Utilities and helpers
 │   ├── supabase/           # Supabase clients
 │   ├── storage/            # R2 storage client
-│   ├── email/              # Resend email client
+│   ├── email/              # Resend email client + IMAP/POP3/SMTP
 │   ├── experiments/        # Experiments SDK
 │   ├── notifications/      # Notifications client
+│   ├── ai/                 # AI workers, prompts, jobs
+│   ├── hitl/               # HITL service and QA sampling
+│   ├── ops/                # Ops worker service
+│   ├── policy/             # Policy evaluator, lint, preview
+│   ├── risk/               # Risk aggregation and scoring
+│   ├── events/             # Event dispatcher and handlers
+│   ├── gateway/            # AI gateway router
+│   ├── cache/              # Semantic cache with invalidation
+│   ├── rag/                # RAG and PII scanning
 │   └── tenant.ts           # Tenant resolution
 ├── scripts/               # Setup and maintenance
 │   └── seed-mars-tenant.js # Mars tenant seeding

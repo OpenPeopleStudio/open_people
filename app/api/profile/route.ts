@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { UpdateProfileRequest } from "@/types/ai-profile";
 
@@ -7,10 +7,10 @@ import type { UpdateProfileRequest } from "@/types/ai-profile";
    Get current user's AI profile
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
-    
+
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -33,7 +33,7 @@ export async function GET() {
       
       if (createError) {
         console.error("Failed to create profile:", createError);
-        return NextResponse.json({ error: "Failed to create profile" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to create profile", details: createError.message }, { status: 500 });
       }
       
       profile = newProfile;

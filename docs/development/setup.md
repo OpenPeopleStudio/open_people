@@ -64,6 +64,11 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 | `mars.localhost:3000` | Internal Tenant | Open People workspace |
 | `demo.localhost:3000` | Demo Tenant | Customer demo environment |
 
+**Demo-ready dashboards**
+
+- Tenant dashboard: `http://demo.localhost:3000/admin?demo=1`
+- Super-admin dashboard: `http://app.localhost:3000/super-admin?demo=1`
+
 ## ⚙️ Environment Configuration
 
 ### Required Environment Variables
@@ -241,7 +246,7 @@ git checkout -b feature/your-feature-name
 ```
 
 ### 2. Make Changes
-- Follow the [coding standards](./standards.md)
+- Follow the repository ESLint/TypeScript conventions
 - Write tests for new functionality
 - Update documentation as needed
 
@@ -271,8 +276,8 @@ git push origin feature/your-feature-name
 # Clear Next.js cache
 rm -rf .next
 
-# Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
+# Clear node_modules and reinstall (keep lockfile)
+rm -rf node_modules
 npm install
 
 # Check environment variables
@@ -363,7 +368,6 @@ npm install next@latest react@latest react-dom@latest
 
 ### Following Platform Changes
 - Watch the [GitHub repository](../../) for updates
-- Follow the [CHANGELOG](../CHANGELOG.md) for release notes
 - Subscribe to [GitHub releases](../../releases)
 
 ## 🏢 Tenant Admin Development
@@ -443,5 +447,5 @@ if (!profile || !allowedRoles.includes(profile.role)) {
 
 ---
 
-**Last Updated**: January 19, 2026
+**Last Updated**: January 20, 2026
 **Environment**: Development

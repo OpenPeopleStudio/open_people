@@ -19,10 +19,10 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
-    // Get conversation
+    // Get conversation with project info
     const { data: conversation, error: convError } = await supabase
       .from("ai_conversations")
-      .select("*")
+      .select("*, project:projects(id, name, color)")
       .eq("id", conversationId)
       .eq("owner_id", user.id)
       .single();
@@ -69,10 +69,24 @@ export async function PATCH(
     
     const body = await request.json();
     const allowedFields = [
-      "title", "system_prompt", "model", "temperature",
+      "title", "project_id", "system_prompt", "model", "temperature",
       "attached_notes", "attached_files", "attached_folders",
       "use_memory", "memory_threshold", "is_archived", "is_pinned"
     ];
+    
+    // Verify project ownership if updating project_id
+    if (body.project_id) {
+      const { data: project } = await supabase
+        .from("projects")
+        .select("id")
+        .eq("id", body.project_id)
+        .eq("owner_id", user.id)
+        .single();
+      
+      if (!project) {
+        return NextResponse.json({ error: "Project not found" }, { status: 404 });
+      }
+    }
     
     const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
     for (const field of allowedFields) {
@@ -86,7 +100,7 @@ export async function PATCH(
       .update(updates)
       .eq("id", conversationId)
       .eq("owner_id", user.id)
-      .select()
+      .select("*, project:projects(id, name, color)")
       .single();
     
     if (updateError) {

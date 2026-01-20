@@ -568,3 +568,46 @@ export interface SearchResponse {
   total_count: number;
   search_time_ms: number;
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// CHIEF OF STAFF / WEEK PLANNING
+// ════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Re-export plan types from the prompts module for convenience
+ */
+export type {
+  PlanProposal,
+  ProposedOutcome,
+  ProposedTaskCreate,
+  ProposedTaskUpdate,
+  ClarifyingQuestion,
+  WeekPlanRequest,
+  WeekPlanResponse,
+  SavedWeekPlan,
+} from "@/lib/ai/prompts/chiefOfStaff";
+
+// ════════════════════════════════════════════════════════════════════════════
+// OPS WORKER
+// ════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Re-export ops worker types from the prompts module for convenience
+ */
+export type {
+  DecisionSourceType,
+  DecisionSource,
+  Decision,
+  ProposedActionItem,
+  ProposedChecklistItem,
+  ProposedTaskUpdate as OpsProposedTaskUpdate,
+  OpsProposal,
+  OpsQuestion,
+  OpsRunLog,
+  OpsIngestRequest,
+  OpsIngestResponse,
+  OpsProposeRequest,
+  OpsProposeResponse,
+  OpsCommitRequest,
+  OpsCommitResponse,
+} from "@/lib/ai/prompts/opsWorker";

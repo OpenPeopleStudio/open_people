@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openpeople.ai/schemas/events/ai.json",
+  "title": "AI Events",
+  "description": "Schemas for AI operation events",
+  "definitions": {
+    "ai.request.started": {
+      "type": "object",
+      "required": ["request_id", "model"],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "description": "Unique request identifier"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model being used"
+        },
+        "application_id": {
+          "type": ["string", "null"],
+          "description": "Application context"
+        },
+        "input_tokens": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Estimated input tokens"
+        }
+      }
+    },
+    "ai.request.completed": {
+      "type": "object",
+      "required": ["request_id", "model", "input_tokens", "output_tokens", "latency_ms"],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "description": "Unique request identifier"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model used"
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Actual input tokens"
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Output tokens generated"
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total processing time in milliseconds"
+        },
+        "cached": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether response was cached"
+        }
+      }
+    },
+    "ai.request.failed": {
+      "type": "object",
+      "required": ["request_id", "error_code", "error_message", "retryable"],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "description": "Unique request identifier"
+        },
+        "error_code": {
+          "type": "string",
+          "description": "Error classification code"
+        },
+        "error_message": {
+          "type": "string",
+          "description": "Human-readable error message"
+        },
+        "retryable": {
+          "type": "boolean",
+          "description": "Whether the request can be retried"
+        }
+      }
+    },
+    "ai.request.blocked": {
+      "type": "object",
+      "required": ["request_id", "reason"],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "description": "Unique request identifier"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Block reason category"
+        },
+        "policy_id": {
+          "type": ["string", "null"],
+          "description": "Policy that triggered the block"
+        },
+        "guardrail_id": {
+          "type": ["string", "null"],
+          "description": "Guardrail that triggered the block"
+        }
+      }
+    },
+    "ai.worker.queued": {
+      "type": "object",
+      "required": ["job_id", "worker_id", "job_type"],
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Job identifier"
+        },
+        "worker_id": {
+          "type": "string",
+          "description": "Worker type identifier"
+        },
+        "job_type": {
+          "type": "string",
+          "description": "Specific job type"
+        },
+        "priority": {
+          "type": "integer",
+          "default": 0,
+          "description": "Job priority (higher = sooner)"
+        }
+      }
+    },
+    "ai.worker.started": {
+      "type": "object",
+      "required": ["job_id", "worker_id", "runner_id"],
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Job identifier"
+        },
+        "worker_id": {
+          "type": "string",
+          "description": "Worker type identifier"
+        },
+        "runner_id": {
+          "type": "string",
+          "description": "Runner instance identifier"
+        }
+      }
+    },
+    "ai.worker.completed": {
+      "type": "object",
+      "required": ["job_id", "worker_id", "duration_ms"],
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Job identifier"
+        },
+        "worker_id": {
+          "type": "string",
+          "description": "Worker type identifier"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Processing duration in milliseconds"
+        },
+        "result_summary": {
+          "type": ["object", "null"],
+          "description": "Optional result metadata"
+        }
+      }
+    },
+    "ai.worker.failed": {
+      "type": "object",
+      "required": ["job_id", "worker_id", "error_code", "error_message", "attempt", "will_retry"],
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Job identifier"
+        },
+        "worker_id": {
+          "type": "string",
+          "description": "Worker type identifier"
+        },
+        "error_code": {
+          "type": "string",
+          "description": "Error classification code"
+        },
+        "error_message": {
+          "type": "string",
+          "description": "Human-readable error message"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Attempt number"
+        },
+        "will_retry": {
+          "type": "boolean",
+          "description": "Whether the job will be retried"
+        }
+      }
+    },
+    "ai.quota.warning": {
+      "type": "object",
+      "required": ["quota_type", "current_usage", "limit", "percentage"],
+      "properties": {
+        "quota_type": {
+          "type": "string",
+          "enum": ["tokens", "requests", "cost"],
+          "description": "Type of quota"
+        },
+        "current_usage": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Current usage amount"
+        },
+        "limit": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Configured limit"
+        },
+        "percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Usage percentage"
+        }
+      }
+    },
+    "ai.quota.exceeded": {
+      "type": "object",
+      "required": ["quota_type", "current_usage", "limit", "action_taken"],
+      "properties": {
+        "quota_type": {
+          "type": "string",
+          "enum": ["tokens", "requests", "cost"],
+          "description": "Type of quota"
+        },
+        "current_usage": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Current usage amount"
+        },
+        "limit": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Configured limit"
+        },
+        "action_taken": {
+          "type": "string",
+          "enum": ["blocked", "throttled", "warned"],
+          "description": "Action taken in response"
+        }
+      }
+    }
+  }
+}

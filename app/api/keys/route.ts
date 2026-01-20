@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import {
+  ApiKeysEncryptionConfigError,
   encryptApiKey,
-  decryptApiKey,
   generateKeyHint,
   validateKeyFormat,
 } from "@/lib/api-keys/encryption";
@@ -145,7 +145,22 @@ export async function POST(request: NextRequest) {
     }
     
     // Encrypt the key
-    const { encryptedKey, iv } = encryptApiKey(key);
+    let encryptedKey: string;
+    let iv: string;
+    try {
+      const encrypted = encryptApiKey(key);
+      encryptedKey = encrypted.encryptedKey;
+      iv = encrypted.iv;
+    } catch (err) {
+      if (err instanceof ApiKeysEncryptionConfigError) {
+        return NextResponse.json(
+          { error: err.message, code: "API_KEYS_ENCRYPTION_NOT_CONFIGURED" },
+          { status: 503 }
+        );
+      }
+      throw err;
+    }
+
     const keyHint = generateKeyHint(key);
     
     // Insert the key

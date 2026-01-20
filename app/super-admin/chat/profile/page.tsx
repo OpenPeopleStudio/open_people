@@ -692,6 +692,81 @@ function CommunicationSection({
   styles: { system_styles: AIConversationStyle[]; custom_styles: AIConversationStyle[] };
   onSave: (updates: Partial<AIUserProfile>) => void;
 }) {
+  const [showCreateStyle, setShowCreateStyle] = useState(false);
+  const [newStyleName, setNewStyleName] = useState("");
+  const [newStyleDescription, setNewStyleDescription] = useState("");
+  const [savingStyle, setSavingStyle] = useState(false);
+  const [customStyles, setCustomStyles] = useState(styles.custom_styles);
+  
+  // Check if current settings match a preset
+  function matchesPreset(style: AIConversationStyle): boolean {
+    const checks = [
+      style.communication_style === null || style.communication_style === profile.communication_style,
+      style.formality_level === null || style.formality_level === profile.formality_level,
+      style.detail_preference === null || style.detail_preference === profile.detail_preference,
+      style.emotional_support_level === null || style.emotional_support_level === profile.emotional_support_level,
+      style.challenge_me === null || style.challenge_me === profile.challenge_me,
+      style.use_analogies === null || style.use_analogies === profile.use_analogies,
+      style.use_humor === null || style.use_humor === profile.use_humor,
+      style.be_philosophical === null || style.be_philosophical === profile.be_philosophical,
+      style.action_oriented === null || style.action_oriented === profile.action_oriented,
+    ];
+    // At least 5 settings must match for it to be considered a match
+    const matchCount = checks.filter(Boolean).length;
+    return matchCount >= 7;
+  }
+  
+  async function saveCustomStyle() {
+    if (!newStyleName.trim()) return;
+    
+    setSavingStyle(true);
+    try {
+      const res = await fetch("/api/profile/styles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newStyleName.trim(),
+          description: newStyleDescription.trim() || null,
+          communication_style: profile.communication_style,
+          formality_level: profile.formality_level,
+          detail_preference: profile.detail_preference,
+          emotional_support_level: profile.emotional_support_level,
+          challenge_me: profile.challenge_me,
+          use_analogies: profile.use_analogies,
+          use_humor: profile.use_humor,
+          be_philosophical: profile.be_philosophical,
+          action_oriented: profile.action_oriented,
+        }),
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setCustomStyles([...customStyles, data.style]);
+        setNewStyleName("");
+        setNewStyleDescription("");
+        setShowCreateStyle(false);
+      }
+    } catch (err) {
+      console.error("Failed to create style:", err);
+    } finally {
+      setSavingStyle(false);
+    }
+  }
+  
+  async function deleteCustomStyle(styleId: string) {
+    try {
+      const res = await fetch(`/api/profile/styles/${styleId}`, {
+        method: "DELETE",
+      });
+      
+      if (res.ok) {
+        setCustomStyles(customStyles.filter(s => s.id !== styleId));
+      }
+    } catch (err) {
+      console.error("Failed to delete style:", err);
+    }
+  }
+  
   return (
     <div className="space-y-8">
       {/* Quick styles */}
@@ -704,26 +779,149 @@ function CommunicationSection({
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {styles.system_styles.map(style => (
-            <button
-              key={style.id}
-              onClick={() => onSave({
-                communication_style: style.communication_style || undefined,
-                formality_level: style.formality_level || undefined,
-                detail_preference: style.detail_preference || undefined,
-                emotional_support_level: style.emotional_support_level || undefined,
-                challenge_me: style.challenge_me ?? undefined,
-                use_analogies: style.use_analogies ?? undefined,
-                use_humor: style.use_humor ?? undefined,
-                be_philosophical: style.be_philosophical ?? undefined,
-                action_oriented: style.action_oriented ?? undefined,
+          {styles.system_styles.map(style => {
+            const isActive = matchesPreset(style);
+            return (
+              <button
+                key={style.id}
+                onClick={() => onSave({
+                  communication_style: style.communication_style || undefined,
+                  formality_level: style.formality_level || undefined,
+                  detail_preference: style.detail_preference || undefined,
+                  emotional_support_level: style.emotional_support_level || undefined,
+                  challenge_me: style.challenge_me ?? undefined,
+                  use_analogies: style.use_analogies ?? undefined,
+                  use_humor: style.use_humor ?? undefined,
+                  be_philosophical: style.be_philosophical ?? undefined,
+                  action_oriented: style.action_oriented ?? undefined,
+                })}
+                className={`p-4 rounded-xl border text-left transition-colors ${
+                  isActive
+                    ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)]"
+                    : "bg-[var(--surface-2)] border-[var(--border-subtle)] hover:border-[var(--electric-lime)]"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <h3 className={`font-medium ${isActive ? "text-[var(--electric-lime)]" : "text-[var(--text-primary)]"}`}>
+                    {style.name}
+                  </h3>
+                  {isActive && (
+                    <svg className="w-5 h-5 text-[var(--electric-lime)]" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <p className="text-sm text-[var(--text-muted)] mt-1">{style.description}</p>
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Custom styles */}
+        {customStyles.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-[var(--border-subtle)]">
+            <h3 className="text-sm font-medium text-[var(--text-primary)] mb-4">Your Custom Styles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {customStyles.map(style => {
+                const isActive = matchesPreset(style);
+                return (
+                  <div
+                    key={style.id}
+                    className={`p-4 rounded-xl border transition-colors ${
+                      isActive
+                        ? "bg-[var(--electric-cyan)]/10 border-[var(--electric-cyan)]"
+                        : "bg-[var(--surface-2)] border-[var(--border-subtle)]"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className={`font-medium ${isActive ? "text-[var(--electric-cyan)]" : "text-[var(--text-primary)]"}`}>
+                        {style.name}
+                      </h3>
+                      <button
+                        onClick={() => deleteCustomStyle(style.id)}
+                        className="text-[var(--text-muted)] hover:text-[var(--error)] transition-colors"
+                        title="Delete style"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        </svg>
+                      </button>
+                    </div>
+                    {style.description && (
+                      <p className="text-sm text-[var(--text-muted)] mb-3">{style.description}</p>
+                    )}
+                    <button
+                      onClick={() => onSave({
+                        communication_style: style.communication_style || undefined,
+                        formality_level: style.formality_level || undefined,
+                        detail_preference: style.detail_preference || undefined,
+                        emotional_support_level: style.emotional_support_level || undefined,
+                        challenge_me: style.challenge_me ?? undefined,
+                        use_analogies: style.use_analogies ?? undefined,
+                        use_humor: style.use_humor ?? undefined,
+                        be_philosophical: style.be_philosophical ?? undefined,
+                        action_oriented: style.action_oriented ?? undefined,
+                      })}
+                      className="text-sm text-[var(--electric-cyan)] hover:underline"
+                    >
+                      Apply this style
+                    </button>
+                  </div>
+                );
               })}
-              className="p-4 rounded-xl bg-[var(--surface-2)] border border-[var(--border-subtle)] text-left hover:border-[var(--electric-lime)] transition-colors"
+            </div>
+          </div>
+        )}
+        
+        {/* Save current as custom style */}
+        <div className="mt-6 pt-6 border-t border-[var(--border-subtle)]">
+          {!showCreateStyle ? (
+            <button
+              onClick={() => setShowCreateStyle(true)}
+              className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--electric-lime)] transition-colors"
             >
-              <h3 className="font-medium text-[var(--text-primary)]">{style.name}</h3>
-              <p className="text-sm text-[var(--text-muted)] mt-1">{style.description}</p>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Save current settings as a custom style
             </button>
-          ))}
+          ) : (
+            <div className="space-y-3">
+              <input
+                type="text"
+                value={newStyleName}
+                onChange={(e) => setNewStyleName(e.target.value)}
+                placeholder="Style name (e.g., 'My Work Mode')"
+                className="w-full max-w-md px-4 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
+              />
+              <input
+                type="text"
+                value={newStyleDescription}
+                onChange={(e) => setNewStyleDescription(e.target.value)}
+                placeholder="Short description (optional)"
+                className="w-full max-w-md px-4 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={saveCustomStyle}
+                  disabled={!newStyleName.trim() || savingStyle}
+                  className="px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] text-sm font-medium hover:brightness-110 disabled:opacity-50"
+                >
+                  {savingStyle ? "Saving..." : "Save Style"}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowCreateStyle(false);
+                    setNewStyleName("");
+                    setNewStyleDescription("");
+                  }}
+                  className="px-4 py-2 rounded-lg bg-[var(--surface-2)] text-[var(--text-secondary)] text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       
@@ -755,7 +953,7 @@ function CommunicationSection({
                   className={`p-3 rounded-lg text-left transition-colors ${
                     profile.communication_style === opt.value
                       ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)] text-[var(--electric-lime)]"
-                      : "bg-[var(--surface-2)] text-[var(--text-secondary)]"
+                      : "bg-[var(--surface-2)] text-[var(--text-secondary)] hover:border-[var(--text-muted)]"
                   } border border-[var(--border-subtle)]`}
                 >
                   <span className="block text-sm font-medium">{opt.label}</span>
@@ -771,21 +969,22 @@ function CommunicationSection({
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {([
-                { value: "formal", label: "Formal" },
-                { value: "professional", label: "Professional" },
-                { value: "casual", label: "Casual" },
-                { value: "friendly", label: "Friendly" },
+                { value: "formal", label: "Formal", desc: "Professional and structured" },
+                { value: "professional", label: "Professional", desc: "Business appropriate" },
+                { value: "casual", label: "Casual", desc: "Relaxed and easy" },
+                { value: "friendly", label: "Friendly", desc: "Warm and personable" },
               ] as const).map(opt => (
                 <button
                   key={opt.value}
                   onClick={() => onSave({ formality_level: opt.value })}
-                  className={`p-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`p-3 rounded-lg text-left transition-colors ${
                     profile.formality_level === opt.value
                       ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)] text-[var(--electric-lime)]"
-                      : "bg-[var(--surface-2)] text-[var(--text-secondary)]"
+                      : "bg-[var(--surface-2)] text-[var(--text-secondary)] hover:border-[var(--text-muted)]"
                   } border border-[var(--border-subtle)]`}
                 >
-                  {opt.label}
+                  <span className="block text-sm font-medium">{opt.label}</span>
+                  <span className="block text-xs opacity-70">{opt.desc}</span>
                 </button>
               ))}
             </div>
@@ -808,7 +1007,33 @@ function CommunicationSection({
                   className={`p-3 rounded-lg text-left transition-colors ${
                     profile.detail_preference === opt.value
                       ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)] text-[var(--electric-lime)]"
-                      : "bg-[var(--surface-2)] text-[var(--text-secondary)]"
+                      : "bg-[var(--surface-2)] text-[var(--text-secondary)] hover:border-[var(--text-muted)]"
+                  } border border-[var(--border-subtle)]`}
+                >
+                  <span className="block text-sm font-medium">{opt.label}</span>
+                  <span className="block text-xs opacity-70">{opt.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-3">
+              Emotional Support Level
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { value: "minimal", label: "Minimal", desc: "Just the facts, minimal emotional engagement" },
+                { value: "moderate", label: "Moderate", desc: "Balanced emotional acknowledgment" },
+                { value: "high", label: "High", desc: "Empathetic and emotionally supportive" },
+              ] as const).map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => onSave({ emotional_support_level: opt.value })}
+                  className={`p-3 rounded-lg text-left transition-colors ${
+                    profile.emotional_support_level === opt.value
+                      ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)] text-[var(--electric-lime)]"
+                      : "bg-[var(--surface-2)] text-[var(--text-secondary)] hover:border-[var(--text-muted)]"
                   } border border-[var(--border-subtle)]`}
                 >
                   <span className="block text-sm font-medium">{opt.label}</span>
@@ -833,7 +1058,7 @@ function CommunicationSection({
                 className={`p-4 rounded-xl text-left transition-colors ${
                   profile[toggle.key as keyof AIUserProfile]
                     ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)]"
-                    : "bg-[var(--surface-2)] border-[var(--border-subtle)]"
+                    : "bg-[var(--surface-2)] border-[var(--border-subtle)] hover:border-[var(--text-muted)]"
                 } border`}
               >
                 <div className="flex items-center justify-between">
@@ -854,6 +1079,76 @@ function CommunicationSection({
               </button>
             ))}
           </div>
+        </div>
+      </div>
+      
+      {/* Current Settings Summary */}
+      <div className="p-6 rounded-2xl bg-[var(--surface-1)] border border-[var(--border-subtle)]">
+        <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-1">
+          Current Settings Summary
+        </h2>
+        <p className="text-sm text-[var(--text-muted)] mb-4">
+          Here&apos;s how the AI will communicate with you based on your current settings.
+        </p>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-3 rounded-lg bg-[var(--surface-2)]">
+            <p className="text-xs text-[var(--text-muted)]">Style</p>
+            <p className="text-sm font-medium text-[var(--text-primary)] capitalize">
+              {profile.communication_style || "Balanced"}
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-[var(--surface-2)]">
+            <p className="text-xs text-[var(--text-muted)]">Formality</p>
+            <p className="text-sm font-medium text-[var(--text-primary)] capitalize">
+              {profile.formality_level || "Casual"}
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-[var(--surface-2)]">
+            <p className="text-xs text-[var(--text-muted)]">Detail</p>
+            <p className="text-sm font-medium text-[var(--text-primary)] capitalize">
+              {profile.detail_preference || "Moderate"}
+            </p>
+          </div>
+          <div className="p-3 rounded-lg bg-[var(--surface-2)]">
+            <p className="text-xs text-[var(--text-muted)]">Emotional Support</p>
+            <p className="text-sm font-medium text-[var(--text-primary)] capitalize">
+              {profile.emotional_support_level || "Moderate"}
+            </p>
+          </div>
+        </div>
+        
+        <div className="mt-4 flex flex-wrap gap-2">
+          {profile.challenge_me && (
+            <span className="px-2 py-1 rounded text-xs bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]">
+              Challenges thinking
+            </span>
+          )}
+          {profile.celebrate_wins && (
+            <span className="px-2 py-1 rounded text-xs bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]">
+              Celebrates wins
+            </span>
+          )}
+          {profile.use_analogies && (
+            <span className="px-2 py-1 rounded text-xs bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]">
+              Uses analogies
+            </span>
+          )}
+          {profile.use_humor && (
+            <span className="px-2 py-1 rounded text-xs bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]">
+              Uses humor
+            </span>
+          )}
+          {profile.be_philosophical && (
+            <span className="px-2 py-1 rounded text-xs bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]">
+              Philosophical
+            </span>
+          )}
+          {profile.action_oriented && (
+            <span className="px-2 py-1 rounded text-xs bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]">
+              Action-oriented
+            </span>
+          )}
         </div>
       </div>
     </div>
