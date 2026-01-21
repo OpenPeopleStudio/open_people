@@ -27,6 +27,9 @@ A typical demo flow:
 - **[Getting Started](../README.md)** - Platform overview, tech stack, and basic setup
 - **[Development Setup](./development/setup.md)** - Local development environment and contribution guidelines
 - **[Deployment Guide](./deployment/overview.md)** - Production deployment and operations
+- **[AI Playbook](./AI/PLAYBOOK.md)** - Agent and newcomer recipes
+- **[Safety Guardrails](./SAFETY.md)** - High-risk areas and data handling rules
+- **[Runbook](./RUNBOOK.md)** - Debug/ops quick reference
 
 ### 🏗️ Architecture & Design
 - **[System Architecture](./architecture/overview.md)** - Platform architecture, data flows, and design decisions

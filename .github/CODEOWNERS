@@ -1,0 +1,7 @@
+# Adjust owners to real GitHub usernames/teams
+/supabase/                 @team-data
+/app/(platform)/           @team-app
+/app/super-admin/          @team-app
+/lib/ai/                   @team-ml
+/lib/policy/               @team-ml
+/workers/                  @team-ml

@@ -87,6 +87,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the marketing site.
 
+### Repo map (fast orientation)
+- Architecture: `docs/architecture/overview.md`
+- Development setup: `docs/development/setup.md`
+- Deployment/ops: `docs/deployment/overview.md`
+- Security: `docs/security/overview.md`
+- AI playbook: `docs/AI/PLAYBOOK.md`
+- Safety guardrails: `docs/SAFETY.md`
+- Runbook: `docs/RUNBOOK.md`
+- Migrations: `supabase/`
+- Scripts: `scripts/`
+
 ### Development URLs
 
 | URL | Purpose |
@@ -102,13 +113,22 @@ To set up the internal Open People workspace:
 
 ```bash
 # Apply database migrations
-supabase db push
+npm run db:migrate
 
 # Seed the mars tenant and owner user
-node scripts/seed-mars-tenant.js
+npm run db:seed
 ```
 
 Then access `mars.localhost:3000/admin` to use the workspace.
+
+### Common commands
+- `npm run dev` — start app
+- `npm run lint` — ESLint
+- `npm run typecheck` — TypeScript
+- `npm test` — Vitest suite
+- `npm run doctor` — env + DB + migration lint
+- `npm run db:migrate` — apply Supabase migrations
+- `npm run db:seed` — seed Mars tenant
 
 ## Project Structure
 

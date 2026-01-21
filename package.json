@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "doctor": "bash scripts/doctor.sh",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
@@ -24,7 +25,9 @@
     "generate:sdk:ts": "npm run generate:openapi && npx openapi-typescript docs/api/openapi.json -o sdk/typescript/index.d.ts",
     "generate:sdk": "npm run generate:sdk:ts",
     "supabase:health": "node scripts/supabase-health.js",
-    "queue:worker": "node scripts/start-worker.js"
+    "queue:worker": "node scripts/start-worker.js",
+    "db:migrate": "supabase db push",
+    "db:seed": "node scripts/seed-mars-tenant.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.971.0",
