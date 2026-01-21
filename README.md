@@ -48,6 +48,16 @@ OpenPeople.ai is a multi-tenant SaaS platform that provides modular AI-powered p
 - **Styling**: Tailwind CSS
 - **Deployment**: Vercel
 
+## Monitoring & Observability
+
+- **Structured Logging**: Pino-based JSON logging with correlation IDs and context
+- **Error Tracking**: Sentry integration for client and server-side error monitoring
+- **Performance Monitoring**: Request timing, database queries, and API metrics
+- **Security Alerting**: Real-time alerts for suspicious activities and security events
+- **Audit Logging**: Comprehensive audit trails for compliance and investigations
+- **Health Checks**: System health monitoring with automated status reporting
+- **Correlation Tracing**: Request tracing across the entire application stack
+
 ## Getting Started
 
 ### Prerequisites

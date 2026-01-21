@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { decryptApiKey } from "@/lib/api-keys/encryption";
-import type { UpdateApiKeyRequest } from "@/types/api-keys";
+import { errorResponse, errors } from "@/lib/http/responses";
+import { parseJsonBody } from "@/lib/http/validation";
+import { updateApiKeySchema } from "@/lib/schemas/api-keys";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GET /api/keys/[keyId]
@@ -19,7 +20,7 @@ export async function GET(
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized();
     }
     
     // Get the key
@@ -30,8 +31,13 @@ export async function GET(
       .eq("owner_id", user.id)
       .single();
     
-    if (keyError || !key) {
-      return NextResponse.json({ error: "Key not found" }, { status: 404 });
+    if (keyError) {
+      console.error("Failed to fetch key:", keyError);
+      return errorResponse(500, "Failed to fetch key", { code: "KEY_FETCH_FAILED" });
+    }
+
+    if (!key) {
+      return errors.notFound("Key not found");
     }
     
     // Get recent usage
@@ -49,7 +55,7 @@ export async function GET(
     
   } catch (error) {
     console.error("Key fetch error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError();
   }
 }
 
@@ -69,23 +75,32 @@ export async function PATCH(
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized();
     }
     
     // Verify ownership
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from("api_keys")
       .select("id")
       .eq("id", keyId)
       .eq("owner_id", user.id)
       .single();
     
+    if (existingError) {
+      console.error("Failed to load key:", existingError);
+      return errorResponse(500, "Failed to load key", { code: "KEY_FETCH_FAILED" });
+    }
+
     if (!existing) {
-      return NextResponse.json({ error: "Key not found" }, { status: 404 });
+      return errors.notFound("Key not found");
     }
     
     // Parse body
-    const body: UpdateApiKeyRequest = await request.json();
+    const parsedBody = await parseJsonBody(request, updateApiKeySchema);
+    if ("error" in parsedBody) {
+      return parsedBody.error;
+    }
+    const body = parsedBody.data;
     const {
       name,
       description,
@@ -119,7 +134,7 @@ export async function PATCH(
     
     if (updateError) {
       console.error("Failed to update key:", updateError);
-      return NextResponse.json({ error: "Failed to update key" }, { status: 500 });
+      return errorResponse(500, "Failed to update key", { code: "KEY_UPDATE_FAILED" });
     }
     
     // Log update
@@ -139,7 +154,7 @@ export async function PATCH(
     
   } catch (error) {
     console.error("Key update error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError();
   }
 }
 
@@ -159,19 +174,24 @@ export async function DELETE(
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized();
     }
     
     // Verify ownership and get key name for logging
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from("api_keys")
       .select("id, name")
       .eq("id", keyId)
       .eq("owner_id", user.id)
       .single();
     
+    if (existingError) {
+      console.error("Failed to load key:", existingError);
+      return errorResponse(500, "Failed to load key", { code: "KEY_FETCH_FAILED" });
+    }
+
     if (!existing) {
-      return NextResponse.json({ error: "Key not found" }, { status: 404 });
+      return errors.notFound("Key not found");
     }
     
     // Delete the key
@@ -182,13 +202,15 @@ export async function DELETE(
     
     if (deleteError) {
       console.error("Failed to delete key:", deleteError);
-      return NextResponse.json({ error: "Failed to delete key" }, { status: 500 });
+      return errorResponse(500, "Failed to delete key", {
+        code: "KEY_DELETE_FAILED",
+      });
     }
     
     return NextResponse.json({ success: true });
     
   } catch (error) {
     console.error("Key delete error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError();
   }
 }

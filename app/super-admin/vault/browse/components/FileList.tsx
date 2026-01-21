@@ -18,6 +18,7 @@ interface FileListProps {
   onSort: (by: "name" | "date" | "size" | "category") => void;
   onSelect: (fileId: string, multiSelect: boolean) => void;
   onOpen: (fileId: string) => void;
+  onPreview: (fileId: string) => void;
   onSelectAll: () => void;
   totalFiles: number;
   page: number;
@@ -35,6 +36,7 @@ export function FileList({
   onSort,
   onSelect,
   onOpen,
+  onPreview,
   onSelectAll,
   totalFiles,
   page,
@@ -85,6 +87,7 @@ export function FileList({
               selected={selectedIds.has(file.id)}
               onSelect={(multi) => onSelect(file.id, multi)}
               onOpen={() => onOpen(file.id)}
+              onPreview={() => onPreview(file.id)}
             />
           ))}
         </div>
@@ -120,7 +123,7 @@ export function FileList({
         <SortHeader label="Category" field="category" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} className="w-28" />
         <SortHeader label="Size" field="size" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} className="w-24 text-right" />
         <SortHeader label="Date" field="date" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} className="w-28 text-right" />
-        <div className="w-8" />
+        <div className="w-16" />
       </div>
       
       {/* File rows */}
@@ -132,6 +135,7 @@ export function FileList({
             selected={selectedIds.has(file.id)}
             onSelect={(multi) => onSelect(file.id, multi)}
             onOpen={() => onOpen(file.id)}
+            onPreview={() => onPreview(file.id)}
           />
         ))}
       </div>
@@ -191,11 +195,13 @@ function FileListItem({
   selected,
   onSelect,
   onOpen,
+  onPreview,
 }: {
   file: VaultFileWithFolder;
   selected: boolean;
   onSelect: (multiSelect: boolean) => void;
   onOpen: () => void;
+  onPreview: () => void;
 }) {
   const categoryColor = getCategoryColor(file.ai_category);
   
@@ -279,10 +285,21 @@ function FileListItem({
       </div>
       
       {/* Actions */}
-      <div className="w-8">
+      <div className="w-16 flex gap-1">
+        <button
+          onClick={(e) => { e.stopPropagation(); onPreview(); }}
+          className="p-1.5 rounded hover:bg-[var(--surface-2)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+          title="Preview"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </button>
         <button
           onClick={(e) => { e.stopPropagation(); onOpen(); }}
           className="p-1.5 rounded hover:bg-[var(--surface-2)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+          title="Details"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
@@ -298,11 +315,13 @@ function FileGridItem({
   selected,
   onSelect,
   onOpen,
+  onPreview,
 }: {
   file: VaultFileWithFolder;
   selected: boolean;
   onSelect: (multiSelect: boolean) => void;
   onOpen: () => void;
+  onPreview: () => void;
 }) {
   const categoryColor = getCategoryColor(file.ai_category);
   
@@ -369,6 +388,29 @@ function FileGridItem({
         >
           {getCategoryLabel(file.ai_category)}
         </span>
+      </div>
+
+      {/* Hover Actions */}
+      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+        <button
+          onClick={(e) => { e.stopPropagation(); onPreview(); }}
+          className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
+          title="Preview"
+        >
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onOpen(); }}
+          className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
+          title="Details"
+        >
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+          </svg>
+        </button>
       </div>
     </div>
   );

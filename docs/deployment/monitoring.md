@@ -243,6 +243,26 @@ ORDER BY idx_scan DESC;
 
 **Access via**: Vercel Dashboard → Analytics → Functions
 
+### Cloudflare Workers Monitoring
+
+**Email Worker Metrics**:
+- Email processing throughput
+- Attachment encryption/decryption times
+- R2 upload success/failure rates
+- Webhook delivery status
+- Error rates and performance
+
+**Access via**: Cloudflare Dashboard → Workers → Functions
+
+**Email Worker Logs**:
+```bash
+# Monitor worker logs
+wrangler tail vault-email-worker
+
+# View in Cloudflare Dashboard
+# Workers → vault-email-worker → Logs
+```
+
 ### Cloudflare R2 Monitoring
 
 **Metrics Available**:

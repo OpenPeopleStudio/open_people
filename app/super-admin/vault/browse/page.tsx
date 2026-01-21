@@ -7,7 +7,8 @@ import { FileList } from "./components/FileList";
 import { FileDetails } from "./components/FileDetails";
 import { SearchBar } from "./components/SearchBar";
 import { UploadDropzone } from "./components/UploadDropzone";
-import type { VaultFolder, VaultFile, VaultFileWithFolder, AICategory } from "@/types/vault";
+import { FilePreviewModal } from "@/components/vault/FilePreviewModal";
+import type { VaultFolder, VaultFile, VaultFileWithFolder, AICategory, VaultPreviewResponse } from "@/types/vault";
 import { formatBytes } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -35,6 +36,7 @@ function VaultBrowseContent() {
   );
   const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
   const [detailsFileId, setDetailsFileId] = useState<string | null>(null);
+  const [previewData, setPreviewData] = useState<VaultPreviewResponse | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [sortBy, setSortBy] = useState<"name" | "date" | "size" | "category">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -168,6 +170,23 @@ function VaultBrowseContent() {
   
   function handleFileOpen(fileId: string) {
     setDetailsFileId(fileId);
+  }
+
+  async function handleFilePreview(fileId: string) {
+    if (!sessionId) return;
+
+    try {
+      const res = await fetch(`/api/vault/files/${fileId}/preview`, {
+        headers: { "x-vault-session": sessionId },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setPreviewData(data);
+      }
+    } catch (err) {
+      console.error("Failed to load preview:", err);
+    }
   }
   
   function handleSelectAll() {
@@ -410,6 +429,7 @@ function VaultBrowseContent() {
             }}
             onSelect={handleFileSelect}
             onOpen={handleFileOpen}
+            onPreview={handleFilePreview}
             onSelectAll={handleSelectAll}
             totalFiles={totalFiles}
             page={page}
@@ -430,6 +450,15 @@ function VaultBrowseContent() {
           </div>
         )}
       </div>
+
+      {/* Preview Modal */}
+      {previewData && (
+        <FilePreviewModal
+          previewData={previewData}
+          sessionId={sessionId || ""}
+          onClose={() => setPreviewData(null)}
+        />
+      )}
     </div>
   );
 }

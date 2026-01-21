@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import type { ApiKey } from "@/types/api-keys";
 import { getProviderInfo, ENVIRONMENTS } from "@/lib/api-keys/encryption";
 
@@ -17,19 +17,17 @@ interface KeyCardProps {
 export function KeyCard({ apiKey, selected, onSelect }: KeyCardProps) {
   const provider = getProviderInfo(apiKey.provider);
   const env = ENVIRONMENTS.find(e => e.id === apiKey.environment);
-  const [isExpired, setIsExpired] = useState(false);
-  const [isExpiringSoon, setIsExpiringSoon] = useState(false);
-
-  useEffect(() => {
-    if (apiKey.expires_at) {
-      const now = new Date();
-      const expires = new Date(apiKey.expires_at);
-      const expired = expires < now;
-      setIsExpired(expired);
-      
-      const soon = expires < new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) && !expired;
-      setIsExpiringSoon(soon);
+  const { isExpired, isExpiringSoon } = useMemo(() => {
+    if (!apiKey.expires_at) {
+      return { isExpired: false, isExpiringSoon: false };
     }
+
+    const now = new Date();
+    const expires = new Date(apiKey.expires_at);
+    const expired = expires < now;
+    const soon = expires < new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) && !expired;
+
+    return { isExpired: expired, isExpiringSoon: soon };
   }, [apiKey.expires_at]);
   
   return (

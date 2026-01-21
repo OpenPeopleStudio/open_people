@@ -39,15 +39,73 @@ async function getRequestData(requestId: string): Promise<AIRequestData | null> 
   return buildRequestData(run, supabase);
 }
 
+type RiskSignal = { type?: string; score?: number; level?: string };
+
+type AIRunContext = {
+  policy_decision?: {
+    decision?: string;
+    policy_name?: string;
+    policy_id?: string;
+    reasons?: string[];
+  };
+  risk_signals?: RiskSignal[];
+  risk_score?: number;
+  risk_level?: string;
+  pii_detection?: {
+    detected: boolean;
+    types?: string[];
+    redacted?: boolean;
+  };
+  moderation?: {
+    passed?: boolean;
+    flags?: string[];
+    scores?: Record<string, number>;
+  };
+  guardrails?: {
+    triggered?: string[];
+    passed?: string[];
+  };
+  policy_trace?: unknown;
+};
+
+type AIRunRecord = {
+  id: string;
+  tenant_id: string;
+  created_at: string;
+  completed_at?: string | null;
+  request_id?: string;
+  status?: string;
+  model?: string;
+  messages?: { role: string; content: string }[];
+  input_text?: string;
+  temperature?: number;
+  output_text?: string;
+  finish_reason?: string;
+  input_tokens?: number;
+  output_tokens?: number;
+  latency_ms?: number;
+  estimated_cost_usd?: number;
+  time_to_first_token_ms?: number;
+  quality_score?: number;
+  hallucination_score?: number;
+  relevance_score?: number;
+  coherence_score?: number;
+  trace_id?: string;
+  span_id?: string;
+  parent_span_id?: string;
+  context?: AIRunContext;
+};
+
 async function buildRequestData(
-  run: any,
+  run: AIRunRecord,
   supabase: Awaited<ReturnType<typeof createSupabaseServer>>
 ): Promise<AIRequestData> {
+  const runRecord = run;
   // Build timeline from activity logs
   const { data: activityLogs } = await supabase
     .from("activity_ledger")
     .select("*")
-    .eq("resource_id", run.id)
+    .eq("resource_id", runRecord.id)
     .order("created_at", { ascending: true });
   
   const timeline = (activityLogs || []).map((log) => ({
@@ -61,16 +119,16 @@ async function buildRequestData(
   if (timeline.length === 0) {
     timeline.push(
       {
-        timestamp: run.created_at,
+        timestamp: runRecord.created_at,
         event: "Request received",
         details: undefined,
         status: "info",
       },
       {
-        timestamp: run.completed_at || run.created_at,
-        event: run.status === "completed" ? "Response generated" : `Status: ${run.status}`,
+        timestamp: runRecord.completed_at || runRecord.created_at,
+        event: runRecord.status === "completed" ? "Response generated" : `Status: ${runRecord.status}`,
         details: undefined,
-        status: run.status === "completed" ? "success" : "error",
+        status: runRecord.status === "completed" ? "success" : "error",
       }
     );
   }
@@ -79,41 +137,41 @@ async function buildRequestData(
   const { data: contextItems } = await supabase
     .from("ai_run_context_items")
     .select("*")
-    .eq("run_id", run.id);
+    .eq("run_id", runRecord.id);
   
   // Get policy decision from context if available
-  const policyDecision = run.context?.policy_decision || {
+  const policyDecision = runRecord.context?.policy_decision || {
     decision: "allow",
     reasons: ["No policy evaluation recorded"],
   };
   
   // Get risk signals
-  const riskSignals = run.context?.risk_signals || [];
+  const riskSignals = runRecord.context?.risk_signals || [];
   
   return {
-    request_id: run.request_id || run.id,
-    tenant_id: run.tenant_id,
-    created_at: run.created_at,
+    request_id: runRecord.request_id || runRecord.id,
+    tenant_id: runRecord.tenant_id,
+    created_at: runRecord.created_at,
     
     input: {
-      model: run.model || "unknown",
-      messages: run.messages || [
-        { role: "user", content: run.input_text || "[Input not recorded]" },
+      model: runRecord.model || "unknown",
+      messages: runRecord.messages || [
+        { role: "user", content: runRecord.input_text || "[Input not recorded]" },
       ],
-      temperature: run.temperature,
+      temperature: runRecord.temperature,
     },
     
     output: {
-      content: run.output_text || "[Output not recorded]",
-      finish_reason: run.finish_reason,
+      content: runRecord.output_text || "[Output not recorded]",
+      finish_reason: runRecord.finish_reason,
     },
     
     metrics: {
-      input_tokens: run.input_tokens || 0,
-      output_tokens: run.output_tokens || 0,
-      latency_ms: run.latency_ms || 0,
-      cost_usd: run.estimated_cost_usd || 0,
-      time_to_first_token_ms: run.time_to_first_token_ms,
+      input_tokens: runRecord.input_tokens || 0,
+      output_tokens: runRecord.output_tokens || 0,
+      latency_ms: runRecord.latency_ms || 0,
+      cost_usd: runRecord.estimated_cost_usd || 0,
+      time_to_first_token_ms: runRecord.time_to_first_token_ms,
     },
     
     timeline: timeline as AIRequestData["timeline"],
@@ -129,52 +187,52 @@ async function buildRequestData(
       policy_name: policyDecision.policy_name,
       policy_id: policyDecision.policy_id,
       reasons: policyDecision.reasons || [],
-      trace_available: !!run.context?.policy_trace,
+      trace_available: !!runRecord.context?.policy_trace,
     },
     
-    risk_signals: riskSignals.map((signal: any) => ({
+    risk_signals: riskSignals.map((signal: RiskSignal) => ({
       type: signal.type,
       score: signal.score,
       level: signal.level || "low",
     })),
-    overall_risk_score: run.context?.risk_score || 0,
-    overall_risk_level: run.context?.risk_level || "low",
+    overall_risk_score: runRecord.context?.risk_score || 0,
+    overall_risk_level: runRecord.context?.risk_level || "low",
     
-    quality: run.quality_score
+    quality: runRecord.quality_score
       ? {
-          score: run.quality_score,
-          hallucination_score: run.hallucination_score,
-          relevance_score: run.relevance_score,
-          coherence_score: run.coherence_score,
+          score: runRecord.quality_score,
+          hallucination_score: runRecord.hallucination_score,
+          relevance_score: runRecord.relevance_score,
+          coherence_score: runRecord.coherence_score,
         }
       : undefined,
     
-    pii: run.context?.pii_detection
+    pii: runRecord.context?.pii_detection
       ? {
-          detected: run.context.pii_detection.detected,
-          types: run.context.pii_detection.types,
-          redacted: run.context.pii_detection.redacted,
+          detected: runRecord.context.pii_detection.detected,
+          types: runRecord.context.pii_detection.types,
+          redacted: runRecord.context.pii_detection.redacted,
         }
       : undefined,
     
-    moderation: run.context?.moderation
+    moderation: runRecord.context?.moderation
       ? {
-          passed: run.context.moderation.passed,
-          flags: run.context.moderation.flags,
-          scores: run.context.moderation.scores,
+          passed: runRecord.context.moderation.passed,
+          flags: runRecord.context.moderation.flags,
+          scores: runRecord.context.moderation.scores,
         }
       : undefined,
     
-    guardrails: run.context?.guardrails
+    guardrails: runRecord.context?.guardrails
       ? {
-          triggered: run.context.guardrails.triggered || [],
-          passed: run.context.guardrails.passed || [],
+          triggered: runRecord.context.guardrails.triggered || [],
+          passed: runRecord.context.guardrails.passed || [],
         }
       : undefined,
     
-    trace_id: run.trace_id,
-    span_id: run.span_id,
-    parent_span_id: run.parent_span_id,
+    trace_id: runRecord.trace_id,
+    span_id: runRecord.span_id,
+    parent_span_id: runRecord.parent_span_id,
   };
 }
 

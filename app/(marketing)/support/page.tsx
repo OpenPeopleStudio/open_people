@@ -251,7 +251,7 @@ export default function SupportPage() {
             </h2>
             <p className="mt-2 sm:mt-3 text-sm sm:text-base text-[var(--text-secondary)] max-w-xl mx-auto">
               Our support team typically responds within 24 hours. For urgent issues, 
-              include "URGENT" in your subject line.
+              include &quot;URGENT&quot; in your subject line.
             </p>
             <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
               <a

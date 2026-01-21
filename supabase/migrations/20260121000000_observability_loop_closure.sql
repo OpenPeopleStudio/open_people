@@ -359,6 +359,14 @@ CREATE TABLE IF NOT EXISTS auto_baseline_configs (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Auto-baseline results
+CREATE TABLE IF NOT EXISTS drift_baselines (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Auto-baseline collection jobs
 CREATE TABLE IF NOT EXISTS auto_baseline_jobs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

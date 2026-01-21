@@ -6,7 +6,10 @@ import {
   generateKeyHint,
   validateKeyFormat,
 } from "@/lib/api-keys/encryption";
-import type { CreateApiKeyRequest, ApiKeyFilters } from "@/types/api-keys";
+import { errorResponse, errors } from "@/lib/http/responses";
+import { parseJsonBody } from "@/lib/http/validation";
+import { createApiKeySchema } from "@/lib/schemas/api-keys";
+import type { ApiKeyFilters } from "@/types/api-keys";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GET /api/keys
@@ -20,7 +23,7 @@ export async function GET(request: NextRequest) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized();
     }
     
     // Get profile to check permissions (super_admin, owner, or admin can manage keys)
@@ -32,7 +35,7 @@ export async function GET(request: NextRequest) {
     
     const allowedRoles = ["super_admin", "owner", "admin"];
     if (!profile || !allowedRoles.includes(profile.role)) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return errors.forbidden("Access denied");
     }
     
     // Parse filters from query params
@@ -74,7 +77,9 @@ export async function GET(request: NextRequest) {
     
     if (keysError) {
       console.error("Failed to fetch keys:", keysError);
-      return NextResponse.json({ error: "Failed to fetch keys" }, { status: 500 });
+      return errorResponse(500, "Failed to fetch keys", {
+        code: "KEYS_FETCH_FAILED",
+      });
     }
     
     return NextResponse.json({
@@ -84,7 +89,7 @@ export async function GET(request: NextRequest) {
     
   } catch (error) {
     console.error("Keys fetch error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError();
   }
 }
 
@@ -100,7 +105,7 @@ export async function POST(request: NextRequest) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized();
     }
     
     // Get profile to check permissions (super_admin, owner, or admin can create keys)
@@ -112,36 +117,34 @@ export async function POST(request: NextRequest) {
     
     const allowedRoles = ["super_admin", "owner", "admin"];
     if (!profile || !allowedRoles.includes(profile.role)) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return errors.forbidden("Access denied");
     }
     
     // Parse body
-    const body: CreateApiKeyRequest = await request.json();
+    const parsedBody = await parseJsonBody(request, createApiKeySchema);
+    if ("error" in parsedBody) {
+      return parsedBody.error;
+    }
+
     const {
       name,
       provider,
       key,
       description,
-      environment = "development",
-      scope = "super_admin",
+      environment,
+      scope,
       project_name,
-      tags = [],
+      tags,
       expires_at,
-      metadata = {},
-    } = body;
-    
-    // Validate required fields
-    if (!name || !provider || !key) {
-      return NextResponse.json(
-        { error: "name, provider, and key are required" },
-        { status: 400 }
-      );
-    }
+      metadata,
+    } = parsedBody.data;
     
     // Validate key format
     const validation = validateKeyFormat(provider, key);
     if (!validation.valid) {
-      return NextResponse.json({ error: validation.error }, { status: 400 });
+      return errorResponse(400, validation.error ?? "Invalid API key format", {
+        code: "INVALID_KEY_FORMAT",
+      });
     }
     
     // Encrypt the key
@@ -153,10 +156,9 @@ export async function POST(request: NextRequest) {
       iv = encrypted.iv;
     } catch (err) {
       if (err instanceof ApiKeysEncryptionConfigError) {
-        return NextResponse.json(
-          { error: err.message, code: "API_KEYS_ENCRYPTION_NOT_CONFIGURED" },
-          { status: 503 }
-        );
+        return errorResponse(503, err.message, {
+          code: "API_KEYS_ENCRYPTION_NOT_CONFIGURED",
+        });
       }
       throw err;
     }
@@ -186,7 +188,9 @@ export async function POST(request: NextRequest) {
     
     if (insertError) {
       console.error("Failed to create key:", insertError);
-      return NextResponse.json({ error: "Failed to create key" }, { status: 500 });
+      return errorResponse(500, "Failed to create key", {
+        code: "KEY_CREATE_FAILED",
+      });
     }
     
     // Log creation
@@ -209,6 +213,6 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error("Key create error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError();
   }
 }

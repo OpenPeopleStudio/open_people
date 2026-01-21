@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#00FF88"/>
+
+  <!-- Open People Icon - stylized human figures -->
+  <g transform="translate(8,8)">
+    <!-- Person 1 (left) -->
+    <circle cx="3" cy="2" r="1.5" fill="#000"/>
+    <rect x="2.5" y="4" width="1" height="3" rx="0.5" fill="#000"/>
+
+    <!-- Person 2 (right) -->
+    <circle cx="13" cy="2" r="1.5" fill="#000"/>
+    <rect x="12.5" y="4" width="1" height="3" rx="0.5" fill="#000"/>
+
+    <!-- Connecting lines representing openness/communication -->
+    <path d="M4.5 6 L11.5 6" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M4 7.5 L12 7.5" stroke="#000" stroke-width="1" stroke-linecap="round"/>
+    <path d="M4.5 9 L11.5 9" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

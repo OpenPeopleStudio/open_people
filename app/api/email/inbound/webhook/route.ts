@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { simpleParser } from "mailparser";
 import type { EmailAddress, EmailAttachmentMeta } from "@/types/email";
 import { createResendClient } from "@/lib/email/resend";
+import { emailWorkspace } from "@/lib/email/workspace";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Inbound Email Webhook
@@ -143,158 +144,53 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Webhooks are unauthenticated requests, so we must use the admin client
-    // to bypass RLS when looking up managed domains/accounts and inserting messages.
-    let supabase: any;
-    try {
-      supabase = await createSupabaseAdmin();
-    } catch (e) {
-      console.error("[Inbound Webhook] Supabase admin client not available:", e);
-      return NextResponse.json(
-        { received: true, stored: false, error: "Server not configured for inbound ingestion" },
-        { status: 500 }
-      );
-    }
+    // Convert emailData to the format expected by EmailWorkspaceService
+    const webhookPayload = {
+      type: contentType.includes("application/json") ? "email.received" : "email.raw",
+      data: {
+        email_id: emailData.resendEmailId,
+        message_id: emailData.messageId,
+        from: emailData.fromName ? `${emailData.fromName} <${emailData.from}>` : emailData.from,
+        to: Array.isArray(emailData.to) ? emailData.to : [emailData.to],
+        cc: emailData.cc,
+        subject: emailData.subject,
+        text: emailData.text,
+        html: emailData.html,
+        created_at: emailData.date?.toISOString() || new Date().toISOString(),
+        attachments: emailData.attachments,
+        in_reply_to: emailData.inReplyTo,
+        references: emailData.references,
+      },
+    };
 
-    const toAddresses = normalizeAddressList(Array.isArray(emailData.to) ? emailData.to : [emailData.to]);
-    console.log(`[Inbound Webhook ${requestId}] Normalized to addresses:`, toAddresses);
+    // Get webhook secret from environment (could be per-tenant in the future)
+    const webhookSecret = process.env.RESEND_WEBHOOK_SECRET || process.env.INBOUND_WEBHOOK_SECRET || "";
 
-    if (toAddresses.length === 0) {
-      console.log(`[Inbound Webhook ${requestId}] No valid recipient addresses found`);
-      return NextResponse.json({ error: "Missing recipient address", requestId }, { status: 400 });
-    }
+    // Process with EmailWorkspaceService
+    const result = await emailWorkspace.processInboundWebhook(
+      webhookPayload,
+      request.headers.get("svix-signature") || request.headers.get("x-webhook-signature") || "",
+      webhookSecret
+    );
 
-    // Find the best matching managed domain / account
-    let matchedManagedDomain: any | null = null;
-    let matchedToAddress: string | null = null;
-
-    for (const addr of toAddresses) {
-      const at = addr.lastIndexOf("@");
-      if (at === -1) continue;
-      const domain = addr.slice(at + 1);
-      console.log(`[Inbound Webhook ${requestId}] Checking domain: ${domain} for address: ${addr}`);
-
-      const { data: managedDomain, error: managedDomainError } = await supabase
-        .from("managed_email_domains")
-        .select("*")
-        .eq("domain", domain)
-        .eq("status", "verified")
-        .maybeSingle();
-
-      if (managedDomainError) {
-        console.error(`[Inbound Webhook ${requestId}] managed_email_domains lookup error:`, managedDomainError);
-        continue;
-      }
-
-      console.log(`[Inbound Webhook ${requestId}] Domain lookup result for ${domain}:`, managedDomain ? "FOUND" : "NOT FOUND");
-
-      if (managedDomain) {
-        matchedManagedDomain = managedDomain;
-        matchedToAddress = addr;
-        console.log(`[Inbound Webhook ${requestId}] Matched managed domain:`, {
-          id: managedDomain.id,
-          domain: managedDomain.domain,
-          tenant_id: managedDomain.tenant_id,
-          account_id: managedDomain.account_id,
-        });
-        break;
-      }
-    }
-
-    if (!matchedManagedDomain) {
-      console.log(`[Inbound Webhook ${requestId}] No managed domain found, trying email_accounts fallback`);
-      
-      // Fallback: exact match on email_accounts.email_address (useful for single-address managed inboxes)
-      for (const addr of toAddresses) {
-        console.log(`[Inbound Webhook ${requestId}] Checking email_accounts for: ${addr}`);
-        
-        const { data: account, error: accountError } = await supabase
-          .from("email_accounts")
-          .select("*")
-          .eq("email_address", addr)
-          .eq("mode", "managed")
-          .maybeSingle();
-
-        if (accountError) {
-          console.error(`[Inbound Webhook ${requestId}] email_accounts lookup error:`, accountError);
-          continue;
-        }
-
-        if (account) {
-          console.log(`[Inbound Webhook ${requestId}] Found managed account: ${account.id} (${account.name})`);
-          await storeInboundMessage(supabase, account, emailData);
-          console.log(`[Inbound Webhook ${requestId}] ✓ Email stored successfully via account match`);
-          return NextResponse.json({ received: true, stored: true, matched: { type: "account", to: addr }, requestId });
-        }
-      }
-
-      console.log(`[Inbound Webhook ${requestId}] ✗ No managed domain/account found for recipients:`, toAddresses);
-      
-      // Also check what domains DO exist for debugging
-      const { data: allDomains } = await supabase
-        .from("managed_email_domains")
-        .select("domain, status, tenant_id");
-      console.log(`[Inbound Webhook ${requestId}] Available managed domains in system:`, allDomains);
-      
-      // Return 200 to avoid retry loops, but report that we didn't store.
+    if (result.success) {
+      console.log(`[Inbound Webhook ${requestId}] ✓ Email processed successfully`);
       return NextResponse.json({
         received: true,
-        stored: false,
-        reason: "No managed domain/account found for recipient(s)",
-        to: toAddresses,
+        stored: true,
+        threadId: result.threadId,
+        messageId: result.messageId,
         requestId,
       });
-    }
-
-    // Domain matched: store to its linked account (if any), otherwise store at the tenant level
-    const domainAccountId = matchedManagedDomain.account_id as string | null;
-
-    if (domainAccountId) {
-      const { data: account, error: accountError } = await supabase
-        .from("email_accounts")
-        .select("*")
-        .eq("id", domainAccountId)
-        .maybeSingle();
-
-      if (accountError) {
-        console.error("[Inbound Webhook] linked account lookup error:", accountError);
-        return NextResponse.json({ received: true, stored: false, error: "Account lookup failed" });
-      }
-
-        if (account) {
-          await storeInboundMessage(
-            supabase,
-            account,
-            emailData,
-            matchedManagedDomain.tenant_id ?? undefined
-          );
-          console.log(`[Inbound Webhook ${requestId}] ✓ Email stored successfully via domain match (account: ${account.id})`);
-          return NextResponse.json({
-            received: true,
-            stored: true,
-            matched: { type: "domain", domain: matchedManagedDomain.domain, to: matchedToAddress },
-            requestId,
-          });
-        }
-      }
-
-    if (!matchedManagedDomain.tenant_id) {
-      console.warn("[Inbound Webhook] Managed domain has no tenant_id and no account_id:", matchedManagedDomain.domain);
+    } else {
+      console.log(`[Inbound Webhook ${requestId}] ✗ Email processing failed:`, result.error);
       return NextResponse.json({
         received: true,
         stored: false,
-        reason: "Managed domain is not associated with a tenant/account",
-      });
+        error: result.error,
+        requestId,
+      }, { status: 400 });
     }
-
-    await storeInboundMessageForTenant(supabase, matchedManagedDomain.tenant_id, emailData);
-    console.log(`[Inbound Webhook ${requestId}] ✓ Email stored successfully via domain-tenant match`);
-    return NextResponse.json({
-      received: true,
-      stored: true,
-      matched: { type: "domain-tenant", domain: matchedManagedDomain.domain, to: matchedToAddress },
-      requestId,
-    });
   } catch (error) {
     console.error(`[Inbound Webhook ${requestId}] ✗ Error:`, error);
     // Return 200 to avoid retry loops

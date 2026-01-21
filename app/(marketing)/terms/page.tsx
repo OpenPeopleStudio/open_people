@@ -37,7 +37,7 @@ export default function TermsPage() {
             </h1>
 
             <p className="mt-5 sm:mt-6 md:mt-8 text-base sm:text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed animate-slide-up delay-100">
-              These Terms of Service ("Terms") govern your access to and use of
+              These Terms of Service (&quot;Terms&quot;) govern your access to and use of
               OpenPeople.ai&apos;s website and services. By using the Services, you agree 
               to these Terms.
             </p>
@@ -85,7 +85,7 @@ export default function TermsPage() {
               <h2>4. Customer content</h2>
               <p>
                 You retain your rights in the content and data you submit to the
-                Services ("Customer Content"). You grant us a limited license to
+                Services (&quot;Customer Content&quot;). You grant us a limited license to
                 host, process, and transmit Customer Content solely to provide
                 and secure the Services.
               </p>
@@ -120,7 +120,7 @@ export default function TermsPage() {
 
               <h2>9. Disclaimers</h2>
               <p>
-                The Services are provided on an "as is" and "as available"
+                The Services are provided on an &quot;as is&quot; and &quot;as available&quot;
                 basis. To the fullest extent permitted by law, we disclaim all
                 warranties, express or implied.
               </p>

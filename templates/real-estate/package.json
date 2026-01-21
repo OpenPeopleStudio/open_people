@@ -1,0 +1,46 @@
+{
+  "name": "openpeople-real-estate",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate": "supabase db push",
+    "migrate:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local > types/supabase.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.90.1",
+    "next": "16.1.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-leaflet": "^5.0.0",
+    "leaflet": "^1.9.4",
+    "date-fns": "^4.1.0",
+    "react-calendar": "^5.0.0",
+    "react-big-calendar": "^1.15.0",
+    "react-dropzone": "^14.3.5",
+    "react-markdown": "^10.1.0",
+    "lucide-react": "^0.468.0",
+    "openai": "^4.77.4",
+    "@types/leaflet": "^1.9.21"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitest/ui": "^2.1.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.3",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^2.1.0"
+  }
+}

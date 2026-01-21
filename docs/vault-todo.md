@@ -16,7 +16,7 @@ Super Admin Encrypted Vault with R2 storage, client-side encryption, AI analysis
 | 2. File Management | ✅ Complete | Browse UI, folders, upload/download, search/filter |
 | 3. Encryption UX | ✅ Complete | Client-side crypto, password change, session management |
 | 4. AI Integration | ✅ Complete | OpenAI analysis, suggestions, inbox review |
-| 5. Automation | 🔲 Scaffolded | Email ingestion, automation rules (UI/API wired to schema) |
+| 5. Automation | ✅ Complete | Email ingestion, automation rules (UI/API wired to schema) |
 
 ---
 
@@ -24,34 +24,34 @@ Super Admin Encrypted Vault with R2 storage, client-side encryption, AI analysis
 
 ### Email Ingestion (Cloudflare Email Worker)
 
-- [ ] **Create Cloudflare Email Worker**
+- [x] **Create Cloudflare Email Worker**
   - Location: `workers/vault-email-worker/` (separate deployment)
   - Receives emails at `vault-ingest@yourdomain.com`
   - Extracts attachments
   - Encrypts with vault's public key (or stores encrypted pending approval)
   - Calls webhook to create inbox items
 
-- [ ] **Email Webhook API**
+- [x] **Email Webhook API**
   - Location: `app/api/vault/webhook/email/route.ts`
   - Validates webhook signature
   - Creates `vault_inbox` entries
   - Triggers AI analysis on attachments
   - Matches against automation rules
 
-- [ ] **Email Configuration**
+- [x] **Email Configuration**
   - Add Cloudflare Email Routing setup instructions
   - DNS records for email receiving
   - Worker deployment scripts
 
 ### Automation Rules
 
-- [ ] **Rules API**
+- [x] **Rules API**
   - Location: `app/api/vault/automation/rules/route.ts`
   - CRUD operations for automation rules
   - Rule matching logic
   - Fields (schema-aligned): `email_from_pattern`, `email_from_exact[]`, `email_subject_pattern`, `email_subject_contains[]`, `attachment_types`, `attachment_name_pattern`, size bounds, `target_folder_id`, `auto_approve`, `ai_classify`, `apply_tags`, `priority`
 
-- [ ] **Rules UI**
+- [x] **Rules UI**
   - Location: `app/super-admin/vault/automation/page.tsx`
   - List existing rules
   - Create/edit form uses pattern + exact/contains fields, attachment filters, target folder, auto-approve toggle, priority
@@ -66,9 +66,9 @@ Super Admin Encrypted Vault with R2 storage, client-side encryption, AI analysis
 
 ### Integration Points
 
-- [ ] **Update inbox to show matched rule**
-- [ ] **Auto-approve flow** (bypass inbox for trusted rules)
-- [ ] **Email metadata storage** (from, subject, date, message-id)
+- [x] **Update inbox to show matched rule**
+- [x] **Auto-approve flow** (bypass inbox for trusted rules)
+- [x] **Email metadata storage** (from, subject, date, message-id)
 - [ ] **Attachment deduplication** (check content hash before creating)
 
 ---

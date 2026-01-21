@@ -7,6 +7,7 @@ import {
   HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { withOpObjectMetadata } from "@/lib/op/tag";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Cloudflare R2 Storage Client
@@ -62,11 +63,11 @@ export async function getUploadUrl(
     Bucket: R2_BUCKET_NAME,
     Key: key,
     ContentType: contentType,
-    Metadata: {
+    Metadata: withOpObjectMetadata({
       "tenant-id": tenantId,
       "bucket-name": bucket,
       "original-filename": filename,
-    },
+    }),
   });
 
   const url = await getSignedUrl(client, command, { expiresIn });
@@ -109,7 +110,7 @@ export async function uploadFile(
     Key: key,
     Body: body,
     ContentType: contentType,
-    Metadata: metadata,
+    Metadata: withOpObjectMetadata(metadata),
   });
 
   const response = await client.send(command);

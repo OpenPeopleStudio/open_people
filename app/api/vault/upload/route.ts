@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     
     // Parse request body
     const body: VaultUploadRequest = await request.json();
-    const { filename, content_type, size_bytes, folder_id } = body;
+    const { filename, content_type, size_bytes, folder_id, has_thumbnail } = body;
     
     if (!filename || !content_type || !size_bytes) {
       return NextResponse.json(
@@ -118,6 +118,22 @@ export async function POST(request: NextRequest) {
       content_type,
       3600 // 1 hour expiry
     );
+
+    // Generate thumbnail upload URL if requested
+    let thumbnailUploadUrl: string | null = null;
+    let thumbnailKey: string | null = null;
+
+    if (has_thumbnail) {
+      const thumbnailResult = await getUploadUrl(
+        vault.id,
+        "vault-thumbnails",
+        `${fileId}.enc`,
+        'image/jpeg',
+        3600 // 1 hour expiry
+      );
+      thumbnailUploadUrl = thumbnailResult.url;
+      thumbnailKey = thumbnailResult.key;
+    }
     
     // Generate encryption IV for this file
     const iv = generateRandomBytes(12);
@@ -158,6 +174,10 @@ export async function POST(request: NextRequest) {
       upload_url: uploadUrl,
       encryption_key: encryptionKey.id, // Client will use session key to encrypt
       encryption_iv: ivBase64,
+      ...(thumbnailUploadUrl && thumbnailKey && {
+        thumbnail_upload_url: thumbnailUploadUrl,
+        thumbnail_key: thumbnailKey,
+      }),
     };
     
     // Update session activity

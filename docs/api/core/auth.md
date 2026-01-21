@@ -1,42 +1,253 @@
-# Authentication (Supabase Auth)
+# Centralized Authentication & Authorization
 
-OpenPeople.ai uses **Supabase Auth** for user authentication. There is **no custom `/api/auth/*` REST API** in this repo; login/signup flows use the Supabase client and session cookies.
+OpenPeople.ai uses a **centralized authentication and authorization system** built on top of Supabase Auth. The system provides unified auth patterns, role-based access control (RBAC), and multi-tenant isolation.
 
-## ✅ What API routes do
+## 🏗️ Architecture Overview
 
-Most `app/api/**/route.ts` handlers authenticate like this:
+### Core Components
 
-- Build a server Supabase client (see `lib/supabase/server.ts`)
-- Call `supabase.auth.getUser()`
-- Use the authenticated user’s `id` to look up `709_profiles` for `tenant_id` and `role`
-
-If the user is missing/invalid, endpoints typically return:
-
-- `401` with `{ error: "Unauthorized" }`
-
-## 🧑‍💻 Calling authenticated endpoints
-
-### From the web app (recommended)
-
-Calls from the app usually rely on **Supabase session cookies**, so you don’t manually attach headers.
-
-### From external clients
-
-Send a Supabase access token as a Bearer token:
-
-```http
-Authorization: Bearer <supabase_access_token>
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   API Routes    │───▶│   Middleware     │───▶│  Handlers       │
+│                 │    │ • Authentication │    │ • Business      │
+│ • withAuth()    │    │ • Authorization  │    │ • Logic         │
+│ • withRole()    │    │ • Tenant Check   │    │                 │
+│ • withPermission│    │ • RBAC           │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
-## 🔎 Where authorization rules live
+### Authentication Flow
 
-Authorization is implemented per endpoint. Common patterns:
+1. **Request arrives** with Supabase session cookies
+2. **Middleware authenticates** user via `supabase.auth.getUser()`
+3. **Profile lookup** retrieves role and tenant information
+4. **Authorization checks** validate permissions and access
+5. **Request processing** continues with authenticated context
 
-- Tenant-scoped access via the user’s `profile.tenant_id`
-- Role checks against `profile.role` (for example `"super_admin"`, `"owner"`, `"admin"`)
+## 🎯 Using Auth Middleware
 
-If you need an endpoint’s exact rules, open the corresponding `app/api/.../route.ts`.
+### Basic Authentication
 
----
+```typescript
+// app/api/user/profile/route.ts
+import { withAuthentication } from '@/lib/auth/middleware';
 
-**Last Updated**: January 20, 2026
+export const GET = withAuthentication(async (auth) => {
+  // User is guaranteed to be authenticated
+  const profile = await getUserProfile(auth.user.id);
+  return NextResponse.json({ profile });
+});
+```
+
+### Role-Based Access
+
+```typescript
+// app/api/admin/users/route.ts
+import { withRole, UserRole } from '@/lib/auth/middleware';
+
+export const GET = withRole(UserRole.ADMIN)(async (auth) => {
+  // Only admins can access this
+  const users = await getAllUsers();
+  return NextResponse.json({ users });
+});
+```
+
+### Permission-Based Access
+
+```typescript
+// app/api/vault/files/route.ts
+import { withPermission, Permission } from '@/lib/auth/middleware';
+
+export const POST = withPermission(Permission.VAULT_WRITE)(async (auth) => {
+  // Must have vault write permission
+  const file = await uploadFile(auth.user.id);
+  return NextResponse.json({ file });
+});
+```
+
+### Complex Requirements
+
+```typescript
+// app/api/notes/[noteId]/route.ts
+import { withAuthAndAuthZ } from '@/lib/auth/middleware';
+
+export const DELETE = withAuthAndAuthZ({
+  role: UserRole.OWNER,
+  permission: Permission.NOTES_DELETE,
+  tenantId: 'tenant-123'
+})(async (auth, request) => {
+  // Complex multi-level authorization
+  const noteId = request.params.noteId;
+  await deleteNote(noteId);
+  return NextResponse.json({ success: true });
+});
+```
+
+## 👥 User Roles & Permissions
+
+### Role Hierarchy
+
+```
+SUPER_ADMIN (highest)
+├── ADMIN
+├── OWNER
+├── MEMBER
+└── GUEST (lowest)
+```
+
+Higher roles inherit permissions from lower roles.
+
+### Available Permissions
+
+| Category | Permissions |
+|----------|-------------|
+| **Vault** | `VAULT_READ`, `VAULT_WRITE`, `VAULT_DELETE`, `VAULT_ADMIN` |
+| **Notes** | `NOTES_READ`, `NOTES_WRITE`, `NOTES_DELETE` |
+| **Chat** | `CHAT_READ`, `CHAT_WRITE` |
+| **Admin** | `ADMIN_READ`, `ADMIN_WRITE`, `ADMIN_DELETE` |
+| **Tenant** | `TENANT_READ`, `TENANT_WRITE`, `TENANT_ADMIN` |
+
+### Role Permissions
+
+| Role | Permissions |
+|------|-------------|
+| **SUPER_ADMIN** | All permissions across all tenants |
+| **ADMIN** | Administrative access within tenant |
+| **OWNER** | Full resource access within tenant |
+| **MEMBER** | Standard access within tenant |
+| **GUEST** | Read-only access within tenant |
+
+## 🌐 Multi-Tenant Access Control
+
+### Tenant Isolation
+
+- **Automatic tenant scoping** based on user profile
+- **Cross-tenant access** requires SUPER_ADMIN role
+- **Resource ownership** validation for user-owned objects
+
+### Tenant Context
+
+```typescript
+// Access tenant information
+const { user, tenantId } = auth;
+const userRole = user.profile?.role;
+const userTenantId = user.profile?.tenant_id;
+```
+
+## 🔧 Calling Authenticated Endpoints
+
+### From the Web App
+
+```typescript
+// Automatic authentication via session cookies
+const response = await fetch('/api/user/profile');
+const data = await response.json();
+```
+
+### From External Clients
+
+```http
+# Include Supabase access token
+Authorization: Bearer <supabase_access_token>
+
+# Or use session cookies
+Cookie: sb-<project-ref>-auth-token=<token>
+```
+
+### Error Responses
+
+```typescript
+// 401 Unauthorized
+{ "error": "Authentication required" }
+
+// 403 Forbidden
+{ "error": "Insufficient permissions" }
+
+// 403 Forbidden (wrong tenant)
+{ "error": "Access denied: wrong tenant" }
+```
+
+## 📊 Monitoring & Security
+
+### Authentication Metrics
+
+- **Successful logins**: `auth_success_total{role="admin"}`
+- **Failed attempts**: `auth_failed_total{reason="invalid_credentials"}`
+- **Permission grants**: `authz_granted_total{permission="vault:write"}`
+- **Permission denials**: `authz_denied_total{reason="insufficient_role"}`
+
+### Security Alerts
+
+- **Brute force attempts** on authentication
+- **Unauthorized permission** requests
+- **Suspicious activity** patterns
+- **Role escalation** attempts
+
+### Audit Logging
+
+All authentication and authorization events are logged with:
+
+- User ID and role
+- IP address and user agent
+- Requested permission/resource
+- Success/failure status
+- Correlation IDs for request tracing
+
+## 🔄 Migration Status
+
+### ✅ Migrated Routes
+
+| Route | Status | Auth Pattern |
+|-------|--------|--------------|
+| `/api/profile` | ✅ Migrated | `withAuthAndAuthZ({ role: OWNER })` |
+| `/api/vault/status` | ✅ Migrated | `withRole(OWNER)` |
+| `/api/notes` | ✅ Migrated | `withRole(OWNER)` |
+
+### 🔄 Migration Pattern
+
+```typescript
+// Before (scattered auth)
+export async function GET(request: NextRequest) {
+  const supabase = await createSupabaseServer();
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Business logic...
+}
+
+// After (centralized auth)
+import { withAuthentication } from '@/lib/auth/middleware';
+
+export const GET = withAuthentication(async (auth) => {
+  // User is authenticated, business logic only...
+});
+```
+
+## 🧪 Testing Auth Middleware
+
+```typescript
+// Unit tests
+describe('Auth Middleware', () => {
+  it('should require authentication', async () => {
+    const response = await request(app)
+      .get('/api/protected-route')
+      .expect(401);
+  });
+
+  it('should allow authenticated users', async () => {
+    const response = await request(app)
+      .get('/api/protected-route')
+      .set('Authorization', `Bearer ${validToken}`)
+      .expect(200);
+  });
+});
+```
+
+## 📚 Related Documentation
+
+- [Auth System Architecture](../../architecture/auth-system.md)
+- [Monitoring & Observability](../../deployment/monitoring.md)
+- [Security Overview](../../../security/overview.md)

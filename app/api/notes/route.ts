@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { withAuthAndAuthZ, UserRole } from "@/lib/auth/middleware";
 import type { CreateNoteRequest, NoteFilters } from "@/types/notes";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -7,27 +8,10 @@ import type { CreateNoteRequest, NoteFilters } from "@/types/notes";
    List notes for the authenticated user
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: NextRequest) {
-  try {
-    const supabase = await createSupabaseServer();
-    
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    
-    // Get profile to check permissions (super_admin, owner, or admin can access notes)
-    const { data: profile } = await supabase
-      .from("709_profiles")
-      .select("role, tenant_id")
-      .eq("id", user.id)
-      .single();
-    
-    const allowedRoles = ["super_admin", "owner", "admin"];
-    if (!profile || !allowedRoles.includes(profile.role)) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
+const handleGetNotes = withAuthAndAuthZ({
+  role: UserRole.OWNER, // Owner or higher (includes admin, super_admin)
+})(async (auth, request: NextRequest) => {
+  const supabase = await createSupabaseServer();
     
     // Parse filters
     const { searchParams } = new URL(request.url);
@@ -41,13 +25,13 @@ export async function GET(request: NextRequest) {
       search: searchParams.get("search") || undefined,
     };
     
-    // Build query
-    let query = supabase
-      .from("notes")
-      .select("*, category:note_categories(*)", { count: "exact" })
-      .eq("owner_id", user.id)
-      .order("is_pinned", { ascending: false })
-      .order("updated_at", { ascending: false });
+  // Build query
+  let query = supabase
+    .from("notes")
+    .select("*, category:note_categories(*)", { count: "exact" })
+    .eq("owner_id", auth.user.id)
+    .order("is_pinned", { ascending: false })
+    .order("updated_at", { ascending: false });
     
     // Apply filters
     if (filters.category_id) {
@@ -76,43 +60,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Failed to fetch notes" }, { status: 500 });
     }
     
-    return NextResponse.json({
-      notes: notes || [],
-      total: count || 0,
-    });
-    
-  } catch (error) {
-    console.error("Notes fetch error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
-}
+  return NextResponse.json({
+    notes: notes || [],
+    total: count || 0,
+  });
+});
 
 /* ═══════════════════════════════════════════════════════════════════════════
    POST /api/notes
    Create a new note
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(request: NextRequest) {
-  try {
-    const supabase = await createSupabaseServer();
-    
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    
-    // Get profile to check permissions (super_admin, owner, or admin can create notes)
-    const { data: profile } = await supabase
-      .from("709_profiles")
-      .select("role, tenant_id")
-      .eq("id", user.id)
-      .single();
-    
-    const allowedRoles = ["super_admin", "owner", "admin"];
-    if (!profile || !allowedRoles.includes(profile.role)) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
+const handleCreateNote = withAuthAndAuthZ({
+  role: UserRole.OWNER, // Owner or higher (includes admin, super_admin)
+})(async (auth, request: NextRequest) => {
+  const supabase = await createSupabaseServer();
     
     // Parse body
     const body: CreateNoteRequest = await request.json();
@@ -134,20 +96,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
     
-    // Generate slug
-    const { data: slugData } = await supabase
-      .rpc("generate_note_slug", { p_title: title, p_owner_id: user.id });
-    
-    const slug = slugData || title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    
-    // Generate excerpt
-    const excerpt = content.slice(0, 200).replace(/[#*_`~\[\]()]/g, "");
-    
-    // Insert note
-    const { data: note, error: insertError } = await supabase
-      .from("notes")
-      .insert({
-        owner_id: user.id,
+  // Generate slug
+  const { data: slugData } = await supabase
+    .rpc("generate_note_slug", { p_title: title, p_owner_id: auth.user.id });
+
+  const slug = slugData || title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  // Generate excerpt
+  const excerpt = content.slice(0, 200).replace(/[#*_`~\[\]()]/g, "");
+
+  // Insert note
+  const { data: note, error: insertError } = await supabase
+    .from("notes")
+    .insert({
+      owner_id: auth.user.id,
         title,
         slug,
         content,
@@ -171,10 +133,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to create note" }, { status: 500 });
     }
     
-    return NextResponse.json({ note });
-    
-  } catch (error) {
-    console.error("Note create error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
-}
+  return NextResponse.json({ note });
+});
+
+// Export the wrapped handlers
+export const GET = handleGetNotes;
+export const POST = handleCreateNote;

@@ -10,6 +10,7 @@ import {
   getNotificationMetrics,
   formatNotificationCount,
 } from "@/lib/analytics/notification-metrics";
+import { PlatformAnalytics } from "@/components/super-admin/PlatformAnalytics";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Super Admin - Analytics Page
@@ -761,12 +762,23 @@ export default async function AnalyticsPage() {
   };
 
   return (
-    <AnalyticsTabs
-      platformData={platformData}
-      emailData={emailData}
-      storageData={storageData}
-      notificationData={notificationData}
-      experimentsData={experimentsData}
-    />
+    <div className="space-y-8">
+      {/* New Platform Analytics Dashboard */}
+      <PlatformAnalytics />
+
+      {/* Existing Analytics Tabs */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
+          Detailed Analytics
+        </h2>
+        <AnalyticsTabs
+          platformData={platformData}
+          emailData={emailData}
+          storageData={storageData}
+          notificationData={notificationData}
+          experimentsData={experimentsData}
+        />
+      </div>
+    </div>
   );
 }

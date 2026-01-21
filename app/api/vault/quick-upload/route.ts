@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { hashToken, isValidTokenFormat, parseClientType, isContentTypeAllowed } from "@/lib/quick-share/tokens";
 import { analyzeDocument } from "@/lib/vault/ai-analysis";
+import { encryptSecret, serializeEnvelope } from "@/lib/secrets/kms";
 import crypto from "crypto";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -20,7 +21,13 @@ import crypto from "crypto";
 // Use service role for this endpoint (no user session)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_VAULT_UPLOAD_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
 );
 
 const s3Client = new S3Client({
@@ -32,17 +39,64 @@ const s3Client = new S3Client({
   },
 });
 
+const ALLOWED_ORIGINS = (process.env.VAULT_QUICK_UPLOAD_ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim().toLowerCase())
+  .filter(Boolean);
+
+function buildCorsHeaders(originHeader: string | null): Record<string, string> | null {
+  if (!originHeader) return {};
+
+  try {
+    const origin = new URL(originHeader).origin.toLowerCase();
+    if (ALLOWED_ORIGINS.length > 0 && !ALLOWED_ORIGINS.includes(origin)) {
+      return null;
+    }
+    return {
+      "Access-Control-Allow-Origin": origin,
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, x-vault-token",
+      "Access-Control-Max-Age": "3600",
+      Vary: "Origin",
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
+  const origin = request.headers.get("origin");
+  const corsHeaders = buildCorsHeaders(origin);
+  const withCors = (response: NextResponse) => {
+    if (corsHeaders) {
+      Object.entries(corsHeaders).forEach(([key, value]) =>
+        response.headers.set(key, value)
+      );
+    }
+    return response;
+  };
   
   try {
+
+    if (origin && corsHeaders === null) {
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Origin not allowed" },
+          { status: 403 }
+        )
+      );
+    }
+    
     // Extract token from header
     const token = request.headers.get("x-vault-token");
     
     if (!token || !isValidTokenFormat(token)) {
-      return NextResponse.json(
-        { success: false, error: "Missing or invalid x-vault-token header" },
-        { status: 401 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Missing or invalid x-vault-token header" },
+          { status: 401 }
+        )
       );
     }
     
@@ -58,18 +112,68 @@ export async function POST(request: NextRequest) {
       .single();
     
     if (tokenError || !tokenRecord) {
-      return NextResponse.json(
-        { success: false, error: "Invalid or inactive token" },
-        { status: 401 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Invalid or inactive token" },
+          { status: 401 }
+        )
       );
     }
     
     // Check expiration
     if (tokenRecord.expires_at && new Date(tokenRecord.expires_at) < new Date()) {
-      return NextResponse.json(
-        { success: false, error: "Token has expired" },
-        { status: 401 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Token has expired" },
+          { status: 401 }
+        )
       );
+    }
+
+    const clientIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      null;
+
+    const allowedIps = Array.isArray(tokenRecord.permissions?.allowed_ips)
+      ? tokenRecord.permissions.allowed_ips
+      : [];
+    if (allowedIps.length > 0 && (!clientIp || !allowedIps.includes(clientIp))) {
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Token not valid for this IP" },
+          { status: 403 }
+        )
+      );
+    }
+
+    const userAgent = request.headers.get("user-agent") || "";
+    const allowedUserAgents = Array.isArray(tokenRecord.permissions?.allowed_user_agents)
+      ? tokenRecord.permissions.allowed_user_agents
+      : [];
+    if (
+      allowedUserAgents.length > 0 &&
+      !allowedUserAgents.some((ua) => userAgent.toLowerCase().includes(ua.toLowerCase()))
+    ) {
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Token not valid for this device" },
+          { status: 403 }
+        )
+      );
+    }
+
+    const ttlMinutes = Number(tokenRecord.permissions?.ttl_minutes) || null;
+    if (ttlMinutes && tokenRecord.created_at) {
+      const createdAt = new Date(tokenRecord.created_at).getTime();
+      if (Date.now() > createdAt + ttlMinutes * 60_000) {
+        return withCors(
+          NextResponse.json(
+            { success: false, error: "Token TTL exceeded" },
+            { status: 401 }
+          )
+        );
+      }
     }
     
     // Check rate limit
@@ -77,9 +181,11 @@ export async function POST(request: NextRequest) {
       .rpc("check_token_rate_limit", { p_token_id: tokenRecord.id });
     
     if (!rateLimitOk) {
-      return NextResponse.json(
-        { success: false, error: "Rate limit exceeded" },
-        { status: 429 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Rate limit exceeded" },
+          { status: 429 }
+        )
       );
     }
     
@@ -88,9 +194,11 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File | null;
     
     if (!file) {
-      return NextResponse.json(
-        { success: false, error: "No file provided" },
-        { status: 400 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "No file provided" },
+          { status: 400 }
+        )
       );
     }
     
@@ -99,9 +207,11 @@ export async function POST(request: NextRequest) {
     if (file.size > maxBytes) {
       await logUsage(tokenRecord.id, null, file.name, file.size, file.type, false, 
         `File too large (max ${tokenRecord.max_file_size_mb}MB)`, request);
-      return NextResponse.json(
-        { success: false, error: `File too large. Maximum size is ${tokenRecord.max_file_size_mb}MB` },
-        { status: 400 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: `File too large. Maximum size is ${tokenRecord.max_file_size_mb}MB` },
+          { status: 400 }
+        )
       );
     }
     
@@ -109,9 +219,11 @@ export async function POST(request: NextRequest) {
     if (!isContentTypeAllowed(file.type, tokenRecord.allowed_types || [])) {
       await logUsage(tokenRecord.id, null, file.name, file.size, file.type, false,
         "File type not allowed", request);
-      return NextResponse.json(
-        { success: false, error: "File type not allowed for this token" },
-        { status: 400 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "File type not allowed for this token" },
+          { status: 400 }
+        )
       );
     }
     
@@ -144,7 +256,6 @@ export async function POST(request: NextRequest) {
       Metadata: {
         "original-name": encodeURIComponent(file.name),
         "original-type": file.type,
-        "upload-token": tokenRecord.token_prefix,
       },
     }));
     
@@ -153,6 +264,22 @@ export async function POST(request: NextRequest) {
     
     // Determine folder
     const folderId = tokenRecord.default_folder_id || null;
+
+    // Wrap the DEK with KMS/local KEK before storing
+    let dekEnvelope;
+    try {
+      dekEnvelope = serializeEnvelope(
+        await encryptSecret(encryptionKey.toString("base64"))
+      );
+    } catch (encryptionError) {
+      console.error("Failed to wrap DEK:", encryptionError);
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Encryption service unavailable" },
+          { status: 503 }
+        )
+      );
+    }
     
     // Create file record
     const { data: fileRecord, error: fileError } = await supabase
@@ -171,28 +298,29 @@ export async function POST(request: NextRequest) {
         metadata: {
           upload_token_id: tokenRecord.id,
           upload_token_name: tokenRecord.name,
-          client_type: parseClientType(request.headers.get("user-agent")),
-        },
+        client_type: parseClientType(request.headers.get("user-agent")),
+        dek_envelope: dekEnvelope,
+      },
       })
       .select()
       .single();
     
     if (fileError) {
       console.error("Failed to create file record:", fileError);
-      return NextResponse.json(
-        { success: false, error: "Failed to save file" },
-        { status: 500 }
+      return withCors(
+        NextResponse.json(
+          { success: false, error: "Failed to save file" },
+          { status: 500 }
+        )
       );
     }
     
-    // Store DEK encrypted with vault's KEK (simplified - in production use proper key hierarchy)
-    // For quick share, we store the key directly since user isn't present to provide password
     await supabase
       .from("vault_encryption_keys")
       .insert({
         vault_id: tokenRecord.vault_id,
         file_id: fileId,
-        encrypted_dek: encryptionKey.toString("base64"), // In production, encrypt with vault KEK
+        encrypted_dek: JSON.stringify(dekEnvelope),
         key_version: 1,
       });
     
@@ -257,24 +385,28 @@ export async function POST(request: NextRequest) {
     
     const duration = Date.now() - startTime;
     
-    return NextResponse.json({
-      success: true,
-      file_id: fileId,
-      filename: file.name,
-      size_bytes: file.size,
-      ai_summary: aiResult?.summary,
-      ai_category: aiResult?.category,
-      ai_tags: aiResult?.tags,
-      suggested_folder: aiResult?.suggestedFolder,
-      auto_approved: autoApprove,
-      duration_ms: duration,
-    });
+    return withCors(
+      NextResponse.json({
+        success: true,
+        file_id: fileId,
+        filename: file.name,
+        size_bytes: file.size,
+        ai_summary: aiResult?.summary,
+        ai_category: aiResult?.category,
+        ai_tags: aiResult?.tags,
+        suggested_folder: aiResult?.suggestedFolder,
+        auto_approved: autoApprove,
+        duration_ms: duration,
+      })
+    );
     
   } catch (error) {
     console.error("Quick upload error:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal server error" },
-      { status: 500 }
+    return withCors(
+      NextResponse.json(
+        { success: false, error: "Internal server error" },
+        { status: 500 }
+      )
     );
   }
 }
@@ -313,14 +445,19 @@ async function logUsage(
    OPTIONS - CORS preflight
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const corsHeaders = buildCorsHeaders(request.headers.get("origin"));
+  if (request.headers.get("origin") && corsHeaders === null) {
+    return new NextResponse(null, { status: 403 });
+  }
+
   return new NextResponse(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      ...(corsHeaders || {}),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, x-vault-token",
-      "Access-Control-Max-Age": "86400",
+      "Access-Control-Max-Age": "3600",
     },
   });
 }

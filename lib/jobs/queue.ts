@@ -1,380 +1,447 @@
 /**
- * Jobs Queue - Generalized background job processing
+ * Event-Driven Job Queue System
  *
- * Provides a consistent API for enqueueing and processing background jobs
- * with retries, rate limiting, and observability.
- *
- * Usage:
- *   // Enqueue a job
- *   const jobId = await enqueueJob({
- *     job_type: "send_email",
- *     input: { to: "user@example.com", template: "welcome" },
- *   });
- *
- *   // Register a handler
- *   registerHandler("send_email", async (input, ctx) => {
- *     await sendEmail(input.to, input.template);
- *     return { sent: true };
- *   });
+ * Provides a robust job queue system for background processing with:
+ * - Event-driven architecture
+ * - Priority queues
+ * - Retry mechanisms
+ * - Monitoring and metrics
+ * - Scalable worker pools
  */
 
-import { createSupabaseAdmin } from "@/lib/supabase/server";
-import type {
-  JobRow,
-  EnqueueJobOptions,
-  JobResult,
-  JobHandler,
-  JobContext,
-  RegisteredHandler,
-  QueueConfig,
-  DEFAULT_QUEUES,
-} from "@/types/jobs";
+import { createSupabaseServer } from '@/lib/supabase/server';
+import { logPerformance } from '@/lib/observability/logger';
 
-// ═══════════════════════════════════════════════════════════════════════════
-// Job Enqueueing
-// ═══════════════════════════════════════════════════════════════════════════
+export enum JobPriority {
+  LOW = 0,
+  NORMAL = 1,
+  HIGH = 2,
+  CRITICAL = 3,
+}
 
-/**
- * Enqueue a new background job.
- * Returns the job ID (for tracking).
- */
-export async function enqueueJob(options: EnqueueJobOptions): Promise<string> {
-  const supabase = await createSupabaseAdmin();
+export enum JobStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
+  RETRY = 'retry',
+}
 
-  const { data: jobId, error } = await supabase.rpc("enqueue_job", {
-    p_queue: options.queue ?? "default",
-    p_job_type: options.job_type,
-    p_input: options.input,
-    p_tenant_id: options.tenant_id ?? null,
-    p_owner_id: options.owner_id ?? null,
-    p_priority: options.priority ?? 0,
-    p_idempotency_key: options.idempotency_key ?? null,
-    p_scheduled_for: options.scheduled_for
-      ? typeof options.scheduled_for === "string"
-        ? options.scheduled_for
-        : options.scheduled_for.toISOString()
-      : null,
-    p_max_retries: options.max_retries ?? 3,
-    p_timeout_seconds: options.timeout_seconds ?? 600,
-  });
+export enum JobType {
+  // Email processing
+  EMAIL_TRIAGE = 'email_triage',
+  EMAIL_SEND = 'email_send',
+  EMAIL_ANALYZE = 'email_analyze',
 
-  if (error) {
-    throw new JobQueueError(`Failed to enqueue job: ${error.message}`, error);
-  }
+  // AI processing
+  AI_ANALYZE_CONTENT = 'ai_analyze_content',
+  AI_GENERATE_SUMMARY = 'ai_generate_summary',
+  AI_CLASSIFY_DOCUMENT = 'ai_classify_document',
 
-  return jobId as string;
+  // Vault operations
+  VAULT_ENCRYPT_FILE = 'vault_encrypt_file',
+  VAULT_DECRYPT_FILE = 'vault_decrypt_file',
+  VAULT_GENERATE_THUMBNAIL = 'vault_generate_thumbnail',
+
+  // Background tasks
+  CLEANUP_EXPIRED_SESSIONS = 'cleanup_expired_sessions',
+  SEND_NOTIFICATIONS = 'send_notifications',
+  GENERATE_REPORTS = 'generate_reports',
+
+  // Webhook processing
+  WEBHOOK_DELIVER = 'webhook_deliver',
+  WEBHOOK_RETRY = 'webhook_retry',
+}
+
+export interface JobData {
+  [key: string]: any;
+}
+
+export interface Job {
+  id: string;
+  type: JobType;
+  priority: JobPriority;
+  data: JobData;
+  status: JobStatus;
+  maxRetries: number;
+  retryCount: number;
+  nextRunAt: Date;
+  startedAt?: Date;
+  completedAt?: Date;
+  failedAt?: Date;
+  errorMessage?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy?: string;
+  correlationId?: string;
+}
+
+export interface JobResult {
+  success: boolean;
+  data?: any;
+  error?: string;
+  retryAfter?: number; // seconds
+}
+
+export interface JobHandler {
+  (job: Job): Promise<JobResult>;
 }
 
 /**
- * Enqueue multiple jobs in a batch.
+ * Job Queue Manager
  */
-export async function enqueueJobs(jobs: EnqueueJobOptions[]): Promise<string[]> {
-  const results: string[] = [];
-  for (const job of jobs) {
-    const id = await enqueueJob(job);
-    results.push(id);
-  }
-  return results;
-}
+export class JobQueue {
+  private handlers: Map<JobType, JobHandler> = new Map();
+  private isProcessing = false;
+  private processingInterval?: NodeJS.Timeout;
 
-/**
- * Cancel a pending job.
- */
-export async function cancelJob(jobId: string): Promise<boolean> {
-  const supabase = await createSupabaseAdmin();
-
-  const { error } = await supabase
-    .from("jobs")
-    .update({ status: "cancelled", updated_at: new Date().toISOString() })
-    .eq("id", jobId)
-    .eq("status", "pending");
-
-  return !error;
-}
-
-/**
- * Get job status and details.
- */
-export async function getJob(jobId: string): Promise<JobRow | null> {
-  const supabase = await createSupabaseAdmin();
-
-  const { data, error } = await supabase.from("jobs").select("*").eq("id", jobId).single();
-
-  if (error || !data) return null;
-  return data as JobRow;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Handler Registry
-// ═══════════════════════════════════════════════════════════════════════════
-
-const handlerRegistry = new Map<string, RegisteredHandler>();
-
-/**
- * Register a job handler for a specific job type.
- */
-export function registerHandler<TInput = unknown, TResult = unknown>(
-  jobType: string,
-  handler: JobHandler<TInput, TResult>,
-  options?: { concurrency?: number; timeout_seconds?: number }
-): void {
-  handlerRegistry.set(jobType, {
-    handler: handler as JobHandler,
-    concurrency: options?.concurrency,
-    timeout_seconds: options?.timeout_seconds,
-  });
-}
-
-/**
- * Get a registered handler.
- */
-export function getHandler(jobType: string): RegisteredHandler | undefined {
-  return handlerRegistry.get(jobType);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Job Execution
-// ═══════════════════════════════════════════════════════════════════════════
-
-/**
- * Execute a single job.
- */
-export async function executeJob(job: JobRow): Promise<JobResult> {
-  const startTime = Date.now();
-  const handler = handlerRegistry.get(job.job_type);
-
-  if (!handler) {
-    return {
-      success: false,
-      error: `No handler registered for job type: ${job.job_type}`,
-      duration_ms: Date.now() - startTime,
-    };
-  }
-
-  const supabase = await createSupabaseAdmin();
-
-  // Build context
-  const context: JobContext = {
-    job,
-    supabase,
-    log: (level, message, meta) => {
-      const logFn = level === "error" ? console.error : level === "warn" ? console.warn : console.log;
-      logFn(`[job:${job.id}] ${message}`, meta ? JSON.stringify(meta) : "");
-    },
-  };
-
-  try {
-    // Execute with timeout
-    const timeout = handler.timeout_seconds ?? job.timeout_seconds;
-    const result = await Promise.race([
-      handler.handler(job.input, context),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error(`Job timed out after ${timeout}s`)), timeout * 1000)
-      ),
-    ]);
-
-    // Mark job as completed
-    await supabase.rpc("complete_job", {
-      p_job_id: job.id,
-      p_result: result as Record<string, unknown>,
-    });
-
-    return {
-      success: true,
-      data: result,
-      duration_ms: Date.now() - startTime,
-    };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-
-    // Mark job as failed
-    await supabase.rpc("fail_job", {
-      p_job_id: job.id,
-      p_error: errorMessage,
-      p_move_to_dlq: false,
-    });
-
-    return {
-      success: false,
-      error: errorMessage,
-      duration_ms: Date.now() - startTime,
-    };
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Worker Runner
-// ═══════════════════════════════════════════════════════════════════════════
-
-import os from "os";
-
-const RUNNER_ID = `job-runner:${os.hostname()}:${process.pid}`;
-
-declare global {
-  // eslint-disable-next-line no-var
-  var __jobRunnerStarted: Record<string, boolean> | undefined;
-  // eslint-disable-next-line no-var
-  var __jobRunnerIntervals: Record<string, NodeJS.Timeout> | undefined;
-}
-
-/**
- * Start a job runner for a specific queue.
- */
-export function startQueueRunner(
-  queue: string,
-  config?: Partial<QueueConfig>
-): void {
-  const allowInProcess =
-    process.env.JOB_RUNNER_MODE === "in_process" || process.env.NODE_ENV === "development";
-
-  if (!allowInProcess) return;
-
-  globalThis.__jobRunnerStarted = globalThis.__jobRunnerStarted || {};
-  globalThis.__jobRunnerIntervals = globalThis.__jobRunnerIntervals || {};
-
-  if (globalThis.__jobRunnerStarted[queue]) return;
-  globalThis.__jobRunnerStarted[queue] = true;
-
-  const pollInterval = config?.poll_interval_ms ?? 1000;
-
-  console.log(`[job-runner] Starting runner for queue: ${queue}`);
-
-  globalThis.__jobRunnerIntervals[queue] = setInterval(() => {
-    void runQueueTick(queue).catch((err) =>
-      console.error(`[job-runner] ${queue} tick error:`, err)
-    );
-  }, pollInterval);
-}
-
-/**
- * Stop a queue runner.
- */
-export function stopQueueRunner(queue: string): void {
-  if (globalThis.__jobRunnerIntervals?.[queue]) {
-    clearInterval(globalThis.__jobRunnerIntervals[queue]);
-    delete globalThis.__jobRunnerIntervals[queue];
-  }
-  if (globalThis.__jobRunnerStarted) {
-    globalThis.__jobRunnerStarted[queue] = false;
-  }
-}
-
-/**
- * Single tick of the queue runner.
- */
-async function runQueueTick(queue: string): Promise<void> {
-  const supabase = await createSupabaseAdmin();
-
-  // Claim a job
-  const { data: job, error } = await supabase.rpc("claim_next_job", {
-    p_queue: queue,
-    p_runner_id: RUNNER_ID,
-  });
-
-  if (error) {
-    console.error(`[job-runner] Failed to claim job from ${queue}:`, error);
-    return;
-  }
-
-  if (!job) return;
-
-  // Execute the job
-  await executeJob(job as JobRow);
-}
-
-/**
- * Run a single processing cycle for a queue (for cron/serverless).
- */
-export async function runQueueCycle(
-  queue: string,
-  options?: { batchSize?: number }
-): Promise<{ processed: number; errors: number }> {
-  const supabase = await createSupabaseAdmin();
-  let processed = 0;
-  let errors = 0;
-
-  // Claim batch of jobs
-  const { data: jobs, error } = await supabase.rpc("claim_jobs_batch", {
-    p_queue: queue,
-    p_runner_id: RUNNER_ID,
-    p_batch_size: options?.batchSize ?? 10,
-  });
-
-  if (error) {
-    console.error(`[job-runner] Failed to claim jobs from ${queue}:`, error);
-    return { processed: 0, errors: 1 };
-  }
-
-  if (!jobs || jobs.length === 0) {
-    return { processed: 0, errors: 0 };
-  }
-
-  // Execute jobs
-  const results = await Promise.allSettled(jobs.map((job: JobRow) => executeJob(job)));
-
-  for (const result of results) {
-    if (result.status === "fulfilled" && result.value.success) {
-      processed++;
-    } else {
-      errors++;
-    }
-  }
-
-  // Also process retry jobs
-  const { data: retryJobs } = await supabase.rpc("claim_retry_jobs", {
-    p_queue: queue,
-    p_runner_id: RUNNER_ID,
-    p_batch_size: Math.floor((options?.batchSize ?? 10) / 2),
-  });
-
-  if (retryJobs && retryJobs.length > 0) {
-    const retryResults = await Promise.allSettled(
-      retryJobs.map((job: JobRow) => executeJob(job))
-    );
-
-    for (const result of retryResults) {
-      if (result.status === "fulfilled" && result.value.success) {
-        processed++;
-      } else {
-        errors++;
-      }
-    }
-  }
-
-  return { processed, errors };
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Error Types
-// ═══════════════════════════════════════════════════════════════════════════
-
-export class JobQueueError extends Error {
   constructor(
-    message: string,
-    public readonly cause?: unknown
-  ) {
-    super(message);
-    this.name = "JobQueueError";
+    private queueName: string,
+    private pollInterval = 5000, // 5 seconds
+    private maxConcurrentJobs = 5
+  ) {}
+
+  /**
+   * Register a job handler
+   */
+  registerHandler(type: JobType, handler: JobHandler): void {
+    this.handlers.set(type, handler);
+  }
+
+  /**
+   * Start processing jobs
+   */
+  start(): void {
+    if (this.isProcessing) return;
+
+    this.isProcessing = true;
+    console.log(`[JobQueue:${this.queueName}] Starting job processing`);
+
+    this.processingInterval = setInterval(() => {
+      this.processJobs();
+    }, this.pollInterval);
+  }
+
+  /**
+   * Stop processing jobs
+   */
+  stop(): void {
+    this.isProcessing = false;
+    if (this.processingInterval) {
+      clearInterval(this.processingInterval);
+      this.processingInterval = undefined;
+    }
+    console.log(`[JobQueue:${this.queueName}] Stopped job processing`);
+  }
+
+  /**
+   * Add a job to the queue
+   */
+  async addJob(
+    type: JobType,
+    data: JobData,
+    options: {
+      priority?: JobPriority;
+      delay?: number; // seconds
+      maxRetries?: number;
+      correlationId?: string;
+      createdBy?: string;
+    } = {}
+  ): Promise<string> {
+    const supabase = await createSupabaseServer();
+
+    const jobId = `job_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    const nextRunAt = new Date(Date.now() + (options.delay || 0) * 1000);
+
+    const { error } = await supabase
+      .from('job_queue')
+      .insert({
+        id: jobId,
+        type,
+        priority: options.priority || JobPriority.NORMAL,
+        data,
+        status: JobStatus.PENDING,
+        max_retries: options.maxRetries || 3,
+        retry_count: 0,
+        next_run_at: nextRunAt.toISOString(),
+        correlation_id: options.correlationId,
+        created_by: options.createdBy,
+      });
+
+    if (error) {
+      console.error(`[JobQueue:${this.queueName}] Failed to add job:`, error);
+      throw new Error(`Failed to add job: ${error.message}`);
+    }
+
+    console.log(`[JobQueue:${this.queueName}] Added job ${jobId} of type ${type}`);
+    return jobId;
+  }
+
+  /**
+   * Process pending jobs
+   */
+  private async processJobs(): Promise<void> {
+    if (!this.isProcessing) return;
+
+    try {
+      const supabase = await createSupabaseServer();
+
+      // Get pending jobs ordered by priority and creation time
+      const { data: jobs, error } = await supabase
+        .from('job_queue')
+        .select('*')
+        .eq('status', JobStatus.PENDING)
+        .lte('next_run_at', new Date().toISOString())
+        .order('priority', { ascending: false })
+        .order('created_at', { ascending: true })
+        .limit(this.maxConcurrentJobs);
+
+      if (error) {
+        console.error(`[JobQueue:${this.queueName}] Failed to fetch jobs:`, error);
+        return;
+      }
+
+      if (!jobs || jobs.length === 0) return;
+
+      console.log(`[JobQueue:${this.queueName}] Processing ${jobs.length} jobs`);
+
+      // Process jobs concurrently
+      const processingPromises = jobs.map(job => this.processJob(job));
+      await Promise.allSettled(processingPromises);
+
+    } catch (error) {
+      console.error(`[JobQueue:${this.queueName}] Error in job processing:`, error);
+    }
+  }
+
+  /**
+   * Process a single job
+   */
+  private async processJob(jobData: any): Promise<void> {
+    const job: Job = {
+      id: jobData.id,
+      type: jobData.type,
+      priority: jobData.priority,
+      data: jobData.data,
+      status: jobData.status,
+      maxRetries: jobData.max_retries,
+      retryCount: jobData.retry_count,
+      nextRunAt: new Date(jobData.next_run_at),
+      startedAt: jobData.started_at ? new Date(jobData.started_at) : undefined,
+      completedAt: jobData.completed_at ? new Date(jobData.completed_at) : undefined,
+      failedAt: jobData.failed_at ? new Date(jobData.failed_at) : undefined,
+      errorMessage: jobData.error_message,
+      createdAt: new Date(jobData.created_at),
+      updatedAt: new Date(jobData.updated_at),
+      createdBy: jobData.created_by,
+      correlationId: jobData.correlation_id,
+    };
+
+    const handler = this.handlers.get(job.type);
+    if (!handler) {
+      console.error(`[JobQueue:${this.queueName}] No handler registered for job type: ${job.type}`);
+      await this.failJob(job.id, `No handler for job type: ${job.type}`);
+      return;
+    }
+
+    const startTime = Date.now();
+    try {
+      // Mark job as processing
+      await this.updateJobStatus(job.id, JobStatus.PROCESSING);
+
+      // Execute handler
+      const result = await handler(job);
+
+      if (result.success) {
+        await this.completeJob(job.id, result.data);
+        logPerformance(`job_${job.type}_duration`, Date.now() - startTime, 'ms', {
+          jobId: job.id,
+          success: true,
+        });
+      } else {
+        await this.handleJobFailure(job, result);
+        logPerformance(`job_${job.type}_duration`, Date.now() - startTime, 'ms', {
+          jobId: job.id,
+          success: false,
+          error: result.error,
+        });
+      }
+
+    } catch (error) {
+      console.error(`[JobQueue:${this.queueName}] Job ${job.id} failed:`, error);
+      await this.handleJobFailure(job, {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+      logPerformance(`job_${job.type}_duration`, Date.now() - startTime, 'ms', {
+        jobId: job.id,
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  }
+
+  /**
+   * Handle job failure with retry logic
+   */
+  private async handleJobFailure(job: Job, result: JobResult): Promise<void> {
+    const newRetryCount = job.retryCount + 1;
+
+    if (newRetryCount >= job.maxRetries) {
+      // Max retries exceeded
+      await this.failJob(job.id, result.error || 'Max retries exceeded');
+    } else {
+      // Schedule retry with exponential backoff
+      const delaySeconds = Math.min(300, Math.pow(2, newRetryCount) * 60); // Max 5 minutes
+      const nextRunAt = new Date(Date.now() + delaySeconds * 1000);
+
+      await this.retryJob(job.id, nextRunAt, result.error, newRetryCount);
+    }
+  }
+
+  /**
+   * Update job status
+   */
+  private async updateJobStatus(jobId: string, status: JobStatus, additionalFields: any = {}): Promise<void> {
+    const supabase = await createSupabaseServer();
+
+    const updateData: any = {
+      status,
+      updated_at: new Date().toISOString(),
+      ...additionalFields,
+    };
+
+    if (status === JobStatus.PROCESSING) {
+      updateData.started_at = new Date().toISOString();
+    } else if (status === JobStatus.COMPLETED) {
+      updateData.completed_at = new Date().toISOString();
+    } else if (status === JobStatus.FAILED) {
+      updateData.failed_at = new Date().toISOString();
+    }
+
+    const { error } = await supabase
+      .from('job_queue')
+      .update(updateData)
+      .eq('id', jobId);
+
+    if (error) {
+      console.error(`[JobQueue:${this.queueName}] Failed to update job ${jobId}:`, error);
+    }
+  }
+
+  private async completeJob(jobId: string, result?: any): Promise<void> {
+    await this.updateJobStatus(jobId, JobStatus.COMPLETED, { result });
+  }
+
+  private async failJob(jobId: string, errorMessage: string): Promise<void> {
+    await this.updateJobStatus(jobId, JobStatus.FAILED, { error_message: errorMessage });
+  }
+
+  private async retryJob(jobId: string, nextRunAt: Date, errorMessage?: string, retryCount?: number): Promise<void> {
+    await this.updateJobStatus(jobId, JobStatus.RETRY, {
+      next_run_at: nextRunAt.toISOString(),
+      error_message: errorMessage,
+      retry_count: retryCount,
+    });
+  }
+
+  /**
+   * Get queue statistics
+   */
+  async getStats(): Promise<{
+    pending: number;
+    processing: number;
+    completed: number;
+    failed: number;
+    total: number;
+  }> {
+    const supabase = await createSupabaseServer();
+
+    const { data, error } = await supabase
+      .from('job_queue')
+      .select('status')
+      .in('status', [JobStatus.PENDING, JobStatus.PROCESSING, JobStatus.COMPLETED, JobStatus.FAILED]);
+
+    if (error) {
+      console.error(`[JobQueue:${this.queueName}] Failed to get stats:`, error);
+      return { pending: 0, processing: 0, completed: 0, failed: 0, total: 0 };
+    }
+
+    const stats = {
+      pending: 0,
+      processing: 0,
+      completed: 0,
+      failed: 0,
+      total: data?.length || 0,
+    };
+
+    data?.forEach(job => {
+      stats[job.status as keyof typeof stats]++;
+    });
+
+    return stats;
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Utilities
+// Global Job Queue Instances
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Main application job queue
+export const appJobQueue = new JobQueue('app', 5000, 5);
+
+// Email processing job queue
+export const emailJobQueue = new JobQueue('email', 3000, 3);
+
+// AI processing job queue
+export const aiJobQueue = new JobQueue('ai', 10000, 2);
+
+// Background maintenance job queue
+export const maintenanceJobQueue = new JobQueue('maintenance', 30000, 1);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Convenience Functions
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Generate an idempotency key for a job.
+ * Schedule a job for later execution
  */
-export function generateJobIdempotencyKey(
-  jobType: string,
-  uniqueAttrs: Record<string, unknown>
-): string {
-  const payload = JSON.stringify({ type: jobType, ...uniqueAttrs });
-  let hash = 0;
-  for (let i = 0; i < payload.length; i++) {
-    const char = payload.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-  }
-  return `${jobType}:${Math.abs(hash).toString(36)}`;
+export async function scheduleJob(
+  queue: JobQueue,
+  type: JobType,
+  data: JobData,
+  options: {
+    priority?: JobPriority;
+    delay?: number;
+    maxRetries?: number;
+    correlationId?: string;
+    createdBy?: string;
+  } = {}
+): Promise<string> {
+  return queue.addJob(type, data, options);
+}
+
+/**
+ * Start all job queues
+ */
+export function startAllJobQueues(): void {
+  appJobQueue.start();
+  emailJobQueue.start();
+  aiJobQueue.start();
+  maintenanceJobQueue.start();
+
+  console.log('All job queues started');
+}
+
+/**
+ * Stop all job queues
+ */
+export function stopAllJobQueues(): void {
+  appJobQueue.stop();
+  emailJobQueue.stop();
+  aiJobQueue.stop();
+  maintenanceJobQueue.stop();
+
+  console.log('All job queues stopped');
 }

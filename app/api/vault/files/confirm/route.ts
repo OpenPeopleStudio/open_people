@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     
     // Parse request body
     const body = await request.json();
-    const { file_id, content_hash, auth_tag } = body;
+    const { file_id, content_hash, auth_tag, thumbnail_key } = body;
     
     if (!file_id || !content_hash) {
       return NextResponse.json(
@@ -98,6 +98,7 @@ export async function POST(request: NextRequest) {
       .update({
         status: "active",
         content_hash,
+        thumbnail_key: thumbnail_key || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", file_id)

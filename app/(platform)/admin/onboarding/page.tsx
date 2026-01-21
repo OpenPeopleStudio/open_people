@@ -842,7 +842,7 @@ export default function OnboardingPage() {
                   Thanks for sharing!
                 </h3>
                 <p className="text-sm text-[var(--text-secondary)] mb-4">
-                  Based on what you've told us, we'll personalize your workspace and
+                  Based on what you have told us, we will personalize your workspace and
                   provide AI-powered recommendations to help you achieve your goals.
                 </p>
                 <ul className="text-sm text-[var(--text-secondary)] space-y-1">

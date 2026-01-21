@@ -79,16 +79,21 @@ function OnboardingPendingContent() {
     if (!slug) return;
 
     // Initial check
-    checkDomainStatus();
+    const initialCheck = setTimeout(() => {
+      void checkDomainStatus();
+    }, 0);
 
     // Poll every 3 seconds while pending
     const interval = setInterval(() => {
       if (status === "pending" || status === "error") {
-        checkDomainStatus();
+        void checkDomainStatus();
       }
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(initialCheck);
+      clearInterval(interval);
+    };
   }, [slug, status, checkDomainStatus]);
 
   // Set tenant override cookie and continue to app domain

@@ -402,30 +402,12 @@ create policy "Tenant admins can view tenant access logs"
 -- Super admins can view all
 create policy "Super admins can view all secrets"
   on encrypted_secrets for select
-  using (
-    exists (
-      select 1 from "709_profiles" p 
-      where p.id = auth.uid() 
-      and p.is_super_admin = true
-    )
-  );
+  using (is_super_admin());
 
 create policy "Super admins can view all access logs"
   on secret_access_log for select
-  using (
-    exists (
-      select 1 from "709_profiles" p 
-      where p.id = auth.uid() 
-      and p.is_super_admin = true
-    )
-  );
+  using (is_super_admin());
 
 create policy "Super admins can manage break glass"
   on break_glass_access for all
-  using (
-    exists (
-      select 1 from "709_profiles" p 
-      where p.id = auth.uid() 
-      and p.is_super_admin = true
-    )
-  );
+  using (is_super_admin());

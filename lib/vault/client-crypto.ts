@@ -317,6 +317,53 @@ export async function decryptFileForDownload(
   return new Blob([decryptedData], { type: contentType });
 }
 
+/**
+ * Decrypt file for preview (returns data URL for display)
+ */
+export async function decryptFileForPreview(
+  encryptedData: ArrayBuffer,
+  ivBase64: string,
+  contentType: string
+): Promise<string> {
+  const decryptedData = await decryptFile(encryptedData, ivBase64);
+
+  // Convert to data URL for preview
+  const blob = new Blob([decryptedData], { type: contentType });
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Decrypt file for text preview (returns string)
+ */
+export async function decryptFileForTextPreview(
+  encryptedData: ArrayBuffer,
+  ivBase64: string,
+  encoding: string = 'utf-8'
+): Promise<string> {
+  const decryptedData = await decryptFile(encryptedData, ivBase64);
+
+  // Convert to text
+  const decoder = new TextDecoder(encoding);
+  return decoder.decode(decryptedData);
+}
+
+/**
+ * Decrypt file and return as Blob (for thumbnail generation)
+ */
+export async function decryptFileForThumbnail(
+  encryptedData: ArrayBuffer,
+  ivBase64: string,
+  contentType: string
+): Promise<Blob> {
+  const decryptedData = await decryptFile(encryptedData, ivBase64);
+  return new Blob([decryptedData], { type: contentType });
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Streaming Encryption (for large files)
 // ═══════════════════════════════════════════════════════════════════════════

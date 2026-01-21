@@ -281,7 +281,7 @@ export function IntegrationsTab({
           </div>
         ) : (
           <div className="p-8 text-center text-[var(--text-muted)]">
-            <p>Click "Refresh Health" to check integration status</p>
+            <p>Click Refresh Health to check integration status</p>
           </div>
         )}
 

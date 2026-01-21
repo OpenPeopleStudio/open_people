@@ -633,33 +633,12 @@ create policy "Tenant admins can manage sink config"
 -- Super admins can view all
 create policy "Super admins can view all events"
   on event_outbox for select
-  using (
-    exists (
-      select 1 
-      from "709_profiles" p 
-      where p.id = auth.uid() 
-      and p.is_super_admin = true
-    )
-  );
+  using (is_super_admin());
 
 create policy "Super admins can view all dispatch logs"
   on event_dispatch_log for select
-  using (
-    exists (
-      select 1 
-      from "709_profiles" p 
-      where p.id = auth.uid() 
-      and p.is_super_admin = true
-    )
-  );
+  using (is_super_admin());
 
 create policy "Super admins can view all DLQ"
   on event_dlq for select
-  using (
-    exists (
-      select 1 
-      from "709_profiles" p 
-      where p.id = auth.uid() 
-      and p.is_super_admin = true
-    )
-  );
+  using (is_super_admin());

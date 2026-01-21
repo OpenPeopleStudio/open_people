@@ -20,36 +20,67 @@ export interface Note {
   id: string;
   owner_id: string;
   category_id: string | null;
-  
+
   title: string;
   slug: string;
   content: string;
   excerpt: string | null;
-  
+
   format: "markdown" | "mdx" | "plain";
   tags: string[];
   metadata: Record<string, unknown>;
-  
+
   project_name: string | null;
-  
+
   is_template: boolean;
   template_name: string | null;
   template_description: string | null;
-  
+
   status: "draft" | "published" | "archived";
   is_pinned: boolean;
-  
+
   is_api_accessible: boolean;
   api_key_id: string | null;
-  
+
   created_at: string;
   updated_at: string;
   published_at: string | null;
-  
+
   version: number;
-  
+
+  // Sharing settings
+  is_public: boolean;
+  public_slug?: string;
+  allow_comments: boolean;
+  collaborators?: NoteCollaborator[];
+
   // Joined data
   category?: NoteCategory;
+}
+
+export interface NoteCollaborator {
+  id: string;
+  note_id: string;
+  user_id: string;
+  permission: "read" | "write" | "admin";
+  invited_by: string;
+  invited_at: string;
+  accepted_at?: string;
+  user_email?: string;
+  user_name?: string;
+}
+
+export interface NoteComment {
+  id: string;
+  note_id: string;
+  user_id: string;
+  content: string;
+  parent_id?: string; // For threaded comments
+  created_at: string;
+  updated_at: string;
+  user_name?: string;
+  user_email?: string;
+  replies?: NoteComment[];
 }
 
 export interface NoteVersion {

@@ -98,6 +98,11 @@ TWILIO_ACCOUNT_SID=AC_your_account_sid
 TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_FROM_NUMBER=+1234567890
 
+# Monitoring & Observability (Optional - for local development)
+SENTRY_DSN=your_sentry_dsn
+NEXT_PUBLIC_SENTRY_DSN=your_sentry_dsn
+LOG_LEVEL=debug
+
 # Deployment Configuration
 NEXT_PUBLIC_ROOT_DOMAIN=yourdomain.com
 NEXT_PUBLIC_SUPER_ADMIN_DOMAIN=app.yourdomain.com

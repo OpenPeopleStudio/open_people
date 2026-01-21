@@ -1,0 +1,141 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: personal-data-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-personal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-personal}
+      POSTGRES_DB: ${POSTGRES_DB:-personal}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-personal} -d ${POSTGRES_DB:-personal}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - personal-net
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: personal-data-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./volumes/minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - personal-net
+
+  minio-setup:
+    image: quay.io/minio/mc:latest
+    container_name: personal-data-minio-setup
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+        /usr/bin/mc alias set local http://minio:9000 ${MINIO_ROOT_USER:-minioadmin} ${MINIO_ROOT_PASSWORD:-minioadmin} &&
+        /usr/bin/mc mb -p local/${MINIO_BUCKET_RAW:-personal-raw} &&
+        /usr/bin/mc mb -p local/${MINIO_BUCKET_CURATED:-personal-curated} &&
+        /usr/bin/mc anonymous set private local/${MINIO_BUCKET_RAW:-personal-raw} &&
+        /usr/bin/mc anonymous set private local/${MINIO_BUCKET_CURATED:-personal-curated} ||
+        true"
+    networks:
+      - personal-net
+
+  traefik:
+    image: traefik:v3.3
+    container_name: personal-data-traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--certificatesresolvers.le.acme.email=${TRAEFIK_ACME_EMAIL:-you@example.com}"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./volumes/letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    profiles: ["ingress"]
+    networks:
+      - personal-net
+
+  tailscale:
+    image: ghcr.io/tailscale/tailscale:stable
+    container_name: personal-data-tailscale
+    hostname: ${TAILSCALE_HOSTNAME:-personal-data}
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TAILSCALE_AUTHKEY:-}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_ROUTES: ${TAILSCALE_ROUTES:-}
+      TS_EXTRA_ARGS: ${TAILSCALE_EXTRA_ARGS:-}
+    volumes:
+      - ./volumes/tailscale:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    network_mode: host
+    profiles: ["vpn"]
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: personal-data-metabase
+    restart: unless-stopped
+    environment:
+      MB_DB_FILE: /metabase-data/metabase.db
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./volumes/metabase:/metabase-data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["analytics"]
+    networks:
+      - personal-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: personal-data-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./volumes/grafana:/var/lib/grafana
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["analytics"]
+    networks:
+      - personal-net
+
+networks:
+  personal-net:
+    driver: bridge

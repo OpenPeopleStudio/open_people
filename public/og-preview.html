@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenPeople.ai OG Preview</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .og-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .platform-name {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .meta-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .meta-item {
+            margin: 5px 0;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .meta-value {
+            color: #666;
+            word-break: break-all;
+        }
+
+        .test-url {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+
+        .note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>OpenPeople.ai OG Preview</h1>
+
+    <div class="test-url">
+        <strong>Test URL:</strong>
+        <code>https://openpeople.ai</code>
+        <br><br>
+        <strong>Dynamic OG:</strong>
+        <code>https://openpeople.ai/api/og?title=Test%20Title&description=Test%20description&type=website</code>
+    </div>
+
+    <div class="note">
+        <strong>Note:</strong> This page shows how your Open Graph images will appear when shared on social media. Use the Facebook Sharing Debugger and Twitter Card Validator to test your actual URLs.
+    </div>
+
+    <!-- Facebook/LinkedIn Preview -->
+    <div class="preview-card">
+        <h2>Facebook / LinkedIn Preview (1200×630)</h2>
+
+        <!-- Static OG Image -->
+        <div style="margin-bottom: 30px;">
+            <h3>Static OG Image</h3>
+            <img src="/og-image.png" alt="OG Image Preview" class="og-image" onerror="this.style.display='none'">
+            <div style="background: #000; color: #00FF88; padding: 40px; text-align: center; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 24px; margin-bottom: 20px;">🎨 Static OG Image Placeholder</div>
+                <div style="font-size: 18px; opacity: 0.8;">Create this image using the design specs in docs/assets/og-image-spec.md</div>
+            </div>
+        </div>
+
+        <!-- Dynamic OG Image -->
+        <div>
+            <h3>Dynamic OG Image</h3>
+            <img src="/api/og?title=OpenPeople.ai%20—%20Human-centric%20AI%20for%20business&description=Human-centric%20AI%20to%20help%20your%20team%20plan,%20execute,%20and%20stay%20aligned&type=website" alt="Dynamic OG Image Preview" class="og-image" onerror="this.style.display='none'">
+        </div>
+
+        <div class="meta-info">
+            <div class="platform-name">Facebook / LinkedIn</div>
+            <div class="meta-item">
+                <span class="meta-label">og:title:</span>
+                <span class="meta-value">OpenPeople.ai — Human-centric AI for business</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">og:description:</span>
+                <span class="meta-value">Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage.</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">og:image:</span>
+                <span class="meta-value">https://openpeople.ai/og-image.png (1200×630)</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">og:url:</span>
+                <span class="meta-value">https://openpeople.ai</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Twitter Preview -->
+    <div class="preview-card">
+        <h2>Twitter Card Preview (1200×600)</h2>
+
+        <div style="margin-bottom: 30px;">
+            <h3>Twitter Card Image</h3>
+            <img src="/twitter-image.png" alt="Twitter Image Preview" class="og-image" onerror="this.style.display='none'">
+            <div style="background: #000; color: #00FF88; padding: 40px; text-align: center; border-radius: 8px; margin-top: 10px;">
+                <div style="font-size: 24px; margin-bottom: 20px;">🐦 Twitter Card Image Placeholder</div>
+                <div style="font-size: 18px; opacity: 0.8;">Create this image using the design specs in docs/assets/og-image-spec.md</div>
+            </div>
+        </div>
+
+        <div class="meta-info">
+            <div class="platform-name">Twitter</div>
+            <div class="meta-item">
+                <span class="meta-label">twitter:card:</span>
+                <span class="meta-value">summary_large_image</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">twitter:title:</span>
+                <span class="meta-value">OpenPeople.ai — Human-centric AI for business</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">twitter:description:</span>
+                <span class="meta-value">Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage.</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">twitter:image:</span>
+                <span class="meta-value">https://openpeople.ai/twitter-image.png (1200×600)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Sharing Preview -->
+    <div class="preview-card">
+        <h2>Note Sharing Preview</h2>
+
+        <div style="margin-bottom: 30px;">
+            <h3>Shared Note OG Image</h3>
+            <img src="/api/og?title=How%20to%20Build%20Better%20AI%20Systems&description=An%20in-depth%20guide%20to%20creating%20human-centric%20AI%20that%20actually%20helps%20people%20succeed&type=note" alt="Note OG Preview" class="og-image">
+        </div>
+
+        <div class="meta-info">
+            <div class="platform-name">Shared Note</div>
+            <div class="meta-item">
+                <span class="meta-label">Title:</span>
+                <span class="meta-value">How to Build Better AI Systems</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Type:</span>
+                <span class="meta-value">note</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">OG URL:</span>
+                <span class="meta-value">/api/og?title=...&type=note</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testing Links -->
+    <div class="preview-card">
+        <h2>Testing Tools</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <a href="https://developers.facebook.com/tools/debug/" target="_blank" style="display: block; padding: 15px; background: #4267B2; color: white; text-decoration: none; border-radius: 8px; text-align: center;">
+                Facebook Debugger
+            </a>
+            <a href="https://cards-dev.twitter.com/validator" target="_blank" style="display: block; padding: 15px; background: #1DA1F2; color: white; text-decoration: none; border-radius: 8px; text-align: center;">
+                Twitter Validator
+            </a>
+        </div>
+
+        <div style="margin-top: 15px; font-size: 14px; color: #666;">
+            Use these tools to test your actual URLs and see how they appear on social media platforms.
+        </div>
+    </div>
+
+    <script>
+        // Add error handling for missing images
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.og-image');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const placeholder = this.nextElementSibling;
+                    if (placeholder) {
+                        placeholder.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

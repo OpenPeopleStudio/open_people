@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { Note, NoteCategory, NoteFilters } from "@/types/notes";
+import { LoadingText, EmptyState } from "@/lib/ui";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Notes List View - Shared component for Notes UI
@@ -232,34 +233,26 @@ export function NotesListView({ basePath }: NotesListViewProps) {
           
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="flex items-center gap-3 text-[var(--text-muted)]">
-                <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                <span>Loading notes...</span>
-              </div>
+              <LoadingText text="Loading notes..." />
             </div>
           ) : notes.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--surface-1)] flex items-center justify-center">
+            <EmptyState
+              icon={
                 <svg className="w-8 h-8 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
-              </div>
-              <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
-                No notes yet
-              </h3>
-              <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto mb-6">
-                Create your first note to start documenting your projects, APIs, and architecture decisions.
-              </p>
-              <button
-                onClick={() => setShowNewModal(true)}
-                className="px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all"
-              >
-                Create First Note
-              </button>
-            </div>
+              }
+              title="No notes yet"
+              description="Create your first note to start documenting your projects, APIs, and architecture decisions."
+              action={
+                <button
+                  onClick={() => setShowNewModal(true)}
+                  className="px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all"
+                >
+                  Create First Note
+                </button>
+              }
+            />
           ) : (
             <div className="space-y-6">
               {/* Pinned Notes */}

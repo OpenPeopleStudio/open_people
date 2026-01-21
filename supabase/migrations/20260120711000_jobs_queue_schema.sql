@@ -584,6 +584,17 @@ alter table jobs enable row level security;
 alter table job_tenant_limits enable row level security;
 alter table job_dlq enable row level security;
 
+-- Refresh policies to align with updated table definitions
+drop policy if exists "Service role full access to jobs" on jobs;
+drop policy if exists "Service role full access to job_tenant_limits" on job_tenant_limits;
+drop policy if exists "Service role full access to job_dlq" on job_dlq;
+drop policy if exists "Users can view own jobs" on jobs;
+drop policy if exists "Users can insert own jobs" on jobs;
+drop policy if exists "Tenant admins can view tenant jobs" on jobs;
+drop policy if exists "Tenant admins can view tenant DLQ" on job_dlq;
+drop policy if exists "Super admins can view all jobs" on jobs;
+drop policy if exists "Super admins can view all DLQ" on job_dlq;
+
 -- Service role has full access
 create policy "Service role full access to jobs"
   on jobs for all

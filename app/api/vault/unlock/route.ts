@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { verifyPassword, unwrapDEK, bufferToBase64 } from "@/lib/vault/encryption";
+import { alertVaultUnlock } from "@/lib/observability/alerting";
 import type { VaultUnlockRequest, VaultUnlockResponse, VaultEncryptionKey } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -138,6 +139,13 @@ export async function POST(request: NextRequest) {
         success: true,
         metadata: { device_name: device_name || "Unknown Device" },
       });
+
+    // Alert on vault unlock
+    await alertVaultUnlock(
+      vault.id,
+      user.id,
+      request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || undefined
+    );
     
     // Return session info and DEK
     // The DEK is returned encrypted to the session - client stores in memory

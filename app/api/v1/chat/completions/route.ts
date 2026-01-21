@@ -13,6 +13,12 @@ import {
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import type { RequestContext } from "@/types/policy";
 import type { ChatMessage } from "@/types/ai-providers";
+import { checkRateLimit, getRateLimitHeaders } from "@/lib/security/rate-limit";
+import { z } from "zod";
+import {
+  ApiKeysEncryptionConfigError,
+  decryptApiKey,
+} from "@/lib/api-keys/encryption";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -52,6 +58,98 @@ interface GatewayLogEntry {
   status: "success" | "error" | "timeout";
   error_code?: string;
   error_message?: string;
+}
+
+const MAX_MESSAGES = 50;
+const MAX_MESSAGE_LENGTH = 6000;
+const MAX_TOTAL_CHARS = 48000;
+const MAX_TOKENS = 4096;
+
+const EXPLICIT_ALLOWED_MODELS = [
+  "gpt-4o",
+  "gpt-4o-mini",
+  "gpt-4o-mini-1",
+  "gpt-4o-mini-1.5",
+  "gpt-4-turbo",
+  "gpt-4.1",
+  "gpt-4.1-mini",
+  "gpt-3.5-turbo",
+];
+
+const ALLOWED_MODEL_PREFIXES = ["gpt-4o", "gpt-4", "gpt-3.5-turbo", "o1-", "o3-"];
+
+const messageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.string().min(1).max(MAX_MESSAGE_LENGTH),
+});
+
+const gatewayRequestSchema = z.object({
+  model: z.string(),
+  messages: z.array(messageSchema).min(1).max(MAX_MESSAGES),
+  temperature: z.number().min(0).max(2).optional(),
+  max_tokens: z.number().int().positive().max(MAX_TOKENS).optional(),
+  top_p: z.number().min(0).max(1).optional(),
+  frequency_penalty: z.number().min(-2).max(2).optional(),
+  presence_penalty: z.number().min(-2).max(2).optional(),
+  stop: z.union([z.string(), z.array(z.string())]).optional(),
+  stream: z.boolean().optional(),
+  user: z.string().max(128).optional(),
+  _gateway: z
+    .object({
+      trace: z.boolean().optional(),
+      bypass_cache: z.boolean().optional(),
+      force_provider: z.string().optional(),
+    })
+    .optional(),
+});
+
+function isAllowedModel(model: string): boolean {
+  return (
+    EXPLICIT_ALLOWED_MODELS.includes(model) ||
+    ALLOWED_MODEL_PREFIXES.some((prefix) => model.startsWith(prefix))
+  );
+}
+
+function decodeProviderApiKey(raw: unknown): string | null {
+  if (!raw) return null;
+
+  const asString =
+    typeof raw === "string"
+      ? raw
+      : Buffer.isBuffer(raw)
+        ? raw.toString("utf8")
+        : ArrayBuffer.isView(raw)
+          ? Buffer.from(raw as ArrayBufferView).toString("utf8")
+          : "";
+
+  if (!asString) return null;
+
+  try {
+    const parsed = JSON.parse(asString) as { encryptedKey?: string; iv?: string };
+    if (parsed.encryptedKey && parsed.iv) {
+      return decryptApiKey({
+        encryptedKey: parsed.encryptedKey,
+        iv: parsed.iv,
+      });
+    }
+  } catch {
+    // Not JSON, fall through
+  }
+
+  try {
+    const decoded = Buffer.from(asString, "base64").toString("utf8");
+    if (decoded && decoded.length >= 16) {
+      return decoded;
+    }
+  } catch {
+    // Ignore base64 failures
+  }
+
+  if (asString.length >= 16) {
+    return asString;
+  }
+
+  return null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -176,10 +274,20 @@ async function createProviderClient(
     return null;
   }
 
-  // Decrypt API key (simplified - would need actual decryption)
-  const apiKey = provider.api_key_encrypted
-    ? Buffer.from(provider.api_key_encrypted).toString("utf8")
-    : process.env.OPENAI_API_KEY;
+  let apiKey: string | null = null;
+  try {
+    apiKey = decodeProviderApiKey(provider.api_key_encrypted);
+  } catch (error) {
+    if (error instanceof ApiKeysEncryptionConfigError) {
+      console.error("Provider key decryption failed: encryption key not configured");
+    } else {
+      console.error("Provider key decryption failed:", error);
+    }
+  }
+
+  if (!apiKey) {
+    apiKey = process.env.OPENAI_API_KEY || null;
+  }
 
   return new OpenAI({
     apiKey: apiKey || "not-needed",
@@ -210,6 +318,15 @@ export async function POST(req: NextRequest) {
   let tenantId: string | undefined;
   let requestId: string = crypto.randomUUID();
   let requestedModel: string = "";
+  let tenantRateLimitHeaders: Record<string, string> | null = null;
+  const applyRateLimitHeaders = (response: NextResponse) => {
+    if (tenantRateLimitHeaders) {
+      Object.entries(tenantRateLimitHeaders).forEach(([key, value]) =>
+        response.headers.set(key, value)
+      );
+    }
+    return response;
+  };
 
   try {
     // 1. Validate API key
@@ -228,35 +345,114 @@ export async function POST(req: NextRequest) {
     }
     tenantId = authResult.tenantId;
 
-    // 2. Parse request body
-    const body: GatewayRequest = await req.json();
-    requestedModel = body.model;
+    // 2. Per-tenant rate limit (separate from IP-based middleware limit)
+    const tenantRateLimit = checkRateLimit(
+      { headers: req.headers, method: req.method },
+      "/api/v1/chat/completions",
+      [
+        {
+          pattern: /^\/api\/v1\/chat\/completions$/,
+          limit: 120,
+          windowMs: 60_000,
+        },
+      ],
+      `tenant:${tenantId}`
+    );
+    tenantRateLimitHeaders = getRateLimitHeaders(tenantRateLimit);
 
-    // Validate required fields
-    if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
-      return NextResponse.json(
+    if (!tenantRateLimit.allowed) {
+      const rateLimited = NextResponse.json(
         {
           error: {
-            message: "messages is required and must be a non-empty array",
-            type: "invalid_request_error",
-            code: "invalid_request",
+            message: "Tenant rate limit exceeded",
+            type: "rate_limit_error",
+            code: "rate_limit_exceeded",
           },
         },
-        { status: 400 }
+        { status: 429 }
+      );
+      Object.entries(tenantRateLimitHeaders).forEach(([key, value]) =>
+        rateLimited.headers.set(key, value)
+      );
+      return rateLimited;
+    }
+
+    // 3. Parse & validate request body
+    let body: GatewayRequest;
+    try {
+      body = gatewayRequestSchema.parse(await req.json());
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return applyRateLimitHeaders(
+          NextResponse.json(
+            {
+              error: {
+                message: "Invalid request payload",
+                details: error.issues?.map((issue) => issue.message),
+                type: "invalid_request_error",
+                code: "invalid_request",
+              },
+            },
+            { status: 400 }
+          )
+        );
+      }
+      throw error;
+    }
+    requestedModel = body.model;
+
+    if (!isAllowedModel(body.model)) {
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: "Requested model is not allowed",
+              type: "invalid_request_error",
+              code: "model_not_allowed",
+            },
+          },
+          { status: 400 }
+        )
       );
     }
 
-    // 3. Build request context
-    const context = buildRequestContext(req, body, tenantId, authResult.userId);
+    const totalChars = body.messages.reduce(
+      (sum, message) => sum + (message.content?.length || 0),
+      0
+    );
+
+    if (totalChars > MAX_TOTAL_CHARS) {
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: `Request too large. Combined message content exceeds ${MAX_TOTAL_CHARS} characters.`,
+              type: "invalid_request_error",
+              code: "payload_too_large",
+            },
+          },
+          { status: 413 }
+        )
+      );
+    }
+
+    const normalizedMaxTokens = Math.min(body.max_tokens ?? 2048, MAX_TOKENS);
+    const normalizedBody: GatewayRequest = {
+      ...body,
+      max_tokens: normalizedMaxTokens,
+    };
+
+    // 4. Build request context
+    const context = buildRequestContext(req, normalizedBody, tenantId, authResult.userId);
     requestId = context.request_id!;
 
-    // 4. Evaluate gateway policies and routing
+    // 5. Evaluate gateway policies and routing
     const gatewayResult = await evaluateGatewayRequest(tenantId, context, {
       includeBudget: true,
-      includeTrace: body._gateway?.trace,
+      includeTrace: normalizedBody._gateway?.trace,
     });
 
-    // 5. Check policy decision
+    // 6. Check policy decision
     if (gatewayResult.policy_decision === "deny") {
       await logGatewayRequest({
         tenant_id: tenantId,
@@ -272,15 +468,17 @@ export async function POST(req: NextRequest) {
         error_message: gatewayResult.policy_reasons.join("; "),
       });
 
-      return NextResponse.json(
-        {
-          error: {
-            message: `Request denied by policy: ${gatewayResult.policy_reasons.join("; ")}`,
-            type: "policy_error",
-            code: "request_denied",
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: `Request denied by policy: ${gatewayResult.policy_reasons.join("; ")}`,
+              type: "policy_error",
+              code: "request_denied",
+            },
           },
-        },
-        { status: 403 }
+          { status: 403 }
+        )
       );
     }
 
@@ -299,43 +497,47 @@ export async function POST(req: NextRequest) {
         error_message: "Request requires approval",
       });
 
-      return NextResponse.json(
-        {
-          error: {
-            message: "Request requires approval before processing",
-            type: "policy_error",
-            code: "approval_required",
-            request_id: requestId,
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: "Request requires approval before processing",
+              type: "policy_error",
+              code: "approval_required",
+              request_id: requestId,
+            },
           },
-        },
-        { status: 202 }
+          { status: 202 }
+        )
       );
     }
 
-    // 6. Get provider client based on routing decision
+    // 7. Get provider client based on routing decision
     const providerId =
-      body._gateway?.force_provider ||
+      normalizedBody._gateway?.force_provider ||
       gatewayResult.routing.provider_id ||
       "default-openai";
     
-    const actualModel = gatewayResult.routing.model || body.model;
+    const actualModel = gatewayResult.routing.model || normalizedBody.model;
 
     const client = await createProviderClient(tenantId, providerId);
     if (!client) {
-      return NextResponse.json(
-        {
-          error: {
-            message: "No available AI provider configured",
-            type: "server_error",
-            code: "no_provider",
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: "No available AI provider configured",
+              type: "server_error",
+              code: "no_provider",
+            },
           },
-        },
-        { status: 503 }
+          { status: 503 }
+        )
       );
     }
 
-    // 7. Modify request if needed (e.g., add safety prompt)
-    let messages = body.messages;
+    // 8. Modify request if needed (e.g., add safety prompt)
+    let messages = normalizedBody.messages;
     if (gatewayResult.routing.modified_request?.system_prompt_prefix) {
       const systemMessage = messages.find((m) => m.role === "system");
       if (systemMessage) {
@@ -354,18 +556,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 8. Make the actual API call
+    // 9. Make the actual API call
     const completion = await client.chat.completions.create({
       model: actualModel,
       messages: messages,
       temperature:
-        gatewayResult.routing.modified_request?.temperature ?? body.temperature,
-      max_tokens: body.max_tokens,
-      top_p: body.top_p,
-      frequency_penalty: body.frequency_penalty,
-      presence_penalty: body.presence_penalty,
-      stop: body.stop,
-      stream: body.stream ?? false,
+        gatewayResult.routing.modified_request?.temperature ?? normalizedBody.temperature,
+      max_tokens: normalizedBody.max_tokens,
+      top_p: normalizedBody.top_p,
+      frequency_penalty: normalizedBody.frequency_penalty,
+      presence_penalty: normalizedBody.presence_penalty,
+      stop: normalizedBody.stop,
+      stream: normalizedBody.stream ?? false,
     });
 
     const latencyMs = Date.now() - startTime;
@@ -399,7 +601,7 @@ export async function POST(req: NextRequest) {
         : undefined,
     };
 
-    return NextResponse.json(response);
+    return applyRateLimitHeaders(NextResponse.json(response));
   } catch (error) {
     const latencyMs = Date.now() - startTime;
 
@@ -424,27 +626,31 @@ export async function POST(req: NextRequest) {
 
     // Check for specific OpenAI errors
     if (error instanceof OpenAI.APIError) {
-      return NextResponse.json(
-        {
-          error: {
-            message: error.message,
-            type: error.type || "api_error",
-            code: error.code || "provider_error",
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: error.message,
+              type: error.type || "api_error",
+              code: error.code || "provider_error",
+            },
           },
-        },
-        { status: error.status || 500 }
+          { status: error.status || 500 }
+        )
       );
     }
 
-    return NextResponse.json(
-      {
-        error: {
-          message: error instanceof Error ? error.message : "Internal server error",
-          type: "server_error",
-          code: "internal_error",
+    return applyRateLimitHeaders(
+      NextResponse.json(
+        {
+          error: {
+            message: error instanceof Error ? error.message : "Internal server error",
+            type: "server_error",
+            code: "internal_error",
+          },
         },
-      },
-      { status: 500 }
+        { status: 500 }
+      )
     );
   }
 }

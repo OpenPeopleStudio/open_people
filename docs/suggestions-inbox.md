@@ -2,7 +2,7 @@
 
 > A persistent record of AI-generated suggestions, future enhancements, and long-term architectural outlooks.
 
-**Last updated:** 2026-01-19
+**Last updated:** 2026-01-21
 
 ---
 
@@ -23,123 +23,48 @@
 
 ## Active Suggestions
 
-### [SECURITY] Centralized Auth Middleware
-**Priority:** High | **Added:** 2026-01-18
+### [DATA-OPS] Migration Idempotency & Drift Guardrails
+**Priority:** Medium | **Added:** 2026-01-21
 
-**Context:** Auth/authz is scattered across individual API routes. Each route manually fetches user, checks tenant_id, etc.
+**Context:** Recent Supabase runs surfaced duplicate triggers/policies and partition clashes when reapplying migrations or using `--include-all`.
 
 **Recommendation:**
-1. Create root `middleware.ts` for all protected routes
-2. Create helpers: `withTenantAuth()`, `withSuperAdminAuth()`
-3. Inject `tenantId` and `user` into request context
+1. Add a preflight script to scan migrations for duplicate names/version collisions and missing `DROP IF EXISTS`.
+2. Standardize partition creation in migrations with `DO $$ BEGIN ... EXCEPTION WHEN duplicate_table THEN NULL; END $$;`.
+3. Add CI step to run `supabase db diff` against a scratch database to catch drift before pushing.
+4. Provide a one-click “reset and reseed” script for local environments to ensure clean replays.
 
-**Impact:** Reduces duplication, prevents auth bypass bugs, easier to audit
+**Impact:** Fewer migration failures, faster onboarding for new devs, safer recovery when replaying history.
 
 ---
 
-### [ARCHITECTURE] API Request Validation
-**Priority:** Medium | **Added:** 2026-01-18
+### [SECURITY] Policy Lint & Auto-Fix
+**Priority:** Medium | **Added:** 2026-01-21
 
-**Context:** API routes accept JSON without validation. Invalid data could cause runtime errors.
+**Context:** RLS policies have duplicated definitions and mixed patterns (`current_user_tenant_id` vs. manual subqueries), increasing risk of gaps.
 
 **Recommendation:**
-1. Add Zod for schema validation
-2. Create shared schemas in `/lib/schemas/`
-3. Validate all request bodies at route entry
-4. Return consistent 400 errors for validation failures
+1. Build a lint script that flags duplicate policy names and inconsistent tenant scoping.
+2. Offer autofix helpers to insert `DROP POLICY IF EXISTS` and standard predicates (tenant isolation + `is_super_admin()` escape).
+3. Add the lint to CI and block pushes on policy duplicates or missing tenant predicates.
+4. Generate a policy manifest (table → policies → predicates) to review during security audits.
 
-```typescript
-// Example
-const body = createFolderSchema.parse(await request.json());
-```
-
-**Impact:** Prevents invalid data, better error messages, self-documenting APIs
+**Impact:** Consistent tenant isolation, cleaner migrations, and reduced auth regressions.
 
 ---
 
-### [UX] Vault File Preview
-**Priority:** Medium | **Added:** 2026-01-18
+### [OPERATIONS] Supabase Local Health Automation
+**Priority:** Low | **Added:** 2026-01-21
 
-**Context:** Users must download files to view them.
-
-**Recommendation:**
-1. Images: Decrypt in memory, display in modal
-2. PDFs: Use pdf.js with decrypted data
-3. Text/code: Syntax-highlighted viewer
-4. Thumbnails: Generate on upload for gallery view
-
-**Technical Note:** Preview must happen client-side for zero-knowledge encryption.
-
-**Impact:** Major UX improvement for document management
-
----
-
-### [PERFORMANCE] Streaming Encryption for Large Files
-**Priority:** Low | **Added:** 2026-01-18
-
-**Context:** Current encryption loads entire file into memory. Files >100MB could crash browser.
+**Context:** Local stack requires manual `--include-all` and ad-hoc checks to confirm containers, health endpoints, and ports.
 
 **Recommendation:**
-1. Switch from AES-GCM to AES-CTR + HMAC for streaming
-2. Implement chunked upload with progress
-3. Use Web Workers for non-blocking encryption
-4. Add file size warnings/limits in UI
+1. Add `npm run supabase:health` script: check container status, `:54321` readiness, `pg_isready`, and key service health endpoints.
+2. Auto-suggest `--include-all` when local migrations precede remote head; print the pending list for clarity.
+3. Tail structured logs for core services (db, auth, storage, realtime) with colored severity filters.
+4. Document common recovery flows (reset volumes, reseed, relink project) and surface them in CLI help.
 
-**Impact:** Enables large file support, better memory usage
-
----
-
-### [FEATURE] Smart Folders with Saved Searches
-**Priority:** Medium | **Added:** 2026-01-18
-
-**Context:** Database supports `is_smart_folder` but UI doesn't implement it.
-
-**Recommendation:**
-1. Add UI to create smart folders
-2. Store search criteria (category, tags, date range)
-3. Smart folders auto-update based on criteria
-4. Example: "All Invoices from 2026" auto-populates
-
-**Impact:** Powerful organization without manual filing
-
----
-
-### [TESTING] Database Seeding
-**Priority:** Medium | **Added:** 2026-01-18
-
-**Context:** Tests need realistic data. Manual test data is tedious and inconsistent.
-
-**Recommendation:**
-```
-scripts/seed/
-  tenants.ts      # 3 tenants: active, suspended, trial
-  users.ts        # Users for each tenant + super admin
-  storage.ts      # Sample files and buckets
-  vault.ts        # Sample vault with files
-```
-
-**Impact:** Reliable tests, easier debugging
-
----
-
-### [MONITORING] Structured Logging
-**Priority:** Medium | **Added:** 2026-01-18
-
-**Context:** Current logging is inconsistent `console.log/error`. Hard to search.
-
-**Recommendation:**
-1. Add structured logging (pino/winston)
-2. Include context: tenant_id, user_id, request_id
-3. Log levels: debug, info, warn, error
-4. JSON format for log aggregation
-
-```typescript
-logger.info('file_uploaded', {
-  tenant_id, user_id, file_id, size_bytes, duration_ms
-});
-```
-
-**Impact:** Easier debugging, better observability
+**Impact:** Faster local recovery, fewer blocked dev cycles, predictable setup for new contributors.
 
 ---
 
@@ -160,22 +85,6 @@ logger.info('file_uploaded', {
 
 ---
 
-
-### [FEATURE] Notes Collaboration & Sharing
-**Priority:** Low | **Added:** 2026-01-19
-
-**Context:** Notes system is complete but single-user only.
-
-**Future Considerations:**
-1. Share notes with other super admins (read-only or edit)
-2. Public note links (like Notion public pages)
-3. Collaborative editing (real-time sync)
-4. Comments and discussions on notes
-5. Export collections as documentation site
-
-**Impact:** Team knowledge sharing, public documentation
-
----
 
 ### [DEVEX] API Route Generator
 **Priority:** Low | **Added:** 2026-01-18
@@ -213,6 +122,119 @@ generateCrudRoute({
 
 
 ## Addressed Suggestions
+
+### [FEATURE] Notes Collaboration & Sharing
+**Addressed:** 2026-01-20
+
+**Original:** Notes system is complete but single-user only. Future considerations for sharing and collaboration.
+
+**Implementation:**
+- Added to TODO.md under Super Admin domain
+- Share notes with other super admins (read-only or edit)
+- Public note links (like Notion public pages)
+- Collaborative editing (real-time sync)
+- Comments and discussions on notes
+- Export collections as documentation site
+
+---
+
+### [SECURITY] Centralized Auth Middleware
+**Addressed:** 2026-01-20
+
+**Original:** Auth/authz is scattered across individual API routes. Each route manually fetches user, checks tenant_id, etc.
+
+**Implementation:**
+- Enhanced TODO.md Security section with specific requirements
+- Create root `middleware.ts` for all protected routes
+- Create helpers: `withTenantAuth()`, `withSuperAdminAuth()`
+- Inject `tenantId` and `user` into request context
+
+---
+
+### [ARCHITECTURE] API Request Validation
+**Addressed:** 2026-01-20
+
+**Original:** API routes accept JSON without validation. Invalid data could cause runtime errors.
+
+**Implementation:**
+- Enhanced TODO.md API Quality section with specific requirements
+- Add Zod for schema validation
+- Create shared schemas in `/lib/schemas/`
+- Validate all request bodies at route entry
+- Return consistent 400 errors for validation failures
+
+---
+
+### [UX] Vault File Preview
+**Addressed:** 2026-01-20
+
+**Original:** Users must download files to view them.
+
+**Implementation:**
+- Enhanced TODO.md Vault Enhancements section with specific requirements
+- Images: Decrypt in memory, display in modal
+- PDFs: Use pdf.js with decrypted data
+- Text/code: Syntax-highlighted viewer
+- Thumbnails: Generate on upload for gallery view
+
+---
+
+### [PERFORMANCE] Streaming Encryption for Large Files
+**Addressed:** 2026-01-20
+
+**Original:** Current encryption loads entire file into memory. Files >100MB could crash browser.
+
+**Implementation:**
+- Enhanced TODO.md Vault Enhancements section with specific requirements
+- Switch from AES-GCM to AES-CTR + HMAC for streaming
+- Implement chunked upload with progress
+- Use Web Workers for non-blocking encryption
+- Add file size warnings/limits in UI
+
+---
+
+### [FEATURE] Smart Folders with Saved Searches
+**Addressed:** 2026-01-20
+
+**Original:** Database supports `is_smart_folder` but UI doesn't implement it.
+
+**Implementation:**
+- Enhanced TODO.md Vault Enhancements section with specific requirements
+- Add UI to create smart folders
+- Store search criteria (category, tags, date range)
+- Smart folders auto-update based on criteria
+- Example: "All Invoices from 2026" auto-populates
+
+---
+
+### [TESTING] Database Seeding
+**Addressed:** 2026-01-20
+
+**Original:** Tests need realistic data. Manual test data is tedious and inconsistent.
+
+**Implementation:**
+- Enhanced TODO.md Testing Infrastructure section with specific requirements
+- Create `scripts/seed/` directory structure
+- `tenants.ts` - 3 tenants: active, suspended, trial
+- `users.ts` - Users for each tenant + super admin
+- `storage.ts` - Sample files and buckets
+- `vault.ts` - Sample vault with files
+
+---
+
+### [MONITORING] Structured Logging
+**Addressed:** 2026-01-20
+
+**Original:** Current logging is inconsistent `console.log/error`. Hard to search.
+
+**Implementation:**
+- Enhanced TODO.md Monitoring & Observability section with specific requirements
+- Add structured logging (pino/winston)
+- Include context: tenant_id, user_id, request_id
+- Log levels: debug, info, warn, error
+- JSON format for log aggregation
+
+---
 
 ### [FEATURE] API Key Management System
 **Addressed:** 2026-01-19

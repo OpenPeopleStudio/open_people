@@ -29,18 +29,25 @@ interface SidebarNavProps {
 
 // Hook for localStorage with SSR safety
 function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
-
-  useEffect(() => {
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    if (typeof window === "undefined") return initialValue;
     try {
       const item = window.localStorage.getItem(key);
-      if (item) {
-        setStoredValue(JSON.parse(item));
-      }
+      return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.error("Error reading localStorage:", error);
+      return initialValue;
     }
-  }, [key]);
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(key, JSON.stringify(storedValue));
+    } catch (error) {
+      console.error("Error writing localStorage:", error);
+    }
+  }, [key, storedValue]);
 
   const setValue = useCallback((value: T) => {
     try {
@@ -107,7 +114,11 @@ export function SidebarNav({
   useEffect(() => {
     const newExpanded = getInitialExpandedItems(sections, pathname);
     if (newExpanded.size > 0) {
-      setExpandedItems(prev => new Set([...prev, ...newExpanded]));
+      const timeout = setTimeout(() => {
+        setExpandedItems(prev => new Set([...prev, ...newExpanded]));
+      }, 0);
+
+      return () => clearTimeout(timeout);
     }
   }, [pathname, sections]);
 

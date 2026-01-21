@@ -1,6 +1,6 @@
 # Project Todo
 
-> Last updated: 2026-01-19
+> Last updated: 2026-01-20
 
 Master todo list for the Open People platform.
 
@@ -81,7 +81,12 @@ Minimum Lovable Foundation infrastructure.
 - [ ] Set up Playwright for E2E tests
 - [ ] Add CI/CD pipeline (GitHub Actions)
 - [ ] Add pre-commit hooks
-- [ ] Database seed scripts for tests
+- [ ] Database seeding
+  - [ ] Create `scripts/seed/` directory
+  - [ ] `tenants.ts` - 3 tenants: active, suspended, trial
+  - [ ] `users.ts` - Users for each tenant + super admin
+  - [ ] `storage.ts` - Sample files and buckets
+  - [ ] `vault.ts` - Sample vault with files
 
 ---
 
@@ -89,8 +94,10 @@ Minimum Lovable Foundation infrastructure.
 
 ### Security (HIGH PRIORITY)
 
-- [ ] Add root `middleware.ts` for route protection
-- [ ] Create `withTenantAuth()` and `withSuperAdminAuth()` helpers
+- [ ] Centralized auth middleware
+  - [ ] Create root `middleware.ts` for all protected routes
+  - [ ] Create helpers: `withTenantAuth()`, `withSuperAdminAuth()`
+  - [ ] Inject `tenantId` and `user` into request context
 - [ ] Audit all API routes for auth/authz gaps
 - [ ] Review RLS policies completeness
 - [ ] Add rate limiting to APIs
@@ -99,15 +106,22 @@ Minimum Lovable Foundation infrastructure.
 
 ### API Quality
 
-- [ ] Add Zod for request validation
-- [ ] Create shared schemas in `/lib/schemas/`
+- [ ] API request validation
+  - [ ] Add Zod for schema validation
+  - [ ] Create shared schemas in `/lib/schemas/`
+  - [ ] Validate all request bodies at route entry
+  - [ ] Return consistent 400 errors for validation failures
 - [ ] Standardize API error responses
 - [ ] Add OpenAPI/Swagger documentation
 - [ ] API versioning strategy
 
 ### Monitoring & Observability
 
-- [ ] Structured logging (pino/winston)
+- [ ] Structured logging
+  - [ ] Add structured logging (pino/winston)
+  - [ ] Include context: tenant_id, user_id, request_id
+  - [ ] Log levels: debug, info, warn, error
+  - [ ] JSON format for log aggregation
 - [ ] Error tracking (Sentry)
 - [ ] Performance monitoring
 - [ ] Correlation IDs for request tracing
@@ -141,14 +155,29 @@ Minimum Lovable Foundation infrastructure.
 - [ ] Platform analytics dashboard
 - [ ] User management UI
 - [ ] System health monitoring
+- [ ] Notes collaboration & sharing
+  - [ ] Share notes with other super admins (read-only or edit)
+  - [ ] Public note links (like Notion public pages)
+  - [ ] Collaborative editing (real-time sync)
+  - [ ] Comments and discussions on notes
+  - [ ] Export collections as documentation site
 
 ### Vault Enhancements
 
 - [ ] File preview (decrypt in browser)
+  - [ ] Images: Decrypt in memory, display in modal
+  - [ ] PDFs: Use pdf.js with decrypted data
+  - [ ] Text/code: Syntax-highlighted viewer
 - [ ] Thumbnail generation
-- [ ] Smart folders UI
+- [ ] Smart folders with saved searches
+  - [ ] UI to create smart folders
+  - [ ] Store search criteria (category, tags, date range)
+  - [ ] Smart folders auto-update based on criteria
 - [ ] Full content AI analysis (OCR)
 - [ ] Streaming encryption for large files
+  - [ ] Switch from AES-GCM to AES-CTR + HMAC for streaming
+  - [ ] Implement chunked upload with progress
+  - [ ] Use Web Workers for non-blocking encryption
 
 ---
 

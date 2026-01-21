@@ -7,9 +7,9 @@ This repo exposes its API via **Next.js App Router route handlers** under `app/a
 - **Development**: `http://localhost:3000/api`
 - **Production**: the same origin as the app (for example `https://{tenant}.openpeople.ai/api`)
 
-## 🔐 Authentication (how it works in this codebase)
+## 🔐 Authentication (Centralized Auth System)
 
-Most endpoints authenticate with **Supabase Auth** by calling `supabase.auth.getUser()` on the server.
+This codebase uses a **centralized authentication and authorization system** built on Supabase Auth. Most endpoints use **declarative auth middleware** instead of scattered authentication code.
 
 ### Browser / same-origin calls (recommended)
 
@@ -37,7 +37,7 @@ When documenting/consuming an endpoint, rely on the endpoint’s doc (below) or 
 ## 🧭 API map
 
 ### Core
-- **[Authentication](./core/auth.md)** - Supabase Auth usage and how API routes authorize
+- **[Authentication](./core/auth.md)** - Centralized auth system, RBAC, and middleware patterns
 - **[Tenants](./core/tenants.md)** - Tenant listing (super-admin) and domain status checks
 - **[Onboarding](./core/onboarding.md)** - Tenant onboarding record read/update
 - **[Profile](./core/profile.md)** - Current user profile + tenant-scoped settings

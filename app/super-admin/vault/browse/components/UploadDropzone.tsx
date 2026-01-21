@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { formatBytes } from "@/types/vault";
 import { encryptFileForUpload, computeHash } from "@/lib/vault/client-crypto";
+import { generateImageThumbnail } from "@/lib/vault/client-thumbnails";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Upload Dropzone Component
@@ -102,18 +103,31 @@ export function UploadDropzone({ sessionId, folderId, onComplete, onClose }: Upl
         f.id === id ? { ...f, status: "uploading", progress: 5 } : f
       ));
       
-      // 1. Encrypt file client-side
-      setFiles(prev => prev.map(f => 
-        f.id === id ? { ...f, progress: 10 } : f
+      // 1. Generate thumbnail if image
+      setFiles(prev => prev.map(f =>
+        f.id === id ? { ...f, progress: 5 } : f
       ));
-      
+
+      const thumbnail = await generateImageThumbnail(file);
+
+      // 2. Encrypt file client-side
+      setFiles(prev => prev.map(f =>
+        f.id === id ? { ...f, progress: 15 } : f
+      ));
+
       const { encryptedBlob, iv, contentHash } = await encryptFileForUpload(file);
-      
-      setFiles(prev => prev.map(f => 
-        f.id === id ? { ...f, progress: 30 } : f
+
+      setFiles(prev => prev.map(f =>
+        f.id === id ? { ...f, progress: 35 } : f
       ));
       
-      // 2. Get upload URL from server
+      // 3. Encrypt thumbnail if exists
+      let encryptedThumbnail = null;
+      if (thumbnail) {
+        encryptedThumbnail = await encryptFileForUpload(thumbnail.thumbnail);
+      }
+
+      // 4. Get upload URLs from server
       const initRes = await fetch("/api/vault/upload", {
         method: "POST",
         headers: {
@@ -126,20 +140,36 @@ export function UploadDropzone({ sessionId, folderId, onComplete, onClose }: Upl
           size_bytes: encryptedBlob.size, // Use encrypted size
           folder_id: folderId,
           encryption_iv: iv, // Send IV to server for storage
+          has_thumbnail: !!encryptedThumbnail,
         }),
       });
-      
+
       if (!initRes.ok) {
         throw new Error("Failed to initialize upload");
       }
-      
-      const { file_id, upload_url } = await initRes.json();
-      
-      setFiles(prev => prev.map(f => 
-        f.id === id ? { ...f, progress: 40 } : f
+
+      const { file_id, upload_url, thumbnail_upload_url, thumbnail_key } = await initRes.json();
+
+      // 5. Upload thumbnail if exists
+      if (encryptedThumbnail && thumbnail_upload_url) {
+        const thumbnailUploadRes = await fetch(thumbnail_upload_url, {
+          method: "PUT",
+          body: encryptedThumbnail.encryptedBlob,
+          headers: {
+            "Content-Type": "application/octet-stream",
+          },
+        });
+
+        if (!thumbnailUploadRes.ok) {
+          console.warn("Thumbnail upload failed, continuing with main file");
+        }
+      }
+
+      setFiles(prev => prev.map(f =>
+        f.id === id ? { ...f, progress: 50 } : f
       ));
-      
-      // 3. Upload encrypted file to R2
+
+      // 6. Upload encrypted file to R2
       const uploadRes = await fetch(upload_url, {
         method: "PUT",
         body: encryptedBlob,
@@ -147,16 +177,16 @@ export function UploadDropzone({ sessionId, folderId, onComplete, onClose }: Upl
           "Content-Type": "application/octet-stream", // Encrypted data is binary
         },
       });
-      
+
       if (!uploadRes.ok) {
         throw new Error("Failed to upload file");
       }
-      
-      setFiles(prev => prev.map(f => 
-        f.id === id ? { ...f, progress: 80, status: "processing" } : f
+
+      setFiles(prev => prev.map(f =>
+        f.id === id ? { ...f, progress: 85, status: "processing" } : f
       ));
       
-      // 4. Confirm upload with content hash
+      // 7. Confirm upload with content hash and thumbnail info
       const confirmRes = await fetch("/api/vault/files/confirm", {
         method: "POST",
         headers: {
@@ -167,6 +197,7 @@ export function UploadDropzone({ sessionId, folderId, onComplete, onClose }: Upl
           file_id,
           content_hash: contentHash,
           encryption_iv: iv,
+          thumbnail_key: thumbnail_key || null,
         }),
       });
       

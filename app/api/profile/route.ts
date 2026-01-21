@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { withAuthAndAuthZ } from "@/lib/auth/middleware";
 import type { UpdateProfileRequest } from "@/types/ai-profile";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -7,72 +8,55 @@ import type { UpdateProfileRequest } from "@/types/ai-profile";
    Get current user's AI profile
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: NextRequest) {
-  try {
-    const supabase = await createSupabaseServer();
+const handleGetProfile = withAuthAndAuthZ()(async (auth) => {
+  const supabase = await createSupabaseServer();
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    
-    // Try to get existing profile
-    let { data: profile, error } = await supabase
+  // Try to get existing profile
+  let { data: profile, error } = await supabase
+    .from("ai_user_profiles")
+    .select("*")
+    .eq("user_id", auth.user.id)
+    .single();
+
+  // If no profile exists, create one
+  if (error?.code === "PGRST116" || !profile) {
+    const { data: newProfile, error: createError } = await supabase
       .from("ai_user_profiles")
-      .select("*")
-      .eq("user_id", user.id)
+      .insert({ user_id: auth.user.id })
+      .select()
       .single();
-    
-    // If no profile exists, create one
-    if (error?.code === "PGRST116" || !profile) {
-      const { data: newProfile, error: createError } = await supabase
-        .from("ai_user_profiles")
-        .insert({ user_id: user.id })
-        .select()
-        .single();
-      
-      if (createError) {
-        console.error("Failed to create profile:", createError);
-        return NextResponse.json({ error: "Failed to create profile", details: createError.message }, { status: 500 });
-      }
-      
-      profile = newProfile;
+
+    if (createError) {
+      console.error("Failed to create profile:", createError);
+      return NextResponse.json({ error: "Failed to create profile", details: createError.message }, { status: 500 });
     }
-    
-    // Get active goals
-    const { data: goals } = await supabase
-      .from("ai_user_goals")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("status", "active")
-      .order("created_at", { ascending: false });
-    
-    return NextResponse.json({
-      profile,
-      goals: goals || [],
-    });
-    
-  } catch (error) {
-    console.error("Profile fetch error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+
+    profile = newProfile;
   }
-}
+
+  // Get active goals
+  const { data: goals } = await supabase
+    .from("ai_user_goals")
+    .select("*")
+    .eq("user_id", auth.user.id)
+    .eq("status", "active")
+    .order("created_at", { ascending: false });
+
+  return NextResponse.json({
+    profile,
+    goals: goals || [],
+  });
+});
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PATCH /api/profile
    Update user's AI profile
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(request: NextRequest) {
-  try {
-    const supabase = await createSupabaseServer();
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    
-    const body: UpdateProfileRequest = await request.json();
+const handleUpdateProfile = withAuthAndAuthZ()(async (auth, request: NextRequest) => {
+  const supabase = await createSupabaseServer();
+
+  const body: UpdateProfileRequest = await request.json();
     
     // Build updates object (only include provided fields)
     const updates: Record<string, unknown> = {};
@@ -117,27 +101,26 @@ export async function PATCH(request: NextRequest) {
     if (body.topics_to_avoid !== undefined) updates.topics_to_avoid = body.topics_to_avoid;
     if (body.sensitive_areas !== undefined) updates.sensitive_areas = body.sensitive_areas;
     
-    // Upsert profile
-    const { data: profile, error: updateError } = await supabase
-      .from("ai_user_profiles")
-      .upsert({
-        user_id: user.id,
-        ...updates,
-      }, {
-        onConflict: "user_id",
-      })
-      .select()
-      .single();
-    
-    if (updateError) {
-      console.error("Failed to update profile:", updateError);
-      return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
-    }
-    
-    return NextResponse.json({ profile });
-    
-  } catch (error) {
-    console.error("Profile update error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  // Upsert profile
+  const { data: profile, error: updateError } = await supabase
+    .from("ai_user_profiles")
+    .upsert({
+      user_id: auth.user.id,
+      ...updates,
+    }, {
+      onConflict: "user_id",
+    })
+    .select()
+    .single();
+
+  if (updateError) {
+    console.error("Failed to update profile:", updateError);
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
-}
+
+  return NextResponse.json({ profile });
+});
+
+// Export the wrapped handlers
+export const GET = handleGetProfile;
+export const PATCH = handleUpdateProfile;

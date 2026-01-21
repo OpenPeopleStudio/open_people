@@ -484,6 +484,8 @@ export interface VaultUploadResponse {
   upload_url: string;
   encryption_key: string; // DEK for client-side encryption
   encryption_iv: string;
+  thumbnail_upload_url?: string; // For thumbnail uploads
+  thumbnail_key?: string; // R2 key for thumbnail
 }
 
 export interface VaultDownloadResponse {
@@ -494,6 +496,18 @@ export interface VaultDownloadResponse {
   filename: string;
   content_type: string;
   size_bytes: number;
+}
+
+export interface VaultPreviewResponse {
+  download_url: string;
+  encryption_key: string; // DEK for client-side decryption
+  encryption_iv: string;
+  filename: string;
+  content_type: string;
+  size_bytes: number;
+  thumbnail_url: string | null; // For image thumbnails
+  ai_summary: string | null; // For context in preview
+  ai_category: AICategory | null; // For context in preview
 }
 
 export interface VaultSearchParams {
