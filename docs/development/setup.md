@@ -12,7 +12,7 @@ Before you begin, ensure you have the following installed:
 - **Git**: Version control system ([Download](https://git-scm.com/))
 
 ### Recommended Tools
-- **VS Code**: IDE with excellent TypeScript support ([Download](https://code.visualstudio.com/))
+- **VS Code (standardized)**: Primary IDE for this repo ([Download](https://code.visualstudio.com/))
 - **Docker**: For running local services ([Download](https://docker.com/))
 - **Supabase CLI**: For database management ([Install](https://supabase.com/docs/guides/cli))
 
@@ -23,6 +23,8 @@ Before you begin, ensure you have the following installed:
 - **Network**: Stable internet connection
 
 ## 🚀 Quick Start
+
+> IDE: We standardize on VS Code. Open the repo root; the workspace picks up `.vscode/settings.json` and recommended extensions.
 
 ### 1. Clone the Repository
 ```bash

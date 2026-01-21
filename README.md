@@ -66,6 +66,7 @@ OpenPeople.ai is a multi-tenant SaaS platform that provides modular AI-powered p
 - npm or pnpm
 - Supabase project
 - Vercel account (for deployment)
+- VS Code (repo-standard IDE)
 
 ### Installation
 

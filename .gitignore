@@ -51,6 +51,8 @@ supabase/.temp
 # IDE
 .idea/
 .vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
 *.swp
 *.swo
 
