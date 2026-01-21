@@ -11,6 +11,8 @@ const spec = {
     version: pkg.version || "0.1.0",
     description:
       "Unofficial OpenAPI surface for critical endpoints. This file is generated and should stay in sync with route schemas.",
+    "x-stability-default": "stable",
+    "x-response-envelope": "{ data, error, traceId }"
   },
   servers: [
     { url: "https://app.openpeople.ai", description: "Production" },

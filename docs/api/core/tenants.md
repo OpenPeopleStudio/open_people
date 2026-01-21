@@ -1,4 +1,6 @@
-# Tenants API
+# Tenants API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 This repo has a small set of tenant-related endpoints under `/api/tenants`.
 

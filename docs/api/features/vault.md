@@ -1,4 +1,6 @@
-# Vault API
+# Vault API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 Vault is an encrypted, tenant-scoped “secure inbox” for sensitive files and artifacts. It supports:
 
@@ -51,4 +53,3 @@ Routes live under `app/api/vault/**`.
 ---
 
 **Last Updated**: January 20, 2026
-

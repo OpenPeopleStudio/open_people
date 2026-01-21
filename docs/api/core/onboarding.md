@@ -1,4 +1,6 @@
-# Onboarding API
+# Onboarding API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 Tenant onboarding is stored in the `tenant_onboarding` table and exposed via `/api/onboarding`.
 

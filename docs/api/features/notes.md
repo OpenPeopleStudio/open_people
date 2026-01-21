@@ -1,4 +1,6 @@
-# Notes API
+# Notes API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 Notes provide a lightweight knowledge/documentation system (markdown-first) with templates, versions, and a link graph.
 
@@ -42,4 +44,3 @@ Fetch/update/delete a note.
 ---
 
 **Last Updated**: January 20, 2026
-

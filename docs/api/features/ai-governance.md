@@ -1,4 +1,6 @@
-# AI Governance API
+# AI Governance API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 The AI Governance API provides endpoints for managing AI models, monitoring usage, and maintaining audit trails for AI alignment and compliance.
 

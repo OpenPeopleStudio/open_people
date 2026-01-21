@@ -1,4 +1,6 @@
-# Email API
+# Email API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 Email supports:
 

@@ -1,6 +1,29 @@
 # OpenPeople.ai API Documentation
 
+See `docs/api/STANDARDS.md` for stability tags, response envelope, auth, rate limits, and change policy.
+
 This repo exposes its API via **Next.js App Router route handlers** under `app/api/**/route.ts`. These endpoints are primarily used by the web app itself (browser + server components), but can also be called by external clients.
+
+## Who should use it
+- Product engineers extending the web app or building admin tools.
+- Backend services that need to act as trusted first‑party clients.
+- Power users integrating personal automations against their own tenant.
+
+## Why it exists
+- Provide a single, documented contract for the product surface instead of duplicating logic in clients.
+- Keep authentication, authorization, and tenant isolation consistent across all features.
+- Enable safe third‑party automation while preserving server ownership of business logic.
+
+## Risks & responsibilities
+- Calls run against live tenant data; misuse can leak cross‑tenant info if auth is bypassed. Always use the provided middleware.
+- Rate limits and audit logging apply; noisy scripts can be throttled or flagged.
+- Backward compatibility is maintained per STANDARDS, but preview/unstable endpoints can change without notice—pin to stability tags when consuming.
+
+## Quick start
+1) Pick the route doc below and check its stability tag.
+2) Authenticate using Supabase session cookies (in-app) or a bearer access token (external).
+3) Call the endpoint from the same origin (`/api/...`) in dev/prod; keep the response envelope `{ data, error, traceId }` in mind.
+4) Log `traceId` on errors so support can correlate requests.
 
 ## 🌐 Base URL
 
@@ -27,14 +50,24 @@ The token can be obtained using the Supabase JS client or Supabase Auth API (dep
 
 ## 📋 Response shapes
 
-There is **no single global response envelope** today. Common patterns you’ll see:
+Recommended envelope (see STANDARDS):
 
-- `{ error: "..." }` with status `4xx/5xx`
-- `{ success: true, ... }` on successful actions (not universal)
+- Success: `{ "data": <payload>, "error": null, "traceId": "<id>" }`
+- Error: `{ "data": null, "error": { "code": "string", "message": "string", "details"?: any }, "traceId": "<id>" }`
 
-When documenting/consuming an endpoint, rely on the endpoint’s doc (below) or the route handler in `app/api/.../route.ts`.
+Some older endpoints may still return legacy shapes; when updating them, migrate toward the envelope above.
 
 ## 🧭 API map
+
+### Stability (summary)
+- Core (auth, tenants, onboarding, profile): **stable**
+- Features (chat, notes, storage, notifications, email, experiments/flags, workflows, vault, API keys, AI governance/ops workers): **stable** unless marked otherwise in their doc
+
+## 🗒️ API changelog (contract changes)
+| Date (UTC) | Change | Stability | Notes/links |
+|-----------|--------|-----------|-------------|
+| _add rows here_ | – | – | – |
+
 
 ### Core
 - **[Authentication](./core/auth.md)** - Centralized auth system, RBAC, and middleware patterns

@@ -1,4 +1,6 @@
-# Notifications API
+# Notifications API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 This document covers how to add notifications to your features in OpenPeople. The notification system supports multiple channels (in-app, email, webhook, push) with customizable delivery preferences per event type.
 

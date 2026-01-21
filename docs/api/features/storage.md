@@ -1,6 +1,29 @@
-# Storage API
+# Storage API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 Storage is backed by **Cloudflare R2** with metadata stored in Postgres (`storage_buckets`, `storage_files`).
+
+## Who should use it
+- Features needing tenant-scoped file storage (uploads/downloads) without new infra.
+- Admin tools managing tenant buckets on the platform tenant.
+- Automations that need presigned URLs for client-side uploads.
+
+## Why it exists
+- Centralize storage auth + presign logic; avoid direct R2 exposure from clients.
+- Provide consistent metadata (size, key, bucket) for search and billing.
+- Enforce tenant isolation while supporting platform-wide super_admin operations.
+
+## Risks & responsibilities
+- Presigned URLs are time-limited; leaking them exposes the object temporarily.
+- Super admin scope uses the platform tenant; double-check role to avoid cross-tenant leaks.
+- Bulk deletes with `force` can remove data irreversibly; consider soft-delete lifecycle.
+
+## Quick start
+1) Authenticate (session cookies or bearer token). Super admins operate on the platform tenant automatically.
+2) List buckets with `GET /api/storage/buckets`; create via `POST /api/storage/buckets`.
+3) Obtain upload URLs with `POST /api/storage/upload`, then PUT the file to the returned `uploadUrl`.
+4) Fetch download URLs via `GET /api/storage/download/:fileId`; delete with `DELETE /api/storage/files`.
 
 ## Auth & tenant behavior
 

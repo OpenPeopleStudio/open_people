@@ -1,6 +1,29 @@
-# Centralized Authentication & Authorization
+# Centralized Authentication & Authorization (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 OpenPeople.ai uses a **centralized authentication and authorization system** built on top of Supabase Auth. The system provides unified auth patterns, role-based access control (RBAC), and multi-tenant isolation.
+
+## Who should use it
+- Teams building or securing route handlers that require consistent authz/authn.
+- Platform engineers defining RBAC/tenant policies across features.
+- External services acting as trusted first-party clients (with bearer tokens).
+
+## Why it exists
+- Enforce one source of truth for authentication, tenant isolation, and permission checks.
+- Reduce duplicated auth code and eliminate per-route security drift.
+- Provide composable middleware (`withAuthentication`, `withRole`, `withPermission`) that encode policy.
+
+## Risks & responsibilities
+- Skipping the middleware can leak data across tenants or bypass RBAC—always wrap handlers.
+- Token handling: bearer tokens can be replayed if logged; avoid printing them and prefer short TTLs.
+- Role/permission changes propagate immediately; cache user context carefully to avoid stale grants.
+
+## Quick start
+1) Choose the middleware shape: `withAuthentication` (auth only), `withRole`, or `withPermission`.
+2) Wrap your route handler export; accept the injected `auth` context.
+3) Return `{ data, error, traceId }` envelopes and bubble `traceId` into logs.
+4) For external callers, obtain a Supabase access token and send `Authorization: Bearer <token>`.
 
 ## 🏗️ Architecture Overview
 

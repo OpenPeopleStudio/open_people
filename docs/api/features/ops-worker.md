@@ -1,4 +1,6 @@
-# Ops Worker
+# Ops Worker (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 The Ops Worker is an AI-powered assistant that transforms decisions, meeting notes, emails, and other inputs into structured, actionable tasks with checklists and due dates.
 

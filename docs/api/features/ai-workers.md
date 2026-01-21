@@ -1,4 +1,6 @@
-# AI Workers
+# AI Workers (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 This repo includes several **AI workers** that produce **structured artifacts** (tasks, notes, knowledge docs, decisions) rather than chat-only output. Worker UIs are centralized under the **AI hub** at `/admin/ai`.
 
@@ -166,4 +168,3 @@ Poll `GET /api/ai/jobs/[jobId]` for status and results.
   "reasoning": "Brief explanation of approach"
 }
 ```
-

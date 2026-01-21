@@ -1,10 +1,33 @@
-# Chat API
+# Chat API (stable)
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`.
 
 Chat is implemented under `app/api/chat/**` and powers:
 
 - conversations + messages
 - “memories” (saved context)
 - “actions” (turn a chat message into a note, fact, edit, etc.)
+
+## Who should use it
+- Product surfaces that need conversational UI backed by server-side reasoning.
+- Automations that file notes/facts via chat actions rather than direct table writes.
+- Teams experimenting with assistant behavior while keeping state server-owned.
+
+## Why it exists
+- Provide a unified conversation model (messages, memories, actions) shared by web/app.
+- Keep LLM prompts, context assembly, and action execution on the server for safety.
+- Enable structured side-effects (notes, facts) without duplicating logic in clients.
+
+## Risks & responsibilities
+- Messages may include PII; ensure callers are authenticated to the correct tenant.
+- Actions can mutate data (notes/facts); confirm role/permission middleware is applied.
+- Long-running assistant calls can be expensive; set client timeouts and retry carefully.
+
+## Quick start
+1) Auth via Supabase cookies (browser) or bearer token (external).
+2) Create a conversation with `POST /api/chat/conversations`, then append messages via `POST /api/chat/conversations/:conversationId/messages`.
+3) Read context with `GET /api/chat/context` and memories with `GET /api/chat/memories`.
+4) Use action endpoints (`/actions/note|fact|edit`) to turn replies into structured records.
 
 ## Conversations
 
@@ -63,4 +86,3 @@ Chat actions are small, explicit endpoints that turn a chat response into struct
 ---
 
 **Last Updated**: January 20, 2026
-
