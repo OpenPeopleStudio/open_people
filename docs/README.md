@@ -48,6 +48,7 @@ A typical demo flow:
 
 ### 🔌 API Documentation
 - **[API Overview](./api/overview.md)** - API design principles and authentication
+- **[OpenAPI Spec](./api/openapi.md)** - Generated OpenAPI contract and usage
 - **[Authentication](./api/core/auth.md)** - Supabase Auth usage for API routes
 - **[Tenants](./api/core/tenants.md)** - Tenant management and domain status
 - **[Onboarding](./api/core/onboarding.md)** - Tenant onboarding records and updates

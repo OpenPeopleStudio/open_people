@@ -3,7 +3,9 @@
   "info": {
     "title": "OpenPeople API",
     "version": "0.1.0",
-    "description": "Unofficial OpenAPI surface for critical endpoints. This file is generated and should stay in sync with route schemas."
+    "description": "Unofficial OpenAPI surface for critical endpoints. This file is generated and should stay in sync with route schemas.",
+    "x-stability-default": "stable",
+    "x-response-envelope": "{ data, error, traceId }"
   },
   "servers": [
     {

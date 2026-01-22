@@ -1,6 +1,6 @@
 # Project Todo
 
-> Last updated: 2026-01-20
+> Last updated: 2026-01-22
 
 Master todo list for the Open People platform.
 
@@ -78,7 +78,7 @@ Minimum Lovable Foundation infrastructure.
 - [ ] Write comprehensive unit tests
 - [ ] Write integration tests for APIs
 - [ ] Write isolation tests (tenant data protection)
-- [ ] Set up Playwright for E2E tests
+- [x] Set up Playwright for E2E tests
 - [ ] Add CI/CD pipeline (GitHub Actions)
 - [ ] Add pre-commit hooks
 - [ ] Database seeding
@@ -100,6 +100,7 @@ Minimum Lovable Foundation infrastructure.
   - [ ] Inject `tenantId` and `user` into request context
 - [ ] Audit all API routes for auth/authz gaps
 - [ ] Review RLS policies completeness
+- [ ] Verify RLS behavior for partitioned tables (`gateway_requests_*`, `ai_metrics_hourly_*`) and add explicit child policies if needed
 - [ ] Add rate limiting to APIs
 - [ ] Add CSRF protection
 - [ ] Security headers (CSP, HSTS, etc.)
@@ -112,7 +113,7 @@ Minimum Lovable Foundation infrastructure.
   - [ ] Validate all request bodies at route entry
   - [ ] Return consistent 400 errors for validation failures
 - [ ] Standardize API error responses
-- [ ] Add OpenAPI/Swagger documentation
+- [x] Add OpenAPI/Swagger documentation
 - [ ] API versioning strategy
 
 ### Monitoring & Observability
@@ -146,6 +147,7 @@ Minimum Lovable Foundation infrastructure.
 - [ ] Dashboard improvements
 - [ ] File preview (images, PDFs)
 - [ ] Better mobile responsiveness
+- [x] Admin dashboard mobile layout pass (2026-01-22)
 - [ ] Tenant settings page
 
 ### Super Admin (`/app/super-admin/`)
@@ -189,6 +191,7 @@ Minimum Lovable Foundation infrastructure.
 - [ ] Add tenant_id middleware enforcement
 - [ ] Standardize API error responses
 - [ ] Add request validation (Zod)
+- [ ] Fix lint error in admin language settings page (`app/(platform)/admin/company/language/page.tsx`) blocking lint (react-hooks/set-state-in-effect)
 
 ### Medium Priority
 
@@ -211,10 +214,10 @@ Minimum Lovable Foundation infrastructure.
 - [x] Build isolation strategy (`docs/development/build-isolation.md`)
 - [x] Vault detailed todo (`docs/vault-todo.md`)
 - [x] AI Suggestions Inbox (`docs/suggestions-inbox.md`)
-- [ ] API documentation (OpenAPI)
-- [ ] Deployment guide
-- [ ] Contributing guide
-- [ ] Architecture overview
+- [x] API documentation (OpenAPI)
+- [x] Deployment guide (`docs/deployment/overview.md`)
+- [x] Contributing guide (`docs/development/contributing.md`)
+- [x] Architecture overview (`docs/architecture/overview.md`)
 
 ---
 

@@ -57,6 +57,12 @@ Recommended envelope (see STANDARDS):
 
 Some older endpoints may still return legacy shapes; when updating them, migrate toward the envelope above.
 
+## 📘 OpenAPI spec
+
+The generated OpenAPI contract lives at `docs/api/openapi.json`. Use it to
+browse and test endpoints in tools like Swagger UI or Postman. For generation
+and SDK details, see `docs/api/openapi.md` and `docs/api/sdk/README.md`.
+
 ## 🧭 API map
 
 ### Stability (summary)
@@ -95,4 +101,4 @@ Some older endpoints may still return legacy shapes; when updating them, migrate
 
 ---
 
-**Last Updated**: January 20, 2026
+**Last Updated**: January 22, 2026
