@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial public release preparation
 - Multi-tenant SaaS platform foundation
 - AI alignment and governance features
@@ -26,19 +27,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Role-based access control (RBAC) with permission hierarchy
   - Multi-tenant access control and isolation
   - Resource ownership validation
-  - Easy-to-use middleware decorators for API routes
+- Easy-to-use middleware decorators for API routes
 
 ### Changed
+
 - Migrated to Next.js 16 App Router
-- Updated Supabase integration patterns
+- Updated supabase integration patterns
 - Enhanced TypeScript coverage across codebase
 
 ### Fixed
+
 - Various bug fixes and performance improvements
 
 ## [0.1.0] - 2026-01-18
 
 ### Added
+
 - **Core Platform Features**
   - Multi-tenant architecture with isolated data
   - Super admin console for platform management
@@ -59,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Technical Infrastructure**
   - Next.js 16 with App Router
-  - Supabase for database and real-time features
+  - supabase for database and real-time features
   - Tailwind CSS for styling
   - Comprehensive TypeScript coverage
   - Vercel deployment configuration
@@ -71,20 +75,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Contribution guidelines
 
 ### Changed
+
 - Initial platform architecture established
 - Database schema designed for multi-tenancy
 - Authentication flow implemented
 
 ### Deprecated
+
 - N/A (initial release)
 
 ### Removed
+
 - N/A (initial release)
 
 ### Fixed
+
 - N/A (initial release)
 
 ### Security
+
 - Basic authentication and authorization implemented
 - Multi-tenant data isolation enforced
 - API key security measures in place
@@ -92,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.1] - 2025-12-01
 
 ### Added
+
 - Project initialization
 - Basic Next.js setup with TypeScript
 - Supabase project configuration
@@ -99,6 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Development environment setup
 
 ### Changed
+
 - Repository created and configured
 
 ---
@@ -128,6 +139,7 @@ OpenPeople.ai follows [Semantic Versioning](https://semver.org/):
 ## Release Process
 
 ### Pre-release Checklist
+
 - [ ] All tests passing (unit, integration, e2e)
 - [ ] Code review completed
 - [ ] Security audit passed
@@ -137,6 +149,7 @@ OpenPeople.ai follows [Semantic Versioning](https://semver.org/):
 - [ ] Accessibility compliance verified
 
 ### Release Steps
+
 1. **Branch Creation**: Create release branch from `main`
 2. **Version Bump**: Update version in `package.json`
 3. **Changelog Update**: Document all changes since last release
@@ -150,24 +163,28 @@ OpenPeople.ai follows [Semantic Versioning](https://semver.org/):
 ## Upcoming Releases
 
 ### v0.2.0 (Target: February 2026)
+
 - AI audit logging implementation
 - Content moderation pipeline
 - Basic AI model registry UI
 - Enhanced tenant management
 
 ### v0.3.0 (Target: March 2026)
+
 - Safety and compliance features
 - Bias detection monitoring
 - PII detection and redaction
 - Human-in-the-loop workflows
 
 ### v0.4.0 (Target: April 2026)
+
 - Advanced AI governance features
 - Performance monitoring dashboards
 - Cost analytics and reporting
 - Integration APIs
 
 ### v1.0.0 (Target: Q2 2026)
+
 - Production-ready AI alignment platform
 - Complete feature set implementation
 - Enterprise security and compliance
@@ -182,6 +199,7 @@ OpenPeople.ai follows [Semantic Versioning](https://semver.org/):
 ## Breaking Changes Policy
 
 Breaking changes will be:
+
 - Clearly documented in release notes
 - Announced 30 days in advance for major releases
 - Accompanied by migration guides
@@ -189,6 +207,6 @@ Breaking changes will be:
 
 ---
 
-*This changelog is maintained by the OpenPeople.ai team. For the latest updates, see [GitHub Releases](https://github.com/OpenPeopleStudio/open_people/releases).*
+_This changelog is maintained by the OpenPeople.ai team. For the latest updates, see [GitHub Releases](https://github.com/OpenPeopleStudio/open_people/releases)._
 
-*Last updated: January 18, 2026*
+Last updated: January 18, 2026\*

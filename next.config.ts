@@ -55,6 +55,10 @@ function extractSubdomain(host: string): string | null {
 }
 
 const nextConfig: NextConfig = {
+  // Use Turbopack (Next.js 16 default) even though we also supply webpack plugins (e.g., Sentry)
+  // An explicit empty config silences the “webpack config and no turbopack config” error.
+  turbopack: {},
+
   // Handle redirects at the config level
   async redirects() {
     return [

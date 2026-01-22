@@ -35,6 +35,7 @@
     "@aws-sdk/s3-request-presigner": "^3.971.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/microsoft-graph-types": "^2.43.1",
+    "@sentry/nextjs": "^8.55.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.90.1",
     "@vercel/og": "^0.8.6",
