@@ -137,6 +137,3 @@ const handleTriggerMaintenance = withAuthAndAuthZ({
 
 export const GET = handleGetJobs;
 export const POST = handleCreateJob;
-
-// Export maintenance endpoint separately
-export { handleTriggerMaintenance as POST_maintenance };

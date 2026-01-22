@@ -5,7 +5,7 @@
  * that were previously restricted to super-admins only.
  */
 
-import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 /**
  * These tests verify the API route access control logic.
@@ -107,14 +107,14 @@ describe('Tenant Module Access Control', () => {
     
     it('previously restricted modules now allow tenant owner', () => {
       // All these modules should now allow owner role
-      previouslySuperAdminOnlyModules.forEach(module => {
+      previouslySuperAdminOnlyModules.forEach(() => {
         expect(canAccessModule('owner')).toBe(true);
       });
     });
     
     it('owner-scoped modules continue to work for tenant users', () => {
       // These modules already allowed any authenticated user via owner_id
-      ownerScopedModules.forEach(module => {
+      ownerScopedModules.forEach(() => {
         // These don't check role, they check owner_id
         // So any authenticated user with a profile can access their own data
         expect(true).toBe(true);

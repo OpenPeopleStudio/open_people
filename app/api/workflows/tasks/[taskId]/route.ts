@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { indexEntity, removeFromIndex } from "@/lib/workflows/search";
 
@@ -7,12 +7,9 @@ import { indexEntity, removeFromIndex } from "@/lib/workflows/search";
    Get a single task
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ taskId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { taskId } = await params;
+    const { taskId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -44,12 +41,9 @@ export async function GET(
    Update a task
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ taskId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
-    const { taskId } = await params;
+    const { taskId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -120,12 +114,9 @@ export async function PATCH(
    Delete a task
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ taskId: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { taskId } = await params;
+    const { taskId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

@@ -147,7 +147,7 @@ export async function scanDocument(options: ScanDocumentOptions): Promise<ScanRe
   const riskScore = calculateRiskScore(piiTypesFound, piiCounts);
 
   // Determine action based on policy
-  const action = determineAction(policy, piiTypesFound, classification, allDetections);
+  const action = determineAction(policy, classification, allDetections);
   const shouldBlock = action === "blocked" || action === "quarantined";
   const requiresReview = shouldRequireReview(policy, classification);
 
@@ -213,7 +213,7 @@ export async function scanDocument(options: ScanDocumentOptions): Promise<ScanRe
     chunkDetections: allDetections.map((d) => ({ ...d, scan_result_id: savedScan.id })) as PIIChunkDetection[],
     action,
     shouldBlock,
-    redactedChunks,
+    ...(redactedChunks ? { redactedChunks } : {}),
   };
 }
 
@@ -489,7 +489,6 @@ function getDefaultPolicy(): PIIPolicy {
  */
 function determineAction(
   policy: PIIPolicy,
-  piiTypes: PIIType[],
   classification: PIIClassification,
   detections: Array<{ pii_type: string; confidence: number }>
 ): PIIAction {

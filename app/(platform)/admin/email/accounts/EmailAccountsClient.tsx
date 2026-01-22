@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { EmailAccount, ManagedEmailDomain } from "@/types/email";
+import type { EmailAccount } from "@/types/email";
 import { AccountsManager } from "@/components/email/AccountsManager";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -12,11 +12,10 @@ import { AccountsManager } from "@/components/email/AccountsManager";
 
 type Props = {
   accounts: EmailAccount[];
-  managedDomains: ManagedEmailDomain[];
   tenantId: string;
 };
 
-export function EmailAccountsClient({ accounts: initialAccounts, managedDomains, tenantId }: Props) {
+export function EmailAccountsClient({ accounts: initialAccounts, tenantId }: Props) {
   const [accounts, setAccounts] = useState(initialAccounts);
 
   return (

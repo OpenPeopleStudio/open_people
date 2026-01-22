@@ -1,12 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getDownloadUrl } from "@/lib/storage/r2";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { file_id: string } }
-) {
+export async function GET(request: Request, context: any) {
   const auth = await authenticateUser(request);
   if (!auth?.user) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });

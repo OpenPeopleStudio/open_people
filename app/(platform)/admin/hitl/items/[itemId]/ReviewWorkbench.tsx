@@ -66,16 +66,12 @@ type HITLItem = {
 type Props = {
   item: HITLItem;
   decisionOptions: DecisionOption[];
-  userId: string;
-  userName: string | null;
   isAssigned: boolean;
 };
 
 export function ReviewWorkbench({
   item,
   decisionOptions,
-  userId,
-  userName,
   isAssigned,
 }: Props) {
   const router = useRouter();
@@ -83,7 +79,7 @@ export function ReviewWorkbench({
   const [reason, setReason] = useState("");
   const [modifiedOutput, setModifiedOutput] = useState(item.review_content.output);
   const [aiCorrect, setAiCorrect] = useState<boolean | null>(null);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [reviewStartedAt] = useState(new Date().toISOString());

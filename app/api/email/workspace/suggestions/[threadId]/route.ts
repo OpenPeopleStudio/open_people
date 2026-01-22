@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { emailWorkspace } from "@/lib/email/workspace";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Workspace Suggestions API
@@ -8,10 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
    POST /api/email/workspace/suggestions/[threadId] - Use a suggestion
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { threadId: string } }
-) {
+export async function GET(request: Request, context: any) {
   try {
     const supabase = createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -20,7 +17,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { threadId } = params;
+    const { threadId } = context.params;
 
     // Verify user has access to the thread
     const { data: thread } = await supabase
@@ -56,10 +53,7 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { threadId: string } }
-) {
+export async function POST(request: Request, context: any) {
   try {
     const supabase = createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -68,7 +62,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { threadId } = params;
+    const { threadId } = context.params;
     const body = await request.json();
     const { suggestion_id } = body;
 

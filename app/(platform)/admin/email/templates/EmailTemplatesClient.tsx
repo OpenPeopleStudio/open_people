@@ -13,10 +13,9 @@ import { TemplatesManager } from "@/components/email/TemplatesManager";
 type Props = {
   templates: EmailTemplate[];
   plan: EmailPlan;
-  tenantId: string;
 };
 
-export function EmailTemplatesClient({ templates: initialTemplates, plan, tenantId }: Props) {
+export function EmailTemplatesClient({ templates: initialTemplates, plan }: Props) {
   const [templates, setTemplates] = useState(initialTemplates);
 
   const templatesByCategory = {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTenant } from "@/context/TenantContext";
-import { AI_WORKERS, STATUS_STYLES, getVisibleWorkers } from "@/lib/ai/workers";
+import { STATUS_STYLES, getVisibleWorkers } from "@/lib/ai/workers";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    AI Hub - Landing Page

@@ -146,8 +146,8 @@ export async function checkBudget(supabase: SupabaseClient, userId: string): Pro
     usedCents,
     remainingCents,
     canProceed,
-    warning,
     onExceed,
+    ...(warning ? { warning } : {}),
   };
 }
 
@@ -213,11 +213,16 @@ export function checkForDuplicates(
       }
     }
 
-    results.push({
+    const entry: DuplicateCheck = {
       proposalId: proposed.id,
       proposalTitle: proposed.title,
-      potentialDuplicate: bestMatch,
-    });
+    };
+
+    if (bestMatch) {
+      entry.potentialDuplicate = bestMatch;
+    }
+
+    results.push(entry);
   }
 
   return results;
@@ -291,13 +296,9 @@ export function mapProposalToTaskCreate(
   return {
     owner_id: userId,
     title: proposal.title,
-    description: proposal.description,
     priority: proposal.priority,
-    due_date: proposal.due_date,
-    project_id: proposal.project_id,
     tags,
     checklist,
-    estimated_minutes: proposal.estimated_minutes,
     position,
     metadata: {
       ops_worker: true,
@@ -307,6 +308,12 @@ export function mapProposalToTaskCreate(
       source_excerpt: proposal.source_excerpt,
       confidence: proposal.confidence,
     },
+    ...(proposal.description !== undefined ? { description: proposal.description } : {}),
+    ...(proposal.due_date ? { due_date: proposal.due_date } : {}),
+    ...(proposal.project_id ? { project_id: proposal.project_id } : {}),
+    ...(proposal.estimated_minutes !== undefined
+      ? { estimated_minutes: proposal.estimated_minutes }
+      : {}),
   };
 }
 

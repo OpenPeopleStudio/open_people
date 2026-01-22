@@ -7,7 +7,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getTenantForUser } from "@/lib/tenant";
 import {
-  getAutoBaselineConfig,
   createAutoBaselineConfig,
   triggerAutoBaseline,
 } from "@/lib/observability/drift";
@@ -29,11 +28,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No tenant" }, { status: 400 });
     }
     const tenantId = tenant.id;
-
-    // Parse query params
-    const searchParams = request.nextUrl.searchParams;
-    const scopeType = searchParams.get("scope_type") || undefined;
-    const scopeId = searchParams.get("scope_id") || undefined;
 
     // List all configs for tenant
     const { data: configs, error } = await supabase

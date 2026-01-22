@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,12 +6,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Get conversation with messages
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ conversationId: string }> }
-) {
+export async function GET(_request: Request, context: any) {
   try {
-    const { conversationId } = await params;
+    const { conversationId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -54,12 +51,9 @@ export async function GET(
    Update conversation settings
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ conversationId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
-    const { conversationId } = await params;
+    const { conversationId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -121,12 +115,9 @@ export async function PATCH(
    Delete conversation
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ conversationId: string }> }
-) {
+export async function DELETE(_request: Request, context: any) {
   try {
-    const { conversationId } = await params;
+    const { conversationId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

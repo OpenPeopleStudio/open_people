@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,13 +6,10 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Delete a custom conversation style
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ styleId: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { styleId } = await params;
+    const { styleId } = context.params;
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
@@ -44,13 +41,10 @@ export async function DELETE(
    Update a custom conversation style
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ styleId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { styleId } = await params;
+    const { styleId } = context.params;
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {

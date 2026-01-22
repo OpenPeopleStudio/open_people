@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import type { VaultSpace } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -16,7 +15,6 @@ type VaultState =
   | { status: "unlocked"; vault: VaultSpace; sessionId: string; encryptionKey: string };
 
 export default function TenantVaultPage() {
-  const router = useRouter();
   const [state, setState] = useState<VaultState>({ status: "loading" });
   const [error, setError] = useState<string | null>(null);
   
@@ -111,7 +109,6 @@ export default function TenantVaultPage() {
   if (state.status === "locked") {
     return (
       <VaultUnlock
-        vault={state.vault}
         onUnlock={(sessionId, encryptionKey) => {
           sessionStorage.setItem("vault_session_id", sessionId);
           sessionStorage.setItem("vault_encryption_key", encryptionKey);
@@ -128,7 +125,6 @@ export default function TenantVaultPage() {
   
   return (
     <VaultDashboard
-      vault={state.vault}
       sessionId={state.sessionId}
       onLock={() => {
         sessionStorage.removeItem("vault_session_id");
@@ -261,10 +257,8 @@ function VaultSetup({ onComplete }: { onComplete: () => void }) {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function VaultUnlock({ 
-  vault, 
   onUnlock 
 }: { 
-  vault: VaultSpace; 
   onUnlock: (sessionId: string, encryptionKey: string) => void;
 }) {
   const [password, setPassword] = useState("");
@@ -348,11 +342,9 @@ function VaultUnlock({
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function VaultDashboard({
-  vault,
   sessionId,
   onLock,
 }: {
-  vault: VaultSpace;
   sessionId: string;
   onLock: () => void;
 }) {

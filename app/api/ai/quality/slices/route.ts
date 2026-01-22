@@ -35,14 +35,22 @@ export async function GET(request: NextRequest) {
     const minSampleCount = searchParams.get("min_sample_count");
     const limit = searchParams.get("limit");
 
-    const slices = await getQualitySlices(supabase, {
-      tenantId,
-      windowStart: windowStart ? new Date(windowStart) : undefined,
-      windowEnd: windowEnd ? new Date(windowEnd) : undefined,
-      minLowQualityRate: minLowQualityRate ? parseFloat(minLowQualityRate) : undefined,
-      minSampleCount: minSampleCount ? parseInt(minSampleCount, 10) : undefined,
-      limit: limit ? parseInt(limit, 10) : undefined,
-    });
+    const params: {
+      tenantId: string;
+      windowStart?: Date;
+      windowEnd?: Date;
+      minLowQualityRate?: number;
+      minSampleCount?: number;
+      limit?: number;
+    } = { tenantId };
+
+    if (windowStart) params.windowStart = new Date(windowStart);
+    if (windowEnd) params.windowEnd = new Date(windowEnd);
+    if (minLowQualityRate) params.minLowQualityRate = parseFloat(minLowQualityRate);
+    if (minSampleCount) params.minSampleCount = parseInt(minSampleCount, 10);
+    if (limit) params.limit = parseInt(limit, 10);
+
+    const slices = await getQualitySlices(supabase, params);
 
     return NextResponse.json({ slices });
   } catch (error) {

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getRunDetails, explainResponse } from "@/lib/mlf/ai-traces";
 
@@ -7,12 +7,9 @@ import { getRunDetails, explainResponse } from "@/lib/mlf/ai-traces";
    Get AI run details with context items
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ runId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { runId } = await params;
+    const { runId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

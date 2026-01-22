@@ -9,12 +9,6 @@ import { notFound } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { PublicNoteView } from "@/components/notes/PublicNoteView";
 
-interface PublicNotePageProps {
-  params: {
-    slug: string;
-  };
-}
-
 async function getPublicNote(slug: string) {
   const supabase = await createSupabaseServer();
 
@@ -76,8 +70,9 @@ async function getPublicNote(slug: string) {
   };
 }
 
-export default async function PublicNotePage({ params }: PublicNotePageProps) {
-  const note = await getPublicNote(params.slug);
+export default async function PublicNotePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const note = await getPublicNote(slug);
 
   if (!note) {
     notFound();

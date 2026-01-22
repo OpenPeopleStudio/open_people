@@ -56,7 +56,6 @@ export default async function EmailDomainsPage() {
   return (
     <EmailDomainsClient
       managedDomains={data.managedDomains}
-      legacyDomains={data.legacyDomains}
       tenantId={profile.tenant_id}
     />
   );

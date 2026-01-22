@@ -619,7 +619,7 @@ function HowItWorksSection() {
 
             {/* Step items */}
             <div className="space-y-8 sm:space-y-10 md:space-y-12">
-              {steps.map((step, index) => (
+              {steps.map((step) => (
                 <div key={step.number} className="flex gap-4 sm:gap-6 md:gap-8 items-start">
                   {/* Number */}
                   <div className="relative z-10 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-[var(--surface-2)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
@@ -721,7 +721,7 @@ function PricingSection() {
         <div className="max-w-5xl mx-auto">
           {/* Mobile: horizontal scroll, Tablet+: grid */}
           <div className="flex md:grid md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-            {plans.map((plan, index) => (
+            {plans.map((plan) => (
               <div
                 key={plan.name}
                 className={`relative rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 snap-center shrink-0 w-[85vw] sm:w-[70vw] md:w-auto ${

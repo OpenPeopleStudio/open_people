@@ -28,17 +28,20 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
+      const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined;
+      const userAgent = request.headers.get('user-agent') || undefined;
+
       // Log failed authentication attempt
       await alertFailedLogin(
         undefined, // userId not available for failed login
-        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || request.ip,
-        request.headers.get('user-agent') || undefined
+        ip,
+        userAgent
       );
 
       logAuth('login', false, {
         email,
-        error: error.message,
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+        error: new Error(error.message),
+        ip,
       });
 
       return NextResponse.json(
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
     logAuth('login', true, {
       userId: data.user.id,
       email,
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
     });
 
     return NextResponse.json({

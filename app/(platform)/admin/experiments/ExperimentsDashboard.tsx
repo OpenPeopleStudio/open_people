@@ -18,7 +18,6 @@ type Props = {
   flags: FeatureFlag[];
   audiences: Audience[];
   plan: ExperimentPlan;
-  tenantId: string;
 };
 
 export function ExperimentsDashboard({
@@ -26,11 +25,10 @@ export function ExperimentsDashboard({
   flags: initialFlags,
   audiences: initialAudiences,
   plan,
-  tenantId,
 }: Props) {
   const [experiments, setExperiments] = useState(initialExperiments);
   const [flags, setFlags] = useState(initialFlags);
-  const [audiences, setAudiences] = useState(initialAudiences);
+  const [audiences] = useState(initialAudiences);
   const [activeTab, setActiveTab] = useState<"experiments" | "flags" | "audiences">("experiments");
 
   // Experiment form state

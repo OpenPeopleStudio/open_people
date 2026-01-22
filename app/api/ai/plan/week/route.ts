@@ -10,7 +10,6 @@ import {
   COST_WARNING_THRESHOLD_CENTS,
   type WeekPlanRequest,
   type WeekPlanResponse,
-  type PlanProposal,
 } from "@/lib/ai/prompts/chiefOfStaff";
 import { chatCompletion, getDefaultProvider, estimateCost } from "@/lib/ai/providers";
 import type { AIProviderConfig, UserAISettings } from "@/types/ai-providers";
@@ -170,7 +169,6 @@ export async function POST(request: NextRequest) {
     let assistantContent: string;
     let usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number } | undefined;
     let estimatedCostCents = 0;
-    let providerUsed = "openai";
     
     // Determine provider
     let providerConfig: AIProviderConfig | undefined;
@@ -218,7 +216,6 @@ export async function POST(request: NextRequest) {
         
         assistantContent = completion.choices[0]?.message.content || "";
         usage = completion.usage;
-        providerUsed = providerConfig.name;
         
         if (usage) {
           estimatedCostCents = estimateCost(providerConfig, usage.prompt_tokens, usage.completion_tokens) * 100;
@@ -243,7 +240,6 @@ export async function POST(request: NextRequest) {
             completion_tokens: completion.usage.completion_tokens,
             total_tokens: completion.usage.total_tokens,
           } : undefined;
-          providerUsed = "openai (fallback)";
         } else {
           throw providerError;
         }
@@ -290,10 +286,13 @@ export async function POST(request: NextRequest) {
         active_tasks_count: tasks?.length || 0,
         notes_count: recentNotes?.length || 0,
       },
-      usage,
       estimated_cost_cents: Math.round(estimatedCostCents * 100) / 100,
       duration_ms: Date.now() - startTime,
     };
+    
+    if (usage) {
+      response.usage = usage;
+    }
     
     return NextResponse.json(response);
     

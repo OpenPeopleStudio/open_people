@@ -111,8 +111,6 @@ export default async function PolicyTestBenchPage() {
       {/* Main Dashboard */}
       <TestBenchDashboard
         policies={data.policies}
-        recentDecisions={data.recentDecisions}
-        recentSimulations={data.recentSimulations}
       />
     </div>
   );

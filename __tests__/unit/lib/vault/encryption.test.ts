@@ -8,7 +8,6 @@ import { describe, it, expect } from 'vitest';
 import {
   generateDEK,
   generateKeyId,
-  generateSalt,
   createPasswordVerification,
   verifyPassword,
   wrapDEK,
@@ -23,7 +22,7 @@ describe('Key Generation', () => {
   it('generates a valid DEK', async () => {
     const dek = await generateDEK();
     expect(dek).toBeDefined();
-    expect(dek.length).toBe(44); // 32 bytes base64 encoded
+    expect(dek.length).toBe(32); // 32 bytes
   });
   
   it('generates unique DEKs', async () => {
@@ -40,10 +39,10 @@ describe('Key Generation', () => {
     expect(keyId).toMatch(/^[0-9a-f-]+$/i);
   });
   
-  it('generates a valid salt', () => {
-    const salt = generateSalt();
-    expect(salt).toBeDefined();
-    expect(salt.length).toBe(24); // 16 bytes base64 encoded
+  it('generates a valid verification salt', async () => {
+    const verification = await createPasswordVerification("test-password");
+    expect(verification.salt).toBeDefined();
+    expect(verification.salt.length).toBe(24); // 16 bytes base64 encoded
   });
 });
 
@@ -97,7 +96,7 @@ describe('DEK Wrapping', () => {
     // Unwrap the DEK
     const unwrappedDEK = await unwrapDEK(wrapped, password);
     
-    expect(unwrappedDEK).toBe(originalDEK);
+    expect(unwrappedDEK.equals(originalDEK)).toBe(true);
   });
   
   it('fails to unwrap with wrong password', async () => {
@@ -145,7 +144,8 @@ describe('QR Challenge', () => {
     const challenge = generateQRChallenge();
     
     expect(challenge).toBeDefined();
-    expect(challenge.length).toBeGreaterThan(20);
+    expect(challenge.challenge.length).toBeGreaterThan(20);
+    expect(challenge.expiresAt).toBeInstanceOf(Date);
   });
   
   it('generates unique challenges', () => {

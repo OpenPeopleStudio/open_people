@@ -11,8 +11,6 @@ import {
   buildOpsWorkerUserMessage,
   OPS_WORKER_TAG,
   SOURCE_TAGS,
-  type OpsProposal,
-  type DecisionSource,
 } from "@/lib/ai/prompts/opsWorker";
 import {
   checkForDuplicates,
@@ -43,21 +41,6 @@ Action Items:
 - Sarah: Draft product requirements doc
 - Mike: Research competitor pricing
 - All: Review Q1 targets by EOW
-`;
-
-const SAMPLE_EMAIL = `
-From: client@example.com
-Subject: Project Kickoff Follow-up
-
-Hi team,
-
-Following up on our kickoff meeting. Please ensure:
-1. Contract is signed by Jan 20
-2. Technical specs are finalized this week
-3. Schedule onboarding call with their team
-
-Thanks,
-Client
 `;
 
 const VALID_PROPOSAL_JSON = JSON.stringify({

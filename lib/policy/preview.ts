@@ -13,7 +13,7 @@ import type {
   FlippedDecision,
   PolicyDecision,
 } from "@/types/policy";
-import { loadPolicies, evaluatePolicies } from "./evaluator";
+import { loadPolicies } from "./evaluator";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Load Historical Decisions

@@ -98,7 +98,7 @@ export default function WorkerDetailPage() {
    Disabled Worker State
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function WorkerDisabled({ workerId, workerName }: { workerId: string; workerName: string }) {
+function WorkerDisabled({ workerName }: { workerId: string; workerName: string }) {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="text-center py-16">

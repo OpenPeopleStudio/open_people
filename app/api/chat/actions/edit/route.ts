@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
     
     const body: EditRequest = await request.json();
-    const { file_content, file_name, instruction, conversation_id } = body;
+    const { file_content, file_name, instruction } = body;
     
     if (!file_content) {
       return NextResponse.json({ error: "File content is required" }, { status: 400 });

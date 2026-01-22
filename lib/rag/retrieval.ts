@@ -10,8 +10,6 @@ import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { getChunksWithLineage } from "./lineage";
 import type {
   RetrievalSession,
-  RetrievalResult,
-  RetrievalResultChunk,
   SelectionReason,
   ConfidenceFactors,
   ChunkWithLineage,
@@ -180,8 +178,6 @@ export async function explainableSearch(
 
   // 8. Log retrieval for analytics
   const retrievalId = await logRetrievalResult({
-    tenantId: request.tenantId,
-    sessionId: request.sessionId,
     queryText: request.query,
     queryEmbedding: embedding,
     results: explainedResults,
@@ -195,6 +191,8 @@ export async function explainableSearch(
       search: searchLatency,
       total: Date.now() - startTime,
     },
+    ...(request.tenantId ? { tenantId: request.tenantId } : {}),
+    ...(request.sessionId ? { sessionId: request.sessionId } : {}),
   });
 
   return {

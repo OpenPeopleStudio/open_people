@@ -144,14 +144,17 @@ export default async function PoliciesPage() {
           label="Lint Issues"
           value={`${data.stats.lint_errors}/${data.stats.lint_warnings}`}
           subtext="errors/warnings"
-          variant={data.stats.lint_errors > 0 ? "error" : data.stats.lint_warnings > 0 ? "warning" : undefined}
+          {...(data.stats.lint_errors > 0
+            ? { variant: "error" }
+            : data.stats.lint_warnings > 0
+            ? { variant: "warning" }
+            : {})}
         />
       </div>
 
       {/* Main Dashboard */}
       <PoliciesDashboard
         policies={data.policies}
-        tenantId={profile.tenant_id}
       />
     </div>
   );

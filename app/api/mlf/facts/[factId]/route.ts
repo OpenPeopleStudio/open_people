@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { verifyFact } from "@/lib/mlf/facts";
 import { logActivity } from "@/lib/mlf/activity";
@@ -8,12 +8,9 @@ import { logActivity } from "@/lib/mlf/activity";
    Get a single fact
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ factId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { factId } = await params;
+    const { factId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -45,12 +42,9 @@ export async function GET(
    Update a fact
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ factId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
-    const { factId } = await params;
+    const { factId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -125,12 +119,9 @@ export async function PATCH(
    Delete (deactivate) a fact
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ factId: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { factId } = await params;
+    const { factId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

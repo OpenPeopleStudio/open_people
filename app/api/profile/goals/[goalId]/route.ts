@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,12 +6,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Get a single goal
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ goalId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { goalId } = await params;
+    const { goalId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -43,12 +40,9 @@ export async function GET(
    Update a goal
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ goalId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
-    const { goalId } = await params;
+    const { goalId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -101,12 +95,9 @@ export async function PATCH(
    Delete a goal
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ goalId: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { goalId } = await params;
+    const { goalId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

@@ -37,6 +37,11 @@ export function getOpenAIClient(): OpenAI {
   });
 }
 
+// Backwards compatibility: legacy callers expect createAIProvider()
+export function createAIProvider(): OpenAI {
+  return getOpenAIClient();
+}
+
 /**
  * Chat completion with any provider
  */

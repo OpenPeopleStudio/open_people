@@ -6,12 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
    DELETE /api/super-admin/tenants/[id]
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
     const supabase = await createSupabaseServer();
 
     // Get all users for this tenant

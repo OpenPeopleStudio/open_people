@@ -86,8 +86,8 @@ export async function extractTraceContext(): Promise<TraceContext> {
   return {
     trace_id: traceId,
     span_id: spanId,
-    parent_span_id: parentSpanId || undefined,
-    baggage,
+    ...(parentSpanId ? { parent_span_id: parentSpanId } : {}),
+    ...(baggage ? { baggage } : {}),
   };
 }
 
@@ -145,7 +145,7 @@ export function createChildContext(parent: TraceContext): TraceContext {
     trace_id: parent.trace_id,
     span_id: generateSpanId(),
     parent_span_id: parent.span_id,
-    baggage: parent.baggage,
+    ...(parent.baggage ? { baggage: parent.baggage } : {}),
   };
 }
 
@@ -159,17 +159,25 @@ export function startSpan(
   kind: SpanKind = "internal",
   attributes?: Record<string, string | number | boolean>
 ): Span {
-  return {
+  const span: Span = {
     trace_id: ctx.trace_id,
     span_id: ctx.span_id,
-    parent_span_id: ctx.parent_span_id,
     name,
     kind,
     start_time: new Date().toISOString(),
     status: "unset",
-    attributes,
     events: [],
   };
+
+  if (ctx.parent_span_id) {
+    span.parent_span_id = ctx.parent_span_id;
+  }
+
+  if (attributes) {
+    span.attributes = attributes;
+  }
+
+  return span;
 }
 
 export function endSpan(span: Span, status: SpanStatus = "ok"): Span {
@@ -189,15 +197,17 @@ export function addSpanEvent(
   name: string,
   attributes?: Record<string, string | number | boolean>
 ): Span {
+  const event: SpanEvent = {
+    name,
+    timestamp: new Date().toISOString(),
+    ...(attributes ? { attributes } : {}),
+  };
+
   return {
     ...span,
     events: [
       ...(span.events || []),
-      {
-        name,
-        timestamp: new Date().toISOString(),
-        attributes,
-      },
+      event,
     ],
   };
 }

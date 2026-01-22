@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import type { ApiKey, ApiKeyFilters } from "@/types/api-keys";
 import { PROVIDERS, ENVIRONMENTS, getProviderInfo } from "@/lib/api-keys/encryption";
+import type { ProviderId, EnvironmentId } from "@/lib/api-keys/encryption";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    API Keys Page - Tenant Admin
@@ -104,7 +105,16 @@ export default function TenantKeysPage() {
             
             <select
               value={filters.provider || ""}
-              onChange={(e) => setFilters(prev => ({ ...prev, provider: e.target.value || undefined }))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilters((prev) => {
+                  if (!value) {
+                    const { provider, ...rest } = prev;
+                    return rest;
+                  }
+                  return { ...prev, provider: value };
+                });
+              }}
               className="px-3 py-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
             >
               <option value="">All Providers</option>
@@ -115,7 +125,16 @@ export default function TenantKeysPage() {
             
             <select
               value={filters.environment || ""}
-              onChange={(e) => setFilters(prev => ({ ...prev, environment: e.target.value || undefined }))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilters((prev) => {
+                  if (!value) {
+                    const { environment, ...rest } = prev;
+                    return rest;
+                  }
+                  return { ...prev, environment: value };
+                });
+              }}
               className="px-3 py-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
             >
               <option value="">All Environments</option>
@@ -424,8 +443,8 @@ function AddKeyModal({
   onCreated: (key: ApiKey) => void;
 }) {
   const [name, setName] = useState("");
-  const [provider, setProvider] = useState(PROVIDERS[0].id);
-  const [environment, setEnvironment] = useState("development");
+  const [provider, setProvider] = useState<ProviderId>(PROVIDERS[0].id);
+  const [environment, setEnvironment] = useState<EnvironmentId>("development");
   const [key, setKey] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -500,7 +519,7 @@ function AddKeyModal({
               </label>
               <select
                 value={provider}
-                onChange={(e) => setProvider(e.target.value)}
+                onChange={(e) => setProvider(e.target.value as ProviderId)}
                 className="w-full px-4 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--electric-lime)]"
               >
                 {PROVIDERS.map(p => (
@@ -515,7 +534,7 @@ function AddKeyModal({
               </label>
               <select
                 value={environment}
-                onChange={(e) => setEnvironment(e.target.value)}
+                onChange={(e) => setEnvironment(e.target.value as EnvironmentId)}
                 className="w-full px-4 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--electric-lime)]"
               >
                 {ENVIRONMENTS.map(e => (

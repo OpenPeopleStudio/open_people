@@ -2,7 +2,7 @@
  * Unit tests for authorization logic
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   hasPermission,
   hasRole,
@@ -11,6 +11,7 @@ import {
   UserRole,
   Permission,
 } from '@/lib/auth/authorization';
+import type { AuthenticatedUser } from '@/lib/auth/auth';
 
 describe('Authorization Logic', () => {
   describe('Role Hierarchy', () => {
@@ -55,10 +56,14 @@ describe('Authorization Logic', () => {
   });
 
   describe('hasRole', () => {
-    const mockUser = (role: string) => ({
+    const mockUser = (role: string): AuthenticatedUser => ({
       id: 'user-123',
       email: 'test@example.com',
-      profile: { role },
+      app_metadata: {},
+      user_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+      profile: { id: 'profile-1', role },
     });
 
     it('should return true for exact role match', () => {
@@ -71,15 +76,19 @@ describe('Authorization Logic', () => {
     });
 
     it('should return false for invalid user', () => {
-      expect(hasRole({ id: 'user-123' }, UserRole.ADMIN)).toBe(false);
+      expect(hasRole({ id: 'user-123' } as AuthenticatedUser, UserRole.ADMIN)).toBe(false);
     });
   });
 
   describe('hasPermission', () => {
-    const mockUser = (role: string) => ({
+    const mockUser = (role: string): AuthenticatedUser => ({
       id: 'user-123',
       email: 'test@example.com',
-      profile: { role },
+      app_metadata: {},
+      user_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+      profile: { id: 'profile-1', role },
     });
 
     it('should grant permissions based on role', () => {
@@ -109,7 +118,14 @@ describe('Authorization Logic', () => {
     });
 
     it('should handle missing profile gracefully', () => {
-      const userWithoutProfile = { id: 'user-123', email: 'test@example.com' };
+      const userWithoutProfile = {
+        id: 'user-123',
+        email: 'test@example.com',
+        app_metadata: {},
+        user_metadata: {},
+        aud: 'authenticated',
+        created_at: new Date().toISOString(),
+      } as AuthenticatedUser;
 
       expect(hasPermission(userWithoutProfile, Permission.VAULT_READ)).toBe(false);
     });
@@ -147,8 +163,12 @@ describe('Authorization Logic', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
-        profile: { role: 'unknown_role' },
-      };
+        app_metadata: {},
+        user_metadata: {},
+        aud: 'authenticated',
+        created_at: new Date().toISOString(),
+        profile: { id: 'profile-1', role: 'unknown_role' },
+      } as AuthenticatedUser;
 
       expect(hasPermission(mockUser, Permission.VAULT_READ)).toBe(false);
       expect(hasRole(mockUser, UserRole.ADMIN)).toBe(false);

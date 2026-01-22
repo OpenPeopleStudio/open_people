@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createMockSupabase, createMockUser, createMockTenant } from '../setup';
+import { createMockSupabase, createMockTenant } from '../setup';
 
 // Mock the Supabase server client
 vi.mock('@/lib/supabase/server', () => ({
@@ -15,10 +15,7 @@ vi.mock('@/lib/supabase/server', () => ({
 
 describe('Tenant Data Isolation', () => {
   const tenantA = createMockTenant({ id: 'tenant-a', slug: 'acme' });
-  const tenantB = createMockTenant({ id: 'tenant-b', slug: 'globex' });
-  
-  const userA = createMockUser({ id: 'user-a', tenant_id: tenantA.id });
-  const userB = createMockUser({ id: 'user-b', tenant_id: tenantB.id });
+  createMockTenant({ id: 'tenant-b', slug: 'globex' });
   
   beforeEach(() => {
     vi.clearAllMocks();
@@ -32,7 +29,7 @@ describe('Tenant Data Isolation', () => {
       const mockSupabase = createMockSupabase();
       
       // Simulate user A trying to query files
-      mockSupabase.from = vi.fn((table) => {
+      (mockSupabase as any).from = vi.fn((table: string) => {
         if (table === '709_profiles') {
           return {
             select: vi.fn().mockReturnThis(),
@@ -41,6 +38,8 @@ describe('Tenant Data Isolation', () => {
               data: { tenant_id: tenantA.id },
               error: null,
             }),
+            _table: table,
+            _mockData: [],
           };
         }
         
@@ -60,10 +59,12 @@ describe('Tenant Data Isolation', () => {
                 }),
               };
             }),
+            _table: table,
+            _mockData: [],
           };
         }
         
-        return { select: vi.fn().mockReturnThis() };
+        return { select: vi.fn().mockReturnThis(), _table: table, _mockData: [] };
       });
       
       // The query should always include tenant_id filter
@@ -74,18 +75,18 @@ describe('Tenant Data Isolation', () => {
       // Even if tenant A somehow knows tenant B's file ID,
       // they should not be able to access it
       
-      const tenantBFileId = 'file-belonging-to-tenant-b';
-      
       // Simulate query with both file ID and tenant filter
       const mockSupabase = createMockSupabase();
       
-      mockSupabase.from = vi.fn(() => ({
+      (mockSupabase as any).from = vi.fn((table: string) => ({
         select: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
         single: vi.fn().mockResolvedValue({
           data: null, // File not found (because tenant_id doesn't match)
           error: { code: 'PGRST116', message: 'not found' },
         }),
+        _table: table,
+        _mockData: [],
       }));
       
       // The API should return 404, not the file
@@ -94,14 +95,12 @@ describe('Tenant Data Isolation', () => {
     });
     
     it('tenant A cannot delete tenant B file', async () => {
-      const tenantBFileId = 'file-belonging-to-tenant-b';
-      
       // Delete should fail silently (no rows affected)
       // because tenant_id filter prevents matching
       
       const mockSupabase = createMockSupabase();
       
-      mockSupabase.from = vi.fn(() => ({
+      (mockSupabase as any).from = vi.fn((table: string) => ({
         update: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
         // Returns empty result - no rows matched the tenant filter
@@ -110,6 +109,8 @@ describe('Tenant Data Isolation', () => {
           error: null,
           count: 0,
         }),
+        _table: table,
+        _mockData: [],
       }));
       
       expect(true).toBe(true); // Placeholder
@@ -154,12 +155,6 @@ describe('Tenant Data Isolation', () => {
 });
 
 describe('Super Admin Access Control', () => {
-  const regularUser = createMockUser({ id: 'regular-user' });
-  const superAdmin = createMockUser({
-    id: 'super-admin-user',
-    app_metadata: { role: 'super_admin' },
-  });
-  
   describe('Vault Access', () => {
     it('regular user cannot access vault routes', async () => {
       // Verify /api/vault/* returns 403 for non-super-admin

@@ -96,7 +96,6 @@ export default async function EmailInboxPage() {
       accounts={data.accounts}
       messages={data.messages}
       stats={data.stats}
-      tenantId={profile.tenant_id}
     />
   );
 }

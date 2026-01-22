@@ -169,7 +169,6 @@ export default async function ExperimentsPage() {
         flags={data.flags}
         audiences={data.audiences}
         plan={plan}
-        tenantId={profile.tenant_id}
       />
     </div>
   );

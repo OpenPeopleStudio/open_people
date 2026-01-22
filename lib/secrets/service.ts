@@ -13,7 +13,6 @@ import {
   serializeEnvelope,
   deserializeEnvelope,
   generateHint,
-  type EncryptedEnvelope,
 } from "./kms";
 
 // ═══════════════════════════════════════════════════════════════════════════

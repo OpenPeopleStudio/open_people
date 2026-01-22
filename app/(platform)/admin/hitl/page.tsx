@@ -128,7 +128,7 @@ export default async function HITLPage() {
           label="Pending Review"
           value={data.stats.total_pending.toString()}
           subtext="Items awaiting review"
-          variant={data.stats.total_pending > 10 ? "warning" : undefined}
+          {...(data.stats.total_pending > 10 ? { variant: "warning" } : {})}
         />
         <StatCard
           label="My Assigned"
@@ -148,8 +148,6 @@ export default async function HITLPage() {
         queues={data.queues}
         myItems={data.myItems}
         recentDecisions={data.recentDecisions}
-        userId={user.id}
-        isAdmin={isAdmin}
       />
     </div>
   );

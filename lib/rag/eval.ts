@@ -191,7 +191,7 @@ export async function runEval(request: RunEvalRequest): Promise<RunEvalResponse>
   let totalLatency = 0;
 
   for (const testCase of testCases) {
-    const result = await evaluateTestCase(testCase, evalRun.id, request.search_config);
+    const result = await evaluateTestCase(testCase, evalRun.id);
     results.push(result);
 
     if (result.passed) {
@@ -256,8 +256,7 @@ export async function runEval(request: RunEvalRequest): Promise<RunEvalResponse>
  */
 async function evaluateTestCase(
   testCase: EvalTestCase,
-  evalRunId: string,
-  searchConfig?: Record<string, unknown>
+  evalRunId: string
 ): Promise<EvalCaseResult> {
   const supabase = await createSupabaseAdmin();
   const startTime = Date.now();
@@ -328,17 +327,19 @@ async function evaluateTestCase(
       ndcg,
       retrieved_chunks: retrievedChunks,
       retrieved_ranks: Object.fromEntries(retrievedChunks.map((id, i) => [id, i + 1])),
-      generated_answer: generatedAnswer,
-      grounding_score: groundingScore,
-      faithfulness_score: faithfulnessScore,
-      has_hallucination: hasHallucination,
-      hallucination_details: hallucinationDetails,
       latency_ms: latency,
       debug_info: {
         search_result_count: searchResult.results.length,
         expected_chunks_count: expectedChunks.length,
         expected_docs_count: expectedDocs.length,
       },
+      ...(generatedAnswer !== undefined ? { generated_answer: generatedAnswer } : {}),
+      ...(groundingScore !== undefined ? { grounding_score: groundingScore } : {}),
+      ...(faithfulnessScore !== undefined ? { faithfulness_score: faithfulnessScore } : {}),
+      ...(hasHallucination !== undefined ? { has_hallucination: hasHallucination } : {}),
+      ...(hallucinationDetails !== undefined
+        ? { hallucination_details: hallucinationDetails }
+        : {}),
     };
 
     // Save to database
@@ -354,16 +355,22 @@ async function evaluateTestCase(
         ndcg,
         retrieved_chunks: retrievedChunks,
         retrieved_ranks: result.retrieved_ranks,
-        generated_answer: generatedAnswer,
-        grounding_score: groundingScore,
-        faithfulness_score: faithfulnessScore,
-        has_hallucination: hasHallucination,
-        hallucination_details: hallucinationDetails,
         latency_ms: latency,
         debug_info: result.debug_info,
+        ...(generatedAnswer !== undefined ? { generated_answer: generatedAnswer } : {}),
+        ...(groundingScore !== undefined ? { grounding_score: groundingScore } : {}),
+        ...(faithfulnessScore !== undefined ? { faithfulness_score: faithfulnessScore } : {}),
+        ...(hasHallucination !== undefined ? { has_hallucination: hasHallucination } : {}),
+        ...(hallucinationDetails !== undefined
+          ? { hallucination_details: hallucinationDetails }
+          : {}),
       })
       .select()
       .single();
+
+    if (error) {
+      console.error("Failed to save eval case result:", error);
+    }
 
     if (data) {
       result.id = data.id;
@@ -483,23 +490,30 @@ function calculateAggregateMetrics(results: EvalCaseResult[]): EvalMetrics {
   const faithfulnessResults = validResults.filter((r) => r.faithfulness_score !== undefined);
   const hallucinationResults = validResults.filter((r) => r.has_hallucination !== undefined);
 
-  return {
+  const metrics: EvalMetrics = {
     recall: avg(validResults.map((r) => r.recall)),
     precision: avg(validResults.map((r) => r.precision_at_k)),
     mrr: avg(validResults.map((r) => r.mrr)),
     ndcg: avg(validResults.map((r) => r.ndcg)),
-    grounding_score: groundingResults.length > 0
-      ? avg(groundingResults.map((r) => r.grounding_score))
-      : undefined,
-    faithfulness_score: faithfulnessResults.length > 0
-      ? avg(faithfulnessResults.map((r) => r.faithfulness_score))
-      : undefined,
-    hallucination_rate: hallucinationResults.length > 0
-      ? hallucinationResults.filter((r) => r.has_hallucination).length / hallucinationResults.length
-      : undefined,
     pass_rate: results.filter((r) => r.passed).length / results.length,
     avg_latency_ms: avg(results.map((r) => r.latency_ms)),
   };
+
+  if (groundingResults.length > 0) {
+    metrics.grounding_score = avg(groundingResults.map((r) => r.grounding_score));
+  }
+
+  if (faithfulnessResults.length > 0) {
+    metrics.faithfulness_score = avg(faithfulnessResults.map((r) => r.faithfulness_score));
+  }
+
+  if (hallucinationResults.length > 0) {
+    metrics.hallucination_rate =
+      hallucinationResults.filter((r) => r.has_hallucination).length /
+      hallucinationResults.length;
+  }
+
+  return metrics;
 }
 
 /**

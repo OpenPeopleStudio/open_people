@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { generateEmbedding } from "@/lib/ai-chat/memory";
 
@@ -7,12 +7,9 @@ import { generateEmbedding } from "@/lib/ai-chat/memory";
    Get single memory
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ memoryId: string }> }
-) {
+export async function GET(_request: Request, context: any) {
   try {
-    const { memoryId } = await params;
+    const { memoryId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -44,12 +41,9 @@ export async function GET(
    Update memory
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ memoryId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
-    const { memoryId } = await params;
+    const { memoryId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -97,12 +91,9 @@ export async function PATCH(
    Delete memory (soft delete - sets is_active to false)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ memoryId: string }> }
-) {
+export async function DELETE(_request: Request, context: any) {
   try {
-    const { memoryId } = await params;
+    const { memoryId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

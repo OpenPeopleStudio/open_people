@@ -193,7 +193,7 @@ export function buildForecast(
   request: ForecastRequest = {}
 ): ForecastResponse {
   const { daysForward = 14, targetServiceDays = 21, sku } = request;
-  const kpis = buildKpis({ sku });
+  const kpis = buildKpis(sku ? { sku } : {});
   const recommendations: ForecastRecommendation[] = [];
 
   for (const inv of kpis.inventory) {
@@ -240,7 +240,7 @@ export function formatChatSummary({
   range: TimeRange;
   focusSku?: string;
 }): string {
-  const kpis = buildKpis({ ...range, sku: focusSku });
+  const kpis = buildKpis(focusSku ? { ...range, sku: focusSku } : { ...range });
   const top = kpis.topMovers[0];
   const lag = kpis.laggards[0];
   return [

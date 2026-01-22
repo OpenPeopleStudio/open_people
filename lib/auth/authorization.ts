@@ -161,7 +161,7 @@ export function hasPermission(
 
   // Alert on suspicious permission attempts
   if (permission.includes('admin') || permission.includes('delete')) {
-    await alertSuspiciousActivity('unauthorized_permission_attempt', {
+    void alertSuspiciousActivity('unauthorized_permission_attempt', {
       userId: user.id,
       permission,
       role: userRole,

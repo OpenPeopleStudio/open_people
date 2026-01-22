@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,12 +6,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Get links for a specific note
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ noteId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { noteId } = await params;
+    const { noteId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -57,12 +54,9 @@ export async function GET(
    Parse note content and update links
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ noteId: string }> }
-) {
+export async function POST(request: Request, context: any) {
   try {
-    const { noteId } = await params;
+    const { noteId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

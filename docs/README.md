@@ -25,6 +25,7 @@ A typical demo flow:
 
 ### 🚀 Quick Start
 - **[Getting Started](../README.md)** - Platform overview, tech stack, and basic setup
+- **[Company Docs](./company/README.md)** - Org structure, roles, and doc ownership
 - **[Development Setup](./development/setup.md)** - Local development environment and contribution guidelines
 - **[Deployment Guide](./deployment/overview.md)** - Production deployment and operations
 - **[AI Playbook](./AI/PLAYBOOK.md)** - Agent and newcomer recipes
@@ -138,5 +139,5 @@ We welcome contributions to our documentation! Here's how you can help:
 
 ---
 
-**Last Updated**: January 20, 2026
+**Last Updated**: January 22, 2026
 **Platform Version**: v0.1.0

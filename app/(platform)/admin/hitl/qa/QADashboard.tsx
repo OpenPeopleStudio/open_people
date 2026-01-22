@@ -11,13 +11,11 @@ import type { DisagreementMetrics, QAQueueItem } from "@/lib/hitl/qa-sampling";
 type Props = {
   metrics: DisagreementMetrics[];
   qaQueue: QAQueueItem[];
-  userId: string;
 };
 
 export function QADashboard({
   metrics,
   qaQueue: initialQueue,
-  userId,
 }: Props) {
   const [activeTab, setActiveTab] = useState<"metrics" | "review">(
     metrics.length > 0 ? "metrics" : "review"

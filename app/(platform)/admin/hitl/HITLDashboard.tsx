@@ -50,16 +50,12 @@ type Props = {
   queues: Queue[];
   myItems: HITLItem[];
   recentDecisions: Decision[];
-  userId: string;
-  isAdmin: boolean;
 };
 
 export function HITLDashboard({
   queues,
   myItems: initialMyItems,
   recentDecisions,
-  userId,
-  isAdmin,
 }: Props) {
   const [myItems, setMyItems] = useState(initialMyItems);
   const [selectedQueue, setSelectedQueue] = useState<string | null>(null);

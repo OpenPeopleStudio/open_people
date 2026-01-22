@@ -57,7 +57,6 @@ export default async function EmailAccountsPage() {
   return (
     <EmailAccountsClient
       accounts={data.accounts}
-      managedDomains={data.managedDomains}
       tenantId={profile.tenant_id}
     />
   );

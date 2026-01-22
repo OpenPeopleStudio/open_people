@@ -12,10 +12,11 @@ import { beforeAll, afterAll, afterEach, vi } from 'vitest';
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Set test environment variables
-process.env.NODE_ENV = 'test';
-process.env.NEXT_PUBLIC_SUPABASE_URL = 'http://localhost:54321';
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key';
-process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
+const mutableEnv = process.env as Record<string, string | undefined>;
+mutableEnv.NODE_ENV = 'test';
+mutableEnv.NEXT_PUBLIC_SUPABASE_URL = 'http://localhost:54321';
+mutableEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key';
+mutableEnv.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Global Mocks

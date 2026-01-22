@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -21,13 +21,10 @@ type DecisionRequest = {
   }>;
 };
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ itemId: string }> }
-) {
+export async function POST(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { itemId } = await params;
+    const { itemId } = context.params;
 
     // 1. Authenticate
     const {

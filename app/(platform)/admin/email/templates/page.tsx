@@ -59,7 +59,6 @@ export default async function EmailTemplatesPage() {
     <EmailTemplatesClient
       templates={data.templates}
       plan={plan}
-      tenantId={profile.tenant_id}
     />
   );
 }

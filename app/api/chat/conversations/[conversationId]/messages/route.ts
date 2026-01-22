@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import OpenAI from "openai";
 import { generateEmbedding, extractMemories, summarizeMemory } from "@/lib/ai-chat/memory";
-import { buildContext, buildSystemPrompt, truncateContext } from "@/lib/ai-chat/context";
+import { buildContext, truncateContext } from "@/lib/ai-chat/context";
 import { buildPersonalizedPrompt } from "@/lib/ai-profile/personalization";
-import { chatCompletion, getProviderById, getDefaultProvider, estimateCost } from "@/lib/ai/providers";
+import { chatCompletion, getDefaultProvider, estimateCost } from "@/lib/ai/providers";
 import { extractFacts } from "@/lib/mlf/facts";
-import type { SendMessageRequest, AIMessageSource } from "@/types/ai-chat";
+import { applyVibeDelta, estimateTokens, recordTokenEvent, tokensToBaseDelta } from "@/lib/company/vibes";
+import type { SendMessageRequest } from "@/types/ai-chat";
 import type { AIUserProfile, AIUserGoal } from "@/types/ai-profile";
 import type { AIProviderConfig, UserAISettings } from "@/types/ai-providers";
 import { PROVIDER_TEMPLATES } from "@/types/ai-providers";
@@ -20,12 +21,9 @@ const openai = new OpenAI({
    Send a message and get AI response
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ conversationId: string }> }
-) {
+export async function POST(request: Request, context: any) {
   try {
-    const { conversationId } = await params;
+    const { conversationId } = context.params;
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -33,6 +31,14 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
+    // Get tenant context
+    const { data: tenantProfile } = await supabase
+      .from("profiles")
+      .select("tenant_id")
+      .eq("id", user.id)
+      .single();
+    const tenantId = tenantProfile?.tenant_id || null;
+
     // Get conversation
     const { data: conversation, error: convError } = await supabase
       .from("ai_conversations")
@@ -297,6 +303,49 @@ export async function POST(
     
     if (assistantMsgError) {
       console.error("Failed to save assistant message:", assistantMsgError);
+    }
+
+    // 10.5 Token accounting (vibe currency)
+    if (tenantId) {
+      const tokenIn = estimateTokens(content);
+      const tokenOut = usage?.completion_tokens ?? estimateTokens(assistantContent);
+      const inDelta = tokensToBaseDelta(tokenIn, 0);
+      const outDelta = tokensToBaseDelta(0, tokenOut);
+      const baseDelta = inDelta + outDelta;
+
+      if (tokenIn > 0) {
+        await recordTokenEvent(
+          supabase,
+          tenantId,
+          user.id,
+          "in",
+          tokenIn,
+          inDelta,
+          "chat:input"
+        );
+      }
+
+      if (tokenOut > 0) {
+        await recordTokenEvent(
+          supabase,
+          tenantId,
+          user.id,
+          "out",
+          tokenOut,
+          outDelta,
+          "chat:output"
+        );
+      }
+
+      if (baseDelta !== 0) {
+        const balanceResult = await applyVibeDelta(supabase, tenantId, baseDelta);
+        await supabase.from("vibe_events").insert({
+          tenant_id: tenantId,
+          created_by: user.id,
+          source: "tokens:chat",
+          value: balanceResult.delta,
+        });
+      }
     }
     
     // 11. Save context snapshot

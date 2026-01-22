@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { ManagedEmailDomain, EmailDomain } from "@/types/email";
+import type { ManagedEmailDomain } from "@/types/email";
 import { DNSRecordsPanel } from "@/components/email/DNSRecordsPanel";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -12,13 +12,11 @@ import { DNSRecordsPanel } from "@/components/email/DNSRecordsPanel";
 
 type Props = {
   managedDomains: ManagedEmailDomain[];
-  legacyDomains: EmailDomain[];
   tenantId: string;
 };
 
 export function EmailDomainsClient({ 
   managedDomains: initialDomains, 
-  legacyDomains,
   tenantId 
 }: Props) {
   const [domains, setDomains] = useState(initialDomains);

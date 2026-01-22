@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { UserRole } from "@/lib/auth/authorization";
@@ -7,10 +7,7 @@ function isSuperAdmin(role?: string | null) {
   return role === UserRole.SUPER_ADMIN;
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { tenant_id: string } }
-) {
+export async function GET(request: Request, context: any) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
@@ -33,10 +30,7 @@ export async function GET(
   return NextResponse.json(data);
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { tenant_id: string } }
-) {
+export async function PUT(request: Request, context: any) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });

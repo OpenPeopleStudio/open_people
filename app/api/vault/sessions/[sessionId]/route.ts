@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,12 +6,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Revoke a specific session
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ sessionId: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { sessionId: targetSessionId } = await params;
+    const { sessionId: targetSessionId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

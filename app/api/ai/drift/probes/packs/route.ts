@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     // Return available packs
     const packs = await listProbePacks(supabase, {
       tenantId,
-      category,
+      ...(category ? { category } : {}),
     });
 
     return NextResponse.json({ packs });

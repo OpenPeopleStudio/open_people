@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { authenticateUser, requireAuth, withAuth, hasPermission, hasRole } from '@/lib/auth/auth';
+import { authenticateUser, requireAuth, withAuth } from '@/lib/auth/auth';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { NextRequest } from 'next/server';
 

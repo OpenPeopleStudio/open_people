@@ -23,7 +23,7 @@ import {
  */
 export function withAuthAndAuthZ(requirements?: AuthRequirements) {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
     return async (request: NextRequest, ...args: T): Promise<R | NextResponse> => {
       // First authenticate
@@ -35,7 +35,7 @@ export function withAuthAndAuthZ(requirements?: AuthRequirements) {
       // Then authorize if requirements specified
       if (requirements) {
         const authZMiddleware = requireAuthZ(requirements);
-        const result = await authZMiddleware(handler)(auth, request, ...args);
+        const result = await authZMiddleware((authCtx, ...rest) => handler(authCtx, request, ...rest))(auth, request, ...args);
         return result;
       }
 
@@ -173,7 +173,15 @@ export function getResourceOwnerFromBody(fieldName: string = 'user_id') {
   };
 }
 
-// Re-export everything for convenience
+// Re-export common helpers (avoid name collisions between auth and authorization)
 export * from './auth';
-export * from './authorization';
-export { Permission, UserRole } from './authorization';
+export {
+  requirePermission,
+  requireRole,
+  requireOwnershipOrPermission,
+  requireTenantAccess,
+  hasPermission,
+  hasRole,
+  Permission,
+  UserRole,
+} from './authorization';

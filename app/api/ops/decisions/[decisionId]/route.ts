@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,10 +6,10 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Fetch a single decision with its ops run and proposal
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ decisionId: string }> }) {
+export async function GET(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { decisionId } = await params;
+    const { decisionId } = context.params;
 
     const {
       data: { user },
@@ -47,10 +47,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
    Archive or delete a decision
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ decisionId: string }> }) {
+export async function DELETE(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { decisionId } = await params;
+    const { decisionId } = context.params;
 
     const {
       data: { user },

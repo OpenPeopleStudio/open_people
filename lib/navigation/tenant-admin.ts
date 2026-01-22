@@ -20,6 +20,25 @@ export const tenantAdminNavSections: NavSection[] = [
     ],
   },
   {
+    id: "company",
+    label: "Company",
+    items: [
+      {
+        href: "/admin/company",
+        label: "Dashboard",
+        icon: "M3 21h18M4.5 18.75h15a1.5 1.5 0 001.5-1.5V7.5a1.5 1.5 0 00-1.5-1.5H4.5A1.5 1.5 0 003 7.5v9.75a1.5 1.5 0 001.5 1.5zm4.5-9h3m-3 3h6m-6 3h6",
+        exact: true,
+        feature: "admin",
+      },
+      {
+        href: "/admin/company/language",
+        label: "Language",
+        icon: "M10.5 21l5.25-12m2.25 12l-5.25-12M3 12h12",
+        feature: "admin",
+      },
+    ],
+  },
+  {
     id: "data-storage",
     label: "Data & Storage",
     items: [

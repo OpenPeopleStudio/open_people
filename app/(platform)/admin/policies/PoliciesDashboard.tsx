@@ -26,10 +26,9 @@ type Policy = {
 
 type Props = {
   policies: Policy[];
-  tenantId: string;
 };
 
-export function PoliciesDashboard({ policies: initialPolicies, tenantId }: Props) {
+export function PoliciesDashboard({ policies: initialPolicies }: Props) {
   const [policies, setPolicies] = useState(initialPolicies);
   const [lintResult, setLintResult] = useState<LintResponse | null>(null);
   const [linting, setLinting] = useState(false);

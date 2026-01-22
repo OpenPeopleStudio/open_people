@@ -28,7 +28,7 @@ vi.mock('@/lib/auth/authorization', () => ({
 }));
 
 import { authenticateUser, requireAuth } from '@/lib/auth/auth';
-import { requirePermission, requireRole, requireTenantAccess, requireAuth as requireAuthZ } from '@/lib/auth/authorization';
+import { requireAuth as requireAuthZ } from '@/lib/auth/authorization';
 
 describe('Authentication Middleware', () => {
   const mockAuthResult = {
@@ -92,7 +92,7 @@ describe('Authentication Middleware', () => {
   describe('withRole', () => {
     it('should allow access for users with correct role', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((_requirements: any) => (handler: any) => handler);
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withRole(UserRole.OWNER)(mockHandler);
@@ -123,7 +123,7 @@ describe('Authentication Middleware', () => {
   describe('withPermission', () => {
     it('should allow access for users with correct permission', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((_requirements: any) => (handler: any) => handler);
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withPermission(Permission.NOTES_READ)(mockHandler);
@@ -140,7 +140,7 @@ describe('Authentication Middleware', () => {
   describe('withTenantAccess', () => {
     it('should allow access for users in correct tenant', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((_requirements: any) => (handler: any) => handler);
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withTenantAccess('tenant-456')(mockHandler);

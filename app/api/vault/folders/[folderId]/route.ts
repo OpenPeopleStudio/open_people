@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,12 +6,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Get folder details
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ folderId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { folderId } = await params;
+    const { folderId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -91,12 +88,9 @@ export async function GET(
    Update folder (rename, move, change icon/color)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ folderId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
-    const { folderId } = await params;
+    const { folderId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -305,12 +299,9 @@ export async function PATCH(
    Delete folder (and optionally move files)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ folderId: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { folderId } = await params;
+    const { folderId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

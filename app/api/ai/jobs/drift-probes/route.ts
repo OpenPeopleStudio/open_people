@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       // In production, you'd track last run time and check frequency
 
       // Create a mock executor (in production, this would call the actual AI model)
-      const executor = async (input: string) => {
+      const executor = async (_input: string) => {
         // This is a placeholder - in production, you'd call the AI model
         // based on the install's application_id and model_id
         const startTime = Date.now();

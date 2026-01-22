@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import type {
-  NotificationPlan,
   NotificationTemplate,
   NotificationDelivery,
   NotificationChannel,
@@ -17,17 +16,13 @@ import { DEFAULT_NOTIFICATION_TEMPLATES } from "@/types/notifications";
 type Props = {
   templates: NotificationTemplate[];
   recentDeliveries: (NotificationDelivery & { template?: { name: string } | null })[];
-  plan: NotificationPlan;
   fromNumber: string | null;
-  tenantId: string;
 };
 
 export function NotificationsDashboard({
   templates: initialTemplates,
   recentDeliveries,
-  plan,
   fromNumber,
-  tenantId,
 }: Props) {
   const [templates, setTemplates] = useState(initialTemplates);
   const [activeTab, setActiveTab] = useState<"send" | "templates" | "logs">("send");

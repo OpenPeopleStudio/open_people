@@ -4,7 +4,7 @@
  * Tests for quality slices, regression gates, cost-per-outcome, drift probes
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock Supabase
 vi.mock("@/lib/supabase/server", () => ({
@@ -47,8 +47,6 @@ vi.mock("@/lib/supabase/server", () => ({
 describe("Quality Slices", () => {
   describe("computeQualitySlices", () => {
     it("should group outcomes by slice key", async () => {
-      const { computeQualitySlices } = await import("@/lib/observability/quality");
-      
       // This would be a more complete test with proper mocking
       // For now, we test the grouping logic conceptually
       const mockOutcomes = [

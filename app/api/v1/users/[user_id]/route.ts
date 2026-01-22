@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { UserRole } from "@/lib/auth/authorization";
@@ -7,10 +7,7 @@ function canManage(role?: string | null) {
   return role === UserRole.SUPER_ADMIN || role === UserRole.OWNER || role === UserRole.ADMIN;
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { user_id: string } }
-) {
+export async function PATCH(request: Request, context: any) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });

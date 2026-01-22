@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getDownloadUrl } from "@/lib/storage/r2";
 import type { VaultDownloadResponse } from "@/types/vault";
@@ -8,12 +8,9 @@ import type { VaultDownloadResponse } from "@/types/vault";
    Get file details and download URL
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ fileId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { fileId } = await params;
+    const { fileId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

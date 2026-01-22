@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,12 +6,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Get all versions of a note
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ noteId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { noteId } = await params;
+    const { noteId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -57,12 +54,9 @@ export async function GET(
    Restore a note to a specific version
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ noteId: string }> }
-) {
+export async function POST(request: Request, context: any) {
   try {
-    const { noteId } = await params;
+    const { noteId } = context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

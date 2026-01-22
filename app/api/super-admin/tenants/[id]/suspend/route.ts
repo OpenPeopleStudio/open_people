@@ -6,12 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
    POST /api/super-admin/tenants/[id]/suspend
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: Request, context: any) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
     const supabase = await createSupabaseServer();
 
     // Get current tenant status

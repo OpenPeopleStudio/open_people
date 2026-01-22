@@ -114,14 +114,6 @@ export default function WorkflowsPage() {
     cancelled: "var(--text-muted)",
   };
   
-  // Group tasks by status for kanban view
-  const tasksByStatus = tasks.reduce((acc, task) => {
-    const status = task.status || "todo";
-    if (!acc[status]) acc[status] = [];
-    acc[status].push(task);
-    return acc;
-  }, {} as Record<string, Task[]>);
-  
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}

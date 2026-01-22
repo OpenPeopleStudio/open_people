@@ -3,13 +3,10 @@
    Detect conflicts, shadowed rules, unreachable conditions, and other issues
    ═══════════════════════════════════════════════════════════════════════════ */
 
-import { createSupabaseAdmin } from "@/lib/supabase/server";
 import type {
   PolicyWithRelations,
   LintIssue,
   LintResponse,
-  LintSeverity,
-  LintRuleType,
 } from "@/types/policy";
 import { loadPolicies } from "./evaluator";
 
@@ -488,10 +485,18 @@ export async function lintPolicies(
   }
 ): Promise<LintResponse> {
   // Load policies
-  const policies = await loadPolicies(tenantId, {
-    policyIds: options?.policyIds,
-    includeInactive: options?.includeInactive,
-  });
+  const loadOptions: { policyIds?: string[]; includeInactive?: boolean } = {};
+  if (options?.policyIds) {
+    loadOptions.policyIds = options.policyIds;
+  }
+  if (options?.includeInactive !== undefined) {
+    loadOptions.includeInactive = options.includeInactive;
+  }
+
+  const policies = await loadPolicies(
+    tenantId,
+    Object.keys(loadOptions).length > 0 ? loadOptions : undefined
+  );
 
   // Run all lint rules
   const allIssues: LintIssue[] = [
@@ -533,9 +538,6 @@ export async function lintSinglePolicy(
 
   // Filter out the policy being edited (if it already exists)
   const existingPolicies = otherPolicies.filter((p) => p.id !== policy.id);
-
-  // Create combined list for comparison
-  const allPolicies = [...existingPolicies, policy];
 
   // Run lint rules focused on the single policy
   const issues: LintIssue[] = [];

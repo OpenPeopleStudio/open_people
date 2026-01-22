@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,13 +6,10 @@ import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server
    Get single HITL item with full details
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ itemId: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { itemId } = await params;
+    const { itemId } = context.params;
 
     // 1. Authenticate
     const {
@@ -83,13 +80,10 @@ export async function GET(
    Update item (claim, release, update status)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ itemId: string }> }
-) {
+export async function PATCH(request: Request, context: any) {
   try {
     const supabase = await createSupabaseServer();
-    const { itemId } = await params;
+    const { itemId } = context.params;
 
     // 1. Authenticate
     const {

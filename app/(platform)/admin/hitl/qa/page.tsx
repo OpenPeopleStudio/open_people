@@ -1,4 +1,4 @@
-import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseServer } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { QADashboard } from "./QADashboard";
 import { calculateDisagreementMetrics, getQAQueue } from "@/lib/hitl/qa-sampling";
@@ -88,7 +88,7 @@ export default async function HITLQAPage() {
           label="Needs Attention"
           value={lowAccuracyReviewers.toString()}
           subtext="< 80% accuracy"
-          variant={lowAccuracyReviewers > 0 ? "warning" : undefined}
+          {...(lowAccuracyReviewers > 0 ? { variant: "warning" } : {})}
         />
       </div>
 
@@ -96,7 +96,6 @@ export default async function HITLQAPage() {
       <QADashboard
         metrics={metrics}
         qaQueue={queue}
-        userId={user.id}
       />
     </div>
   );

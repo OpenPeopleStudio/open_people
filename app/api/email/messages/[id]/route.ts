@@ -8,12 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
    DELETE /api/email/messages/[id] - Delete message
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
     const supabase = await createSupabaseServer();
 
     const {
@@ -67,12 +64,9 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, context: any) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
     const supabase = await createSupabaseServer();
 
     const {
@@ -136,12 +130,9 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
     const supabase = await createSupabaseServer();
 
     const {

@@ -310,11 +310,12 @@ function formatNumber(num: number): string {
 }
 
 type PageProps = {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function SuperAdminDashboard({ searchParams }: PageProps) {
-  const demoParam = searchParams?.demo;
+  const resolvedSearch = searchParams ? await searchParams : {};
+  const demoParam = resolvedSearch.demo;
   const demoMode =
     demoParam === "1" ||
     demoParam === "true" ||

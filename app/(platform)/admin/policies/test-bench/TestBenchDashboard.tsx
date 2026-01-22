@@ -22,25 +22,8 @@ type Policy = {
   is_active: boolean;
 };
 
-type RecentDecision = {
-  id: string;
-  request_id: string;
-  decision: string;
-  deciding_policy_id: string | null;
-  created_at: string;
-};
-
-type Simulation = {
-  id: string;
-  simulation_type: string;
-  result_data: Record<string, unknown>;
-  created_at: string;
-};
-
 type Props = {
   policies: Policy[];
-  recentDecisions: RecentDecision[];
-  recentSimulations: Simulation[];
 };
 
 const DEFAULT_CONTEXT: RequestContext = {
@@ -58,8 +41,6 @@ const DEFAULT_CONTEXT: RequestContext = {
 
 export function TestBenchDashboard({
   policies,
-  recentDecisions,
-  recentSimulations,
 }: Props) {
   const [context, setContext] = useState<RequestContext>(DEFAULT_CONTEXT);
   const [contextJson, setContextJson] = useState(

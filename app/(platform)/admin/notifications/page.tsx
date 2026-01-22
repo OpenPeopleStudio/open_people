@@ -173,9 +173,7 @@ export default async function NotificationsPage() {
       <NotificationsDashboard
         templates={data.templates}
         recentDeliveries={data.recentDeliveries}
-        plan={plan}
         fromNumber={data.subscription.twilio_from_number}
-        tenantId={profile.tenant_id}
       />
     </div>
   );

@@ -46,9 +46,8 @@ const DEFAULT_ACTION_MAPPINGS: Record<RiskLevel, RecommendedAction> = {
   critical: "block",
 };
 
-const DEFAULT_ESCALATION_RULES = {
+const DEFAULT_ESCALATION_RULES: RiskProfile["escalation_rules"] = {
   min_risk_level: "high" as RiskLevel,
-  min_risk_score: undefined as number | undefined,
   signal_triggers: [] as { type: RiskSignalType; min_score: number }[],
 };
 
@@ -387,10 +386,13 @@ export async function evaluateRisk(
     recommended_action: recommendedAction,
     reasons,
     should_escalate: shouldEscalate,
-    escalation_reasons: escalationReasons.length > 0 ? escalationReasons : undefined,
     profile_id: profile.id,
     evaluation_time_ms: evaluationTimeMs,
   };
+
+  if (escalationReasons.length > 0) {
+    evaluation.escalation_reasons = escalationReasons;
+  }
 
   return evaluation;
 }
@@ -442,10 +444,12 @@ export async function evaluateAndStoreRisk(
   const evaluation = await evaluateRisk(tenantId, request);
   const storedId = await storeRiskEvaluation(tenantId, evaluation);
 
-  return {
-    ...evaluation,
-    id: storedId || undefined,
-  };
+  const result: RiskEvaluation & { stored_id?: string } = { ...evaluation };
+  if (storedId) {
+    result.id = storedId;
+  }
+
+  return result;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

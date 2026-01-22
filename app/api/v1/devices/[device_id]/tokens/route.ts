@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { authenticateUser } from "@/lib/auth/auth";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { device_id: string } }
-) {
+export async function POST(request: Request, context: any) {
   const auth = await authenticateUser(request);
   if (!auth?.user) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
@@ -17,22 +14,19 @@ export async function POST(
   return NextResponse.json(
     {
       token,
-      device_id: params.device_id,
+      device_id: context.params.device_id,
       expires_at: expiresAt,
     },
     { status: 201 }
   );
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { device_id: string } }
-) {
+export async function DELETE(request: Request, context: any) {
   const auth = await authenticateUser(request);
   if (!auth?.user) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
   }
 
   // No persistence yet; acknowledge revoke.
-  return NextResponse.json({ device_id: params.device_id, revoked: true }, { status: 200 });
+  return NextResponse.json({ device_id: context.params.device_id, revoked: true }, { status: 200 });
 }

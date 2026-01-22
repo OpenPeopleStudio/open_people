@@ -780,15 +780,15 @@ function CommunicationSection({
               <button
                 key={style.id}
                 onClick={() => onSave({
-                  communication_style: style.communication_style || undefined,
-                  formality_level: style.formality_level || undefined,
-                  detail_preference: style.detail_preference || undefined,
-                  emotional_support_level: style.emotional_support_level || undefined,
-                  challenge_me: style.challenge_me ?? undefined,
-                  use_analogies: style.use_analogies ?? undefined,
-                  use_humor: style.use_humor ?? undefined,
-                  be_philosophical: style.be_philosophical ?? undefined,
-                  action_oriented: style.action_oriented ?? undefined,
+                  ...(style.communication_style ? { communication_style: style.communication_style } : {}),
+                  ...(style.formality_level ? { formality_level: style.formality_level } : {}),
+                  ...(style.detail_preference ? { detail_preference: style.detail_preference } : {}),
+                  ...(style.emotional_support_level ? { emotional_support_level: style.emotional_support_level } : {}),
+                  ...(style.challenge_me != null ? { challenge_me: style.challenge_me } : {}),
+                  ...(style.use_analogies != null ? { use_analogies: style.use_analogies } : {}),
+                  ...(style.use_humor != null ? { use_humor: style.use_humor } : {}),
+                  ...(style.be_philosophical != null ? { be_philosophical: style.be_philosophical } : {}),
+                  ...(style.action_oriented != null ? { action_oriented: style.action_oriented } : {}),
                 })}
                 className={`p-4 rounded-xl border text-left transition-colors ${
                   isActive
@@ -847,15 +847,15 @@ function CommunicationSection({
                     )}
                     <button
                       onClick={() => onSave({
-                        communication_style: style.communication_style || undefined,
-                        formality_level: style.formality_level || undefined,
-                        detail_preference: style.detail_preference || undefined,
-                        emotional_support_level: style.emotional_support_level || undefined,
-                        challenge_me: style.challenge_me ?? undefined,
-                        use_analogies: style.use_analogies ?? undefined,
-                        use_humor: style.use_humor ?? undefined,
-                        be_philosophical: style.be_philosophical ?? undefined,
-                        action_oriented: style.action_oriented ?? undefined,
+                        ...(style.communication_style ? { communication_style: style.communication_style } : {}),
+                        ...(style.formality_level ? { formality_level: style.formality_level } : {}),
+                        ...(style.detail_preference ? { detail_preference: style.detail_preference } : {}),
+                        ...(style.emotional_support_level ? { emotional_support_level: style.emotional_support_level } : {}),
+                        ...(style.challenge_me != null ? { challenge_me: style.challenge_me } : {}),
+                        ...(style.use_analogies != null ? { use_analogies: style.use_analogies } : {}),
+                        ...(style.use_humor != null ? { use_humor: style.use_humor } : {}),
+                        ...(style.be_philosophical != null ? { be_philosophical: style.be_philosophical } : {}),
+                        ...(style.action_oriented != null ? { action_oriented: style.action_oriented } : {}),
                       })}
                       className="text-sm text-[var(--electric-cyan)] hover:underline"
                     >

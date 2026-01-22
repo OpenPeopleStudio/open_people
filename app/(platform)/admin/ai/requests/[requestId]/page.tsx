@@ -158,21 +158,23 @@ async function buildRequestData(
       messages: runRecord.messages || [
         { role: "user", content: runRecord.input_text || "[Input not recorded]" },
       ],
-      temperature: runRecord.temperature,
-    },
+      ...(runRecord.temperature !== undefined ? { temperature: runRecord.temperature } : {}),
+  },
+  
+  output: {
+    content: runRecord.output_text || "[Output not recorded]",
+    ...(runRecord.finish_reason ? { finish_reason: runRecord.finish_reason } : {}),
+  },
     
-    output: {
-      content: runRecord.output_text || "[Output not recorded]",
-      finish_reason: runRecord.finish_reason,
-    },
-    
-    metrics: {
-      input_tokens: runRecord.input_tokens || 0,
-      output_tokens: runRecord.output_tokens || 0,
-      latency_ms: runRecord.latency_ms || 0,
-      cost_usd: runRecord.estimated_cost_usd || 0,
-      time_to_first_token_ms: runRecord.time_to_first_token_ms,
-    },
+  metrics: {
+    input_tokens: runRecord.input_tokens || 0,
+    output_tokens: runRecord.output_tokens || 0,
+    latency_ms: runRecord.latency_ms || 0,
+    cost_usd: runRecord.estimated_cost_usd || 0,
+    ...(runRecord.time_to_first_token_ms !== undefined
+      ? { time_to_first_token_ms: runRecord.time_to_first_token_ms }
+      : {}),
+  },
     
     timeline: timeline as AIRequestData["timeline"],
     
@@ -182,58 +184,74 @@ async function buildRequestData(
       relevance_score: item.relevance_score,
     })),
     
-    policy: {
-      decision: policyDecision.decision || "allow",
-      policy_name: policyDecision.policy_name,
-      policy_id: policyDecision.policy_id,
-      reasons: policyDecision.reasons || [],
-      trace_available: !!runRecord.context?.policy_trace,
-    },
+  policy: {
+    decision:
+      policyDecision.decision === "deny" || policyDecision.decision === "require_approval"
+        ? policyDecision.decision
+        : "allow",
+    ...(policyDecision.policy_name ? { policy_name: policyDecision.policy_name } : {}),
+    ...(policyDecision.policy_id ? { policy_id: policyDecision.policy_id } : {}),
+    reasons: policyDecision.reasons || [],
+    trace_available: !!runRecord.context?.policy_trace,
+  },
+  
+  risk_signals: riskSignals.map((signal: RiskSignal) => {
+    const level = (signal.level || "low") as "low" | "medium" | "high" | "critical";
+    return {
+      type: signal.type || "unknown",
+      score: signal.score ?? 0,
+      level,
+    };
+  }),
+  overall_risk_score: runRecord.context?.risk_score || 0,
+  overall_risk_level: (runRecord.context?.risk_level || "low") as
+    | "low"
+    | "medium"
+    | "high"
+    | "critical",
+
+  quality: {
+    score: runRecord.quality_score ?? 0,
+    ...(runRecord.hallucination_score !== undefined
+      ? { hallucination_score: runRecord.hallucination_score }
+      : {}),
+    ...(runRecord.relevance_score !== undefined ? { relevance_score: runRecord.relevance_score } : {}),
+    ...(runRecord.coherence_score !== undefined ? { coherence_score: runRecord.coherence_score } : {}),
+  },
     
-    risk_signals: riskSignals.map((signal: RiskSignal) => ({
-      type: signal.type,
-      score: signal.score,
-      level: signal.level || "low",
-    })),
-    overall_risk_score: runRecord.context?.risk_score || 0,
-    overall_risk_level: runRecord.context?.risk_level || "low",
+  pii: runRecord.context?.pii_detection
+    ? {
+        detected: runRecord.context.pii_detection.detected,
+        ...(runRecord.context.pii_detection.types
+          ? { types: runRecord.context.pii_detection.types }
+          : {}),
+        redacted: runRecord.context.pii_detection.redacted ?? false,
+      }
+    : { detected: false, redacted: false },
     
-    quality: runRecord.quality_score
-      ? {
-          score: runRecord.quality_score,
-          hallucination_score: runRecord.hallucination_score,
-          relevance_score: runRecord.relevance_score,
-          coherence_score: runRecord.coherence_score,
-        }
-      : undefined,
+  moderation: runRecord.context?.moderation
+    ? {
+        passed: !!runRecord.context.moderation.passed,
+        ...(runRecord.context.moderation.flags
+          ? { flags: runRecord.context.moderation.flags }
+          : {}),
+        ...(runRecord.context.moderation.scores
+          ? { scores: runRecord.context.moderation.scores }
+          : {}),
+      }
+    : { passed: false },
     
-    pii: runRecord.context?.pii_detection
-      ? {
-          detected: runRecord.context.pii_detection.detected,
-          types: runRecord.context.pii_detection.types,
-          redacted: runRecord.context.pii_detection.redacted,
-        }
-      : undefined,
+  guardrails: runRecord.context?.guardrails
+    ? {
+        triggered: runRecord.context.guardrails.triggered || [],
+        passed: runRecord.context.guardrails.passed || [],
+      }
+    : { triggered: [], passed: [] },
     
-    moderation: runRecord.context?.moderation
-      ? {
-          passed: runRecord.context.moderation.passed,
-          flags: runRecord.context.moderation.flags,
-          scores: runRecord.context.moderation.scores,
-        }
-      : undefined,
-    
-    guardrails: runRecord.context?.guardrails
-      ? {
-          triggered: runRecord.context.guardrails.triggered || [],
-          passed: runRecord.context.guardrails.passed || [],
-        }
-      : undefined,
-    
-    trace_id: runRecord.trace_id,
-    span_id: runRecord.span_id,
-    parent_span_id: runRecord.parent_span_id,
-  };
+  trace_id: runRecord.trace_id ?? "",
+  span_id: runRecord.span_id ?? "",
+  parent_span_id: runRecord.parent_span_id ?? "",
+};
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

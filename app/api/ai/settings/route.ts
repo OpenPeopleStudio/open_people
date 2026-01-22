@@ -9,7 +9,7 @@ import { PROVIDER_TEMPLATES } from "@/types/ai-providers";
    Get user's AI provider settings
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
     

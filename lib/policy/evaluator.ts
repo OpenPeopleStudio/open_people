@@ -5,7 +5,6 @@
 
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import type {
-  Policy,
   PolicyWithRelations,
   PolicySubject,
   PolicyResource,
@@ -604,10 +603,18 @@ export async function evaluatePolicies(
   const requestId = context.request_id || crypto.randomUUID();
 
   // Load policies
-  const policies = await loadPolicies(tenantId, {
-    policyIds: options?.policyIds,
-    includeInactive: options?.includeInactive,
-  });
+  const loadOptions: { policyIds?: string[]; includeInactive?: boolean } = {};
+  if (options?.policyIds) {
+    loadOptions.policyIds = options.policyIds;
+  }
+  if (options?.includeInactive !== undefined) {
+    loadOptions.includeInactive = options.includeInactive;
+  }
+
+  const policies = await loadPolicies(
+    tenantId,
+    Object.keys(loadOptions).length > 0 ? loadOptions : undefined
+  );
 
   // Evaluate each policy
   const evaluations: PolicyEvaluation[] = policies.map((policy) =>

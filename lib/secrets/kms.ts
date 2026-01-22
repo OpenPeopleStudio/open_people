@@ -27,11 +27,12 @@ interface KMSConfig {
 }
 
 function getKMSConfig(): KMSConfig {
+  const localKey = process.env.KMS_LOCAL_KEY || process.env.API_KEYS_ENCRYPTION_KEY;
   return {
     region: process.env.AWS_REGION || "us-east-1",
     keyArn: process.env.AWS_KMS_KEY_ARN || "",
     localFallback: process.env.KMS_LOCAL_FALLBACK === "true" || process.env.NODE_ENV === "development",
-    localKey: process.env.KMS_LOCAL_KEY || process.env.API_KEYS_ENCRYPTION_KEY,
+    ...(localKey ? { localKey } : {}),
   };
 }
 
@@ -86,7 +87,6 @@ async function getKMSClient() {
 
   // Lazy-load AWS SDK only when needed
   try {
-    // @ts-expect-error - AWS SDK is optional, only loaded when configured
     const { KMSClient, GenerateDataKeyCommand, DecryptCommand } = await import("@aws-sdk/client-kms");
 
     const client = new KMSClient({ region: config.region });
@@ -354,7 +354,7 @@ export function deserializeEnvelope(data: {
 export class KMSError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown
+    public override readonly cause?: unknown
   ) {
     super(message);
     this.name = "KMSError";

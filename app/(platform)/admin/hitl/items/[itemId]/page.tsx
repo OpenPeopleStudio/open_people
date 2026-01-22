@@ -146,8 +146,6 @@ export default async function HITLItemPage({
       <ReviewWorkbench
         item={data.item}
         decisionOptions={data.decisionOptions}
-        userId={user.id}
-        userName={profile.name}
         isAssigned={isAssigned}
       />
     </div>
