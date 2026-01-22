@@ -8,8 +8,7 @@ import { FileDetails } from "./components/FileDetails";
 import { SearchBar } from "./components/SearchBar";
 import { UploadDropzone } from "./components/UploadDropzone";
 import { FilePreviewModal } from "@/components/vault/FilePreviewModal";
-import type { VaultFolder, VaultFile, VaultFileWithFolder, AICategory, VaultPreviewResponse } from "@/types/vault";
-import { formatBytes } from "@/types/vault";
+import type { VaultFolder, VaultFileWithFolder, AICategory, VaultPreviewResponse } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Vault File Browser
@@ -22,7 +21,6 @@ function VaultBrowseContent() {
   
   // Session state
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
   
   // Data state
   const [folders, setFolders] = useState<VaultFolder[]>([]);
@@ -61,7 +59,6 @@ function VaultBrowseContent() {
     }
     
     setSessionId(sid);
-    setEncryptionKey(key);
   }, [router]);
   
   // Fetch headers helper
@@ -262,11 +259,6 @@ function VaultBrowseContent() {
       console.error("Failed to create folder:", err);
     }
   }
-  
-  // Get current folder info
-  const currentFolder = selectedFolderId 
-    ? findFolder(folders, selectedFolderId)
-    : null;
   
   // Get breadcrumb path
   const breadcrumbs = getBreadcrumbs(folders, selectedFolderId);
@@ -541,17 +533,6 @@ function MoveDropdown({
 /* ═══════════════════════════════════════════════════════════════════════════
    Helper Functions
    ═══════════════════════════════════════════════════════════════════════════ */
-
-function findFolder(folders: VaultFolder[], id: string): VaultFolder | null {
-  for (const folder of folders) {
-    if (folder.id === id) return folder;
-    if ('children' in folder) {
-      const found = findFolder((folder as any).children, id);
-      if (found) return found;
-    }
-  }
-  return null;
-}
 
 function getBreadcrumbs(folders: VaultFolder[], targetId: string | null): VaultFolder[] {
   if (!targetId) return [];

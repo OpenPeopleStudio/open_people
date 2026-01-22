@@ -117,7 +117,10 @@ export function PDFPreview({ dataUrl, filename }: PDFPreviewProps) {
   return (
     <div className="p-4">
       {/* Controls */}
-      <div className="flex items-center justify-between mb-4 p-3 bg-[var(--surface-1)] rounded-lg">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4 p-3 bg-[var(--surface-1)] rounded-lg">
+        <div className="text-xs text-[var(--text-muted)] truncate max-w-[220px]">
+          {filename}
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}

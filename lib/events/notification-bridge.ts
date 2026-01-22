@@ -42,12 +42,12 @@ const EVENT_NOTIFICATION_MAP: Record<string, NotificationMapper> = {
     return {
       type: "ai.worker_completed",
       tenantId: event.tenant_id,
-      userId: event.actor_id ?? undefined,
       title: `${humanizeWorkerId(data.worker_id)} completed`,
       body: `Your ${humanizeWorkerId(data.worker_id)} job has finished.`,
       priority: "low" as NotificationPriority,
       actionUrl: `/admin/ai/team/${data.worker_id}?job=${data.job_id}`,
       metadata: { job_id: data.job_id, worker_id: data.worker_id },
+      ...(event.actor_id ? { userId: event.actor_id } : {}),
     };
   },
 
@@ -58,12 +58,12 @@ const EVENT_NOTIFICATION_MAP: Record<string, NotificationMapper> = {
     return {
       type: "ai.worker_failed",
       tenantId: event.tenant_id,
-      userId: event.actor_id ?? undefined,
       title: `${humanizeWorkerId(data.worker_id)} failed`,
       body: data.error_message || "The job encountered an error.",
       priority: "high" as NotificationPriority,
       actionUrl: `/admin/ai/team/${data.worker_id}?job=${data.job_id}`,
       metadata: { job_id: data.job_id, worker_id: data.worker_id },
+      ...(event.actor_id ? { userId: event.actor_id } : {}),
     };
   },
 
@@ -180,7 +180,6 @@ const EVENT_NOTIFICATION_MAP: Record<string, NotificationMapper> = {
 
   // Tenant Events
   "tenant.onboarding.completed": (event) => {
-    const data = event.payload as { tenant_id: string };
     if (!event.tenant_id) return null;
 
     return {

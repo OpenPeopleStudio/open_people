@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getUploadUrl } from "@/lib/storage/r2";
-import { generateRandomBytes, bufferToBase64, generateKeyId } from "@/lib/vault/encryption";
+import { generateRandomBytes, bufferToBase64 } from "@/lib/vault/encryption";
 import type { VaultUploadRequest, VaultUploadResponse } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -82,8 +82,9 @@ export async function POST(request: NextRequest) {
     }
     
     // Parse request body
-    const body: VaultUploadRequest = await request.json();
-    const { filename, content_type, size_bytes, folder_id, has_thumbnail } = body;
+    const body = (await request.json()) as VaultUploadRequest & { has_thumbnail?: boolean };
+    const { filename, content_type, size_bytes, folder_id } = body;
+    const hasThumbnail = Boolean(body.has_thumbnail);
     
     if (!filename || !content_type || !size_bytes) {
       return NextResponse.json(
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
     let thumbnailUploadUrl: string | null = null;
     let thumbnailKey: string | null = null;
 
-    if (has_thumbnail) {
+    if (hasThumbnail) {
       const thumbnailResult = await getUploadUrl(
         vault.id,
         "vault-thumbnails",

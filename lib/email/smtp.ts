@@ -6,7 +6,7 @@
 
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
-import type { ComposeEmailRequest, EmailMessage } from "@/types/email";
+import type { ComposeEmailRequest } from "@/types/email";
 
 export interface SMTPConfig {
   host: string;
@@ -127,7 +127,7 @@ export function parseEmailAddresses(input: string): { email: string; name?: stri
     const name = match[1]?.trim();
     const email = match[2]?.trim();
     if (email) {
-      results.push({ email, name: name || undefined });
+      results.push(name ? { email, name } : { email });
     }
   }
   

@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function GET(request: NextRequest) {
+  void request;
   try {
     const supabase = await createSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -18,12 +19,16 @@ export async function GET(request: NextRequest) {
     // Get user profile and tenant
     const { data: profile } = await supabase
       .from("profiles")
-      .select("tenant_id")
+      .select("tenant_id, role")
       .eq("id", user.id)
       .single();
 
     if (!profile?.tenant_id) {
       return NextResponse.json({ error: "No tenant found" }, { status: 400 });
+    }
+
+    if (!["admin", "owner", "super_admin"].includes(profile.role)) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     const tenantId = profile.tenant_id;

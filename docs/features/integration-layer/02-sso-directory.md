@@ -75,6 +75,79 @@ Enterprise customers require identity integration:
 | SCIM 2.0 | User/group provisioning |
 | Just-in-Time | Create users on first login |
 
+### Tenant-Scoped SSO Model (Draft)
+
+**Goals**
+- Keep SSO configuration and auth flows tenant-scoped.
+- Support multiple IdPs per tenant, with one default.
+- Prevent super-admin access via SSO.
+- Preserve a break-glass login path.
+
+**Tenant resolution**
+- Primary: domain-based lookup (email domain -> tenant(s)).
+- If multiple tenants share a domain, require explicit tenant selector (e.g., `/sso/login?tenant=...`).
+- RelayState should include the tenant identifier for SP-initiated flows.
+
+**Configuration**
+- `sso_configurations` is tenant-scoped; only one `is_default` per tenant.
+- `allowed_domains` enforces domain restrictions on JIT.
+- SSO configs can be disabled per tenant without deleting history.
+
+**Auth flow**
+- SP-initiated: user enters email -> resolve tenant -> redirect to IdP.
+- IdP-initiated: accept SAML response only if tenant is resolved and config is active.
+- Always block super-admin logins via SSO.
+
+**JIT provisioning**
+- If user exists: link `external_identities` and update profile attributes.
+- If not: create user with `member` role by default, mark origin as `sso_jit`.
+- Owners/admins must be elevated by an existing owner/admin inside the tenant.
+
+**Break-glass**
+- Local password login remains available for tenant owners (configurable per tenant).
+- Require explicit admin action to disable local logins.
+
+### Role Mapping Defaults (Draft)
+
+**Baseline**
+- Default SSO role: `member`.
+- No super-admin assignment via SSO or SCIM.
+- Role elevation requires in-app admin approval.
+
+**Group mapping**
+- Map IdP groups to roles using `scim_groups.role_id`.
+- Recommend canonical group names:
+  - `op:role:admin`
+  - `op:role:member`
+  - `op:role:viewer` (if enabled in RBAC)
+
+**Fallbacks**
+- If group mapping missing, keep user at default `member`.
+- If IdP sends multiple groups, pick highest privilege within tenant (never super-admin).
+
+### SCIM Provisioning Model (Draft)
+
+**User create**
+- Match by `externalId` first, then email.
+- If email exists: link to existing user and update profile fields.
+- If not: create user as `member`, inactive until first login (optional).
+
+**User update**
+- Update profile attributes (name, email) and group memberships.
+- If email changes, retain `externalId` linkage and re-validate domain.
+
+**User deprovision**
+- Set user to inactive, revoke sessions, remove API keys, and log audit event.
+- Preserve user record and activity for compliance.
+
+**Group provisioning**
+- Create/update `scim_groups` and memberships from IdP payload.
+- Sync group-to-role mapping on change.
+
+**Security**
+- Validate inbound SCIM with per-tenant bearer token.
+- Log all SCIM actions to audit trail with `tenant_id`, `user_id`, `request_id`.
+
 ## Database Schema
 
 ```sql
@@ -390,6 +463,18 @@ PUT    /api/directory/groups/:id/mapping  # Map to internal role
 - Session security
 - Replay protection
 - Audit logging
+
+### Audit Trail Expectations
+
+Log SSO/SCIM events with consistent fields for incident response and compliance:
+
+- `tenant_id`
+- `user_id` (or `null` for pre-auth events)
+- `action` (e.g., `sso.login`, `sso.logout`, `scim.user.create`, `scim.group.sync`)
+- `result` (`success`, `failure`)
+- `request_id`
+- `source_ip`, `user_agent` (when available)
+- `error_code`, `error_message` (on failure)
 
 ## Success Metrics
 

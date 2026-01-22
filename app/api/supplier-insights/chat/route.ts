@@ -26,16 +26,19 @@ export async function POST(request: NextRequest) {
       to: new Date().toISOString(),
     };
 
+    const summaryInput = {
+      message: body.message,
+      range,
+      ...(body.focusSku ? { focusSku: body.focusSku } : {}),
+    };
+    const context = {
+      timeRange: range,
+      ...(body.focusSku ? { focusSku: body.focusSku } : {}),
+    };
+
     const reply: ChatReply = {
-      reply: formatChatSummary({
-        message: body.message,
-        range,
-        focusSku: body.focusSku,
-      }),
-      context: {
-        timeRange: range,
-        focusSku: body.focusSku,
-      },
+      reply: formatChatSummary(summaryInput),
+      context,
     };
 
     return NextResponse.json(reply);

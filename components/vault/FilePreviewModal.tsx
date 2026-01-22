@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { VaultPreviewResponse, AICategory } from "@/types/vault";
+import type { VaultPreviewResponse } from "@/types/vault";
 import { ImagePreview } from "./previews/ImagePreview";
 import { PDFPreview } from "./previews/PDFPreview";
 import { TextPreview } from "./previews/TextPreview";
@@ -25,7 +25,7 @@ export function FilePreviewModal({ previewData, sessionId, onClose }: FilePrevie
 
   useEffect(() => {
     loadPreviewContent();
-  }, [previewData]);
+  }, [previewData, sessionId]);
 
   async function loadPreviewContent() {
     try {

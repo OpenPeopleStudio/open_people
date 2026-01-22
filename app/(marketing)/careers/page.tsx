@@ -25,7 +25,7 @@ export default function CareersPage() {
             <div className="inline-flex animate-fade-in">
               <span className="badge text-[10px] sm:text-xs">
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[var(--electric-lime)] animate-pulse" />
-                Careers · St. John&apos;s, NL
+                Careers · St. John&apos;s, NL · Remote-friendly
               </span>
             </div>
 
@@ -38,7 +38,7 @@ export default function CareersPage() {
               OpenPeople.ai is based in St. John&apos;s, Newfoundland. We&apos;re
               building tools that keep people in control: privacy-forward,
               practical AI that makes your data safer, more useful, and truly
-              yours.
+              yours. We work remotely with a tight cadence and high ownership.
             </p>
 
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-start gap-3 sm:gap-4 animate-slide-up delay-200">
@@ -63,6 +63,57 @@ export default function CareersPage() {
               </Link>
             </div>
           </div>
+
+          {/* Remote work highlights */}
+          <section className="mt-10 sm:mt-12 glass-card p-5 sm:p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-display text-[var(--text-primary)]">
+                  Remote-first, craft-forward
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed max-w-2xl">
+                  We hire for ownership and clarity. Our default is async work, clear
+                  written decisions, and focused deep-work blocks.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 text-xs sm:text-sm text-[var(--text-muted)]">
+                <span className="px-3 py-1 rounded-full border border-[var(--border-subtle)]">
+                  Async by default
+                </span>
+                <span className="px-3 py-1 rounded-full border border-[var(--border-subtle)]">
+                  Deep work
+                </span>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                {
+                  title: "Distributed with intent",
+                  body:
+                    "We keep a small overlap window for collaboration, then let people do their best work on their own schedule.",
+                },
+                {
+                  title: "Documentation is the product",
+                  body:
+                    "Decisions live in writing. You can onboard fast and move confidently without pinging a dozen people.",
+                },
+                {
+                  title: "Impact over optics",
+                  body:
+                    "We care about outcomes, not busywork. If your work moves the needle, it wins.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] p-4 sm:p-5">
+                  <h3 className="text-sm sm:text-base font-semibold text-[var(--text-primary)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
+                    {item.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* Values cards */}
           <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
@@ -145,4 +196,3 @@ export default function CareersPage() {
     </div>
   );
 }
-

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAIProvider } from "@/lib/ai/providers";
-import type { EmailMessage, EmailThread, EmailSuggestion } from "@/types/email";
+import { DEFAULT_MODEL } from "@/lib/ai/prompts/inboxTriage";
+import type { EmailMessage, EmailThread } from "@/types/email";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email AI Triage Job
@@ -15,6 +16,22 @@ export interface EmailTriageJob {
 
 export class EmailTriageWorker {
   private supabase = createClient();
+
+  private async runCompletion(
+    prompt: string,
+    temperature: number,
+    maxTokens: number
+  ): Promise<string> {
+    const ai = createAIProvider();
+    const response = await ai.chat.completions.create({
+      model: DEFAULT_MODEL,
+      messages: [{ role: "user", content: prompt }],
+      temperature,
+      max_tokens: maxTokens,
+    });
+
+    return response.choices[0]?.message?.content?.trim() ?? "";
+  }
 
   async process(job: EmailTriageJob): Promise<void> {
     const { messageId, threadId, tasks } = job;
@@ -101,8 +118,6 @@ export class EmailTriageWorker {
   }
 
   private async generateSummary(message: EmailMessage): Promise<string> {
-    const ai = createAIProvider();
-
     const prompt = `Summarize this email in 2-3 sentences, focusing on the key request or information:
 
 From: ${message.from_name || ""} <${message.from_address}>
@@ -111,13 +126,7 @@ Body: ${message.body_text || message.body_html || ""}
 
 Keep the summary concise but capture all essential information.`;
 
-    const response = await ai.complete({
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
-      maxTokens: 200,
-    });
-
-    return response.content.trim();
+    return this.runCompletion(prompt, 0.3, 200);
   }
 
   private async classifyMessage(message: EmailMessage): Promise<{
@@ -126,8 +135,6 @@ Keep the summary concise but capture all essential information.`;
     sentiment: "positive" | "neutral" | "negative";
     score: number;
   }> {
-    const ai = createAIProvider();
-
     const prompt = `Analyze this email and classify it. Return ONLY a JSON object with these fields:
 - priority: "urgent" | "high" | "normal" | "low" (based on urgency and importance)
 - intent: "support" | "sales" | "admin" | "internal" | "spam" | "unknown" (main purpose)
@@ -139,14 +146,10 @@ From: ${message.from_name || ""} <${message.from_address}>
 Subject: ${message.subject}
 Body: ${message.body_text || message.body_html || ""}`;
 
-    const response = await ai.complete({
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      maxTokens: 300,
-    });
+    const content = await this.runCompletion(prompt, 0.1, 300);
 
     try {
-      const result = JSON.parse(response.content.trim());
+      const result = JSON.parse(content);
       return {
         priority: result.priority || "normal",
         intent: result.intent || "unknown",
@@ -154,7 +157,7 @@ Body: ${message.body_text || message.body_html || ""}`;
         score: Math.max(0, Math.min(1, result.score || 0.5)),
       };
     } catch (error) {
-      console.error("Failed to parse classification response:", response.content);
+      console.error("Failed to parse classification response");
       return {
         priority: "normal",
         intent: "unknown",
@@ -172,8 +175,6 @@ Body: ${message.body_text || message.body_html || ""}`;
     if (this.shouldSkipSuggestion(message)) {
       return null;
     }
-
-    const ai = createAIProvider();
 
     // Get thread context if available
     let threadContext = "";
@@ -216,22 +217,28 @@ Generate a reply with:
 
 Return ONLY a JSON object with fields: subject, body_html, body_text, confidence`;
 
-    const response = await ai.complete({
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      maxTokens: 1000,
-    });
+    const content = await this.runCompletion(prompt, 0.7, 1000);
 
     try {
-      const result = JSON.parse(response.content.trim());
-      return {
-        subject: result.subject,
-        body_html: result.body_html || this.textToHtml(result.body_text),
-        body_text: result.body_text,
-        confidence: Math.max(0, Math.min(1, result.confidence || 0.5)),
+      const result = JSON.parse(content);
+      const bodyText = typeof result.body_text === "string" ? result.body_text : "";
+      const bodyHtml =
+        typeof result.body_html === "string" && result.body_html.length > 0
+          ? result.body_html
+          : this.textToHtml(bodyText);
+      const subject = typeof result.subject === "string" ? result.subject : undefined;
+      const confidence =
+        typeof result.confidence === "number" ? result.confidence : 0.5;
+
+      const base = {
+        body_html: bodyHtml,
+        body_text: bodyText,
+        confidence: Math.max(0, Math.min(1, confidence)),
       };
+
+      return subject !== undefined ? { ...base, subject } : base;
     } catch (error) {
-      console.error("Failed to parse suggestion response:", response.content);
+      console.error("Failed to parse suggestion response");
       return null;
     }
   }
@@ -279,7 +286,11 @@ Return ONLY a JSON object with fields: subject, body_html, body_text, confidence
 
       // Convert priority to numeric score (higher = more urgent)
       const priorityScores = { urgent: 0.9, high: 0.7, normal: 0.5, low: 0.3 };
-      updateData.ai_priority_score = priorityScores[priority] * score;
+      const priorityKey =
+        typeof priority === "string" && priority in priorityScores
+          ? (priority as keyof typeof priorityScores)
+          : "normal";
+      updateData.ai_priority_score = priorityScores[priorityKey] * score;
 
       updateData.ai_intent = intent;
       updateData.ai_sentiment = sentiment;
@@ -298,21 +309,43 @@ Return ONLY a JSON object with fields: subject, body_html, body_text, confidence
     threadId: string | undefined,
     suggestion: { subject?: string; body_html: string; body_text: string; confidence: number }
   ): Promise<void> {
+    const { data: messageData, error: messageError } = await this.supabase
+      .from("email_messages")
+      .select("tenant_id")
+      .eq("id", messageId)
+      .single();
+
+    if (messageError || !messageData?.tenant_id) {
+      throw new Error("Message tenant not found");
+    }
+
+    const insertData: {
+      tenant_id: string;
+      message_id: string;
+      body_html: string;
+      body_text: string;
+      confidence_score: number;
+      thread_id?: string;
+      subject?: string;
+    } = {
+      tenant_id: messageData.tenant_id,
+      message_id: messageId,
+      body_html: suggestion.body_html,
+      body_text: suggestion.body_text,
+      confidence_score: suggestion.confidence,
+    };
+
+    if (threadId) {
+      insertData.thread_id = threadId;
+    }
+
+    if (suggestion.subject !== undefined) {
+      insertData.subject = suggestion.subject;
+    }
+
     await this.supabase
       .from("email_suggestions")
-      .insert({
-        tenant_id: (await this.supabase
-          .from("email_messages")
-          .select("tenant_id")
-          .eq("id", messageId)
-          .single()).data?.tenant_id,
-        message_id: messageId,
-        thread_id: threadId,
-        subject: suggestion.subject,
-        body_html: suggestion.body_html,
-        body_text: suggestion.body_text,
-        confidence_score: suggestion.confidence,
-      });
+      .insert(insertData);
   }
 }
 

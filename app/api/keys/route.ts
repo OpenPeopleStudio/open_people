@@ -40,14 +40,19 @@ export async function GET(request: NextRequest) {
     
     // Parse filters from query params
     const { searchParams } = new URL(request.url);
-    const filters: ApiKeyFilters = {
-      provider: searchParams.get("provider") || undefined,
-      environment: searchParams.get("environment") || undefined,
-      scope: searchParams.get("scope") || undefined,
-      is_active: searchParams.get("is_active") === "true" ? true : 
-                 searchParams.get("is_active") === "false" ? false : undefined,
-      search: searchParams.get("search") || undefined,
-    };
+    const filters: ApiKeyFilters = {};
+    const provider = searchParams.get("provider");
+    const environment = searchParams.get("environment");
+    const scope = searchParams.get("scope");
+    const search = searchParams.get("search");
+    const isActiveParam = searchParams.get("is_active");
+
+    if (provider) filters.provider = provider;
+    if (environment) filters.environment = environment;
+    if (scope) filters.scope = scope;
+    if (search) filters.search = search;
+    if (isActiveParam === "true") filters.is_active = true;
+    if (isActiveParam === "false") filters.is_active = false;
     
     // Build query
     let query = supabase

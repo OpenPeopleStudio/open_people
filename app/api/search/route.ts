@@ -26,15 +26,17 @@ export async function POST(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const explain = searchParams.get("explain") === "true";
     
-    const result = await unifiedSearch({
+    const searchOptions = {
       supabase,
       userId: user.id,
       query: body.query,
-      filters: body.filters,
       limit: body.limit || 20,
       includeSemantic: body.include_semantic !== false,
       explainRelevance: explain,
-    });
+      ...(body.filters ? { filters: body.filters } : {}),
+    };
+
+    const result = await unifiedSearch(searchOptions);
     
     return NextResponse.json({
       results: result.results,

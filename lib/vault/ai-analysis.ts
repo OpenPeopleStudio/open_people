@@ -27,14 +27,6 @@ const SUPPORTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-const SUPPORTED_DOCUMENT_TYPES = [
-  "application/pdf",
-  "text/plain",
-  "text/csv",
-  "application/json",
-  "text/markdown",
-];
-
 // ═══════════════════════════════════════════════════════════════════════════
 // Types
 // ═══════════════════════════════════════════════════════════════════════════

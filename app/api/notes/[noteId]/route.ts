@@ -8,6 +8,7 @@ import type { UpdateNoteRequest } from "@/types/notes";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function GET(request: Request, context: any) {
+  void request;
   try {
     const { noteId } = context.params;
     const supabase = await createSupabaseServer();
@@ -150,6 +151,7 @@ export async function PATCH(request: Request, context: any) {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function DELETE(request: Request, context: any) {
+  void request;
   try {
     const { noteId } = context.params;
     const supabase = await createSupabaseServer();

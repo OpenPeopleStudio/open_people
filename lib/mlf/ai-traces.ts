@@ -166,16 +166,17 @@ export async function startAIRun({
         }
         
         // Prepare detailed context item
-        contextItems.push({
+        const contextItem = {
           run_id: runId,
           source_type: source.type,
           source_id: source.id,
-          source_name: source.title,
           content_preview: source.content.slice(0, 500),
           token_count: Math.ceil(source.content.length * 0.25),
-          relevance_score: source.relevance,
           context_position: i,
-        });
+          ...(source.title ? { source_name: source.title } : {}),
+          ...(source.relevance !== undefined ? { relevance_score: source.relevance } : {}),
+        };
+        contextItems.push(contextItem);
       }
       
       // Update run with context_used

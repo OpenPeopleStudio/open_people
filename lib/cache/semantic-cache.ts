@@ -101,7 +101,6 @@ const DEFAULT_CACHE_POLICY: CachePolicy = {
 };
 
 const EMBEDDING_MODEL = "text-embedding-3-small";
-const EMBEDDING_DIMENSIONS = 1536;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Hash Functions
@@ -161,9 +160,9 @@ async function buildCacheKey(
   return {
     cache_key: cacheKey,
     scope_hash: scopeHash,
-    system_prompt_hash: systemPromptHash,
     messages_hash: messagesHash,
     parameters_hash: parametersHash,
+    ...(systemPromptHash ? { system_prompt_hash: systemPromptHash } : {}),
   };
 }
 

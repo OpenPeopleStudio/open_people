@@ -12,6 +12,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 const handleGetAnalytics = withAuthAndAuthZ({
   role: UserRole.SUPER_ADMIN, // Only super admins can access analytics
 })(async (auth, request: NextRequest) => {
+  void auth;
   const supabase = await createSupabaseServer();
   const { searchParams } = new URL(request.url);
   const period = searchParams.get('period') || '30d';
@@ -19,12 +20,12 @@ const handleGetAnalytics = withAuthAndAuthZ({
   // Calculate date range
   const now = new Date();
   const periodDays = period === '7d' ? 7 : period === '30d' ? 30 : 90;
-  const startDate = new Date(now.getTime() - periodDays * 24 * 60 * 60 * 1000);
+  void now;
 
   // Get tenant overview metrics
   const { data: tenantStats } = await supabase
     .from('tenants')
-    .select('id, status, created_at');
+    .select('id, name, status, created_at');
 
   const { data: billingStats } = await supabase
     .from('tenant_billing')

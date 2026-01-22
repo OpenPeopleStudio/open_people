@@ -7,6 +7,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function DELETE(request: Request, context: any) {
+  void request;
   try {
     const supabase = await createSupabaseServer();
     const { styleId } = context.params;
@@ -42,6 +43,7 @@ export async function DELETE(request: Request, context: any) {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function PATCH(request: Request, context: any) {
+  void request;
   try {
     const supabase = await createSupabaseServer();
     const { styleId } = context.params;

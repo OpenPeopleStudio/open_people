@@ -30,14 +30,14 @@ async function getTenantContext() {
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
+  const { entryId } = await params;
   const { supabase, error } = await getTenantContext();
   if (error) {
     return NextResponse.json({ error }, { status: error === "Unauthorized" ? 401 : 403 });
   }
 
-  const entryId = params.entryId;
   if (!entryId) {
     return NextResponse.json({ error: "Entry ID required" }, { status: 400 });
   }
@@ -107,14 +107,14 @@ export async function PATCH(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
+  const { entryId } = await params;
   const { supabase, error } = await getTenantContext();
   if (error) {
     return NextResponse.json({ error }, { status: error === "Unauthorized" ? 401 : 403 });
   }
 
-  const entryId = params.entryId;
   if (!entryId) {
     return NextResponse.json({ error: "Entry ID required" }, { status: 400 });
   }

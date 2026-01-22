@@ -183,15 +183,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Use admin client for insert to bypass RLS
-    console.log("[POST /api/email/accounts] Inserting:", { 
-      tenant_id: tenantId, 
-      name, 
-      email_address, 
-      provider,
-      mode,
-      resend_domain,
-    });
-
     const { data: account, error } = await adminSupabase
       .from("email_accounts")
       .insert({
@@ -233,7 +224,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to create account" }, { status: 500 });
     }
 
-    console.log("[POST /api/email/accounts] Created:", account?.id);
     return NextResponse.json({ account });
   } catch (error) {
     console.error("Create account error:", error);
@@ -384,7 +374,6 @@ export async function DELETE(request: NextRequest) {
       }
     }
 
-    console.log("[DELETE /api/email/accounts] Deleted:", id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Delete account error:", error);

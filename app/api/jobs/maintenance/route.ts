@@ -15,6 +15,7 @@ import { scheduleMaintenanceJobs } from "@/lib/jobs/processor";
 const handleTriggerMaintenance = withAuthAndAuthZ({
   role: UserRole.SUPER_ADMIN, // Only super admins
 })(async (auth) => {
+  void auth;
   try {
     await scheduleMaintenanceJobs();
 

@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { VaultSetupModal } from "./components/VaultSetupModal";
 import { VaultUnlockModal } from "./components/VaultUnlockModal";
 import { VaultDashboard } from "./components/VaultDashboard";
-import type { VaultSpace, VaultStats } from "@/types/vault";
+import type { VaultSpace } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Super Admin Vault Page
@@ -19,7 +18,6 @@ type VaultState =
   | { status: "unlocked"; vault: VaultSpace; sessionId: string; encryptionKey: string };
 
 export default function VaultPage() {
-  const router = useRouter();
   const [state, setState] = useState<VaultState>({ status: "loading" });
   const [error, setError] = useState<string | null>(null);
   
@@ -76,7 +74,7 @@ export default function VaultPage() {
     }
   }
   
-  async function handleSetupComplete(vaultId: string, recoveryCodes: string[]) {
+  async function handleSetupComplete(_vaultId: string, recoveryCodes: string[]) {
     // Show recovery codes modal/download
     alert(`Vault created! Save these recovery codes securely:\n\n${recoveryCodes.join("\n")}\n\nYou will not see these again.`);
     

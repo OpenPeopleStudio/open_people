@@ -79,10 +79,7 @@ export async function unifiedSearch({
   }
   
   if (filters.date_from) {
-    results = results.filter(r => {
-      // Would need created_at in result
-      return true;
-    });
+    // TODO: require created_at in result to filter by date
   }
   
   // Add relevance explanations if requested

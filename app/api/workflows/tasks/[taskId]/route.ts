@@ -7,7 +7,7 @@ import { indexEntity, removeFromIndex } from "@/lib/workflows/search";
    Get a single task
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+export async function GET(_request: Request, context: any) {
   try {
     const { taskId } = context.params;
     const supabase = await createSupabaseServer();
@@ -114,7 +114,7 @@ export async function PATCH(request: Request, context: any) {
    Delete a task
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(_request: Request, context: any) {
   try {
     const { taskId } = context.params;
     const supabase = await createSupabaseServer();

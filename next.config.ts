@@ -1,58 +1,7 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
-const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai";
 const SUPER_ADMIN_DOMAIN = process.env.SUPER_ADMIN_DOMAIN || "app.openpeople.ai";
-
-// Marketing domains that should NOT resolve to a tenant
-const MARKETING_DOMAINS = new Set([
-  "openpeople.ai",
-  "www.openpeople.ai",
-  "localhost",
-]);
-
-function normalizeHost(host: string | null): string {
-  if (!host) return "";
-  return host.replace(/:\d+$/, "").trim().toLowerCase();
-}
-
-function isMarketingDomain(host: string): boolean {
-  const normalized = normalizeHost(host);
-  return MARKETING_DOMAINS.has(normalized) || normalized === `www.${ROOT_DOMAIN}`;
-}
-
-function isSuperAdminDomain(host: string): boolean {
-  const normalized = normalizeHost(host);
-  return (
-    normalized === SUPER_ADMIN_DOMAIN ||
-    normalized === "super.localhost" ||
-    normalized === "app.localhost"
-  );
-}
-
-function extractSubdomain(host: string): string | null {
-  const normalized = normalizeHost(host);
-
-  // Check root domain
-  if (ROOT_DOMAIN && normalized.endsWith(`.${ROOT_DOMAIN}`)) {
-    const subdomain = normalized.replace(`.${ROOT_DOMAIN}`, "");
-    if (subdomain === "www" || subdomain === "app" || subdomain === "super") {
-      return null;
-    }
-    return subdomain;
-  }
-
-  // Local development
-  if (normalized.endsWith(".localhost")) {
-    const subdomain = normalized.split(".")[0];
-    if (subdomain === "www" || subdomain === "app" || subdomain === "super") {
-      return null;
-    }
-    return subdomain;
-  }
-
-  return null;
-}
 
 const nextConfig: NextConfig = {
   // Use Turbopack (Next.js 16 default) even though we also supply webpack plugins (e.g., Sentry)
@@ -234,12 +183,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
+const sentryOptions = {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+  ...(process.env.SENTRY_ORG ? { org: process.env.SENTRY_ORG } : {}),
+  ...(process.env.SENTRY_PROJECT ? { project: process.env.SENTRY_PROJECT } : {}),
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
@@ -266,4 +215,6 @@ export default withSentryConfig(nextConfig, {
   // See the following for more information:
   // https://docs.sentry.io/product/cron/get-started/#vercel-cron-monitors
   automaticVercelMonitors: true,
-});
+};
+
+export default withSentryConfig(nextConfig, sentryOptions);

@@ -1,11 +1,6 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createClient, createSupabaseServer } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/resend";
-import { sendSMS, type TwilioCredentials } from "./twilio";
-import {
-  NOTIFICATION_PLANS,
-  interpolateTemplate,
-  type NotificationChannel,
-} from "@/types/notifications";
+import type { NotificationChannel } from "@/types/notifications";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Notification Event Dispatcher
@@ -123,7 +118,7 @@ const DEFAULT_CHANNEL_PREFERENCES: Record<NotificationEventType, ChannelPreferen
 export async function dispatchNotificationEvent(
   event: NotificationEvent
 ): Promise<NotificationDispatchResult> {
-  const supabase = await createSupabaseServer();
+  const supabase = await getNotificationSupabaseClient();
   const deliveries: ChannelDeliveryResult[] = [];
 
   // Merge default and event-specific channel preferences
@@ -151,13 +146,6 @@ export async function dispatchNotificationEvent(
       deliveries: [{ channel: "in_app", success: false, error: "Tenant not found" }],
     };
   }
-
-  // Get notification subscription for webhook/limit checks
-  const { data: subscription } = await supabase
-    .from("notification_subscriptions")
-    .select("*")
-    .eq("tenant_id", event.tenantId)
-    .single();
 
   // Get current month period for usage tracking
   const startOfMonth = new Date();
@@ -236,11 +224,11 @@ export async function dispatchNotificationEvent(
           .select("id")
           .single();
 
-        deliveries.push({
-          channel: "in_app",
-          success: true,
-          providerId: inAppNotif?.id,
-        });
+          deliveries.push({
+            channel: "in_app",
+            success: true,
+            ...(inAppNotif?.id ? { providerId: inAppNotif.id } : {}),
+          });
 
         // Update usage
         await supabase.rpc("increment_notification_usage", {
@@ -312,8 +300,8 @@ export async function dispatchNotificationEvent(
         deliveries.push({
           channel: "email",
           success: emailResult.success,
-          providerId: emailResult.emailId,
-          error: emailResult.error,
+          ...(emailResult.emailId ? { providerId: emailResult.emailId } : {}),
+          ...(emailResult.error ? { error: emailResult.error } : {}),
         });
       } catch (error) {
         deliveries.push({
@@ -353,11 +341,12 @@ export async function dispatchNotificationEvent(
           body: JSON.stringify(webhookPayload),
         });
 
+        const webhookProviderId = response.ok ? `webhook-${Date.now()}` : undefined;
         deliveries.push({
           channel: "webhook",
           success: response.ok,
-          providerId: response.ok ? `webhook-${Date.now()}` : undefined,
-          error: response.ok ? undefined : `HTTP ${response.status}`,
+          ...(webhookProviderId ? { providerId: webhookProviderId } : {}),
+          ...(response.ok ? {} : { error: `HTTP ${response.status}` }),
         });
       } else {
         deliveries.push({
@@ -412,6 +401,14 @@ export async function dispatchNotificationEvent(
   };
 }
 
+async function getNotificationSupabaseClient() {
+  try {
+    return await createSupabaseServer();
+  } catch {
+    return createClient();
+  }
+}
+
 /**
  * Send a simple notification to specific users without going through the event system.
  * Useful for ad-hoc notifications from admin actions.
@@ -423,14 +420,37 @@ export async function sendDirectNotification(
   body: string,
   channels: Partial<ChannelPreferences> = { inApp: true }
 ): Promise<NotificationDispatchResult> {
-  return dispatchNotificationEvent({
-    type: "product.feature_released", // Generic type for direct notifications
-    tenantId,
-    title,
-    body,
-    priority: "medium",
-    channels,
-  });
+  if (userIds.length === 0) {
+    return dispatchNotificationEvent({
+      type: "product.feature_released", // Generic type for direct notifications
+      tenantId,
+      title,
+      body,
+      priority: "medium",
+      channels,
+    });
+  }
+
+  const results = await Promise.all(
+    userIds.map((userId) =>
+      dispatchNotificationEvent({
+        type: "product.feature_released",
+        tenantId,
+        userId,
+        title,
+        body,
+        priority: "medium",
+        channels,
+      })
+    )
+  );
+
+  const auditId = results.find((result) => result.auditId)?.auditId;
+  return {
+    eventType: "product.feature_released",
+    deliveries: results.flatMap((result) => result.deliveries),
+    ...(auditId ? { auditId } : {}),
+  };
 }
 
 // Helper: Generate HTML email content

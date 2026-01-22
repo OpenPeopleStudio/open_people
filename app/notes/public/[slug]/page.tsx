@@ -8,8 +8,30 @@
 import { notFound } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { PublicNoteView } from "@/components/notes/PublicNoteView";
+import type { Note, NoteComment } from "@/types/notes";
 
-async function getPublicNote(slug: string) {
+type PublicNote = Pick<
+  Note,
+  | "id"
+  | "title"
+  | "content"
+  | "format"
+  | "tags"
+  | "metadata"
+  | "is_public"
+  | "allow_comments"
+  | "created_at"
+  | "updated_at"
+> & {
+  category?: { name: string; color: string } | null;
+  comments: NoteComment[];
+};
+
+type PublicNotePageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+async function getPublicNote(slug: string): Promise<PublicNote | null> {
   const supabase = await createSupabaseServer();
 
   // Get the public note
@@ -38,7 +60,7 @@ async function getPublicNote(slug: string) {
   }
 
   // Get comments if enabled
-  let comments = [];
+  let comments: NoteComment[] = [];
   if (note.allow_comments) {
     const { data: commentsData } = await supabase
       .from('note_comments')
@@ -61,16 +83,19 @@ async function getPublicNote(slug: string) {
       .is('parent_id', null)
       .order('created_at', { ascending: true });
 
-    comments = commentsData || [];
+    comments = (commentsData || []) as NoteComment[];
   }
+
+  const category = Array.isArray(note.category) ? note.category[0] : note.category;
 
   return {
     ...note,
+    category: category ?? null,
     comments,
-  };
+  } as PublicNote;
 }
 
-export default async function PublicNotePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PublicNotePage({ params }: PublicNotePageProps) {
   const { slug } = await params;
   const note = await getPublicNote(slug);
 
@@ -82,7 +107,8 @@ export default async function PublicNotePage({ params }: { params: Promise<{ slu
 }
 
 export async function generateMetadata({ params }: PublicNotePageProps) {
-  const note = await getPublicNote(params.slug);
+  const { slug } = await params;
+  const note = await getPublicNote(slug);
 
   if (!note) {
     return {

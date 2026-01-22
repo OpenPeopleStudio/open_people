@@ -1,6 +1,6 @@
 "use client";
 
-import type { VaultFileWithFolder, AICategory } from "@/types/vault";
+import type { VaultFileWithFolder } from "@/types/vault";
 import { formatBytes, getCategoryIcon, getCategoryColor, getCategoryLabel } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════

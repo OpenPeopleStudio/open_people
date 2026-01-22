@@ -185,13 +185,13 @@ function CreateGateForm({
     onSubmit({
       name,
       scope_type: scopeType,
-      scope_id: scopeId || undefined,
       requirements: {
         min_quality_score: parseFloat(minQualityScore),
         max_low_quality_rate: parseFloat(maxLowQualityRate),
         min_sample_count: parseInt(minSampleCount, 10),
       },
       on_failure: onFailure,
+      ...(scopeId ? { scope_id: scopeId } : {}),
     });
   }
 

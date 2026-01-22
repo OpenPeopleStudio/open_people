@@ -3,13 +3,10 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import {
   verifyPassword,
   createPasswordVerification,
-  generateDEK,
   wrapDEK,
   unwrapDEK,
-  generateKeyId,
   generateRecoveryCodes,
   hashRecoveryCode,
-  bufferToBase64,
 } from "@/lib/vault/encryption";
 
 /* ═══════════════════════════════════════════════════════════════════════════

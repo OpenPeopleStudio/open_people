@@ -86,6 +86,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (result.success) {
+      const processed = "processed" in result ? result.processed : 0;
       // Log the backfill operation
       await supabase.rpc("log_email_event", {
         p_tenant_id: tenantId,
@@ -95,14 +96,14 @@ export async function POST(request: NextRequest) {
         p_metadata: {
           days_back: daysBack,
           batch_size: batchSize,
-          processed: result.processed,
+          processed,
         },
       });
 
       return NextResponse.json({
         success: true,
-        message: `Backfill completed. Processed ${result.processed || 0} emails.`,
-        processed: result.processed,
+        message: `Backfill completed. Processed ${processed} emails.`,
+        processed,
       });
     }
 

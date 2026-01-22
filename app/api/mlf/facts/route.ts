@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { storeFact, getFactsByType } from "@/lib/mlf/facts";
+import { storeFact } from "@/lib/mlf/facts";
 import { logActivity } from "@/lib/mlf/activity";
 import type { CreateFactRequest, FactType } from "@/types/mlf";
 

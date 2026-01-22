@@ -12,7 +12,6 @@ import {
   vaultKeyManager,
   encryptFileForUpload,
   decryptFileForDownload,
-  computeHash,
 } from "@/lib/vault/client-crypto";
 import type { VaultSpace } from "@/types/vault";
 

@@ -65,17 +65,39 @@ export async function POST(request: NextRequest) {
     }
     
     // Store the fact
-    const newFact = await storeFact(supabase, user.id, {
+    const factPayload = {
       fact: fact.trim(),
       fact_type,
-      subject_type: subjectType,
-      subject_name: subjectName,
       source_type: "conversation",
-      source_id: message_id || conversation_id,
-      source_excerpt,
       tags: ["from-chat", ...tags],
       confidence: 0.9, // User-created facts have high confidence
-    });
+    } as {
+      fact: string;
+      fact_type: typeof fact_type;
+      source_type: "conversation";
+      tags: string[];
+      confidence: number;
+      subject_type?: string;
+      subject_name?: string;
+      source_id?: string;
+      source_excerpt?: string;
+    };
+
+    if (subjectType) {
+      factPayload.subject_type = subjectType;
+    }
+    if (subjectName) {
+      factPayload.subject_name = subjectName;
+    }
+    const sourceId = message_id || conversation_id;
+    if (sourceId) {
+      factPayload.source_id = sourceId;
+    }
+    if (source_excerpt) {
+      factPayload.source_excerpt = source_excerpt;
+    }
+
+    const newFact = await storeFact(supabase, user.id, factPayload);
     
     if (!newFact) {
       return NextResponse.json({ error: "Failed to create fact" }, { status: 500 });

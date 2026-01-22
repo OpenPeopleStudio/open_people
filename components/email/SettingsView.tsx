@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { EmailAccount, ManagedEmailDomain, DNSRecord } from "@/types/email";
+import type { EmailAccount, ManagedEmailDomain } from "@/types/email";
 import { DNSRecordsPanel } from "./DNSRecordsPanel";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -65,14 +65,10 @@ type SecuritySettings = {
 export function SettingsView({ 
   accounts, 
   managedDomains: initialDomains, 
-  tenantId,
-  isSuperAdmin,
-  onAccountsChange,
   onDomainsChange,
 }: Props) {
   const [activeSection, setActiveSection] = useState<SettingsSection>("domains");
   const [managedDomains, setManagedDomains] = useState<ManagedEmailDomain[]>(initialDomains);
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -88,6 +84,7 @@ export function SettingsView({
 
   const [signatures, setSignatures] = useState<EmailSignature[]>([]);
   const [editingSignature, setEditingSignature] = useState<EmailSignature | null>(null);
+  void setSignatures;
 
   const [notifications, setNotifications] = useState<NotificationSettings>({
     email_notifications: true,
@@ -132,19 +129,6 @@ export function SettingsView({
     }
     loadSettings();
   }, []);
-
-  // Load domains
-  const loadDomains = async () => {
-    try {
-      const res = await fetch("/api/email/domains/managed", { credentials: "include" });
-      const data = await res.json();
-      if (data.domains) {
-        setManagedDomains(data.domains);
-      }
-    } catch (error) {
-      console.error("Failed to load domains:", error);
-    }
-  };
 
   // Verify domain
   const handleVerifyDomain = async (domainId: string) => {
@@ -211,6 +195,7 @@ export function SettingsView({
       const timer = setTimeout(() => setMessage(null), 5000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [message]);
 
   const sections: { id: SettingsSection; label: string; icon: string; description: string }[] = [
@@ -947,10 +932,10 @@ export function SettingsView({
                       credentials: "include",
                       body: JSON.stringify({
                         section: activeSection,
-                        defaults: activeSection === "defaults" ? defaults : undefined,
-                        notifications: activeSection === "notifications" ? notifications : undefined,
-                        sync: activeSection === "sync" ? sync : undefined,
-                        security: activeSection === "security" ? security : undefined,
+                        ...(activeSection === "defaults" ? { defaults } : {}),
+                        ...(activeSection === "notifications" ? { notifications } : {}),
+                        ...(activeSection === "sync" ? { sync } : {}),
+                        ...(activeSection === "security" ? { security } : {}),
                       }),
                     });
                     

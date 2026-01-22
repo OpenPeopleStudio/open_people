@@ -6,13 +6,11 @@
  */
 
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { TaskStatus, TaskPriority, Task, Project } from "@/types/workflows";
-import type { AIUserGoal } from "@/types/ai-profile";
+import type { TaskStatus, TaskPriority } from "@/types/workflows";
 import type {
   Decision,
   OpsProposal,
   ProposedActionItem,
-  OpsRunLog,
   DecisionSource,
 } from "@/lib/ai/prompts/opsWorker";
 import { OPS_WORKER_TAG, SOURCE_TAGS, type DecisionSourceType } from "@/lib/ai/prompts/opsWorker";
@@ -86,7 +84,7 @@ export async function fetchOpsContext(supabase: SupabaseClient, userId: string):
       project_name: (Array.isArray(t.project) ? t.project[0]?.name : (t.project as { name: string } | null)?.name),
       tags: t.tags,
     })),
-    profile: profileResult.data || undefined,
+    ...(profileResult.data ? { profile: profileResult.data } : {}),
   };
 }
 

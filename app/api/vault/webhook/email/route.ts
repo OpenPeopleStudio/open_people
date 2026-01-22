@@ -58,7 +58,15 @@ export async function POST(request: NextRequest) {
       .update(`${timestamp}.${body}`)
       .digest("hex");
     
-    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+    const signatureBuffer = Buffer.from(signature, "hex");
+    const expectedBuffer = Buffer.from(expectedSignature, "hex");
+
+    if (signatureBuffer.length !== expectedBuffer.length) {
+      console.error("Invalid webhook signature length");
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+    }
+
+    if (!crypto.timingSafeEqual(signatureBuffer, expectedBuffer)) {
       console.error("Invalid webhook signature");
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }

@@ -11,6 +11,7 @@ import { EXPERIMENT_PLANS, canCreateFlag } from "@/types/experiments";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function GET(request: NextRequest) {
+  void request;
   try {
     const supabase = await createSupabaseServer();
 

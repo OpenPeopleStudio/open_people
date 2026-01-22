@@ -347,7 +347,6 @@ export function EmailInboxClient({
             selectedMessage={selectedMessage}
             onSelectMessage={handleMessageSelect}
             onStar={handleStar}
-            onDelete={handleDelete}
             viewType={currentView}
           />
         </div>

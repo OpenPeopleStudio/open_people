@@ -283,16 +283,22 @@ export async function generateOpsProposalForDecision(params: {
     created_at: opsRun.created_at,
   };
 
-  return {
+  const usedCents = Number(budget?.current_usage_cents ?? 0) + costCents;
+  const remainingCents =
+    Number(budget?.budget_cents ?? 0) - Number(budget?.current_usage_cents ?? 0) - costCents;
+
+  const response: OpsProposeResponse = {
     run: updatedRun,
     proposal,
-    budget: budget
-      ? {
-          used_cents: (budget.current_usage_cents || 0) + costCents,
-          remaining_cents: (budget.budget_cents || 0) - (budget.current_usage_cents || 0) - costCents,
-          warning: budgetWarning,
-        }
-      : undefined,
   };
-}
 
+  if (budget) {
+    response.budget = {
+      used_cents: usedCents,
+      remaining_cents: remainingCents,
+      ...(budgetWarning ? { warning: budgetWarning } : {}),
+    };
+  }
+
+  return response;
+}

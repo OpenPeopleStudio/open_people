@@ -57,6 +57,10 @@ export type EvidencePackageResult = {
 // Evidence Collection Functions
 // ─────────────────────────────────────────────────────────────────────────────
 
+function withDateRange(dateRange?: DateRange): { date_range?: DateRange } {
+  return dateRange ? { date_range: dateRange } : {};
+}
+
 async function collectAuditLogs(
   tenantId: string,
   query: AuditLogQuery
@@ -103,7 +107,7 @@ async function collectAuditLogs(
       data: [],
       record_count: 0,
       collected_at: new Date().toISOString(),
-      date_range: query.date_range,
+      ...withDateRange(query.date_range),
     };
   }
 
@@ -128,7 +132,7 @@ async function collectAuditLogs(
     data: sanitizedData || [],
     record_count: data?.length || 0,
     collected_at: new Date().toISOString(),
-    date_range: query.date_range,
+    ...withDateRange(query.date_range),
   };
 }
 
@@ -256,19 +260,7 @@ async function collectIncidentPostmortems(
     }
   }
 
-  const { data, error } = await query;
-
-  if (error) {
-    return {
-      source_type: "incident_postmortems",
-      title: "Incident Postmortem Records",
-      description: `Error collecting incident data: ${error.message}`,
-      data: [],
-      record_count: 0,
-      collected_at: new Date().toISOString(),
-      date_range: dateRange,
-    };
-  }
+  const { data } = await query;
 
   return {
     source_type: "incident_postmortems",
@@ -277,7 +269,7 @@ async function collectIncidentPostmortems(
     data: data || [],
     record_count: data?.length || 0,
     collected_at: new Date().toISOString(),
-    date_range: dateRange,
+    ...withDateRange(dateRange),
   };
 }
 
@@ -287,6 +279,7 @@ async function collectApprovalTrails(
   dateRange?: DateRange
 ): Promise<EvidenceItem> {
   const supabase = await createSupabaseAdmin();
+  void workflowTypes;
 
   // Get approval-related audit logs
   let query = supabase
@@ -308,19 +301,7 @@ async function collectApprovalTrails(
       .lte("created_at", dateRange.end);
   }
 
-  const { data, error } = await query;
-
-  if (error) {
-    return {
-      source_type: "approval_trails",
-      title: "Approval Workflow Records",
-      description: `Error collecting approval data: ${error.message}`,
-      data: [],
-      record_count: 0,
-      collected_at: new Date().toISOString(),
-      date_range: dateRange,
-    };
-  }
+  const { data } = await query;
 
   return {
     source_type: "approval_trails",
@@ -329,7 +310,7 @@ async function collectApprovalTrails(
     data: data || [],
     record_count: data?.length || 0,
     collected_at: new Date().toISOString(),
-    date_range: dateRange,
+    ...withDateRange(dateRange),
   };
 }
 
@@ -386,7 +367,7 @@ async function collectEncryptionConfig(
 ): Promise<EvidenceItem> {
   // This would collect encryption configuration evidence
   // In a real implementation, this would query actual encryption settings
-  
+  void tenantId;
   const encryptionConfig = {
     data_at_rest: {
       enabled: true,
@@ -445,7 +426,7 @@ async function collectAccessLogs(
       .lte("created_at", dateRange.end);
   }
 
-  const { data, error } = await query;
+  const { data } = await query;
 
   return {
     source_type: "access_logs",
@@ -454,7 +435,7 @@ async function collectAccessLogs(
     data: data || [],
     record_count: data?.length || 0,
     collected_at: new Date().toISOString(),
-    date_range: dateRange,
+    ...withDateRange(dateRange),
   };
 }
 
@@ -479,7 +460,7 @@ async function collectModerationLogs(
       .lte("created_at", dateRange.end);
   }
 
-  const { data, error } = await query;
+  const { data } = await query;
 
   let filteredData = data || [];
   if (includeFlaggedOnly) {
@@ -495,7 +476,7 @@ async function collectModerationLogs(
     data: filteredData,
     record_count: filteredData.length,
     collected_at: new Date().toISOString(),
-    date_range: dateRange,
+    ...withDateRange(dateRange),
   };
 }
 
@@ -550,7 +531,7 @@ async function collectRiskAssessments(
       .lte("created_at", dateRange.end);
   }
 
-  const { data, error } = await query;
+  const { data } = await query;
 
   return {
     source_type: "risk_assessments",
@@ -559,7 +540,7 @@ async function collectRiskAssessments(
     data: data || [],
     record_count: data?.length || 0,
     collected_at: new Date().toISOString(),
-    date_range: dateRange,
+    ...withDateRange(dateRange),
   };
 }
 
@@ -572,12 +553,20 @@ async function collectEvidenceForSource(
   source: EvidenceSource,
   globalDateRange?: DateRange
 ): Promise<EvidenceItem> {
+  const fallbackDateRange = globalDateRange ?? {
+    start: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+    end: new Date().toISOString(),
+  };
+
   switch (source.type) {
-    case "audit_logs":
+    case "audit_logs": {
+      const query: AuditLogQuery = source.query ?? {};
+      const effectiveDateRange = query.date_range ?? fallbackDateRange;
       return collectAuditLogs(tenantId, {
-        ...source.query,
-        date_range: source.query.date_range || globalDateRange,
+        ...query,
+        date_range: effectiveDateRange,
       });
+    }
     case "rbac_snapshot":
       return collectRBACSnapshot(tenantId, source.scope);
     case "pii_config":

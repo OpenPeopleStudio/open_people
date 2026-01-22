@@ -186,20 +186,6 @@ export async function POST(request: NextRequest) {
 
     // If accountId is provided, use that account's provider
     if (accountId) {
-      console.log("[email/send] Using accountId:", accountId);
-      
-      // First, let's see how many rows match this ID (should always be 0 or 1)
-      const { data: debugAccounts, error: debugErr } = await adminSupabase
-        .from("email_accounts")
-        .select("id, tenant_id, email_address, provider")
-        .eq("id", accountId);
-      
-      console.log("[email/send] Debug - accounts matching ID:", {
-        count: debugAccounts?.length || 0,
-        accounts: debugAccounts,
-        error: debugErr?.message,
-      });
-
       // Build query - always filter by ID
       // Super admins can access any account, others need tenant_id match
       const baseQuery = isSuperAdmin
@@ -207,16 +193,6 @@ export async function POST(request: NextRequest) {
         : supabase.from("email_accounts").select("*").eq("id", accountId).eq("tenant_id", tenantId);
 
       const { data: account, error: accountError } = await baseQuery.maybeSingle();
-
-      console.log("[email/send] Account lookup:", { 
-        found: !!account, 
-        error: accountError?.message,
-        provider: account?.provider,
-        resend_domain: account?.resend_domain,
-        mode: account?.mode,
-        accountId,
-        isSuperAdmin,
-      });
 
       if (accountError || !account) {
         return NextResponse.json({ error: "Email account not found" }, { status: 404 });
@@ -245,13 +221,6 @@ export async function POST(request: NextRequest) {
       const effectiveTenantId = account.tenant_id || tenantId;
       const effectiveSlug = tenantSlug || "openpeople";
 
-      console.log("[email/send] Calling sendEmailWithProvider:", {
-        provider: account.provider,
-        effectiveTenantId,
-        effectiveSlug,
-        managedDomain: managedDomain?.domain,
-      });
-
       result = await sendEmailWithProvider(account, effectiveTenantId, effectiveSlug, {
         account_id: accountId,
         to,
@@ -264,8 +233,6 @@ export async function POST(request: NextRequest) {
         in_reply_to: inReplyTo,
         thread_id: threadId,
       }, managedDomain);
-
-      console.log("[email/send] sendEmailWithProvider result:", result);
     } else {
       // Fall back to default Resend integration
       // Get custom domain if available (only if we have a tenant)
@@ -407,26 +374,13 @@ export async function POST(request: NextRequest) {
         sent_at: new Date().toISOString(),
       };
 
-      console.log("[email/send] Saving sent message:", { 
-        tenant_id: messageTenantId, 
-        account_id: usedAccountId,
-        subject: messageData.subject,
-      });
-
       const { error: insertError } = await adminSupabase
         .from("email_messages")
         .insert(messageData);
 
       if (insertError) {
         console.error("[email/send] Failed to save sent message:", insertError);
-      } else {
-        console.log("[email/send] Sent message saved successfully");
       }
-    } else {
-      console.log("[email/send] Skipping sent message save:", { 
-        usedAccountId, 
-        saveToSent 
-      });
     }
 
     // Update usage (only for tenant-based sending)

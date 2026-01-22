@@ -193,7 +193,7 @@ export default async function SuperAdminEmailPage() {
           stats={data.stats}
           plan={plan}
           tenantSlug={tenantSlug}
-          tenantId={tenantId}
+          {...(tenantId ? { tenantId } : {})}
           isSuperAdmin={true}
         />
       </div>

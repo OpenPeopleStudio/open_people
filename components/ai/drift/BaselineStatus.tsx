@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 
 interface AutoBaselineConfig {
   id: string;
@@ -12,18 +12,8 @@ interface AutoBaselineConfig {
   is_active: boolean;
 }
 
-interface AutoBaselineJob {
-  id: string;
-  trigger_type: string;
-  status: string;
-  collection_start: string;
-  samples_collected: number;
-  baseline_id?: string;
-}
-
 export function BaselineStatus() {
   const [configs, setConfigs] = useState<AutoBaselineConfig[]>([]);
-  const [recentJobs, setRecentJobs] = useState<AutoBaselineJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
 
@@ -226,14 +216,14 @@ function CreateConfigForm({
   const [durationHours, setDurationHours] = useState("24");
   const [minSamples, setMinSamples] = useState("100");
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     onSubmit({
       scope_type: scopeType,
-      scope_id: scopeId || undefined,
       trigger_on: triggerOn,
       collection_duration_hours: parseInt(durationHours, 10),
       min_samples: parseInt(minSamples, 10),
+      ...(scopeId ? { scope_id: scopeId } : {}),
     });
   }
 

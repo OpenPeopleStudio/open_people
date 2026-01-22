@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client, type ServerSideEncryption } from "@aws-sdk/client-s3";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
@@ -57,14 +57,19 @@ async function persistBlob(
     `${event.kind}-${Date.now()}.bin`,
   ].join("/");
 
+  const sse = process.env.PERSONAL_DATA_S3_SSE;
+  const serverSideEncryption =
+    sse === "AES256" || sse === "aws:kms" || sse === "aws:kms:dsse"
+      ? (sse as ServerSideEncryption)
+      : undefined;
+
   await s3Client.send(
     new PutObjectCommand({
       Bucket: bucket,
       Key: key,
       Body: bodyBuffer,
       ContentType: event.blobContentType ?? "application/octet-stream",
-      ServerSideEncryption:
-        process.env.PERSONAL_DATA_S3_SSE ?? undefined, // optional
+      ...(serverSideEncryption ? { ServerSideEncryption: serverSideEncryption } : {}),
     })
   );
 
@@ -90,18 +95,25 @@ function normalizeEvents(input: unknown): IngestEvent[] {
     ) {
       return [];
     }
-    return [
-      {
-        source: String(candidate.source),
-        kind: String(candidate.kind),
-        ts: new Date(candidate.ts).toISOString(),
-        payload: candidate.payload as Record<string, unknown>,
-        signature: candidate.signature,
-        blobBase64: candidate.blobBase64,
-        blobContentType: candidate.blobContentType,
-        ingestMeta: candidate.ingestMeta ?? {},
-      },
-    ];
+    const event: IngestEvent = {
+      source: String(candidate.source),
+      kind: String(candidate.kind),
+      ts: new Date(candidate.ts).toISOString(),
+      payload: candidate.payload as Record<string, unknown>,
+    };
+    if (candidate.signature) {
+      event.signature = String(candidate.signature);
+    }
+    if (candidate.blobBase64) {
+      event.blobBase64 = String(candidate.blobBase64);
+    }
+    if (candidate.blobContentType) {
+      event.blobContentType = String(candidate.blobContentType);
+    }
+    if (candidate.ingestMeta) {
+      event.ingestMeta = candidate.ingestMeta as Record<string, unknown>;
+    }
+    return [event];
   });
 }
 

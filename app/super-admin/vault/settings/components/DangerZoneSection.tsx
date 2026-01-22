@@ -14,6 +14,7 @@ interface DangerZoneSectionProps {
 }
 
 export function DangerZoneSection({ sessionId, vaultId }: DangerZoneSectionProps) {
+  void vaultId;
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

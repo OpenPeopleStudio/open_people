@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import type { VaultAuditLog } from "@/types/vault";
+import type { VaultAuditEntry } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Audit Log Viewer Page
@@ -11,13 +10,12 @@ import type { VaultAuditLog } from "@/types/vault";
    Displays security and compliance audit logs for monitoring and investigation.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-interface AuditLogEntry extends VaultAuditLog {
+interface AuditLogEntry extends VaultAuditEntry {
   user_email?: string;
   vault_name?: string;
 }
 
 export default function AuditLogPage() {
-  const router = useRouter();
   const [entries, setEntries] = useState<AuditLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -65,36 +63,6 @@ export default function AuditLogPage() {
   function handleFilterChange(key: string, value: string) {
     setFilters(prev => ({ ...prev, [key]: value }));
     setPage(1); // Reset to first page when filtering
-  }
-
-  function formatTimestamp(timestamp: string) {
-    return new Date(timestamp).toLocaleString();
-  }
-
-  function getActionIcon(action: string) {
-    const icons: Record<string, string> = {
-      unlock: '🔓',
-      lock: '🔒',
-      upload: '📤',
-      download: '📥',
-      delete: '🗑️',
-      move: '📁',
-      share: '🔗',
-      create: '➕',
-      update: '✏️',
-      rule_created: '📋',
-      rule_deleted: '🗑️',
-      email_ingested: '📧',
-    };
-    return icons[action] || '📝';
-  }
-
-  function getSeverityColor(entry: AuditLogEntry) {
-    if (!entry.success) return 'text-[var(--error)]';
-    if (entry.action.includes('delete') || entry.action.includes('lock')) {
-      return 'text-[var(--warning)]';
-    }
-    return 'text-[var(--text-primary)]';
   }
 
   return (

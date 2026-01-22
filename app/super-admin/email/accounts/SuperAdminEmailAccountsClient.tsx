@@ -38,6 +38,8 @@ export function SuperAdminEmailAccountsClient({
   // Platform accounts (no tenant)
   const platformAccounts = accounts.filter(a => !a.tenant_id);
   const tenantAccounts = accounts.filter(a => a.tenant_id);
+  const tenantIdProp =
+    selectedTenantId && selectedTenantId !== "__platform__" ? selectedTenantId : undefined;
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] bg-[var(--void)]">
@@ -118,7 +120,7 @@ export function SuperAdminEmailAccountsClient({
             const unchanged = accounts.filter(a => !updatedIds.has(a.id));
             setAccounts([...unchanged, ...newAccounts]);
           }}
-          tenantId={selectedTenantId === "__platform__" ? undefined : (selectedTenantId || undefined)}
+          {...(tenantIdProp ? { tenantId: tenantIdProp } : {})}
           isSuperAdmin={true}
         />
       </div>

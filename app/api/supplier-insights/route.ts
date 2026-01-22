@@ -21,7 +21,12 @@ export async function GET(request: NextRequest) {
     const to = searchParams.get("to") || undefined;
     const sku = searchParams.get("sku") || undefined;
 
-    const kpis = buildKpis({ from, to, sku });
+    const kpiFilters: { from?: string; to?: string; sku?: string } = {};
+    if (from) kpiFilters.from = from;
+    if (to) kpiFilters.to = to;
+    if (sku) kpiFilters.sku = sku;
+
+    const kpis = buildKpis(kpiFilters);
 
     return NextResponse.json({
       summary: {

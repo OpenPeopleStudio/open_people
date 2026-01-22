@@ -106,13 +106,13 @@ export function BillingManagement({ tenantId, onUpdate }: BillingManagementProps
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): "info" | "error" | "success" | "pending" | "warning" => {
     switch (status) {
       case 'active': return 'success';
       case 'trialing': return 'warning';
       case 'past_due': return 'error';
-      case 'canceled': return 'secondary';
-      default: return 'muted';
+      case 'canceled': return 'info';
+      default: return 'pending';
     }
   };
 
@@ -323,7 +323,7 @@ export function BillingManagement({ tenantId, onUpdate }: BillingManagementProps
                         {tenant.billing.status.replace('_', ' ')}
                       </StatusBadge>
                     ) : (
-                      <StatusBadge status="muted">No Billing</StatusBadge>
+                      <StatusBadge status="info">No Billing</StatusBadge>
                     )}
                   </td>
                   <td className="py-3 px-4">

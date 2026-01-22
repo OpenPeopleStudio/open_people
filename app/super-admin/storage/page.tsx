@@ -29,12 +29,6 @@ type Bucket = {
   total_size: number;
 };
 
-type Subscription = {
-  tier: string;
-  status: string;
-  current_period_end: string | null;
-};
-
 async function getStorageData(tenantId: string) {
   const supabase = await createSupabaseServer();
 

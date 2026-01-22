@@ -18,6 +18,91 @@ export interface SessionUpdateResult {
   user: User | null;
 }
 
+function normalizeHost(host: string | null): string {
+  if (!host) return "";
+  return host.replace(/:\d+$/, "").trim().toLowerCase();
+}
+
+async function resolveTenantId(
+  supabase: ReturnType<typeof createServerClient>,
+  host: string | null,
+  tenantOverride: string | null
+): Promise<string | null> {
+  if (tenantOverride) {
+    const { data } = await supabase
+      .from("tenants")
+      .select("id")
+      .eq("slug", tenantOverride)
+      .eq("status", "active")
+      .single();
+    if (data?.id) {
+      return data.id;
+    }
+  }
+
+  const normalizedHost = normalizeHost(host);
+  if (!normalizedHost) {
+    return null;
+  }
+
+  const rootDomain = (process.env.NEXT_PUBLIC_ROOT_DOMAIN || "openpeople.ai").toLowerCase();
+  const superAdminDomain = (
+    process.env.NEXT_PUBLIC_SUPER_ADMIN_DOMAIN ||
+    process.env.SUPER_ADMIN_DOMAIN ||
+    "app.openpeople.ai"
+  ).toLowerCase();
+
+  const marketingDomains = new Set([
+    rootDomain,
+    `www.${rootDomain}`,
+    "localhost",
+  ]);
+
+  if (
+    marketingDomains.has(normalizedHost) ||
+    normalizedHost === superAdminDomain ||
+    normalizedHost === "super.localhost" ||
+    normalizedHost === "app.localhost"
+  ) {
+    return null;
+  }
+
+  let subdomain: string | null = null;
+  if (normalizedHost.endsWith(".localhost")) {
+    subdomain = normalizedHost.split(".")[0];
+  } else if (rootDomain && normalizedHost.endsWith(`.${rootDomain}`)) {
+    subdomain = normalizedHost.replace(`.${rootDomain}`, "");
+  }
+
+  if (subdomain && ["www", "localhost", "super", "app"].includes(subdomain)) {
+    subdomain = null;
+  }
+
+  if (subdomain) {
+    const { data } = await supabase
+      .from("tenants")
+      .select("id")
+      .eq("slug", subdomain)
+      .eq("status", "active")
+      .single();
+    if (data?.id) {
+      return data.id;
+    }
+  }
+
+  const { data: domainData } = await supabase
+    .from("tenant_domains")
+    .select("tenant_id, verified_at")
+    .eq("domain", normalizedHost)
+    .single();
+
+  if (domainData?.tenant_id && domainData.verified_at) {
+    return domainData.tenant_id;
+  }
+
+  return null;
+}
+
 export async function updateSession(request: NextRequest): Promise<SessionUpdateResult> {
   let supabaseResponse = NextResponse.next({
     request,
@@ -58,22 +143,13 @@ export async function updateSession(request: NextRequest): Promise<SessionUpdate
   let tenantId: string | null = null;
 
   // Check for tenant override cookie (used during onboarding)
-  const tenantOverride = request.cookies.get(TENANT_OVERRIDE_COOKIE)?.value;
+  const tenantOverride = request.cookies.get(TENANT_OVERRIDE_COOKIE)?.value ?? null;
   if (tenantOverride) {
     supabaseResponse.headers.set(TENANT_OVERRIDE_HEADER, tenantOverride);
-    // TODO: Look up tenant ID by slug
-    // tenantId = await getTenantIdBySlug(tenantOverride);
   }
 
-  // Extract tenant from subdomain (format: tenant-slug.localhost:3000)
-  const hostname = request.headers.get('host') || '';
-  if (hostname.includes('.')) {
-    const subdomain = hostname.split('.')[0];
-    if (subdomain && subdomain !== 'localhost' && subdomain !== 'super') {
-      // TODO: Look up tenant ID by subdomain
-      // tenantId = await getTenantIdBySubdomain(subdomain);
-    }
-  }
+  const host = request.headers.get("host");
+  tenantId = await resolveTenantId(supabase, host, tenantOverride);
 
   // Set tenant context for logging
   if (tenantId) {

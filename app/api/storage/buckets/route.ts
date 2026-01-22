@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PLATFORM_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
 export async function GET(request: NextRequest) {
+  void request;
   try {
     const supabase = await createSupabaseServer();
 

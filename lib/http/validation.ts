@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import type { ZodTypeAny, infer as ZodInfer } from "zod";
-import { errorResponse } from "./responses";
+import { errorResponse, errors } from "./responses";
 
 export async function parseJsonBody<TSchema extends ZodTypeAny>(
   request: NextRequest,
@@ -20,10 +20,14 @@ export async function parseJsonBody<TSchema extends ZodTypeAny>(
 
   const result = schema.safeParse(body);
   if (!result.success) {
+    const issues = result.error.issues.map((issue) => ({
+      path: issue.path.join("."),
+      message: issue.message,
+      code: issue.code,
+    }));
     return {
-      error: errorResponse(400, "Invalid request body", {
-        code: "INVALID_BODY",
-        details: result.error.format(),
+      error: errors.unprocessableEntity("Invalid request body", {
+        issues,
       }),
     };
   }

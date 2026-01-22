@@ -17,7 +17,6 @@ import {
 } from "@/lib/ai/prompts/opsWorker";
 import { chatCompletion, getDefaultProvider, estimateCost } from "@/lib/ai/providers";
 import type { AIProviderConfig, UserAISettings } from "@/types/ai-providers";
-import { PROVIDER_TEMPLATES } from "@/types/ai-providers";
 import type { TaskStatus, TaskPriority } from "@/types/workflows";
 import { notifyOpsTaskFailed } from "@/lib/notifications/events";
 
@@ -303,7 +302,9 @@ export async function POST(request: NextRequest) {
         })
         .eq("id", opsRun.id);
 
-      console.error("Failed to parse ops proposal:", assistantContent.slice(0, 500));
+      console.error("Failed to parse ops proposal response", {
+        content_length: assistantContent.length,
+      });
       return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
     }
 
@@ -365,16 +366,19 @@ export async function POST(request: NextRequest) {
       created_at: opsRun.created_at,
     };
 
+    const budgetInfo = budget
+      ? {
+          used_cents: (budget.current_usage_cents || 0) + costCents,
+          remaining_cents:
+            (budget.budget_cents || 0) - (budget.current_usage_cents || 0) - costCents,
+          ...(budgetWarning ? { warning: budgetWarning } : {}),
+        }
+      : undefined;
+
     const response: OpsProposeResponse = {
       run: updatedRun,
       proposal,
-      budget: budget
-        ? {
-            used_cents: (budget.current_usage_cents || 0) + costCents,
-            remaining_cents: (budget.budget_cents || 0) - (budget.current_usage_cents || 0) - costCents,
-            warning: budgetWarning,
-          }
-        : undefined,
+      ...(budgetInfo ? { budget: budgetInfo } : {}),
     };
 
     return NextResponse.json(response);

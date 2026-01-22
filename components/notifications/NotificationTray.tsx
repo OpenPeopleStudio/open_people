@@ -51,6 +51,7 @@ export function NotificationTray({
       const interval = setInterval(fetchNotifications, pollInterval);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [fetchNotifications, pollInterval]);
 
   // Re-fetch when dropdown opens
@@ -77,6 +78,7 @@ export function NotificationTray({
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }
+    return undefined;
   }, [isOpen]);
 
   // Close on escape key
@@ -91,6 +93,7 @@ export function NotificationTray({
       document.addEventListener("keydown", handleEscape);
       return () => document.removeEventListener("keydown", handleEscape);
     }
+    return undefined;
   }, [isOpen]);
 
   // Mark notifications as read

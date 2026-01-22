@@ -5,8 +5,6 @@ import type {
   EmailThread,
   EmailAccount,
   EmailSuggestion,
-  EmailAIQueue,
-  SendEmailRequest,
   ComposeEmailRequest,
 } from "@/types/email";
 import crypto from "crypto";
@@ -20,10 +18,10 @@ export class EmailWorkspaceService {
   private supabase: any = null;
 
   private async getSupabase() {
-    if (!supabase) {
-      supabase = await createSupabaseAdmin();
+    if (!this.supabase) {
+      this.supabase = await createSupabaseAdmin();
     }
-    return supabase;
+    return this.supabase;
   }
 
   /**
@@ -34,8 +32,6 @@ export class EmailWorkspaceService {
     signature: string,
     webhookSecret: string
   ): Promise<{ success: boolean; threadId?: string; messageId?: string; error?: string }> {
-    const supabase = await this.getSupabase();
-
     try {
       console.log("[Email Webhook] Processing webhook payload:", JSON.stringify(payload, null, 2));
 
@@ -130,13 +126,20 @@ export class EmailWorkspaceService {
       attachments = [],
     } = data;
 
-    if (!resendId || !fromAddress || !toAddresses) {
+    const toAddressList = Array.isArray(toAddresses)
+      ? (toAddresses as string[])
+      : typeof toAddresses === "string"
+        ? [toAddresses]
+        : [];
+    const primaryRecipient = toAddressList[0];
+
+    if (!resendId || !fromAddress || toAddressList.length === 0) {
       console.error("[Email Webhook] Missing required email data");
       return { success: false, error: "Missing required email data" };
     }
 
     // Find the appropriate account for this email
-    let account = await this.findAccountForInboundEmail(toAddresses as string[]);
+    let account = await this.findAccountForInboundEmail(toAddressList);
 
     // If no account found through proper tenant routing, this indicates a configuration issue
     if (!account) {
@@ -146,7 +149,10 @@ export class EmailWorkspaceService {
       console.error("[Email Webhook] 2. The tenant has email accounts set up");
       console.error("[Email Webhook] 3. DNS records are properly configured");
 
-      return { success: false, error: `No email account configured to receive emails for ${toAddresses[0]}` };
+      return {
+        success: false,
+        error: `No email account configured to receive emails for ${primaryRecipient ?? "recipient"}`,
+      };
     }
 
     console.log(`[Email Webhook] Processing with account: ${account.id} (${account.email_address}) for tenant: ${account.tenant_id}`);
@@ -165,9 +171,7 @@ export class EmailWorkspaceService {
 
     // Parse email addresses
     const parsedFrom = this.parseEmailAddress(fromAddress as string);
-    const parsedTo = Array.isArray(toAddresses)
-      ? toAddresses.map(addr => this.parseEmailAddress(addr as string))
-      : [this.parseEmailAddress(toAddresses as string)];
+    const parsedTo = toAddressList.map((addr) => this.parseEmailAddress(addr));
 
     // Create email message record
     const { data: message, error: messageError } = await supabase
@@ -200,16 +204,17 @@ export class EmailWorkspaceService {
 
     // Find or create thread
     const threadId = await this.findOrCreateThread(message);
-    if (threadId) {
+    const threadIdValue = threadId ?? undefined;
+    if (threadIdValue) {
       // Update message with thread_id
       await supabase
         .from("email_messages")
-        .update({ thread_id: threadId })
+        .update({ thread_id: threadIdValue })
         .eq("id", message.id);
     }
 
     // Queue for AI processing
-    await this.queueForAIProcessing(message.id, threadId);
+    await this.queueForAIProcessing(message.id, threadIdValue);
 
     // Log audit event
     await supabase.rpc("log_email_event", {
@@ -217,10 +222,12 @@ export class EmailWorkspaceService {
       p_event_type: "receive",
       p_event_subtype: "inbound",
       p_message_id: message.id,
-      p_thread_id: threadId,
+      p_thread_id: threadIdValue ?? null,
     });
 
-    return { success: true, messageId: message.id, threadId };
+    return threadIdValue
+      ? { success: true, messageId: message.id, threadId: threadIdValue }
+      : { success: true, messageId: message.id };
   }
 
   /**
@@ -237,7 +244,13 @@ export class EmailWorkspaceService {
       return { success: true }; // Ignore unmapped events
     }
 
-    const updateData: Partial<EmailMessage> = { status };
+    const updateData: Partial<EmailMessage> & {
+      sent_at?: string;
+      opened_at?: string;
+      clicked_at?: string;
+      bounced_at?: string;
+      error_message?: string;
+    } = { status };
     const timestamp = event.data.created_at as string;
 
     // Set specific timestamps based on event type
@@ -581,10 +594,15 @@ export class EmailWorkspaceService {
       // Apply policies and DLP checks
       const policyCheck = await this.checkEmailPolicies(account.tenant_id, request);
       if (!policyCheck.allowed) {
-        return { success: false, error: policyCheck.reason };
+        return policyCheck.reason
+          ? { success: false, error: policyCheck.reason }
+          : { success: false };
       }
 
       // Create message record first
+      const toList = Array.isArray(request.to) ? request.to : [request.to];
+      const ccList = request.cc && request.cc.length > 0 ? request.cc : undefined;
+      const bccList = request.bcc && request.bcc.length > 0 ? request.bcc : undefined;
       const { data: message, error: messageError } = await supabase
         .from("email_messages")
         .insert({
@@ -593,16 +611,16 @@ export class EmailWorkspaceService {
           direction: "outbound",
           from_address: account.email_address,
           from_name: account.name,
-          to_addresses: request.to.map(email => ({ email })),
-          cc_addresses: request.cc?.map(email => ({ email })),
-          bcc_addresses: request.bcc?.map(email => ({ email })),
+          to_addresses: toList.map((email) => ({ email })),
+          ...(ccList ? { cc_addresses: ccList.map((email) => ({ email })) } : {}),
+          ...(bccList ? { bcc_addresses: bccList.map((email) => ({ email })) } : {}),
           subject: request.subject,
           body_html: request.body_html,
           body_text: request.body_text,
-          reply_to: request.reply_to,
+          ...(request.reply_to ? { reply_to: request.reply_to } : {}),
           status: "queued",
-          thread_id: request.thread_id,
-          in_reply_to: request.in_reply_to,
+          ...(request.thread_id ? { thread_id: request.thread_id } : {}),
+          ...(request.in_reply_to ? { in_reply_to: request.in_reply_to } : {}),
         })
         .select()
         .single();
@@ -613,16 +631,25 @@ export class EmailWorkspaceService {
 
       // Send via Resend
       const resend = createResendClient();
-      const resendPayload = {
+      const html = request.body_html?.trim() || undefined;
+      const text = request.body_text?.trim() || undefined;
+
+      if (!html && !text) {
+        return { success: false, error: "Email body is required" };
+      }
+
+      const basePayload = {
         from: `${account.name} <${account.email_address}>`,
-        to: request.to,
-        cc: request.cc,
-        bcc: request.bcc,
+        to: toList,
+        ...(ccList ? { cc: ccList } : {}),
+        ...(bccList ? { bcc: bccList } : {}),
         subject: request.subject,
-        html: request.body_html,
-        text: request.body_text,
-        reply_to: request.reply_to,
+        ...(request.reply_to ? { reply_to: request.reply_to } : {}),
       };
+
+      const resendPayload: Parameters<typeof resend.emails.send>[0] = html
+        ? { ...basePayload, html, ...(text ? { text } : {}) }
+        : { ...basePayload, text: text as string };
 
       const { data: resendResult, error: resendError } = await resend.emails.send(resendPayload);
 
@@ -661,7 +688,7 @@ export class EmailWorkspaceService {
         p_event_subtype: "outbound",
         p_user_id: (await supabase.auth.getUser()).data.user?.id,
         p_message_id: message.id,
-        p_thread_id: request.thread_id,
+        p_thread_id: request.thread_id ?? null,
       });
 
       return { success: true, messageId: message.id };
@@ -695,11 +722,13 @@ export class EmailWorkspaceService {
     }
 
     // Check blocked domains
-    const allRecipients = [...(request.to || []), ...(request.cc || []), ...(request.bcc || [])];
+    const toList = Array.isArray(request.to) ? request.to : [request.to];
+    const allRecipients = [...toList, ...(request.cc || []), ...(request.bcc || [])];
     const blockedDomains = policies.blocked_domains || [];
 
     for (const recipient of allRecipients) {
       const domain = recipient.split("@")[1];
+      if (!domain) continue;
       if (blockedDomains.includes(domain)) {
         return { allowed: false, reason: `Sending to blocked domain: ${domain}` };
       }
@@ -756,7 +785,7 @@ export class EmailWorkspaceService {
       return { threads: [], total: 0 };
     }
 
-    const uniqueThreadIds = [...new Set(threadIds.map(t => t.thread_id))];
+    const uniqueThreadIds = [...new Set(threadIds.map((t: { thread_id: string }) => t.thread_id))];
 
     // Now get the threads
     let query = supabase

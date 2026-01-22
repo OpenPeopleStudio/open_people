@@ -12,6 +12,7 @@ import {
 } from "@/lib/observability/drift";
 
 export async function GET(request: NextRequest) {
+  void request;
   try {
     const supabase = await createSupabaseServer();
     

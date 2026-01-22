@@ -222,7 +222,7 @@ export async function addGuardrailPatternFromIncident(
       success: !error,
       action_type: "add_guardrail_pattern",
       created_items: createdItems,
-      error: error?.message,
+      ...(error?.message ? { error: error.message } : {}),
     };
   } catch (error) {
     return {
@@ -299,7 +299,7 @@ Please review and determine if a policy exception or modification is needed.
       success: !error,
       action_type: "create_policy_exception_review",
       created_items: createdItems,
-      error: error?.message,
+      ...(error?.message ? { error: error.message } : {}),
     };
   } catch (error) {
     return {

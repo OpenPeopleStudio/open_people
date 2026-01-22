@@ -1,8 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ file_id: string }> }
+) {
+  const { file_id } = await params;
   const auth = await authenticateUser(request);
   if (!auth?.user) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
@@ -14,7 +18,7 @@ export async function GET(request: Request, context: any) {
     .select(
       "id, vault_id, folder_id, filename, size_bytes, content_type, ai_summary, ai_tags, ai_category, status, created_at, updated_at, r2_key"
     )
-    .eq("id", params.file_id)
+    .eq("id", file_id)
     .maybeSingle();
 
   if (error) {
@@ -29,7 +33,11 @@ export async function GET(request: Request, context: any) {
   return NextResponse.json(data);
 }
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ file_id: string }> }
+) {
+  const { file_id } = await params;
   const auth = await authenticateUser(request);
   if (!auth?.user) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
@@ -39,7 +47,7 @@ export async function DELETE(request: Request, context: any) {
   const { error } = await supabase
     .from("vault_files")
     .update({ status: "deleted" })
-    .eq("id", params.file_id);
+    .eq("id", file_id);
 
   if (error) {
     console.error("Failed to delete file", error);

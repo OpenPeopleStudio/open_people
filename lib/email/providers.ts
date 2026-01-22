@@ -9,7 +9,6 @@
  */
 
 import type {
-  EmailAccount,
   EmailProvider,
   ComposeEmailRequest,
   EmailMessage,
@@ -19,8 +18,19 @@ import type {
 import { isManagedAccount } from "@/types/email";
 import { sendEmail as sendResendEmail } from "./resend";
 import { sendSMTPEmail, verifySMTPConnection, type SMTPConfig } from "./smtp";
-import { fetchIMAPEmails, verifyIMAPConnection, type IMAPConfig, type ParsedEmailMessage } from "./imap";
-import { fetchPOP3Emails, verifyPOP3Connection, type POP3Config } from "./pop3";
+import {
+  fetchIMAPEmails,
+  verifyIMAPConnection,
+  type IMAPConfig,
+  type IMAPFetchOptions,
+  type ParsedEmailMessage,
+} from "./imap";
+import {
+  fetchPOP3Emails,
+  verifyPOP3Connection,
+  type POP3Config,
+  type POP3FetchOptions,
+} from "./pop3";
 import { decryptCredential } from "./encryption";
 
 export interface SendResult {
@@ -133,12 +143,15 @@ export async function sendEmailWithProvider(
         return { success: false, error: "SMTP not configured" };
       }
       const result = await sendSMTPEmail(smtpConfig, request);
-      return {
-        success: result.success,
-        messageId: result.messageId,
-        providerId: result.messageId,
-        error: result.error,
-      };
+      const response: SendResult = { success: result.success };
+      if (result.messageId) {
+        response.messageId = result.messageId;
+        response.providerId = result.messageId;
+      }
+      if (result.error) {
+        response.error = result.error;
+      }
+      return response;
     }
     
     case "resend": {
@@ -160,28 +173,44 @@ export async function sendEmailWithProvider(
       
       // Use existing Resend integration
       const to = Array.isArray(request.to) ? request.to : [request.to];
+      const resendRequest: ComposeEmailRequest = {
+        ...request,
+        to,
+      };
+
+      const resendPayload = {
+        to,
+        subject: resendRequest.subject,
+        ...(resendRequest.body_html ? { html: resendRequest.body_html } : {}),
+        ...(resendRequest.body_text ? { text: resendRequest.body_text } : {}),
+        ...(resendRequest.reply_to ? { replyTo: resendRequest.reply_to } : {}),
+        ...(resendRequest.cc && resendRequest.cc.length > 0
+          ? { cc: resendRequest.cc }
+          : {}),
+        ...(resendRequest.bcc && resendRequest.bcc.length > 0
+          ? { bcc: resendRequest.bcc }
+          : {}),
+        from: fromAddress, // Use account's email address
+      };
+
       const result = await sendResendEmail(
         tenantId,
         tenantSlug,
-        {
-          to,
-          subject: request.subject,
-          html: request.body_html,
-          text: request.body_text,
-          replyTo: request.reply_to,
-          cc: request.cc,
-          bcc: request.bcc,
-          from: fromAddress, // Use account's email address
-        },
+        resendPayload,
         null,
         account.resend_domain
       );
-      return {
-        success: result.success,
-        messageId: result.emailId,
-        providerId: result.resendId,
-        error: result.error,
-      };
+      const response: SendResult = { success: result.success };
+      if (result.emailId) {
+        response.messageId = result.emailId;
+      }
+      if (result.resendId) {
+        response.providerId = result.resendId;
+      }
+      if (result.error) {
+        response.error = result.error;
+      }
+      return response;
     }
     
     default:
@@ -221,28 +250,35 @@ async function sendManagedEmail(
   const to = Array.isArray(request.to) ? request.to : [request.to];
   
   // Send via Resend with the custom domain
+  const resendPayload = {
+    to,
+    subject: request.subject,
+    ...(request.body_html ? { html: request.body_html } : {}),
+    ...(request.body_text ? { text: request.body_text } : {}),
+    ...(request.reply_to ? { replyTo: request.reply_to } : {}),
+    ...(request.cc && request.cc.length > 0 ? { cc: request.cc } : {}),
+    ...(request.bcc && request.bcc.length > 0 ? { bcc: request.bcc } : {}),
+  };
+
   const result = await sendResendEmail(
     tenantId,
     tenantSlug,
-    {
-      to,
-      subject: request.subject,
-      html: request.body_html,
-      text: request.body_text,
-      replyTo: request.reply_to,
-      cc: request.cc,
-      bcc: request.bcc,
-    },
+    resendPayload,
     null,
     domain
   );
   
-  return {
-    success: result.success,
-    messageId: result.emailId,
-    providerId: result.resendId,
-    error: result.error,
-  };
+  const response: SendResult = { success: result.success };
+  if (result.emailId) {
+    response.messageId = result.emailId;
+  }
+  if (result.resendId) {
+    response.providerId = result.resendId;
+  }
+  if (result.error) {
+    response.error = result.error;
+  }
+  return response;
 }
 
 /**
@@ -271,13 +307,14 @@ export async function fetchInboxEmails(
       if (!imapConfig) {
         return { success: false, messages: [], error: "IMAP not configured" };
       }
-      return await fetchIMAPEmails(imapConfig, {
-        limit: options.limit,
-        since: options.since,
-        sinceUID: options.sinceUID,
-        mailbox: options.mailbox,
-        includeRead: options.includeRead,
-      });
+      const imapOptions: IMAPFetchOptions = {
+        ...(options.limit !== undefined ? { limit: options.limit } : {}),
+        ...(options.since ? { since: options.since } : {}),
+        ...(options.sinceUID ? { sinceUID: options.sinceUID } : {}),
+        ...(options.mailbox ? { mailbox: options.mailbox } : {}),
+        ...(options.includeRead !== undefined ? { includeRead: options.includeRead } : {}),
+      };
+      return await fetchIMAPEmails(imapConfig, imapOptions);
     }
     
     case "pop3": {
@@ -285,9 +322,10 @@ export async function fetchInboxEmails(
       if (!pop3Config) {
         return { success: false, messages: [], error: "POP3 not configured" };
       }
-      return await fetchPOP3Emails(pop3Config, {
-        limit: options.limit,
-      });
+      const pop3Options: POP3FetchOptions = {
+        ...(options.limit !== undefined ? { limit: options.limit } : {}),
+      };
+      return await fetchPOP3Emails(pop3Config, pop3Options);
     }
     
     case "resend":
@@ -392,23 +430,13 @@ export function parsedMessageToDbFormat(
   tenantId: string,
   direction: EmailDirection = "inbound"
 ): Partial<EmailMessage> {
-  return {
+  const payload: Partial<EmailMessage> = {
     tenant_id: tenantId,
     account_id: accountId,
-    message_id: parsed.messageId,
     provider_id: parsed.uid,
-    thread_id: parsed.references?.[0] || parsed.inReplyTo || parsed.messageId,
-    in_reply_to: parsed.inReplyTo,
     direction,
     from_address: parsed.from.email,
-    from_name: parsed.from.name,
     to_addresses: parsed.to,
-    cc_addresses: parsed.cc,
-    reply_to: parsed.replyTo?.email,
-    subject: parsed.subject,
-    body_text: parsed.bodyText,
-    body_html: parsed.bodyHtml,
-    body_preview: parsed.bodyPreview,
     attachments: parsed.attachments,
     has_attachments: parsed.hasAttachments,
     status: direction === "inbound" ? "received" : "sent",
@@ -416,7 +444,55 @@ export function parsedMessageToDbFormat(
     is_read: parsed.flags.includes("\\Seen"),
     is_starred: parsed.flags.includes("\\Flagged"),
     is_deleted: parsed.flags.includes("\\Deleted"),
-    received_at: parsed.date?.toISOString(),
-    sent_at: direction === "outbound" ? parsed.date?.toISOString() : undefined,
   };
+
+  if (parsed.messageId) {
+    payload.message_id = parsed.messageId;
+  }
+
+  const threadId = parsed.references?.[0] || parsed.inReplyTo || parsed.messageId;
+  if (threadId) {
+    payload.thread_id = threadId;
+  }
+
+  if (parsed.inReplyTo) {
+    payload.in_reply_to = parsed.inReplyTo;
+  }
+
+  if (parsed.from.name) {
+    payload.from_name = parsed.from.name;
+  }
+
+  if (parsed.cc && parsed.cc.length > 0) {
+    payload.cc_addresses = parsed.cc;
+  }
+
+  if (parsed.replyTo?.email) {
+    payload.reply_to = parsed.replyTo.email;
+  }
+
+  if (parsed.subject) {
+    payload.subject = parsed.subject;
+  }
+
+  if (parsed.bodyText !== undefined) {
+    payload.body_text = parsed.bodyText;
+  }
+
+  if (parsed.bodyHtml) {
+    payload.body_html = parsed.bodyHtml;
+  }
+
+  if (parsed.bodyPreview !== undefined) {
+    payload.body_preview = parsed.bodyPreview;
+  }
+
+  if (parsed.date) {
+    payload.received_at = parsed.date.toISOString();
+    if (direction === "outbound") {
+      payload.sent_at = parsed.date.toISOString();
+    }
+  }
+
+  return payload;
 }

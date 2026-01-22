@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     
     // Parse request body
     const body = await request.json();
-    const { file_id, content_hash, auth_tag, thumbnail_key } = body;
+    const { file_id, content_hash, thumbnail_key } = body;
     
     if (!file_id || !content_hash) {
       return NextResponse.json(
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
     // Queue AI analysis (async)
     // In production, this would trigger a background job
     // For now, we'll call it inline but not block on it
-    queueAIAnalysis(vault.id, file_id, file.r2_key, file.content_type, file.filename).catch(err => {
+    queueAIAnalysis(vault.id, file_id, file.content_type, file.filename).catch(err => {
       console.error("AI analysis error:", err);
     });
     
@@ -181,7 +181,6 @@ export async function POST(request: NextRequest) {
 async function queueAIAnalysis(
   vaultId: string,
   fileId: string,
-  r2Key: string,
   contentType: string,
   filename: string
 ) {

@@ -41,17 +41,22 @@ export default function LanguageDashboard() {
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
   const loadEntries = async () => {
-    const res = await fetch("/api/company/lexicon");
-    if (!res.ok) {
+    try {
+      const res = await fetch("/api/company/lexicon");
+      if (!res.ok) {
+        setError("Failed to load lexicon");
+        return;
+      }
+      const data = await res.json();
+      setEntries(data.entries || []);
+    } catch {
       setError("Failed to load lexicon");
-      return;
     }
-    const data = await res.json();
-    setEntries(data.entries || []);
   };
 
   useEffect(() => {
-    loadEntries().catch(() => setError("Failed to load lexicon"));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadEntries();
   }, []);
 
   const resetForm = () => {

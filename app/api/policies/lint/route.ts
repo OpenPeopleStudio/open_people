@@ -47,10 +47,15 @@ export async function POST(request: NextRequest) {
 
     // 4. Run lint
     const startTime = Date.now();
-    const lintResult = await lintPolicies(profile.tenant_id, {
-      policyIds: body.policy_ids,
-      includeInactive: body.include_inactive,
-    });
+    const lintOptions: { policyIds?: string[]; includeInactive?: boolean } = {};
+    if (body.policy_ids && body.policy_ids.length > 0) {
+      lintOptions.policyIds = body.policy_ids;
+    }
+    if (body.include_inactive !== undefined) {
+      lintOptions.includeInactive = body.include_inactive;
+    }
+
+    const lintResult = await lintPolicies(profile.tenant_id, lintOptions);
     const durationMs = Date.now() - startTime;
 
     // 5. Store simulation run for auditing

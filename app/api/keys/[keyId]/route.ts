@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { errorResponse, errors } from "@/lib/http/responses";
 import { parseJsonBody } from "@/lib/http/validation";
@@ -9,7 +9,8 @@ import { updateApiKeySchema } from "@/lib/schemas/api-keys";
    Get a specific API key with usage history
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+export async function GET(request: NextRequest, context: any) {
+  void request;
   try {
     const { keyId } = context.params;
     const supabase = await createSupabaseServer();
@@ -61,7 +62,7 @@ export async function GET(request: Request, context: any) {
    Update an API key
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(request: Request, context: any) {
+export async function PATCH(request: NextRequest, context: any) {
   try {
     const { keyId } = context.params;
     const supabase = await createSupabaseServer();
@@ -157,7 +158,8 @@ export async function PATCH(request: Request, context: any) {
    Delete an API key
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(request: NextRequest, context: any) {
+  void request;
   try {
     const { keyId } = context.params;
     const supabase = await createSupabaseServer();

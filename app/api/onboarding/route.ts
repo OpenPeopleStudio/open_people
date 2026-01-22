@@ -1,6 +1,6 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-import type { TenantOnboarding, OnboardingUpdateRequest } from "@/types/onboarding";
+import type { OnboardingUpdateRequest } from "@/types/onboarding";
 import { notifyOnboardingComplete } from "@/lib/notifications/events";
 
 /* ═══════════════════════════════════════════════════════════════════════════

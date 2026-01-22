@@ -17,10 +17,6 @@ function getOpenAIClient() {
       'OPENAI_API_KEY is missing (or empty). Add it to `.env.local` without quotes and restart `npm run dev`.'
     )
   }
-  if (process.env.NODE_ENV !== 'production') {
-    // Safe debug signal: prefix + length only
-    console.log('OpenAI key detected:', { prefix: apiKey.slice(0, 7), len: apiKey.length })
-  }
   return new OpenAI({ apiKey })
 }
 
@@ -98,7 +94,6 @@ async function recognizeProductFromImage(imageUrl: string): Promise<ProductRecog
       return { confidence: 0 }
     }
 
-    console.log('Starting product recognition for:', imageUrl)
     const openai = getOpenAIClient()
     
     const response = await openai.chat.completions.create({
@@ -138,7 +133,6 @@ Be specific and accurate. If unsure, indicate low confidence.`,
       return { confidence: 0 }
     }
 
-    console.log('OpenAI response:', content)
     const parsed = JSON.parse(content)
     
     return {

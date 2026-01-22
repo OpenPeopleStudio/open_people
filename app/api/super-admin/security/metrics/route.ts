@@ -18,6 +18,7 @@ interface SecurityMetrics {
 }
 
 export async function GET(request: NextRequest) {
+  void request;
   try {
     const supabase = await createSupabaseAdmin();
 

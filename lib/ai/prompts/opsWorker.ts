@@ -5,7 +5,7 @@
  * into structured, reviewable task/checklist proposals.
  */
 
-import type { TaskPriority, TaskStatus, ChecklistItem } from "@/types/workflows";
+import type { TaskPriority, TaskStatus } from "@/types/workflows";
 
 // ════════════════════════════════════════════════════════════════════════════
 // DECISION TYPES

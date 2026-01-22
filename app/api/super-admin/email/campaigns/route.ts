@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withAuthAndAuthZ, UserRole } from "@/lib/auth/middleware";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import type {
-  EmailCampaignDraft,
-  EmailCampaignRecipient,
-  CreateCampaignDraftInput,
-} from "@/types/email";
+import type { CreateCampaignDraftInput } from "@/types/email";
 import { mapCampaignRow } from "@/lib/email/campaigns";
 
 const requireSuperAdmin = withAuthAndAuthZ({ role: UserRole.SUPER_ADMIN });

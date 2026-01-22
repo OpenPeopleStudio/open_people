@@ -48,7 +48,7 @@ REQUIRED_VARS=(
 
 MISSING_VARS=()
 for var in "${REQUIRED_VARS[@]}"; do
-    if [ -z "${!var}" ] && ! grep -q "^$var =" wrangler.toml; then
+    if [ -z "${!var}" ] && ! grep -Eq "^${var}[[:space:]]*=[[:space:]]*\"[^\"]+\"" wrangler.toml; then
         MISSING_VARS+=("$var")
     fi
 done

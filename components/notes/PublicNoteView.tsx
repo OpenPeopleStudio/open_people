@@ -10,10 +10,25 @@ import type { Note, NoteComment } from "@/types/notes";
    Renders publicly shared notes with optional commenting functionality.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type PublicNote = Pick<
+  Note,
+  | "id"
+  | "title"
+  | "content"
+  | "format"
+  | "tags"
+  | "metadata"
+  | "is_public"
+  | "allow_comments"
+  | "created_at"
+  | "updated_at"
+> & {
+  category?: { name: string; color: string } | null;
+  comments: NoteComment[];
+};
+
 interface PublicNoteViewProps {
-  note: Note & {
-    comments: NoteComment[];
-  };
+  note: PublicNote;
 }
 
 export function PublicNoteView({ note }: PublicNoteViewProps) {

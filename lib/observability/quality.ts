@@ -7,6 +7,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
+const roundTo = (value: number, decimals = 6): number => Number(value.toFixed(decimals));
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
@@ -158,12 +160,10 @@ export async function computeQualitySlices(
 
   for (const outcome of outcomes) {
     const keyParts: string[] = [];
-    const sliceKey: QualitySliceKey = {};
 
     for (const dim of groupByDimensions) {
       const value = outcome[dim];
       if (value !== null && value !== undefined) {
-        sliceKey[dim] = value;
         keyParts.push(`${dim}:${value}`);
       } else {
         keyParts.push(`${dim}:__null__`);
@@ -182,10 +182,10 @@ export async function computeQualitySlices(
 
   for (const [, sliceOutcomes] of sliceMap) {
     const first = sliceOutcomes[0];
-    const sliceKey: QualitySliceKey = {};
+    const sliceKey: Record<string, string | number> = {};
     for (const dim of groupByDimensions) {
       if (first[dim] !== null && first[dim] !== undefined) {
-        sliceKey[dim as keyof QualitySliceKey] = first[dim];
+        sliceKey[dim] = first[dim] as string | number;
       }
     }
 
@@ -199,7 +199,7 @@ export async function computeQualitySlices(
 
     const avgQualityScore =
       qualityScores.length > 0
-        ? qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length
+        ? roundTo(qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length)
         : null;
     const minQualityScore = qualityScores.length > 0 ? Math.min(...qualityScores) : null;
     const maxQualityScore = qualityScores.length > 0 ? Math.max(...qualityScores) : null;
@@ -240,14 +240,14 @@ export async function computeQualitySlices(
     if (Object.keys(dimScores).length > 0) {
       dimensionAverages = {};
       for (const [dim, scores] of Object.entries(dimScores)) {
-        dimensionAverages[dim] = scores.reduce((a, b) => a + b, 0) / scores.length;
+        dimensionAverages[dim] = roundTo(scores.reduce((a, b) => a + b, 0) / scores.length);
       }
     }
 
     slices.push({
       id: crypto.randomUUID(),
       tenant_id: tenantId,
-      slice_key: sliceKey,
+      slice_key: sliceKey as QualitySliceKey,
       window_start: windowStart.toISOString(),
       window_end: windowEnd.toISOString(),
       sample_count: sampleCount,
@@ -528,26 +528,62 @@ export async function checkDeploymentGates(
 
     if (!applies) continue;
 
-    const result = await evaluateRegressionGate(supabase, tenantId, gate, {
-      promptId: deployment.promptId,
-      promptVersion: deployment.promptVersion,
-      modelName: deployment.modelName,
-      applicationId: deployment.applicationId,
-    });
+    const gateContext: {
+      promptId?: string;
+      promptVersion?: number;
+      modelName?: string;
+      applicationId?: string;
+    } = {};
+    if (deployment.promptId) {
+      gateContext.promptId = deployment.promptId;
+    }
+    if (deployment.promptVersion !== undefined) {
+      gateContext.promptVersion = deployment.promptVersion;
+    }
+    if (deployment.modelName) {
+      gateContext.modelName = deployment.modelName;
+    }
+    if (deployment.applicationId) {
+      gateContext.applicationId = deployment.applicationId;
+    }
+
+    const result = await evaluateRegressionGate(supabase, tenantId, gate, gateContext);
 
     // Record the evaluation
-    await recordGateEvaluation(supabase, {
+    const evaluation = {
       gateId: gate.id,
       evaluationType: deployment.type,
-      targetId: deployment.promptId || deployment.modelName,
-      targetMetadata: {
-        prompt_version: deployment.promptVersion,
-        model_name: deployment.modelName,
-        application_id: deployment.applicationId,
-      },
       result,
-      evaluatedBy: deployment.deployedBy,
-    });
+      ...(deployment.deployedBy ? { evaluatedBy: deployment.deployedBy } : {}),
+    } as {
+      gateId: string;
+      evaluationType: "prompt_deploy" | "model_change";
+      result: GateEvaluationResult;
+      evaluatedBy?: string;
+      targetId?: string;
+      targetMetadata?: Record<string, unknown>;
+    };
+
+    const targetId = deployment.promptId || deployment.modelName;
+    if (targetId) {
+      evaluation.targetId = targetId;
+    }
+
+    const targetMetadata: Record<string, unknown> = {};
+    if (deployment.promptVersion !== undefined) {
+      targetMetadata.prompt_version = deployment.promptVersion;
+    }
+    if (deployment.modelName) {
+      targetMetadata.model_name = deployment.modelName;
+    }
+    if (deployment.applicationId) {
+      targetMetadata.application_id = deployment.applicationId;
+    }
+    if (Object.keys(targetMetadata).length > 0) {
+      evaluation.targetMetadata = targetMetadata;
+    }
+
+    await recordGateEvaluation(supabase, evaluation);
 
     if (result.passed) {
       passedGates.push(result);

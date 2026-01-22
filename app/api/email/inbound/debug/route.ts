@@ -28,6 +28,11 @@ export async function GET(request: NextRequest) {
       .single();
 
     const isSuperAdmin = profile?.role === "super_admin";
+    const isAdmin = ["admin", "owner", "super_admin"].includes(profile?.role || "");
+
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
 
     // Check environment variables
     const envCheck = {

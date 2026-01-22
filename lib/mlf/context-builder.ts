@@ -10,8 +10,6 @@ import type {
   ContextConfig, 
   BuiltContext, 
   ContextSource,
-  KnowledgeFact,
-  KnowledgeChunk,
 } from "@/types/mlf";
 
 const openai = new OpenAI({

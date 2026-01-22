@@ -153,7 +153,9 @@ export async function POST(request: NextRequest) {
       : [];
     if (
       allowedUserAgents.length > 0 &&
-      !allowedUserAgents.some((ua) => userAgent.toLowerCase().includes(ua.toLowerCase()))
+      !allowedUserAgents.some((ua: string) =>
+        userAgent.toLowerCase().includes(ua.toLowerCase())
+      )
     ) {
       return withCors(
         NextResponse.json(
@@ -282,7 +284,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Create file record
-    const { data: fileRecord, error: fileError } = await supabase
+    const { error: fileError } = await supabase
       .from("vault_files")
       .insert({
         id: fileId,

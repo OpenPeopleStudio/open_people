@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Card, Modal, ModalActions, FormField, Input, StatusBadge, LoadingSpinner } from "@/lib/ui";
 import type { NoteCollaborator } from "@/types/notes";
 
@@ -40,15 +40,18 @@ export function NoteSharing({
   onUpdateCollaborator,
   onRemoveCollaborator,
 }: NoteSharingProps) {
+  void noteId;
+  void currentUserId;
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showPublicSettings, setShowPublicSettings] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [invitePermission, setInvitePermission] = useState<"read" | "write">("read");
   const [updating, setUpdating] = useState(false);
 
-  const publicUrl = publicSlug
-    ? `${window.location.origin}/notes/public/${publicSlug}`
-    : null;
+  const publicUrl =
+    typeof window === "undefined" || !publicSlug
+      ? null
+      : `${window.location.origin}/notes/public/${publicSlug}`;
 
   const copyPublicLink = async () => {
     if (publicUrl) {
@@ -73,7 +76,11 @@ export function NoteSharing({
     }
   };
 
-  const handleUpdateSharing = async (updates: any) => {
+  const handleUpdateSharing = async (updates: {
+    isPublic?: boolean;
+    publicSlug?: string;
+    allowComments?: boolean;
+  }) => {
     setUpdating(true);
     try {
       await onUpdateSharing(updates);
@@ -84,12 +91,12 @@ export function NoteSharing({
     }
   };
 
-  const getPermissionColor = (permission: string) => {
+  const getPermissionColor = (permission: string): "error" | "warning" | "info" => {
     switch (permission) {
       case 'admin': return 'error';
       case 'write': return 'warning';
       case 'read': return 'info';
-      default: return 'secondary';
+      default: return 'info';
     }
   };
 
@@ -241,7 +248,7 @@ export function NoteSharing({
                     </StatusBadge>
                   </>
                 ) : (
-                  <StatusBadge status="secondary">Pending</StatusBadge>
+                  <StatusBadge status="pending">Pending</StatusBadge>
                 )}
 
                 <Button

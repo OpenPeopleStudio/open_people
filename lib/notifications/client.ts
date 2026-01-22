@@ -2,7 +2,6 @@ import type {
   SendNotificationRequest,
   SendNotificationResponse,
   InAppNotification,
-  UserNotificationPreference,
   NotificationChannel,
 } from "@/types/notifications";
 
@@ -54,12 +53,15 @@ export async function sendSMS(
     recipientUserId?: string;
   }
 ): Promise<SendNotificationResponse> {
-  return sendNotification({
+  const request: SendNotificationRequest = {
     channel: "sms",
     recipient: phoneNumber,
     body: message,
-    ...options,
-  });
+    ...(options?.recipientUserId ? { recipientUserId: options.recipientUserId } : {}),
+    ...(options?.templateId ? { templateId: options.templateId } : {}),
+    ...(options?.templateVariables ? { templateVariables: options.templateVariables } : {}),
+  };
+  return sendNotification(request);
 }
 
 // Send in-app notification shorthand
@@ -74,19 +76,25 @@ export async function sendInAppNotification(
     templateVariables?: Record<string, string>;
   }
 ): Promise<SendNotificationResponse> {
-  return sendNotification({
+  const metadata: Record<string, string> = {};
+  if (options?.actionUrl) {
+    metadata.action_url = options.actionUrl;
+  }
+  if (options?.icon) {
+    metadata.icon = options.icon;
+  }
+
+  const request: SendNotificationRequest = {
     channel: "in_app",
     recipient: userId,
     recipientUserId: userId,
     subject: title,
     body,
-    metadata: {
-      action_url: options?.actionUrl,
-      icon: options?.icon,
-    },
-    templateId: options?.templateId,
-    templateVariables: options?.templateVariables,
-  });
+    ...(Object.keys(metadata).length > 0 ? { metadata } : {}),
+    ...(options?.templateId ? { templateId: options.templateId } : {}),
+    ...(options?.templateVariables ? { templateVariables: options.templateVariables } : {}),
+  };
+  return sendNotification(request);
 }
 
 // Client-side: Fetch user's inbox

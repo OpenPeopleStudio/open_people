@@ -155,6 +155,11 @@ Built on Supabase Auth with multi-tenant extensions:
 - `is_tenant_admin()` - Check if current user is a tenant admin/owner
 - `current_user_tenant_id()` - Get the tenant ID for the current user
 
+### Auth Events (Login Metrics)
+
+Login metrics are tracked from server-side auth event logs and summarized weekly.
+See `docs/company/login-metrics.md` for definitions, source of truth, and reporting cadence.
+
 ### 3. Tenant Context
 
 Every request within a tenant context carries tenant information:

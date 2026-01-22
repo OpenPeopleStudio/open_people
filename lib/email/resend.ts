@@ -11,7 +11,6 @@ import type {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
-const DEFAULT_FROM_EMAIL = process.env.DEFAULT_FROM_EMAIL || "noreply@openpeople.ai";
 const DEFAULT_FROM_NAME = process.env.DEFAULT_FROM_NAME || "OpenPeople";
 
 // Create Resend client
@@ -55,6 +54,7 @@ export async function sendEmail(
   customDomain?: string
 ): Promise<SendEmailResponse> {
   try {
+    void tenantId;
     const resend = createResendClient();
 
     // Determine sender
@@ -118,11 +118,9 @@ export async function sendEmail(
       };
     }
 
-    return {
-      success: true,
-      emailId: data?.id,
-      resendId: data?.id,
-    };
+    return data?.id
+      ? { success: true, emailId: data.id, resendId: data.id }
+      : { success: true };
   } catch (error) {
     console.error("Send email error:", error);
     return {

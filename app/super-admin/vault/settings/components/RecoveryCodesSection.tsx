@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { formatRecoveryCode } from "@/lib/vault/client-crypto";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Recovery Codes Section

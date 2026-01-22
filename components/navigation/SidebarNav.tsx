@@ -120,6 +120,7 @@ export function SidebarNav({
 
       return () => clearTimeout(timeout);
     }
+    return undefined;
   }, [pathname, sections]);
 
   const isActive = (href: string, exact?: boolean) => {
@@ -164,7 +165,9 @@ export function SidebarNav({
       <div className="h-16 flex items-center justify-between px-4 border-b border-[var(--border-subtle)]">
         <Link
           href={brandHref}
-          onClick={isMobile ? onMobileClose : undefined}
+          {...(isMobile && onMobileClose
+            ? { onClick: () => onMobileClose() }
+            : {})}
           className={`flex items-center gap-2 ${!isMobile && collapsed ? "justify-center" : ""}`}
         >
           <div className="w-8 h-8 rounded-lg bg-[var(--electric-lime)] flex items-center justify-center shrink-0">
@@ -210,7 +213,7 @@ export function SidebarNav({
         )}
         {isMobile && (
           <button
-            onClick={onMobileClose}
+            onClick={() => onMobileClose?.()}
             className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
             aria-label="Close menu"
           >
@@ -266,7 +269,7 @@ export function SidebarNav({
                   isExpanded={expandedItems.has(item.href) || hasActiveChild(item)}
                   onToggle={() => toggleExpanded(item.href)}
                   isItemVisible={isItemVisible}
-                  onLinkClick={isMobile ? onMobileClose : undefined}
+                  {...(isMobile && onMobileClose ? { onLinkClick: onMobileClose } : {})}
                 />
               ))}
             </div>
@@ -303,7 +306,7 @@ export function SidebarNav({
         {/* Backdrop */}
         <div
           className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-          onClick={onMobileClose}
+          onClick={() => onMobileClose?.()}
         />
         {/* Drawer */}
         <aside
@@ -380,7 +383,7 @@ function NavItemComponent({
         <button
           onClick={onToggle}
           className={`w-full ${baseClasses} ${activeClasses}`}
-          title={collapsed ? item.label : undefined}
+          {...(collapsed ? { title: item.label } : {})}
         >
           <svg
             className="w-5 h-5 shrink-0"
@@ -410,9 +413,9 @@ function NavItemComponent({
       ) : (
         <Link
           href={item.href}
-          onClick={onLinkClick}
+          {...(onLinkClick ? { onClick: onLinkClick } : {})}
           className={`${baseClasses} ${activeClasses}`}
-          title={collapsed ? item.label : undefined}
+          {...(collapsed ? { title: item.label } : {})}
         >
           <svg
             className="w-5 h-5 shrink-0"
@@ -441,7 +444,7 @@ function NavItemComponent({
               <Link
                 key={child.href}
                 href={child.href}
-                onClick={onLinkClick}
+                {...(onLinkClick ? { onClick: onLinkClick } : {})}
                 className={`flex items-center gap-2 px-2 py-2 rounded-lg text-sm transition-colors ${
                   childIsActive
                     ? "text-[var(--electric-lime)]"

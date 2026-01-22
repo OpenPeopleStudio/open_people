@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { formatBytes } from "@/types/vault";
-import { encryptFileForUpload, computeHash } from "@/lib/vault/client-crypto";
+import { encryptFileForUpload } from "@/lib/vault/client-crypto";
 import { generateImageThumbnail } from "@/lib/vault/client-thumbnails";
 
 /* ═══════════════════════════════════════════════════════════════════════════

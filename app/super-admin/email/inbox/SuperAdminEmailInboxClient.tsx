@@ -236,7 +236,6 @@ export function SuperAdminEmailInboxClient({
             selectedMessage={selectedMessage}
             onSelectMessage={handleMessageSelect}
             onStar={handleStar}
-            onDelete={handleDelete}
             viewType={currentView}
           />
         </div>

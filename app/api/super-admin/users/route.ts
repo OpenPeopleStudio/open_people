@@ -14,6 +14,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 const handleGetUsers = withAuthAndAuthZ({
   role: UserRole.SUPER_ADMIN, // Only super admins can manage users
 })(async (auth, request: NextRequest) => {
+  void auth;
   const supabase = await createSupabaseServer();
   const { searchParams } = new URL(request.url);
 
@@ -60,13 +61,13 @@ const handleGetUsers = withAuthAndAuthZ({
   }
 
   // Get auth user data for additional fields
-  const userIds = profiles?.map(p => p.id) || [];
   const { data: authUsers } = await supabase.auth.admin.listUsers();
 
   // Merge profile and auth data
   const users = profiles?.map(profile => {
     const authUser = authUsers?.users.find(u => u.id === profile.id);
-    const tenant = profile.tenant;
+    const tenantRecord = profile.tenant as { name?: string } | { name?: string }[] | null;
+    const tenantName = Array.isArray(tenantRecord) ? tenantRecord[0]?.name : tenantRecord?.name;
 
     return {
       id: profile.id,
@@ -74,7 +75,7 @@ const handleGetUsers = withAuthAndAuthZ({
       full_name: profile.full_name,
       role: profile.role,
       tenant_id: profile.tenant_id,
-      tenant_name: Array.isArray(tenant) ? tenant[0]?.name : tenant?.name,
+      tenant_name: tenantName,
       status: authUser?.email_confirmed_at ? 'active' : 'inactive',
       last_sign_in_at: authUser?.last_sign_in_at,
       created_at: profile.created_at,

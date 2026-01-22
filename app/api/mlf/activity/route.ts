@@ -34,14 +34,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(summaryData);
     }
     
-    const activities = await getRecentActivities(supabase, {
-      tenantId: tenantId || undefined,
-      resourceType: resourceType || undefined,
-      resourceId: resourceId || undefined,
-      actionCategory: actionCategory || undefined,
-      limit,
-      offset,
-    });
+    const activityFilters: {
+      tenantId?: string;
+      resourceType?: string;
+      resourceId?: string;
+      actionCategory?: string;
+      limit?: number;
+      offset?: number;
+    } = { limit, offset };
+    if (tenantId) activityFilters.tenantId = tenantId;
+    if (resourceType) activityFilters.resourceType = resourceType;
+    if (resourceId) activityFilters.resourceId = resourceId;
+    if (actionCategory) activityFilters.actionCategory = actionCategory;
+
+    const activities = await getRecentActivities(supabase, activityFilters);
     
     return NextResponse.json({ activities });
     

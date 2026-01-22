@@ -367,7 +367,6 @@ function shouldExclude(
       // Pattern matching would go here
       // For now, simple tag matching
       if (rule.target_pattern.startsWith("tag:")) {
-        const tag = rule.target_pattern.slice(4);
         // Would check if item has this tag
       }
     }

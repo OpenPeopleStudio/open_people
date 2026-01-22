@@ -169,7 +169,7 @@ export async function POST(request: Request) {
     const { email, role } = await request.json()
     const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : ''
 
-    console.log('[Invite User] Starting invite process for:', normalizedEmail, 'with role:', role)
+    console.log('[Invite User] Starting invite process with role:', role)
 
     if (!normalizedEmail) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 })

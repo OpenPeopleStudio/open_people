@@ -5,11 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import {
-  evaluateGatewayRequest,
-  loadGatewayProviders,
-  getProviderConfig,
-} from "@/lib/gateway";
+import { evaluateGatewayRequest } from "@/lib/gateway";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import type { RequestContext } from "@/types/policy";
 import type { ChatMessage } from "@/types/ai-providers";
@@ -103,6 +99,16 @@ const gatewayRequestSchema = z.object({
     .optional(),
 });
 
+function formatValidationIssues(issues: z.ZodIssue[]) {
+  return {
+    issues: issues.map((issue) => ({
+      path: issue.path.join("."),
+      message: issue.message,
+      code: issue.code,
+    })),
+  };
+}
+
 function isAllowedModel(model: string): boolean {
   return (
     EXPLICIT_ALLOWED_MODELS.includes(model) ||
@@ -119,7 +125,7 @@ function decodeProviderApiKey(raw: unknown): string | null {
       : Buffer.isBuffer(raw)
         ? raw.toString("utf8")
         : ArrayBuffer.isView(raw)
-          ? Buffer.from(raw as ArrayBufferView).toString("utf8")
+          ? Buffer.from(raw.buffer, raw.byteOffset, raw.byteLength).toString("utf8")
           : "";
 
   if (!asString) return null;
@@ -220,7 +226,6 @@ async function validateApiKey(
 function buildRequestContext(
   req: NextRequest,
   gatewayReq: GatewayRequest,
-  tenantId: string,
   userId?: string
 ): RequestContext {
   const userMessage = gatewayReq.messages.find((m) => m.role === "user");
@@ -233,18 +238,21 @@ function buildRequestContext(
   );
   const estimatedInputTokens = Math.ceil(totalInputChars / 4);
 
+  const ipAddress =
+    req.headers.get("x-forwarded-for")?.split(",")[0] ||
+    req.headers.get("x-real-ip") ||
+    undefined;
+  const userAgent = req.headers.get("user-agent") || undefined;
+
   return {
     request_id: crypto.randomUUID(),
-    user_id: userId,
     model: gatewayReq.model,
     input_text: inputText,
     input_tokens: estimatedInputTokens,
     timestamp: new Date().toISOString(),
-    ip_address:
-      req.headers.get("x-forwarded-for")?.split(",")[0] ||
-      req.headers.get("x-real-ip") ||
-      undefined,
-    user_agent: req.headers.get("user-agent") || undefined,
+    ...(userId ? { user_id: userId } : {}),
+    ...(ipAddress ? { ip_address: ipAddress } : {}),
+    ...(userAgent ? { user_agent: userAgent } : {}),
     // PII and risk signals would be populated by pre-processing middleware
   };
 }
@@ -355,8 +363,7 @@ export async function POST(req: NextRequest) {
           limit: 120,
           windowMs: 60_000,
         },
-      ],
-      `tenant:${tenantId}`
+      ]
     );
     tenantRateLimitHeaders = getRateLimitHeaders(tenantRateLimit);
 
@@ -379,24 +386,75 @@ export async function POST(req: NextRequest) {
 
     // 3. Parse & validate request body
     let body: GatewayRequest;
+    let rawBody: unknown;
     try {
-      body = gatewayRequestSchema.parse(await req.json());
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return applyRateLimitHeaders(
-          NextResponse.json(
-            {
-              error: {
-                message: "Invalid request payload",
-                details: error.issues?.map((issue) => issue.message),
-                type: "invalid_request_error",
-                code: "invalid_request",
-              },
+      rawBody = await req.json();
+    } catch {
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: "Invalid JSON payload",
+              type: "invalid_request_error",
+              code: "invalid_json",
             },
-            { status: 400 }
-          )
-        );
-      }
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    const parsedBodyResult = gatewayRequestSchema.safeParse(rawBody);
+    if (!parsedBodyResult.success) {
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: "Invalid request payload",
+              details: formatValidationIssues(parsedBodyResult.error.issues),
+              type: "invalid_request_error",
+              code: "invalid_request",
+            },
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    try {
+      const parsedBody = parsedBodyResult.data;
+      const gatewayPayload = parsedBody._gateway
+        ? {
+            ...(parsedBody._gateway.trace !== undefined
+              ? { trace: parsedBody._gateway.trace }
+              : {}),
+            ...(parsedBody._gateway.bypass_cache !== undefined
+              ? { bypass_cache: parsedBody._gateway.bypass_cache }
+              : {}),
+            ...(parsedBody._gateway.force_provider !== undefined
+              ? { force_provider: parsedBody._gateway.force_provider }
+              : {}),
+          }
+        : undefined;
+
+      body = {
+        model: parsedBody.model,
+        messages: parsedBody.messages,
+        ...(parsedBody.max_tokens !== undefined ? { max_tokens: parsedBody.max_tokens } : {}),
+        ...(parsedBody.temperature !== undefined ? { temperature: parsedBody.temperature } : {}),
+        ...(parsedBody.top_p !== undefined ? { top_p: parsedBody.top_p } : {}),
+        ...(parsedBody.frequency_penalty !== undefined
+          ? { frequency_penalty: parsedBody.frequency_penalty }
+          : {}),
+        ...(parsedBody.presence_penalty !== undefined
+          ? { presence_penalty: parsedBody.presence_penalty }
+          : {}),
+        ...(parsedBody.stop !== undefined ? { stop: parsedBody.stop } : {}),
+        ...(parsedBody.stream !== undefined ? { stream: parsedBody.stream } : {}),
+        ...(parsedBody.user !== undefined ? { user: parsedBody.user } : {}),
+        ...(gatewayPayload ? { _gateway: gatewayPayload } : {}),
+      };
+    } catch (error) {
       throw error;
     }
     requestedModel = body.model;
@@ -409,6 +467,21 @@ export async function POST(req: NextRequest) {
               message: "Requested model is not allowed",
               type: "invalid_request_error",
               code: "model_not_allowed",
+            },
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    if (body.stream === true) {
+      return applyRateLimitHeaders(
+        NextResponse.json(
+          {
+            error: {
+              message: "Streaming is not supported for this endpoint.",
+              type: "invalid_request_error",
+              code: "stream_not_supported",
             },
           },
           { status: 400 }
@@ -438,19 +511,35 @@ export async function POST(req: NextRequest) {
 
     const normalizedMaxTokens = Math.min(body.max_tokens ?? 2048, MAX_TOKENS);
     const normalizedBody: GatewayRequest = {
-      ...body,
+      model: body.model,
+      messages: body.messages,
       max_tokens: normalizedMaxTokens,
+      ...(body.temperature !== undefined ? { temperature: body.temperature } : {}),
+      ...(body.top_p !== undefined ? { top_p: body.top_p } : {}),
+      ...(body.frequency_penalty !== undefined
+        ? { frequency_penalty: body.frequency_penalty }
+        : {}),
+      ...(body.presence_penalty !== undefined
+        ? { presence_penalty: body.presence_penalty }
+        : {}),
+      ...(body.stop !== undefined ? { stop: body.stop } : {}),
+      ...(body.stream !== undefined ? { stream: body.stream } : {}),
+      ...(body.user !== undefined ? { user: body.user } : {}),
+      ...(body._gateway !== undefined ? { _gateway: body._gateway } : {}),
     };
 
     // 4. Build request context
-    const context = buildRequestContext(req, normalizedBody, tenantId, authResult.userId);
+    const context = buildRequestContext(req, normalizedBody, authResult.userId);
     requestId = context.request_id!;
 
     // 5. Evaluate gateway policies and routing
-    const gatewayResult = await evaluateGatewayRequest(tenantId, context, {
-      includeBudget: true,
-      includeTrace: normalizedBody._gateway?.trace,
-    });
+    const includeTrace = normalizedBody._gateway?.trace;
+    const gatewayOptions =
+      includeTrace === undefined
+        ? { includeBudget: true }
+        : { includeBudget: true, includeTrace };
+
+    const gatewayResult = await evaluateGatewayRequest(tenantId, context, gatewayOptions);
 
     // 6. Check policy decision
     if (gatewayResult.policy_decision === "deny") {
@@ -557,18 +646,28 @@ export async function POST(req: NextRequest) {
     }
 
     // 9. Make the actual API call
-    const completion = await client.chat.completions.create({
-      model: actualModel,
-      messages: messages,
-      temperature:
-        gatewayResult.routing.modified_request?.temperature ?? normalizedBody.temperature,
-      max_tokens: normalizedBody.max_tokens,
-      top_p: normalizedBody.top_p,
-      frequency_penalty: normalizedBody.frequency_penalty,
-      presence_penalty: normalizedBody.presence_penalty,
-      stop: normalizedBody.stop,
-      stream: normalizedBody.stream ?? false,
-    });
+    const completionRequest: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming =
+      {
+        model: actualModel,
+        messages: messages,
+        stream: false,
+        max_tokens: normalizedMaxTokens,
+        ...(gatewayResult.routing.modified_request?.temperature !== undefined
+          ? { temperature: gatewayResult.routing.modified_request.temperature }
+          : normalizedBody.temperature !== undefined
+            ? { temperature: normalizedBody.temperature }
+            : {}),
+        ...(normalizedBody.top_p !== undefined ? { top_p: normalizedBody.top_p } : {}),
+        ...(normalizedBody.frequency_penalty !== undefined
+          ? { frequency_penalty: normalizedBody.frequency_penalty }
+          : {}),
+        ...(normalizedBody.presence_penalty !== undefined
+          ? { presence_penalty: normalizedBody.presence_penalty }
+          : {}),
+        ...(normalizedBody.stop !== undefined ? { stop: normalizedBody.stop } : {}),
+      };
+
+    const completion = await client.chat.completions.create(completionRequest);
 
     const latencyMs = Date.now() - startTime;
 
@@ -582,10 +681,12 @@ export async function POST(req: NextRequest) {
       actual_model: actualModel,
       failover_occurred: providerId !== body._gateway?.force_provider && actualModel !== body.model,
       failover_attempts: 0,
-      input_tokens: usage?.prompt_tokens,
-      output_tokens: usage?.completion_tokens,
       latency_ms: latencyMs,
       status: "success",
+      ...(usage?.prompt_tokens !== undefined ? { input_tokens: usage.prompt_tokens } : {}),
+      ...(usage?.completion_tokens !== undefined
+        ? { output_tokens: usage.completion_tokens }
+        : {}),
     });
 
     // 10. Return response with gateway metadata

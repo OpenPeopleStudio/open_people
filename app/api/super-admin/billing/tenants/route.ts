@@ -4,13 +4,14 @@
  * Provides tenant billing information for the billing management interface.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { withAuthAndAuthZ, UserRole } from "@/lib/auth/middleware";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 const handleGetTenants = withAuthAndAuthZ({
   role: UserRole.SUPER_ADMIN, // Only super admins can access billing
 })(async (auth) => {
+  void auth;
   const supabase = await createSupabaseServer();
 
   // Get all tenants with their billing information

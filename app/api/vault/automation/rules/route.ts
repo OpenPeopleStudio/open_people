@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { validateRule } from "@/lib/vault/automation";
+import { errors } from "@/lib/http/responses";
+import { parseJsonBody } from "@/lib/http/validation";
+import {
+  vaultAutomationRuleCreateSchema,
+  vaultAutomationRuleDeleteSchema,
+  vaultAutomationRuleUpdateSchema,
+} from "@/lib/schemas/vault-automation";
 import type { VaultAutomationRule } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -20,13 +27,13 @@ export async function GET(request: NextRequest) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized("Unauthorized");
     }
     
     // Verify session
     const sessionId = request.headers.get("x-vault-session");
     if (!sessionId) {
-      return NextResponse.json({ error: "Vault session required" }, { status: 401 });
+      return errors.unauthorized("Vault session required");
     }
     
     const { data: session } = await supabase
@@ -36,7 +43,7 @@ export async function GET(request: NextRequest) {
       .single();
     
     if (!session || !session.is_active || new Date(session.expires_at) < new Date()) {
-      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 });
+      return errors.unauthorized("Invalid or expired session");
     }
     
     // Get rules
@@ -48,14 +55,14 @@ export async function GET(request: NextRequest) {
     
     if (rulesError) {
       console.error("Failed to fetch rules:", rulesError);
-      return NextResponse.json({ error: "Failed to fetch rules" }, { status: 500 });
+      return errors.serverError("Failed to fetch rules");
     }
     
     return NextResponse.json({ rules: rules || [] });
     
   } catch (error) {
     console.error("Rules fetch error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError("Internal server error");
   }
 }
 
@@ -70,13 +77,13 @@ export async function POST(request: NextRequest) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized("Unauthorized");
     }
     
     // Verify session
     const sessionId = request.headers.get("x-vault-session");
     if (!sessionId) {
-      return NextResponse.json({ error: "Vault session required" }, { status: 401 });
+      return errors.unauthorized("Vault session required");
     }
     
     const { data: session } = await supabase
@@ -86,11 +93,15 @@ export async function POST(request: NextRequest) {
       .single();
     
     if (!session || !session.is_active || new Date(session.expires_at) < new Date()) {
-      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 });
+      return errors.unauthorized("Invalid or expired session");
     }
     
     // Parse body
-    const body = await request.json();
+    const bodyResult = await parseJsonBody(request, vaultAutomationRuleCreateSchema);
+    if ("error" in bodyResult) {
+      return bodyResult.error;
+    }
+    const body = bodyResult.data;
     const {
       name,
       description,
@@ -110,15 +121,18 @@ export async function POST(request: NextRequest) {
     } = body as Partial<VaultAutomationRule> & { name: string };
     
     // Validate
-    const errors = validateRule({
+    const validationInput: Partial<VaultAutomationRule> = {
       name,
-      email_from_pattern,
-      email_from_exact,
-      email_subject_pattern,
-      email_subject_contains,
-    });
-    if (errors.length > 0) {
-      return NextResponse.json({ error: errors.join(", ") }, { status: 400 });
+      ...(email_from_pattern !== undefined ? { email_from_pattern } : {}),
+      ...(email_from_exact !== undefined ? { email_from_exact } : {}),
+      ...(email_subject_pattern !== undefined ? { email_subject_pattern } : {}),
+      ...(email_subject_contains !== undefined ? { email_subject_contains } : {}),
+    };
+    const validationErrors = validateRule(validationInput);
+    if (validationErrors.length > 0) {
+      return errors.unprocessableEntity("Invalid automation rule", {
+        issues: validationErrors.map((message) => ({ message })),
+      });
     }
     
     // Create rule
@@ -148,7 +162,7 @@ export async function POST(request: NextRequest) {
     
     if (createError) {
       console.error("Failed to create rule:", createError);
-      return NextResponse.json({ error: "Failed to create rule" }, { status: 500 });
+      return errors.serverError("Failed to create rule");
     }
     
     // Log action
@@ -168,7 +182,7 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error("Rule create error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError("Internal server error");
   }
 }
 
@@ -183,13 +197,13 @@ export async function PATCH(request: NextRequest) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized("Unauthorized");
     }
     
     // Verify session
     const sessionId = request.headers.get("x-vault-session");
     if (!sessionId) {
-      return NextResponse.json({ error: "Vault session required" }, { status: 401 });
+      return errors.unauthorized("Vault session required");
     }
     
     const { data: session } = await supabase
@@ -199,16 +213,15 @@ export async function PATCH(request: NextRequest) {
       .single();
     
     if (!session || !session.is_active || new Date(session.expires_at) < new Date()) {
-      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 });
+      return errors.unauthorized("Invalid or expired session");
     }
     
     // Parse body
-    const body = await request.json();
-    const { rule_id, ...updates } = body;
-    
-    if (!rule_id) {
-      return NextResponse.json({ error: "rule_id is required" }, { status: 400 });
+    const bodyResult = await parseJsonBody(request, vaultAutomationRuleUpdateSchema);
+    if ("error" in bodyResult) {
+      return bodyResult.error;
     }
+    const { rule_id, ...updates } = bodyResult.data;
     
     // Update rule
     const { data: rule, error: updateError } = await supabase
@@ -224,14 +237,14 @@ export async function PATCH(request: NextRequest) {
     
     if (updateError) {
       console.error("Failed to update rule:", updateError);
-      return NextResponse.json({ error: "Failed to update rule" }, { status: 500 });
+      return errors.serverError("Failed to update rule");
     }
     
     return NextResponse.json({ rule });
     
   } catch (error) {
     console.error("Rule update error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError("Internal server error");
   }
 }
 
@@ -246,13 +259,13 @@ export async function DELETE(request: NextRequest) {
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized("Unauthorized");
     }
     
     // Verify session
     const sessionId = request.headers.get("x-vault-session");
     if (!sessionId) {
-      return NextResponse.json({ error: "Vault session required" }, { status: 401 });
+      return errors.unauthorized("Vault session required");
     }
     
     const { data: session } = await supabase
@@ -262,16 +275,15 @@ export async function DELETE(request: NextRequest) {
       .single();
     
     if (!session || !session.is_active || new Date(session.expires_at) < new Date()) {
-      return NextResponse.json({ error: "Invalid or expired session" }, { status: 401 });
+      return errors.unauthorized("Invalid or expired session");
     }
     
     // Parse body
-    const body = await request.json();
-    const { rule_id } = body;
-    
-    if (!rule_id) {
-      return NextResponse.json({ error: "rule_id is required" }, { status: 400 });
+    const bodyResult = await parseJsonBody(request, vaultAutomationRuleDeleteSchema);
+    if ("error" in bodyResult) {
+      return bodyResult.error;
     }
+    const { rule_id } = bodyResult.data;
     
     // Delete rule
     const { error: deleteError } = await supabase
@@ -282,7 +294,7 @@ export async function DELETE(request: NextRequest) {
     
     if (deleteError) {
       console.error("Failed to delete rule:", deleteError);
-      return NextResponse.json({ error: "Failed to delete rule" }, { status: 500 });
+      return errors.serverError("Failed to delete rule");
     }
     
     // Log action
@@ -301,6 +313,6 @@ export async function DELETE(request: NextRequest) {
     
   } catch (error) {
     console.error("Rule delete error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errors.serverError("Internal server error");
   }
 }

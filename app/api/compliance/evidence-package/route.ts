@@ -10,7 +10,6 @@ import {
   generateControlEvidence,
 } from "@/lib/compliance/evidence-collector";
 import {
-  getEvidencePacksByFramework,
   EVIDENCE_PACK_COLLECTIONS,
   type ComplianceFramework,
 } from "@/lib/compliance/evidence-packs";

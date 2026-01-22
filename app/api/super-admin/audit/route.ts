@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
       .select("role")
       .eq("id", user.id)
       .single();
+    void profile;
 
     // For now, allow access - in production you'd check for super admin role
     // if (!profile || profile.role !== 'super_admin') {
@@ -37,41 +38,18 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = (page - 1) * limit;
 
-    // Build filters
-    const filters: any = {};
-
-    if (searchParams.get('action')) {
-      filters.action = searchParams.get('action');
-    }
-
-    if (searchParams.get('resource_type')) {
-      filters.resource_type = searchParams.get('resource_type');
-    }
-
-    if (searchParams.get('user_id')) {
-      filters.performed_by = searchParams.get('user_id');
-    }
-
-    if (searchParams.get('vault_id')) {
-      filters.vault_id = searchParams.get('vault_id');
-    }
-
-    if (searchParams.get('success')) {
-      filters.success = searchParams.get('success') === 'true';
-    }
-
-    if (searchParams.get('date_from')) {
-      filters.created_at = { gte: new Date(searchParams.get('date_from')!).toISOString() };
-    }
-
-    if (searchParams.get('date_to')) {
-      const dateTo = new Date(searchParams.get('date_to')!);
-      dateTo.setHours(23, 59, 59, 999); // End of day
-      filters.created_at = {
-        ...filters.created_at,
-        lte: dateTo.toISOString()
-      };
-    }
+    const action = searchParams.get('action') || undefined;
+    const resourceType = searchParams.get('resource_type') || undefined;
+    const userId = searchParams.get('user_id') || undefined;
+    const vaultId = searchParams.get('vault_id') || undefined;
+    const successParam = searchParams.get('success');
+    const dateFromParam = searchParams.get('date_from');
+    const dateToParam = searchParams.get('date_to');
+    const success = successParam ? successParam === 'true' : undefined;
+    const dateFrom = dateFromParam ? new Date(dateFromParam).toISOString() : undefined;
+    const dateTo = dateToParam
+      ? new Date(new Date(dateToParam).setHours(23, 59, 59, 999)).toISOString()
+      : undefined;
 
     // Query audit logs with joins for user emails and vault names
     let query = supabase
@@ -85,14 +63,13 @@ export async function GET(request: NextRequest) {
       .range(offset, offset + limit - 1);
 
     // Apply filters
-    Object.entries(filters).forEach(([key, value]) => {
-      if (key === 'created_at' && typeof value === 'object') {
-        if (value.gte) query = query.gte('created_at', value.gte);
-        if (value.lte) query = query.lte('created_at', value.lte);
-      } else {
-        query = query.eq(key, value);
-      }
-    });
+    if (action) query = query.eq('action', action);
+    if (resourceType) query = query.eq('resource_type', resourceType);
+    if (userId) query = query.eq('performed_by', userId);
+    if (vaultId) query = query.eq('vault_id', vaultId);
+    if (success !== undefined) query = query.eq('success', success);
+    if (dateFrom) query = query.gte('created_at', dateFrom);
+    if (dateTo) query = query.lte('created_at', dateTo);
 
     const { data: entries, error: entriesError } = await query;
 

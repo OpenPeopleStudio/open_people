@@ -17,12 +17,10 @@ export function AccountsManager({ accounts, onAccountsChange, tenantId, isSuperA
   const [testing, setTesting] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ id: string; success: boolean; error?: string } | null>(null);
   const [managedDomains, setManagedDomains] = useState<ManagedEmailDomain[]>([]);
-  const [loadingDomains, setLoadingDomains] = useState(false);
 
   // Load managed domains
   useEffect(() => {
     async function loadDomains() {
-      setLoadingDomains(true);
       try {
         const res = await fetch("/api/email/domains/managed");
         const data = await res.json();
@@ -32,7 +30,7 @@ export function AccountsManager({ accounts, onAccountsChange, tenantId, isSuperA
       } catch (error) {
         console.error("Failed to load managed domains:", error);
       } finally {
-        setLoadingDomains(false);
+        // no-op
       }
     }
     loadDomains();
@@ -86,11 +84,14 @@ export function AccountsManager({ accounts, onAccountsChange, tenantId, isSuperA
       });
 
       const data = await res.json();
-      setTestResult({
+      const nextResult: { id: string; success: boolean; error?: string } = {
         id: accountId,
-        success: data.success,
-        error: data.error,
-      });
+        success: Boolean(data.success),
+      };
+      if (data.error) {
+        nextResult.error = data.error;
+      }
+      setTestResult(nextResult);
     } catch (error) {
       setTestResult({
         id: accountId,
@@ -130,10 +131,6 @@ export function AccountsManager({ accounts, onAccountsChange, tenantId, isSuperA
       case "smtp_imap": return "SMTP + IMAP";
       default: return provider;
     }
-  };
-
-  const getModeLabel = (mode?: EmailAccountMode) => {
-    return mode === "managed" ? "DNS-only" : "Custom";
   };
 
   // Get the managed domain for an account
@@ -301,7 +298,7 @@ export function AccountsManager({ accounts, onAccountsChange, tenantId, isSuperA
             setShowAddModal(false);
             setEditingAccount(null);
           }}
-          tenantId={tenantId}
+          {...(tenantId ? { tenantId } : {})}
           isSuperAdmin={isSuperAdmin}
         />
       )}
@@ -351,7 +348,6 @@ function AccountModal({
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [createdDomain, setCreatedDomain] = useState<ManagedEmailDomain | null>(null);
   
   // For super-admin tenant selection
   const [tenants, setTenants] = useState<TenantOption[]>([]);
@@ -443,7 +439,6 @@ function AccountModal({
               const existingData = await existingRes.json();
               if (existingData.domains?.length > 0) {
                 managedDomainId = existingData.domains[0].id;
-                setCreatedDomain(existingData.domains[0]);
               }
             }
           } else {
@@ -451,23 +446,23 @@ function AccountModal({
             return;
           }
         } else {
-          setCreatedDomain(domainData.domain);
           managedDomainId = domainData.domain?.id;
         }
       }
 
       const method = account ? "PUT" : "POST";
       // Include tenant_id for new accounts when super admin
-      const body = account 
-        ? { id: account.id, ...form } 
-        : { 
-            ...form, 
-            tenant_id: effectiveTenantId,
-            managed_domain_id: managedDomainId,
+      const body = account
+        ? { id: account.id, ...form }
+        : {
+            ...form,
+            ...(effectiveTenantId !== undefined ? { tenant_id: effectiveTenantId } : {}),
+            ...(managedDomainId !== undefined ? { managed_domain_id: managedDomainId } : {}),
             // For managed mode, set provider to "managed"
             provider: form.mode === "managed" ? "managed" : form.provider,
-            // Include resend_domain for Resend provider
-            resend_domain: form.provider === "resend" ? form.resend_domain : undefined,
+            ...(form.provider === "resend" && form.resend_domain
+              ? { resend_domain: form.resend_domain }
+              : {}),
           };
 
       const res = await fetch("/api/email/accounts", {

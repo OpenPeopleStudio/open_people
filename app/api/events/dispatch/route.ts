@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  void request;
   // Simple health check / status endpoint
   return NextResponse.json({
     status: "ok",

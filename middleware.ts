@@ -89,6 +89,7 @@ async function loggingMiddleware(request: NextRequest) {
     // Process the request
     const { response, user } = await updateSession(request);
     const { pathname } = new URL(request.url);
+    const hasAuthorizationHeader = Boolean(request.headers.get("authorization"));
 
     let finalResponse = response;
 
@@ -114,12 +115,12 @@ async function loggingMiddleware(request: NextRequest) {
           response.headers.set(key, value);
         });
 
-        if (!isPublicApiPath(pathname) && !user) {
+        if (!isPublicApiPath(pathname) && !user && !hasAuthorizationHeader) {
           finalResponse = NextResponse.json(
             { error: "Authentication required" },
             { status: 401 }
           );
-        } else if (isMutatingMethod(request.method) && !passesCsrfCheck(request)) {
+        } else if (isMutatingMethod(request.method) && !hasAuthorizationHeader && !passesCsrfCheck(request)) {
           finalResponse = NextResponse.json(
             { error: "CSRF validation failed" },
             { status: 403 }
@@ -136,34 +137,33 @@ async function loggingMiddleware(request: NextRequest) {
     const duration = Date.now() - startTime;
     const statusCode = finalResponse.status;
 
-    logRequest(
-      request.method,
-      request.url,
-      statusCode,
-      duration,
-      {
-        ip: request.headers.get('x-forwarded-for') ||
-            request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
-      }
-    );
+    const ipHeader = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip');
+    const userAgentHeader = request.headers.get('user-agent');
+    const logContext: { ip?: string; userAgent?: string } = {};
+    if (ipHeader) {
+      logContext.ip = ipHeader;
+    }
+    if (userAgentHeader) {
+      logContext.userAgent = userAgentHeader;
+    }
+    logRequest(request.method, request.url, statusCode, duration, logContext);
 
     return finalResponse;
   } catch (error) {
     // Log errors
     const duration = Date.now() - startTime;
-    logRequest(
-      request.method,
-      request.url,
-      500,
-      duration,
-      {
-        error: error as Error,
-        ip: request.headers.get('x-forwarded-for') ||
-            request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
-      }
-    );
+    const ipHeader = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip');
+    const userAgentHeader = request.headers.get('user-agent');
+    const errorContext: { error: Error; ip?: string; userAgent?: string } = {
+      error: error as Error,
+    };
+    if (ipHeader) {
+      errorContext.ip = ipHeader;
+    }
+    if (userAgentHeader) {
+      errorContext.userAgent = userAgentHeader;
+    }
+    logRequest(request.method, request.url, 500, duration, errorContext);
 
     throw error;
   }

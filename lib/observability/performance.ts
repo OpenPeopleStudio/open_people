@@ -97,8 +97,8 @@ export class PerformanceMonitor {
       name,
       value,
       unit,
-      tags,
       timestamp: Date.now(),
+      ...(tags ? { tags } : {}),
     };
 
     this.metrics.push(metric);
@@ -274,6 +274,7 @@ export function withDatabaseMonitoring<T extends any[], R>(
   fn: (...args: T) => Promise<R>
 ) {
   return async (...args: T): Promise<R> => {
+    void operation;
     const startTime = Date.now();
     let queryCount = 0;
 

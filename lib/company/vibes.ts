@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getEncoding } from "tiktoken";
+import { get_encoding } from "tiktoken";
 
 const TOKENS_PER_VIBE = 1_000_000;
 const BASE_DELTA_CAP = 5;
@@ -20,7 +20,7 @@ export function estimateTokens(text: string): number {
   const trimmed = text.trim();
   if (!trimmed) return 0;
   try {
-    const encoding = getEncoding(ENCODING_NAME);
+    const encoding = get_encoding(ENCODING_NAME);
     const tokens = encoding.encode(trimmed);
     return Math.max(1, tokens.length);
   } catch {

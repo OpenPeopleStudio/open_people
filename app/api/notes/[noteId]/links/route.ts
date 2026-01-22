@@ -7,6 +7,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function GET(request: Request, context: any) {
+  void request;
   try {
     const { noteId } = context.params;
     const supabase = await createSupabaseServer();
@@ -55,6 +56,7 @@ export async function GET(request: Request, context: any) {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function POST(request: Request, context: any) {
+  void request;
   try {
     const { noteId } = context.params;
     const supabase = await createSupabaseServer();

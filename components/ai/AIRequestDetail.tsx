@@ -115,12 +115,7 @@ export type AIRequestData = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function AIRequestDetail({ data }: { data: AIRequestData }) {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [showFullTrace, setShowFullTrace] = useState(false);
-
-  const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section);
-  };
 
   const formatTimestamp = (ts: string) => {
     return new Date(ts).toLocaleTimeString("en-US", {

@@ -8,7 +8,7 @@ import type { CreateUploadTokenRequest } from "@/types/quick-share";
    List upload tokens for the current user's vault
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
     

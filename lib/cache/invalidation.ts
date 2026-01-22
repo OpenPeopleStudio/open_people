@@ -149,13 +149,13 @@ export async function onKnowledgeBaseUpdated(
   tenantId: string,
   kbId?: string
 ): Promise<InvalidationResult> {
+  const scope = {
+    tenant_id: tenantId,
+    all: !kbId,
+    ...(kbId ? { kb_id: kbId } : {}),
+  };
   return invalidateCache(
-    {
-      tenant_id: tenantId,
-      kb_id: kbId,
-      // If no specific KB, invalidate all KB-dependent entries
-      all: !kbId,
-    },
+    scope,
     "kb_update"
   );
 }

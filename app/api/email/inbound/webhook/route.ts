@@ -1,7 +1,6 @@
-import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { simpleParser } from "mailparser";
-import type { EmailAddress, EmailAttachmentMeta } from "@/types/email";
+import type { EmailAttachmentMeta } from "@/types/email";
 import { createResendClient } from "@/lib/email/resend";
 import { emailWorkspace } from "@/lib/email/workspace";
 
@@ -27,19 +26,6 @@ export async function POST(request: NextRequest) {
   console.log(`[Inbound Webhook ${requestId}] ═══════════════════════════════════════`);
   console.log(`[Inbound Webhook ${requestId}] Received request at ${timestamp}`);
   console.log(`[Inbound Webhook ${requestId}] Method: ${request.method}`);
-  console.log(`[Inbound Webhook ${requestId}] URL: ${request.url}`);
-  
-  // Log all headers for debugging
-  const headers: Record<string, string> = {};
-  request.headers.forEach((value, key) => {
-    // Redact sensitive values
-    if (key.toLowerCase().includes("secret") || key.toLowerCase().includes("auth")) {
-      headers[key] = "[REDACTED]";
-    } else {
-      headers[key] = value;
-    }
-  });
-  console.log(`[Inbound Webhook ${requestId}] Headers:`, JSON.stringify(headers, null, 2));
   
   try {
     // Verify webhook signature if configured
@@ -93,7 +79,6 @@ export async function POST(request: NextRequest) {
 
       const body = JSON.parse(payload);
       console.log(`[Inbound Webhook ${requestId}] JSON payload type: ${body.type || "unknown"}`);
-      console.log(`[Inbound Webhook ${requestId}] JSON payload:`, JSON.stringify(body, null, 2).substring(0, 1000));
       emailData = parseJsonPayload(body);
     } else if (contentType.includes("multipart/form-data")) {
       // Form data payload (e.g., forwarded email)
@@ -102,23 +87,29 @@ export async function POST(request: NextRequest) {
     } else if (contentType.includes("message/rfc822") || contentType.includes("text/plain")) {
       // Raw email payload
       const rawEmail = await request.text();
-      console.log(`[Inbound Webhook ${requestId}] Raw email (first 500 chars):`, rawEmail.substring(0, 500));
       emailData = await parseRawEmail(rawEmail);
     } else {
       console.log(`[Inbound Webhook ${requestId}] Unsupported content type: ${contentType}`);
       return NextResponse.json({ error: "Unsupported content type", requestId }, { status: 400 });
     }
 
-    console.log(`[Inbound Webhook ${requestId}] Parsed email:`, { 
-      from: emailData.from, 
-      to: emailData.to, 
-      subject: emailData.subject,
-      messageId: emailData.messageId,
-      resendEmailId: emailData.resendEmailId,
+    console.log(`[Inbound Webhook ${requestId}] Parsed email summary:`, { 
+      hasFrom: Boolean(emailData.from),
+      toCount: Array.isArray(emailData.to) ? emailData.to.length : 1,
+      hasSubject: Boolean(emailData.subject),
+      hasMessageId: Boolean(emailData.messageId),
+      hasResendEmailId: Boolean(emailData.resendEmailId),
     });
 
-    if (!emailData.to || !emailData.from) {
-      console.log(`[Inbound Webhook ${requestId}] Missing required fields - from: ${emailData.from}, to: ${emailData.to}`);
+    const normalizedFrom = parseAddressString(emailData.from).email;
+    const normalizedTo = normalizeAddressList(
+      Array.isArray(emailData.to) ? emailData.to : [emailData.to]
+    );
+
+    if (!normalizedFrom || normalizedTo.length === 0) {
+      console.log(
+        `[Inbound Webhook ${requestId}] Missing required fields - from: ${emailData.from}, to: ${emailData.to}`
+      );
       return NextResponse.json({ error: "Missing required fields", requestId }, { status: 400 });
     }
 
@@ -148,18 +139,22 @@ export async function POST(request: NextRequest) {
     const webhookPayload = {
       type: contentType.includes("application/json") ? "email.received" : "email.raw",
       data: {
-        email_id: emailData.resendEmailId,
-        message_id: emailData.messageId,
+        ...(emailData.resendEmailId ? { email_id: emailData.resendEmailId } : {}),
+        ...(emailData.messageId ? { message_id: emailData.messageId } : {}),
         from: emailData.fromName ? `${emailData.fromName} <${emailData.from}>` : emailData.from,
         to: Array.isArray(emailData.to) ? emailData.to : [emailData.to],
-        cc: emailData.cc,
-        subject: emailData.subject,
-        text: emailData.text,
-        html: emailData.html,
+        ...(emailData.cc && emailData.cc.length > 0 ? { cc: emailData.cc } : {}),
+        ...(emailData.subject ? { subject: emailData.subject } : {}),
+        ...(emailData.text ? { text: emailData.text } : {}),
+        ...(emailData.html ? { html: emailData.html } : {}),
         created_at: emailData.date?.toISOString() || new Date().toISOString(),
-        attachments: emailData.attachments,
-        in_reply_to: emailData.inReplyTo,
-        references: emailData.references,
+        ...(emailData.attachments && emailData.attachments.length > 0
+          ? { attachments: emailData.attachments }
+          : {}),
+        ...(emailData.inReplyTo ? { in_reply_to: emailData.inReplyTo } : {}),
+        ...(emailData.references && emailData.references.length > 0
+          ? { references: emailData.references }
+          : {}),
       },
     };
 
@@ -233,44 +228,95 @@ function parseJsonPayload(body: any): InboundEmailData {
   if (body.type === "email.received" && body.data) {
     const data = body.data;
     const fromParsed = parseAddressString(data.from);
-    return {
-      resendEmailId: data.email_id,
-      messageId: data.message_id,
+    const toList = (data.to || []).map((t: any) =>
+      typeof t === "string" ? t : t.address || t.email || ""
+    );
+    const ccList = (data.cc || []).map((c: any) =>
+      typeof c === "string" ? c : c.address || c.email || ""
+    );
+    const attachments = data.attachments?.map((a: any) => ({
+      filename: a.filename || a.name,
+      content_type: a.content_type || a.type,
+      size: a.size,
+    }));
+
+    const parsed: InboundEmailData = {
+      ...(data.email_id ? { resendEmailId: data.email_id } : {}),
+      ...(data.message_id ? { messageId: data.message_id } : {}),
       from: fromParsed.email || (data.from?.address || data.from || ""),
-      fromName: fromParsed.name || data.from?.name,
-      to: (data.to || []).map((t: any) => (typeof t === "string" ? t : t.address || t.email || "")),
-      cc: (data.cc || []).map((c: any) => (typeof c === "string" ? c : c.address || c.email || "")),
-      subject: data.subject,
-      // NOTE: Resend webhooks omit text/html; fetch via receiving API using email_id
-      text: data.text,
-      html: data.html,
-      date: data.date ? new Date(data.date) : undefined,
-      inReplyTo: data.in_reply_to,
-      references: data.references,
-      attachments: data.attachments?.map((a: any) => ({
-        filename: a.filename || a.name,
-        content_type: a.content_type || a.type,
-        size: a.size,
-      })),
+      to: toList,
     };
+    const fromName = fromParsed.name || data.from?.name;
+    if (fromName) {
+      parsed.fromName = fromName;
+    }
+    if (ccList.length > 0) {
+      parsed.cc = ccList;
+    }
+    if (data.subject) {
+      parsed.subject = data.subject;
+    }
+    if (data.text) {
+      parsed.text = data.text;
+    }
+    if (data.html) {
+      parsed.html = data.html;
+    }
+    if (data.date) {
+      parsed.date = new Date(data.date);
+    }
+    if (data.in_reply_to) {
+      parsed.inReplyTo = data.in_reply_to;
+    }
+    if (data.references) {
+      parsed.references = data.references;
+    }
+    if (attachments?.length) {
+      parsed.attachments = attachments;
+    }
+    return parsed;
   }
 
   // Generic JSON format
   const fromParsed = parseAddressString(body.from);
-  return {
-    messageId: body.message_id || body.messageId,
+  const generic: InboundEmailData = {
+    ...(body.message_id || body.messageId ? { messageId: body.message_id || body.messageId } : {}),
     from: fromParsed.email || body.from?.address || body.from,
-    fromName: fromParsed.name || body.from?.name || body.fromName,
     to: body.to,
-    cc: Array.isArray(body.cc) ? body.cc : body.cc ? [body.cc] : undefined,
-    subject: body.subject,
-    text: body.text || body.body_text,
-    html: body.html || body.body_html,
-    date: body.date ? new Date(body.date) : undefined,
-    inReplyTo: body.in_reply_to || body.inReplyTo,
-    references: body.references,
-    attachments: body.attachments,
   };
+  const fromName = fromParsed.name || body.from?.name || body.fromName;
+  if (fromName) {
+    generic.fromName = fromName;
+  }
+  const cc = Array.isArray(body.cc) ? body.cc : body.cc ? [body.cc] : [];
+  if (cc.length > 0) {
+    generic.cc = cc;
+  }
+  if (body.subject) {
+    generic.subject = body.subject;
+  }
+  const text = body.text || body.body_text;
+  if (text) {
+    generic.text = text;
+  }
+  const html = body.html || body.body_html;
+  if (html) {
+    generic.html = html;
+  }
+  if (body.date) {
+    generic.date = new Date(body.date);
+  }
+  const inReplyTo = body.in_reply_to || body.inReplyTo;
+  if (inReplyTo) {
+    generic.inReplyTo = inReplyTo;
+  }
+  if (body.references) {
+    generic.references = body.references;
+  }
+  if (body.attachments) {
+    generic.attachments = body.attachments;
+  }
+  return generic;
 }
 
 function parseAddressString(input: unknown): { email: string; name?: string } {
@@ -282,7 +328,7 @@ function parseAddressString(input: unknown): { email: string; name?: string } {
   if (m) {
     const name = m[1].trim().replace(/^"|"$/g, "");
     const email = m[2].trim().toLowerCase();
-    return { email, name: name || undefined };
+    return name ? { email, name } : { email };
   }
 
   // Best-effort extraction of an email within the string
@@ -306,17 +352,40 @@ async function parseFormDataPayload(formData: FormData): Promise<InboundEmailDat
   }
 
   // Parse individual form fields
-  return {
-    messageId: formData.get("message_id") as string,
-    from: formData.get("from") as string,
-    fromName: formData.get("from_name") as string,
-    to: formData.get("to") as string,
-    cc: formData.get("cc")?.toString().split(",").filter(Boolean),
-    subject: formData.get("subject") as string,
-    text: formData.get("text") as string,
-    html: formData.get("html") as string,
-    inReplyTo: formData.get("in_reply_to") as string,
+  const messageId = formData.get("message_id")?.toString();
+  const from = formData.get("from")?.toString() || "";
+  const fromName = formData.get("from_name")?.toString();
+  const to = formData.get("to")?.toString() || "";
+  const cc = formData.get("cc")?.toString().split(",").filter(Boolean) || [];
+  const subject = formData.get("subject")?.toString();
+  const text = formData.get("text")?.toString();
+  const html = formData.get("html")?.toString();
+  const inReplyTo = formData.get("in_reply_to")?.toString();
+
+  const parsed: InboundEmailData = {
+    from,
+    to,
+    ...(messageId ? { messageId } : {}),
   };
+  if (fromName) {
+    parsed.fromName = fromName;
+  }
+  if (cc.length > 0) {
+    parsed.cc = cc;
+  }
+  if (subject) {
+    parsed.subject = subject;
+  }
+  if (text) {
+    parsed.text = text;
+  }
+  if (html) {
+    parsed.html = html;
+  }
+  if (inReplyTo) {
+    parsed.inReplyTo = inReplyTo;
+  }
+  return parsed;
 }
 
 async function parseRawEmail(rawEmail: string): Promise<InboundEmailData> {
@@ -336,168 +405,58 @@ async function parseRawEmail(rawEmail: string): Promise<InboundEmailData> {
     return [getAddress(addrs)];
   };
 
-  return {
-    messageId: parsed.messageId,
+  const rawTo = getAddresses(parsed.to);
+  const rawCc = getAddresses(parsed.cc);
+  const rawRefs = Array.isArray(parsed.references)
+    ? parsed.references
+    : parsed.references
+      ? [parsed.references]
+      : [];
+  const attachments = parsed.attachments?.map((a) => ({
+    filename: a.filename || "attachment",
+    content_type: a.contentType,
+    size: a.size,
+  }));
+
+  const parsedEmail: InboundEmailData = {
     from: getAddress(parsed.from),
-    fromName: parsed.from?.value?.[0]?.name,
-    to: getAddresses(parsed.to),
-    cc: getAddresses(parsed.cc),
-    subject: parsed.subject,
-    text: parsed.text,
-    html: parsed.html || undefined,
-    date: parsed.date,
-    inReplyTo: Array.isArray(parsed.inReplyTo) ? parsed.inReplyTo[0] : parsed.inReplyTo,
-    references: Array.isArray(parsed.references) ? parsed.references : parsed.references ? [parsed.references] : undefined,
-    attachments: parsed.attachments?.map((a) => ({
-      filename: a.filename || "attachment",
-      content_type: a.contentType,
-      size: a.size,
-    })),
+    to: rawTo,
+    ...(parsed.messageId ? { messageId: parsed.messageId } : {}),
   };
+  if (parsed.from?.value?.[0]?.name) {
+    parsedEmail.fromName = parsed.from.value[0].name;
+  }
+  if (rawCc.length > 0) {
+    parsedEmail.cc = rawCc;
+  }
+  if (parsed.subject) {
+    parsedEmail.subject = parsed.subject;
+  }
+  if (parsed.text) {
+    parsedEmail.text = parsed.text;
+  }
+  if (parsed.html) {
+    parsedEmail.html = parsed.html;
+  }
+  if (parsed.date) {
+    parsedEmail.date = parsed.date;
+  }
+  const inReplyTo = Array.isArray(parsed.inReplyTo) ? parsed.inReplyTo[0] : parsed.inReplyTo;
+  if (inReplyTo) {
+    parsedEmail.inReplyTo = inReplyTo;
+  }
+  if (rawRefs.length > 0) {
+    parsedEmail.references = rawRefs;
+  }
+  if (attachments?.length) {
+    parsedEmail.attachments = attachments;
+  }
+  return parsedEmail;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Storage Functions
 // ═══════════════════════════════════════════════════════════════════════════
-
-async function storeInboundMessage(
-  supabase: any,
-  account: any,
-  email: InboundEmailData,
-  tenantIdOverride?: string
-) {
-  const tenantId: string | null = tenantIdOverride ?? account?.tenant_id ?? null;
-  if (!tenantId) {
-    console.error("[Inbound Webhook] Cannot store inbound message without tenant_id", {
-      account_id: account?.id,
-      managed_domain_tenant_id: tenantIdOverride,
-    });
-    throw new Error("Missing tenant_id for inbound message");
-  }
-
-  // Avoid duplicates on webhook retries
-  if (email.messageId) {
-    const { data: existing, error: existingError } = await supabase
-      .from("email_messages")
-      .select("id")
-      .eq("account_id", account.id)
-      .eq("direction", "inbound")
-      .eq("message_id", email.messageId)
-      .maybeSingle();
-
-    if (existingError) {
-      console.error("[Inbound Webhook] Duplicate-check error:", existingError);
-    }
-
-    if (existing) {
-      console.log("[Inbound Webhook] Duplicate message ignored:", email.messageId);
-      return;
-    }
-  }
-
-  const toAddresses: EmailAddress[] = (Array.isArray(email.to) ? email.to : [email.to])
-    .map((addr) => ({ email: addr }));
-
-  const ccAddresses: EmailAddress[] = (email.cc || []).map((addr) => ({ email: addr }));
-
-  const bodyPreview = (email.text || "").slice(0, 200).replace(/\s+/g, " ").trim();
-
-  // Generate thread_id from references or in-reply-to
-  const threadId = email.references?.[0] || email.inReplyTo || email.messageId;
-
-  const { error } = await supabase.from("email_messages").insert({
-    tenant_id: tenantId,
-    account_id: account.id,
-    message_id: email.messageId,
-    provider_id: email.messageId, // For inbound, use message_id as provider_id
-    thread_id: threadId,
-    in_reply_to: email.inReplyTo,
-    direction: "inbound",
-    from_address: email.from,
-    from_name: email.fromName,
-    to_addresses: toAddresses,
-    cc_addresses: ccAddresses,
-    subject: email.subject,
-    body_text: email.text,
-    body_html: email.html,
-    body_preview: bodyPreview,
-    attachments: email.attachments || [],
-    has_attachments: (email.attachments?.length || 0) > 0,
-    status: "received",
-    mailbox: "INBOX",
-    is_read: false,
-    is_starred: false,
-    is_archived: false,
-    is_deleted: false,
-    is_spam: false,
-    received_at: email.date?.toISOString() || new Date().toISOString(),
-  });
-
-  if (error) {
-    console.error("[Inbound Webhook] Failed to insert inbound message:", error);
-    throw new Error("Failed to store inbound message");
-  }
-}
-
-async function storeInboundMessageForTenant(
-  supabase: any,
-  tenantId: string,
-  email: InboundEmailData
-) {
-  // Find the default managed account for this tenant, or create without account
-  const { data: defaultAccount } = await supabase
-    .from("email_accounts")
-    .select("*")
-    .eq("tenant_id", tenantId)
-    .eq("mode", "managed")
-    .eq("is_default", true)
-    .maybeSingle();
-
-  if (defaultAccount) {
-    await storeInboundMessage(supabase, defaultAccount, email);
-    return;
-  }
-
-  // No default account, store with tenant only (account_id will be null)
-  // This requires updating the schema to allow null account_id
-  const toAddresses: EmailAddress[] = (Array.isArray(email.to) ? email.to : [email.to])
-    .map((addr) => ({ email: addr }));
-
-  const ccAddresses: EmailAddress[] = (email.cc || []).map((addr) => ({ email: addr }));
-
-  const bodyPreview = (email.text || "").slice(0, 200).replace(/\s+/g, " ").trim();
-
-  const threadId = email.references?.[0] || email.inReplyTo || email.messageId;
-
-  const { error } = await supabase.from("email_messages").insert({
-    tenant_id: tenantId,
-    account_id: null,
-    message_id: email.messageId,
-    provider_id: email.messageId,
-    thread_id: threadId,
-    in_reply_to: email.inReplyTo,
-    direction: "inbound",
-    from_address: email.from,
-    from_name: email.fromName,
-    to_addresses: toAddresses,
-    cc_addresses: ccAddresses,
-    subject: email.subject,
-    body_text: email.text,
-    body_html: email.html,
-    body_preview: bodyPreview,
-    attachments: email.attachments || [],
-    has_attachments: (email.attachments?.length || 0) > 0,
-    status: "received",
-    mailbox: "INBOX",
-    is_read: false,
-    received_at: email.date?.toISOString() || new Date().toISOString(),
-  });
-
-  if (error) {
-    console.error("[Inbound Webhook] Failed to insert tenant-level inbound message:", error);
-    throw new Error("Failed to store inbound message (tenant)");
-  }
-}
 
 // Also handle GET for webhook verification (some providers require this)
 export async function GET(request: NextRequest) {

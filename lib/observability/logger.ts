@@ -33,7 +33,6 @@ export interface LogContext {
 // Logger Configuration
 // ═══════════════════════════════════════════════════════════════════════════
 
-const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Create logger instance
@@ -290,6 +289,7 @@ export function logPerformance(
 export function withRequestContext(handler: Function) {
   return async (request: NextRequest, ...args: any[]) => {
     const correlationId = generateCorrelationId();
+    const userAgent = request.headers.get('user-agent');
 
     // Extract context from request
     const context: LogContext = {
@@ -298,10 +298,11 @@ export function withRequestContext(handler: Function) {
       requestId: correlationId,
       method: request.method,
       url: request.url,
-      ip: request.headers.get('x-forwarded-for') ||
-          request.headers.get('x-real-ip') ||
-          'unknown',
-      userAgent: request.headers.get('user-agent') || undefined,
+      ip:
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip') ||
+        'unknown',
+      ...(userAgent ? { userAgent } : {}),
     };
 
     // Run handler with context

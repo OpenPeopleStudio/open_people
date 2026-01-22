@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { UpdateUploadTokenRequest } from "@/types/quick-share";
 
@@ -7,9 +7,12 @@ import type { UpdateUploadTokenRequest } from "@/types/quick-share";
    Get a single token with usage history
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  _request: NextRequest,
+  context: { params: Promise<{ tokenId: string }> }
+) {
   try {
-    const { tokenId } = context.params;
+    const { tokenId } = await context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -54,9 +57,12 @@ export async function GET(request: Request, context: any) {
    Update a token
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(request: Request, context: any) {
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ tokenId: string }> }
+) {
   try {
-    const { tokenId } = context.params;
+    const { tokenId } = await context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -136,9 +142,12 @@ export async function PATCH(request: Request, context: any) {
    Delete a token
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(
+  _request: NextRequest,
+  context: { params: Promise<{ tokenId: string }> }
+) {
   try {
-    const { tokenId } = context.params;
+    const { tokenId } = await context.params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

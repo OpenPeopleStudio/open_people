@@ -14,6 +14,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 const handleGetUser = withAuthAndAuthZ({
   role: UserRole.SUPER_ADMIN,
 })(async (auth, request: NextRequest) => {
+  void auth;
   const supabase = await createSupabaseServer();
   const userId = request.nextUrl.pathname.split('/').pop();
 
@@ -50,6 +51,9 @@ const handleGetUser = withAuthAndAuthZ({
   const { data: authUsers } = await supabase.auth.admin.listUsers();
   const authUser = authUsers?.users.find(u => u.id === userId);
 
+  const tenantRecord = profile.tenant as { name?: string } | { name?: string }[] | null;
+  const tenantName = Array.isArray(tenantRecord) ? tenantRecord[0]?.name : tenantRecord?.name;
+
   return NextResponse.json({
     user: {
       id: profile.id,
@@ -57,7 +61,7 @@ const handleGetUser = withAuthAndAuthZ({
       full_name: profile.full_name,
       role: profile.role,
       tenant_id: profile.tenant_id,
-      tenant_name: Array.isArray(profile.tenant) ? profile.tenant[0]?.name : profile.tenant?.name,
+      tenant_name: tenantName,
       status: authUser?.email_confirmed_at ? 'active' : 'inactive',
       last_sign_in_at: authUser?.last_sign_in_at,
       created_at: profile.created_at,

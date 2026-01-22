@@ -6,7 +6,7 @@
 
 import { ImapFlow } from "imapflow";
 import { simpleParser, ParsedMail } from "mailparser";
-import type { EmailMessage, EmailAddress, EmailAttachmentMeta } from "@/types/email";
+import type { EmailAddress, EmailAttachmentMeta } from "@/types/email";
 
 export interface IMAPConfig {
   host: string;
@@ -103,7 +103,7 @@ export async function listMailboxes(config: IMAPConfig): Promise<{ name: string;
     return mailboxes.map((mb) => ({
       name: mb.name,
       path: mb.path,
-      specialUse: mb.specialUse,
+      ...(mb.specialUse ? { specialUse: mb.specialUse } : {}),
     }));
   } catch (error) {
     console.error("List mailboxes error:", error);
@@ -181,7 +181,7 @@ export async function fetchIMAPEmails(
     return {
       success: true,
       messages,
-      lastUID,
+      ...(lastUID ? { lastUID } : {}),
     };
   } catch (error) {
     console.error("IMAP fetch error:", error);
@@ -360,26 +360,28 @@ function parseMailToMessage(
     references = Array.isArray(parsed.references) ? parsed.references : [parsed.references];
   }
   
-  return {
+  const emailMessage: ParsedEmailMessage = {
     uid,
-    messageId: parsed.messageId,
-    inReplyTo,
-    references,
     from,
     to,
-    cc,
-    bcc,
-    replyTo,
-    subject: parsed.subject,
     bodyText,
-    bodyHtml: parsed.html || undefined,
     bodyPreview,
     attachments,
     hasAttachments: attachments.length > 0,
-    date: parsed.date,
     flags: Array.from(flags),
     mailbox,
+    ...(parsed.messageId ? { messageId: parsed.messageId } : {}),
+    ...(inReplyTo ? { inReplyTo } : {}),
+    ...(references ? { references } : {}),
+    ...(cc && cc.length > 0 ? { cc } : {}),
+    ...(bcc && bcc.length > 0 ? { bcc } : {}),
+    ...(replyTo ? { replyTo } : {}),
+    ...(parsed.subject ? { subject: parsed.subject } : {}),
+    ...(parsed.html ? { bodyHtml: parsed.html } : {}),
+    ...(parsed.date ? { date: parsed.date } : {}),
   };
+
+  return emailMessage;
 }
 
 /**
@@ -389,17 +391,19 @@ function parseAddress(addr: any): EmailAddress {
   if (!addr) return { email: "unknown@unknown.com" };
   
   if (addr.value && addr.value[0]) {
-    return {
-      email: addr.value[0].address || "",
-      name: addr.value[0].name,
-    };
+    const name = addr.value[0].name;
+    return name
+      ? { email: addr.value[0].address || "", name }
+      : { email: addr.value[0].address || "" };
   }
   
   if (typeof addr === "string") {
     return { email: addr };
   }
   
-  return { email: addr.address || "", name: addr.name };
+  return addr.name
+    ? { email: addr.address || "", name: addr.name }
+    : { email: addr.address || "" };
 }
 
 /**
@@ -409,10 +413,9 @@ function parseAddresses(addrs: any): EmailAddress[] {
   if (!addrs) return [];
   
   if (addrs.value) {
-    return addrs.value.map((a: any) => ({
-      email: a.address || "",
-      name: a.name,
-    }));
+    return addrs.value.map((a: any) =>
+      a.name ? { email: a.address || "", name: a.name } : { email: a.address || "" }
+    );
   }
   
   if (Array.isArray(addrs)) {

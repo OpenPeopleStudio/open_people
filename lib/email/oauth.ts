@@ -222,7 +222,13 @@ export class EmailOAuthService {
       const tokens = await tokenResponse.json();
 
       if (!tokenResponse.ok) {
-        console.error("Outlook token exchange failed:", tokens);
+        console.error("Outlook token exchange failed:", {
+          status: tokenResponse.status,
+          error: tokens?.error,
+          error_description: tokens?.error_description,
+          trace_id: tokens?.trace_id,
+          correlation_id: tokens?.correlation_id,
+        });
         return { success: false, error: "Failed to get Outlook tokens" };
       }
 
@@ -348,7 +354,13 @@ export class EmailOAuthService {
       const tokens = await tokenResponse.json();
 
       if (!tokenResponse.ok) {
-        console.error("Outlook token refresh failed:", tokens);
+        console.error("Outlook token refresh failed:", {
+          status: tokenResponse.status,
+          error: tokens?.error,
+          error_description: tokens?.error_description,
+          trace_id: tokens?.trace_id,
+          correlation_id: tokens?.correlation_id,
+        });
         return false;
       }
 

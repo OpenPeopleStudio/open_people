@@ -1,5 +1,5 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Message API
@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function GET(request: Request, context: any) {
+  void request;
   try {
     const { id } = context.params;
     const supabase = await createSupabaseServer();

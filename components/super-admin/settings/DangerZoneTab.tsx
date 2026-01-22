@@ -409,9 +409,9 @@ export function DangerZoneTab({
         title={currentDialog.title}
         message={currentDialog.message}
         confirmText={currentDialog.confirmText}
-        confirmPhrase={
-          confirmDialog.action === "reset" ? "RESET-PLATFORM" : undefined
-        }
+        {...(confirmDialog.action === "reset"
+          ? { confirmPhrase: "RESET-PLATFORM" }
+          : {})}
         onConfirm={handleConfirm}
         onCancel={() => setConfirmDialog({ open: false, action: "cache" })}
         variant={currentDialog.variant}

@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { withAuthAndAuthZ, UserRole } from "@/lib/auth/middleware";
+import { withAuthAndAuthZ } from "@/lib/auth/middleware";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 const handleUpdateCollaborator = withAuthAndAuthZ()(async (auth, request: NextRequest) => {
@@ -122,6 +122,9 @@ const handleRemoveCollaborator = withAuthAndAuthZ()(async (auth, request: NextRe
   }
 
   // Log the removal
+  const collaboratorEmail = Array.isArray(collaborator?.user)
+    ? collaborator.user[0]?.email
+    : (collaborator?.user as { email?: string } | undefined)?.email;
   await supabase
     .from('vault_audit_log')
     .insert({
@@ -133,7 +136,7 @@ const handleRemoveCollaborator = withAuthAndAuthZ()(async (auth, request: NextRe
       success: true,
       metadata: {
         collaborator_id: collaboratorId,
-        collaborator_email: collaborator?.user?.email,
+        ...(collaboratorEmail ? { collaborator_email: collaboratorEmail } : {}),
       },
     });
 

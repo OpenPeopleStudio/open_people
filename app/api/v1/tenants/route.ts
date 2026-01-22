@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
-import { createSupabaseAdmin, createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { UserRole } from "@/lib/auth/authorization";
+import { errors } from "@/lib/http/responses";
+import { parseJsonBody } from "@/lib/http/validation";
+import { tenantCreateSchema } from "@/lib/schemas/v1-tenants";
 
 function isSuperAdmin(role?: string | null) {
   return role === UserRole.SUPER_ADMIN;
@@ -10,11 +13,11 @@ function isSuperAdmin(role?: string | null) {
 export async function GET(request: NextRequest) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
-    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    return errors.unauthorized("Authentication required");
   }
 
   if (!isSuperAdmin(auth.user.profile.role)) {
-    return NextResponse.json({ error: "Insufficient role" }, { status: 403 });
+    return errors.forbidden("Insufficient role");
   }
 
   const supabase = await createSupabaseAdmin();
@@ -25,7 +28,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("Failed to list tenants", error);
-    return NextResponse.json({ error: "Failed to list tenants" }, { status: 500 });
+    return errors.serverError("Failed to list tenants");
   }
 
   return NextResponse.json({ data: data || [] });
@@ -34,19 +37,17 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
-    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    return errors.unauthorized("Authentication required");
   }
   if (!isSuperAdmin(auth.user.profile.role)) {
-    return NextResponse.json({ error: "Insufficient role" }, { status: 403 });
+    return errors.forbidden("Insufficient role");
   }
 
-  const body = await request.json().catch(() => null);
-  if (!body || !body.name || !body.slug) {
-    return NextResponse.json(
-      { error: "name and slug are required" },
-      { status: 400 }
-    );
+  const bodyResult = await parseJsonBody(request, tenantCreateSchema);
+  if ("error" in bodyResult) {
+    return bodyResult.error;
   }
+  const body = bodyResult.data;
 
   const supabase = await createSupabaseAdmin();
   const { data, error } = await supabase
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("Failed to create tenant", error);
-    return NextResponse.json({ error: "Failed to create tenant" }, { status: 500 });
+    return errors.serverError("Failed to create tenant");
   }
 
   return NextResponse.json(data, { status: 201 });

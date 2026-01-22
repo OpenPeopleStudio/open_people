@@ -27,7 +27,7 @@ export default function OpsWorker() {
   const [view, setView] = useState<ViewState>("intake");
 
   // Data state
-  const [currentDecision, setCurrentDecision] = useState<Decision | null>(null);
+  const [, setCurrentDecision] = useState<Decision | null>(null);
   const [currentRun, setCurrentRun] = useState<OpsRunLog | null>(null);
   const [proposal, setProposal] = useState<OpsProposal | null>(null);
   const [commitResult, setCommitResult] = useState<OpsCommitResponse | null>(null);
@@ -519,7 +519,7 @@ export default function OpsWorker() {
           onApply={handleCommit}
           onCancel={handleReset}
           applying={committing}
-          budgetInfo={budgetInfo}
+          {...(budgetInfo ? { budgetInfo } : {})}
         />
       )}
     </div>
@@ -567,4 +567,3 @@ async function pollJobUntilDone(
     await sleep(delays[Math.min(i, delays.length - 1)]);
   }
 }
-

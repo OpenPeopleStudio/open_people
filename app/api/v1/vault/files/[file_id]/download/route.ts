@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getDownloadUrl } from "@/lib/storage/r2";
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ file_id: string }> }
+) {
+  const { file_id } = await params;
   const auth = await authenticateUser(request);
   if (!auth?.user) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
@@ -13,7 +17,7 @@ export async function GET(request: Request, context: any) {
   const { data, error } = await supabase
     .from("vault_files")
     .select("id, r2_key")
-    .eq("id", params.file_id)
+    .eq("id", file_id)
     .maybeSingle();
 
   if (error) {
@@ -27,7 +31,7 @@ export async function GET(request: Request, context: any) {
   try {
     const url = await getDownloadUrl(data.r2_key, 900);
     return NextResponse.json({
-      file_id: params.file_id,
+      file_id,
       download_url: url,
       expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
     });

@@ -42,9 +42,9 @@ export function AddKeyModal({ onClose, onCreated }: AddKeyModalProps) {
         name: name.trim(),
         provider,
         key: key.trim(),
-        description: description.trim() || undefined,
         environment,
-        project_name: projectName.trim() || undefined,
+        ...(description.trim() ? { description: description.trim() } : {}),
+        ...(projectName.trim() ? { project_name: projectName.trim() } : {}),
       };
       
       const res = await fetch("/api/keys", {

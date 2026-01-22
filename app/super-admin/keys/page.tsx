@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { ApiKey, ApiKeyFilters } from "@/types/api-keys";
-import { PROVIDERS, ENVIRONMENTS, getProviderInfo } from "@/lib/api-keys/encryption";
+import { PROVIDERS, ENVIRONMENTS } from "@/lib/api-keys/encryption";
 import { AddKeyModal } from "./components/AddKeyModal";
 import { KeyCard } from "./components/KeyCard";
 import { KeyDetailPanel } from "./components/KeyDetailPanel";
@@ -112,7 +112,16 @@ export default function ApiKeysPage() {
             
             <select
               value={filters.provider || ""}
-              onChange={(e) => setFilters(prev => ({ ...prev, provider: e.target.value || undefined }))}
+              onChange={(e) =>
+                setFilters((prev) => {
+                  const value = e.target.value;
+                  if (!value) {
+                    const { provider, ...rest } = prev;
+                    return rest;
+                  }
+                  return { ...prev, provider: value };
+                })
+              }
               className="px-3 py-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
             >
               <option value="">All Providers</option>
@@ -123,7 +132,16 @@ export default function ApiKeysPage() {
             
             <select
               value={filters.environment || ""}
-              onChange={(e) => setFilters(prev => ({ ...prev, environment: e.target.value || undefined }))}
+              onChange={(e) =>
+                setFilters((prev) => {
+                  const value = e.target.value;
+                  if (!value) {
+                    const { environment, ...rest } = prev;
+                    return rest;
+                  }
+                  return { ...prev, environment: value };
+                })
+              }
               className="px-3 py-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
             >
               <option value="">All Environments</option>

@@ -9,40 +9,6 @@ import { NextRequest, NextResponse } from "next/server";
    Settings are stored in tenant_email_settings table (JSONB columns)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-type EmailDefaults = {
-  default_account_id: string | null;
-  default_signature_id: string | null;
-  reply_to_same_account: boolean;
-  include_signature_in_replies: boolean;
-  auto_save_drafts: boolean;
-  draft_save_interval_seconds: number;
-};
-
-type NotificationSettings = {
-  email_notifications: boolean;
-  push_notifications: boolean;
-  notify_on_new_email: boolean;
-  notify_on_reply: boolean;
-  notify_on_mention: boolean;
-  digest_frequency: "none" | "daily" | "weekly";
-};
-
-type SyncSettings = {
-  auto_sync_enabled: boolean;
-  sync_interval_minutes: number;
-  sync_on_open: boolean;
-  max_emails_per_sync: number;
-  sync_sent_folder: boolean;
-  sync_deleted_folder: boolean;
-};
-
-type SecuritySettings = {
-  block_external_images: boolean;
-  block_tracking_pixels: boolean;
-  warn_external_links: boolean;
-  require_tls: boolean;
-};
-
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();

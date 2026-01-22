@@ -20,12 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const {
-      accountId,
-      provider = "imap", // "imap" | "gmail" | "outlook"
-      fullSync = false,
-      maxEmails = 50,
-    } = body;
+    const { accountId, fullSync = false, maxEmails = 50 } = body;
 
     if (!accountId) {
       return NextResponse.json(

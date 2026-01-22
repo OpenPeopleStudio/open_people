@@ -25,12 +25,14 @@ export function DecisionIntakeForm({ onSubmit, loading }: DecisionIntakeFormProp
     e.preventDefault();
     if (!rawText.trim()) return;
 
+    const source: DecisionSource = {
+      type: sourceType,
+      ...(sourceLabel ? { label: sourceLabel } : {}),
+    };
+
     await onSubmit({
       raw_text: rawText,
-      source: {
-        type: sourceType,
-        label: sourceLabel || undefined,
-      },
+      source,
     });
   }
 

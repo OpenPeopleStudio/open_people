@@ -7,7 +7,6 @@ import {
   generateKeyId,
   generateRecoveryCodes,
   hashRecoveryCode,
-  bufferToBase64,
 } from "@/lib/vault/encryption";
 import type { VaultSetupResponse } from "@/types/vault";
 

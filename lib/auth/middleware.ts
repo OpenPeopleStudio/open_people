@@ -8,13 +8,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth, requireAuth, type AuthResult } from './auth';
 import {
-  requirePermission,
-  requireRole,
-  requireOwnershipOrPermission,
-  requireTenantAccess,
   requireAuth as requireAuthZ,
-  type Permission,
-  type UserRole,
+  hasPermission,
+  Permission,
+  UserRole,
   type AuthRequirements,
 } from './authorization';
 
@@ -34,9 +31,8 @@ export function withAuthAndAuthZ(requirements?: AuthRequirements) {
 
       // Then authorize if requirements specified
       if (requirements) {
-        const authZMiddleware = requireAuthZ(requirements);
-        const result = await authZMiddleware((authCtx, ...rest) => handler(authCtx, request, ...rest))(auth, request, ...args);
-        return result;
+        const authZHandler = requireAuthZ(requirements)(handler);
+        return await authZHandler(auth, request, ...args);
       }
 
       // Just authentication required
@@ -55,11 +51,15 @@ export const withAuthentication = withAuth;
  */
 export function withPermission(permission: Permission, resourceOwnerId?: string) {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
-    return withAuthAndAuthZ({ permission, resourceOwnerId })(
-      async (auth, ...args) => {
-        return await handler(auth, ...args);
+    const requirements: AuthRequirements = {
+      permission,
+      ...(resourceOwnerId ? { resourceOwnerId } : {}),
+    };
+    return withAuthAndAuthZ(requirements)(
+      async (auth, request, ...args: T) => {
+        return await handler(auth, request, ...args);
       }
     );
   };
@@ -70,11 +70,11 @@ export function withPermission(permission: Permission, resourceOwnerId?: string)
  */
 export function withRole(role: UserRole) {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
     return withAuthAndAuthZ({ role })(
-      async (auth, ...args) => {
-        return await handler(auth, ...args);
+      async (auth, request, ...args: T) => {
+        return await handler(auth, request, ...args);
       }
     );
   };
@@ -85,11 +85,11 @@ export function withRole(role: UserRole) {
  */
 export function withTenantAccess(tenantId: string) {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
     return withAuthAndAuthZ({ tenantId })(
-      async (auth, ...args) => {
-        return await handler(auth, ...args);
+      async (auth, request, ...args: T) => {
+        return await handler(auth, request, ...args);
       }
     );
   };
@@ -98,18 +98,23 @@ export function withTenantAccess(tenantId: string) {
 /**
  * Ownership-based middleware
  */
-export function withOwnership(getResourceOwnerId: (args: any[]) => string) {
+export function withOwnership(
+  getResourceOwnerId: (args: any[]) => string,
+  permission: Permission = Permission.VAULT_WRITE
+) {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
-    return withAuthAndAuthZ({
-      permission: Permission.VAULT_WRITE, // Example permission
-      resourceOwnerId: getResourceOwnerId([]), // Will be overridden at runtime
-    })(
-      async (auth, ...args) => {
-        return await handler(auth, ...args);
+    return withAuthAndAuthZ()(async (auth, request, ...args: T) => {
+      const resourceOwnerId = getResourceOwnerId([request, ...args]);
+      if (!hasPermission(auth.user, permission, resourceOwnerId)) {
+        return NextResponse.json(
+          { error: "Insufficient permissions" },
+          { status: 403 }
+        );
       }
-    );
+      return await handler(auth, request, ...args);
+    });
   };
 }
 
@@ -120,16 +125,17 @@ export function withOwnership(getResourceOwnerId: (args: any[]) => string) {
  */
 export function withTenantAuth() {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
-    return withAuthAndAuthZ({ requireTenant: true })(async (auth, ...args) => {
-      if (!auth.tenantId) {
+    return withAuthAndAuthZ()(async (auth, request, ...args: T) => {
+      const tenantId = auth.tenantId ?? auth.user.profile?.tenant_id;
+      if (!tenantId) {
         return NextResponse.json(
           { error: "Tenant context required" },
           { status: 400 }
         );
       }
-      return handler(auth, ...args);
+      return handler(auth, request, ...args);
     });
   };
 }
@@ -139,10 +145,10 @@ export function withTenantAuth() {
  */
 export function withSuperAdminAuth() {
   return function <T extends any[], R>(
-    handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+    handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
   ) {
-    return withAuthAndAuthZ({ role: 'super_admin' })(async (auth, ...args) => {
-      return handler(auth, ...args);
+    return withAuthAndAuthZ({ role: UserRole.SUPER_ADMIN })(async (auth, request, ...args: T) => {
+      return handler(auth, request, ...args);
     });
   };
 }

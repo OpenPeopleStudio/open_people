@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { VaultFile, AICategory, AIExtractedData } from "@/types/vault";
+import type { VaultFile, AIExtractedData } from "@/types/vault";
 import { formatBytes, getCategoryIcon, getCategoryColor, getCategoryLabel } from "@/types/vault";
 import { decryptFileForDownload } from "@/lib/vault/client-crypto";
 
@@ -127,7 +127,7 @@ export function FileDetails({ fileId, sessionId, onClose, onUpdate }: FileDetail
   async function handleRemoveTag(tag: string) {
     if (!file) return;
     
-    const updatedTags = file.ai_tags.filter(t => t !== tag);
+    const updatedTags = (file.ai_tags ?? []).filter(t => t !== tag);
     
     try {
       const res = await fetch("/api/vault/files", {
@@ -274,7 +274,7 @@ export function FileDetails({ fileId, sessionId, onClose, onUpdate }: FileDetail
         {/* Tags */}
         <Section title="Tags">
           <div className="flex flex-wrap gap-1.5">
-            {file.ai_tags.map(tag => (
+            {(file.ai_tags ?? []).map(tag => (
               <span
                 key={tag}
                 className="group inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--surface-2)] text-xs text-[var(--text-secondary)]"
@@ -321,7 +321,7 @@ export function FileDetails({ fileId, sessionId, onClose, onUpdate }: FileDetail
         {/* Extracted Data */}
         {file.ai_extracted_data && Object.keys(file.ai_extracted_data).length > 0 && (
           <Section title="Extracted Data">
-            <ExtractedDataView data={file.ai_extracted_data} category={file.ai_category} />
+            <ExtractedDataView data={file.ai_extracted_data} />
           </Section>
         )}
         
@@ -406,9 +406,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function ExtractedDataView({ data, category }: { data: AIExtractedData; category: AICategory | null }) {
-  // Render based on category
-  const fields = getDisplayFields(data, category);
+function ExtractedDataView({ data }: { data: AIExtractedData }) {
+  const fields = getDisplayFields(data);
   
   return (
     <div className="space-y-2">
@@ -441,7 +440,7 @@ function ExtractedDataView({ data, category }: { data: AIExtractedData; category
   );
 }
 
-function getDisplayFields(data: AIExtractedData, category: AICategory | null): { label: string; value: string }[] {
+function getDisplayFields(data: AIExtractedData): { label: string; value: string }[] {
   const fields: { label: string; value: string }[] = [];
   
   if (data.document_date) {

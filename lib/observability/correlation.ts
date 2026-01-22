@@ -14,6 +14,7 @@ import { setRequestContext } from './logger';
 
 const CORRELATION_ID_HEADER = 'x-correlation-id';
 const REQUEST_ID_HEADER = 'x-request-id';
+const CORRELATION_ID_COOKIE = 'correlation-id';
 
 /**
  * Generate a unique correlation ID
@@ -50,6 +51,11 @@ export function createResponseWithCorrelationId(
   // Add correlation ID headers
   newResponse.headers.set(CORRELATION_ID_HEADER, correlationId);
   newResponse.headers.set(REQUEST_ID_HEADER, correlationId);
+  newResponse.cookies.set(CORRELATION_ID_COOKIE, correlationId, {
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
 
   return newResponse;
 }

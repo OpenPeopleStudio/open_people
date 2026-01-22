@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { verifyPassword, unwrapDEK, bufferToBase64 } from "@/lib/vault/encryption";
 import { alertVaultUnlock } from "@/lib/observability/alerting";
-import type { VaultUnlockRequest, VaultUnlockResponse, VaultEncryptionKey } from "@/types/vault";
+import type { VaultUnlockRequest, VaultUnlockResponse } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    POST /api/vault/unlock

@@ -61,12 +61,14 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Evaluate risk
-    const evaluation = await evaluateAndStoreRisk(profile.tenant_id, {
-      request_id: body.request_id,
+    const riskRequest: RiskEvaluateRequest = {
       signals: body.signals,
-      profile_id: body.profile_id,
-      context: body.context,
-    });
+      ...(body.request_id ? { request_id: body.request_id } : {}),
+      ...(body.profile_id ? { profile_id: body.profile_id } : {}),
+      ...(body.context ? { context: body.context } : {}),
+    };
+
+    const evaluation = await evaluateAndStoreRisk(profile.tenant_id, riskRequest);
 
     // 5. Build response
     const response: RiskEvaluateResponse = {

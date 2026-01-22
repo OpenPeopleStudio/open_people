@@ -226,12 +226,9 @@ export async function computeCostOutcomeMetrics(
   const avgCostPerHighQualityCents =
     highQualityRequests > 0 ? highQualityCostCents / highQualityRequests : 0;
 
-  return {
+  const metrics: CostOutcomeMetrics = {
     id: crypto.randomUUID(),
     tenant_id: tenantId,
-    application_id: dimensions?.applicationId,
-    model_name: dimensions?.modelName,
-    prompt_id: dimensions?.promptId,
     bucket_timestamp: bucketStart.toISOString(),
     bucket_interval: bucketInterval,
     total_requests: totalRequests,
@@ -244,7 +241,12 @@ export async function computeCostOutcomeMetrics(
     high_quality_requests: highQualityRequests,
     high_quality_cost_cents: highQualityCostCents,
     avg_cost_per_high_quality_cents: avgCostPerHighQualityCents,
+    ...(dimensions?.applicationId ? { application_id: dimensions.applicationId } : {}),
+    ...(dimensions?.modelName ? { model_name: dimensions.modelName } : {}),
+    ...(dimensions?.promptId ? { prompt_id: dimensions.promptId } : {}),
   };
+
+  return metrics;
 }
 
 /**
@@ -480,21 +482,24 @@ export async function correlateAnomalyWithChanges(
     anomaly_details: anomaly.anomaly_details,
     correlated_change_ids: correlatedChangeIds,
     correlation_scores: correlationScores,
-    root_cause_hypothesis: rootCauseHypothesis,
     confidence,
+    ...(rootCauseHypothesis ? { root_cause_hypothesis: rootCauseHypothesis } : {}),
   };
 
   // Store the correlation
-  const { error } = await supabase.from("cost_anomaly_correlations").insert({
+  const correlationInsert: Record<string, unknown> = {
     tenant_id: correlation.tenant_id,
     anomaly_timestamp: correlation.anomaly_timestamp,
     anomaly_type: correlation.anomaly_type,
     anomaly_details: correlation.anomaly_details,
     correlated_change_ids: correlation.correlated_change_ids,
     correlation_scores: correlation.correlation_scores,
-    root_cause_hypothesis: correlation.root_cause_hypothesis,
     confidence: correlation.confidence,
-  });
+  };
+  if (correlation.root_cause_hypothesis) {
+    correlationInsert.root_cause_hypothesis = correlation.root_cause_hypothesis;
+  }
+  const { error } = await supabase.from("cost_anomaly_correlations").insert(correlationInsert);
 
   if (error) {
     console.error("Error storing anomaly correlation:", error);
@@ -557,17 +562,31 @@ export async function detectAndCorrelateAnomalies(
         : 0;
 
     if (deviation > 2) {
+      const anomalyDetails: {
+        expected_value?: number;
+        actual_value?: number;
+        deviation_percent?: number;
+        affected_dimension?: string;
+        affected_value?: string;
+      } = {
+        expected_value: baselineAvgCost,
+        actual_value: metric.avg_cost_per_request_cents,
+        deviation_percent:
+          ((metric.avg_cost_per_request_cents - baselineAvgCost) / baselineAvgCost) * 100,
+      };
+      if (metric.application_id) {
+        anomalyDetails.affected_dimension = "application";
+        anomalyDetails.affected_value = metric.application_id;
+      } else if (metric.model_name) {
+        anomalyDetails.affected_dimension = "model";
+        anomalyDetails.affected_value = metric.model_name;
+      }
+
       anomalies.push({
         tenant_id: tenantId,
         anomaly_timestamp: metric.bucket_timestamp,
         anomaly_type: "spike",
-        anomaly_details: {
-          expected_value: baselineAvgCost,
-          actual_value: metric.avg_cost_per_request_cents,
-          deviation_percent: ((metric.avg_cost_per_request_cents - baselineAvgCost) / baselineAvgCost) * 100,
-          affected_dimension: metric.application_id ? "application" : metric.model_name ? "model" : undefined,
-          affected_value: metric.application_id || metric.model_name || undefined,
-        },
+        anomaly_details: anomalyDetails,
       });
     }
   }

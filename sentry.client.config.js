@@ -29,7 +29,13 @@ Sentry.init({
   beforeSend(event, hint) {
     // Add correlation ID if available
     if (typeof window !== 'undefined') {
-      const correlationId = localStorage.getItem('correlation-id');
+      const cookieMatch = document.cookie.match(/(?:^|; )correlation-id=([^;]+)/);
+      const cookieCorrelationId = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+      const storedCorrelationId = localStorage.getItem('correlation-id');
+      const correlationId = cookieCorrelationId || storedCorrelationId;
+      if (cookieCorrelationId && cookieCorrelationId !== storedCorrelationId) {
+        localStorage.setItem('correlation-id', cookieCorrelationId);
+      }
       if (correlationId) {
         event.tags = event.tags || {};
         event.tags.correlationId = correlationId;

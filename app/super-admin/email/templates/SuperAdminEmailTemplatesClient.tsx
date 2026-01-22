@@ -46,12 +46,6 @@ export function SuperAdminEmailTemplatesClient({
     notification: filteredTemplates.filter(t => t.category === "notification"),
   };
 
-  const getTenantName = (tenantId: string | null) => {
-    if (!tenantId) return "Platform";
-    const tenant = tenants.find(t => t.id === tenantId);
-    return tenant?.name || "Unknown";
-  };
-
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] bg-[var(--void)]">
       {/* Header */}

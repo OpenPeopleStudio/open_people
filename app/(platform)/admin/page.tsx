@@ -257,7 +257,19 @@ export default function AdminDashboard() {
     }
 
     loadStats();
-  }, [tenant.slug, refreshNonce, features.storage, features.notifications, features.email, features.notes, features.ai_chat, features.workflows, features.vault, features.api_keys]);
+  }, [
+    tenant.slug,
+    refreshNonce,
+    demoMode,
+    features.storage,
+    features.notifications,
+    features.email,
+    features.notes,
+    features.ai_chat,
+    features.workflows,
+    features.vault,
+    features.api_keys,
+  ]);
 
   async function seedDemoData() {
     if (seeding) return;
@@ -504,12 +516,12 @@ export default function AdminDashboard() {
   ].filter(card => features[card.feature as keyof typeof features] !== false);
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text-primary)]">
               Welcome to {brandName}
             </h1>
             <p className="text-sm text-[var(--text-muted)] mt-1">
@@ -518,7 +530,7 @@ export default function AdminDashboard() {
           </div>
 
           {showSeedButton && (
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col items-start gap-2 sm:items-end">
               <button
                 onClick={seedDemoData}
                 disabled={seeding}
@@ -547,12 +559,12 @@ export default function AdminDashboard() {
           <h2 className="text-sm font-medium text-[var(--text-secondary)] mb-4">
             Quick Actions
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {quickActions.map((action) => (
               <Link
                 key={action.label}
                 href={action.href}
-                className="p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] hover:border-[var(--electric-lime)]/50 transition-all group"
+                className="p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] hover:border-[var(--electric-lime)]/50 hover:shadow-lg transition-all group"
               >
                 <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                   <svg
@@ -580,12 +592,12 @@ export default function AdminDashboard() {
           <h2 className="text-sm font-medium text-[var(--text-secondary)] mb-4">
             Overview
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
             {statCards.map((card) => (
               <Link
                 key={card.label}
                 href={card.href}
-                className="p-5 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] hover:border-[var(--border)] transition-colors"
+                className="p-4 sm:p-5 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] hover:border-[var(--border)] transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="w-10 h-10 rounded-lg bg-[var(--electric-lime)]/10 flex items-center justify-center">
@@ -619,7 +631,7 @@ export default function AdminDashboard() {
       {/* Recent Notifications */}
       {features.notifications !== false && (
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
             <h2 className="text-sm font-medium text-[var(--text-secondary)]">
               Recent
             </h2>
@@ -632,12 +644,12 @@ export default function AdminDashboard() {
           </div>
           <div className="rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] overflow-hidden">
             {loading ? (
-              <div className="p-5">
+              <div className="p-4 sm:p-5">
                 <div className="h-4 w-40 bg-[var(--surface-2)] rounded animate-pulse mb-2" />
                 <div className="h-4 w-64 bg-[var(--surface-2)] rounded animate-pulse" />
               </div>
             ) : recentNotifications.length === 0 ? (
-              <div className="p-5 text-sm text-[var(--text-muted)]">
+              <div className="p-4 sm:p-5 text-sm text-[var(--text-muted)]">
                 No notifications yet.
               </div>
             ) : (
@@ -648,7 +660,7 @@ export default function AdminDashboard() {
                     href={n.action_url || "/admin/notifications"}
                     className="block p-4 hover:bg-[var(--surface-2)] transition-colors"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-[var(--text-primary)] truncate">
                           {n.title || "Notification"}
@@ -659,7 +671,7 @@ export default function AdminDashboard() {
                           </p>
                         )}
                       </div>
-                      <p className="text-xs text-[var(--text-muted)] shrink-0">
+                      <p className="text-xs text-[var(--text-muted)] sm:shrink-0">
                         {new Date(n.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -676,7 +688,7 @@ export default function AdminDashboard() {
         <h2 className="text-sm font-medium text-[var(--text-secondary)] mb-4">
           Modules
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
           {features.email !== false && (
             <ModuleCard
               title="Email"
@@ -769,7 +781,7 @@ function ModuleCard({
   return (
     <Link
       href={href}
-      className="p-5 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] hover:border-[var(--electric-lime)]/50 transition-all group"
+      className="p-4 sm:p-5 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] hover:border-[var(--electric-lime)]/50 transition-all group"
     >
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--electric-lime)]/20 to-[var(--electric-cyan)]/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">

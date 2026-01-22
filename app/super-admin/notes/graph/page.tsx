@@ -85,7 +85,7 @@ export default function NeuralGraphPage() {
     
     // Create color map for categories
     const categoryColors: Record<string, string> = {};
-    data.stats.categories.forEach((cat, i) => {
+    data.stats.categories.forEach((cat) => {
       categoryColors[cat.id] = cat.color;
     });
     

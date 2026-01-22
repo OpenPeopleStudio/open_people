@@ -121,7 +121,7 @@ export function SystemHealth({ className = '' }: SystemHealthProps) {
     return `${ms.toFixed(0)}ms`;
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): "info" | "error" | "success" | "pending" | "warning" => {
     switch (status) {
       case 'up':
       case 'healthy':
@@ -132,16 +132,16 @@ export function SystemHealth({ className = '' }: SystemHealthProps) {
       case 'unhealthy':
         return 'error';
       default:
-        return 'secondary';
+        return 'info';
     }
   };
 
-  const getAlertColor = (type: string) => {
+  const getAlertColor = (type: string): "info" | "error" | "success" | "pending" | "warning" => {
     switch (type) {
       case 'error': return 'error';
       case 'warning': return 'warning';
       case 'info': return 'info';
-      default: return 'secondary';
+      default: return 'info';
     }
   };
 
@@ -452,7 +452,7 @@ interface MetricCardProps {
   title: string;
   value: string;
   subtitle?: string;
-  status?: string;
+  status?: "info" | "error" | "success" | "pending" | "warning";
   icon: string;
 }
 
@@ -494,21 +494,12 @@ interface ServiceCardProps {
 }
 
 function ServiceCard({ name, status, metrics }: ServiceCardProps) {
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'up': return '🟢';
-      case 'degraded': return '🟡';
-      case 'down': return '🔴';
-      default: return '⚪';
-    }
-  };
-
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): "info" | "error" | "success" | "pending" | "warning" => {
     switch (status) {
       case 'up': return 'success';
       case 'degraded': return 'warning';
       case 'down': return 'error';
-      default: return 'secondary';
+      default: return 'info';
     }
   };
 

@@ -5,7 +5,7 @@
  */
 
 import { SupabaseClient } from "@supabase/supabase-js";
-import type { AIFeedback, AICost, AICostBudget } from "@/types/workflows";
+import type { AIFeedback, AICostBudget } from "@/types/workflows";
 
 /**
  * Record feedback for an AI response

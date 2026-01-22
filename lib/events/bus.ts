@@ -252,7 +252,7 @@ export async function emitEvent<T extends keyof EventDataMap>(
 export class EventBusError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown
+    public override readonly cause?: unknown
   ) {
     super(message);
     this.name = "EventBusError";
@@ -292,6 +292,8 @@ export function createEventEnvelope<T>(
   context: EventContext,
   options?: EmitEventOptions
 ): EventEnvelope<T> {
+  const metadata = options?.metadata;
+
   return {
     id: crypto.randomUUID(),
     type: eventType,
@@ -303,7 +305,7 @@ export function createEventEnvelope<T>(
     occurred_at: new Date().toISOString(),
     source: context.source,
     data,
-    metadata: options?.metadata,
+    ...(metadata ? { metadata } : {}),
   };
 }
 

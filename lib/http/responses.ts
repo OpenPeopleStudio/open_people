@@ -34,13 +34,23 @@ export function errorResponse(
     },
   };
 
-  return NextResponse.json(payload, { status, headers });
+  const init: ResponseInit = {
+    status,
+    ...(headers ? { headers } : {}),
+  };
+  return NextResponse.json(payload, init);
 }
 
 export const errors = {
   badRequest: (message = "Bad request", details?: unknown) =>
     errorResponse(400, message, {
       code: "BAD_REQUEST",
+      ...(details !== undefined ? { details } : {}),
+    }),
+  unprocessableEntity: (message = "Validation failed", details?: unknown) =>
+    errorResponse(422, message, {
+      code: "UNPROCESSABLE_ENTITY",
+      type: "validation_error",
       ...(details !== undefined ? { details } : {}),
     }),
   unauthorized: (message = "Unauthorized") =>

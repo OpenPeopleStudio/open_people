@@ -4,24 +4,16 @@
  * Background job processing with retries, rate limiting, and observability.
  */
 
-// Core queue operations
+// Core queue objects and lifecycle
 export {
-  enqueueJob,
-  enqueueJobs,
-  cancelJob,
-  getJob,
-  generateJobIdempotencyKey,
-  JobQueueError,
+  JobQueue,
+  appJobQueue,
+  emailJobQueue,
+  aiJobQueue,
+  maintenanceJobQueue,
+  startAllJobQueues,
+  stopAllJobQueues,
 } from "./queue";
-
-// Handler registration
-export { registerHandler, getHandler } from "./queue";
-
-// Execution
-export { executeJob, runQueueCycle } from "./queue";
-
-// Runner lifecycle
-export { startQueueRunner, stopQueueRunner } from "./queue";
 
 // Re-export types
 export type {

@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       logAuth('login', false, {
         email,
         error: new Error(error.message),
-        ip,
+        ...(ip ? { ip } : {}),
       });
 
       return NextResponse.json(
@@ -51,10 +51,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Log successful authentication
+    const successIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined;
     logAuth('login', true, {
       userId: data.user.id,
       email,
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+      ...(successIp ? { ip: successIp } : {}),
     });
 
     return NextResponse.json({

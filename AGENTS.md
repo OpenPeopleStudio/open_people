@@ -66,6 +66,11 @@ These roles define ownership and decision authority across the company docs and 
 - Stay within assigned file ownership or locked areas.
 - Raise risks when tasks intersect security, privacy, or multi-tenancy.
 
+## Debug Team (Skill)
+
+- `debug-team` skill can coordinate debugging tasks across employee owners.
+- Debuggers perform fixes, then confirm with file owners for functionality concerns.
+
 ## Permissions
 
 ### CEO (Elon)
@@ -127,36 +132,6 @@ Repo map references (preferred reading before changes):
 - `docs/AI/PLAYBOOK.md`
 - `docs/SAFETY.md`
 - `docs/RUNBOOK.md`
-
-## Intentful development protocol (DEFAULT)
-
-When asked to implement or change behavior:
-
-1. Clarify intent (NO CODE YET)
-
-- Restate: Goal, Non-goals, Constraints, Success metrics.
-- Identify the “smallest shippable step”.
-
-1. Produce an ExecPlan (NO CODE YET)
-   Create a short plan with these headings:
-
-- Goal
-- Non-goals
-- Current behavior (with file paths you inspected)
-- Proposed change
-- Diff map (exact paths you will touch + why)
-- Data / migrations impact (if any)
-- Tests (what you will add/run)
-- Rollout (flags, backwards-compat, how to revert)
-- Observability (logs/metrics, what proves it works)
-- Risks & mitigations
-
-Stop and wait for explicit approval before editing files.
-
-1. Implement
-
-- Prefer the smallest coherent diff.
-- Prefer multiple small PRs over one large PR.
 
 ## Guardrails (non-negotiable unless user overrides)
 

@@ -129,6 +129,7 @@ export class EmailSyncService {
           fetchRange = `${account.last_sync_uid}:*`;
           console.log(`[Email Sync] Incremental sync: fetching from UID ${account.last_sync_uid}`);
         }
+        console.log(`[Email Sync] Fetch range: ${fetchRange}`);
 
         // Search for messages in range
         const searchCriteria = ["ALL"];
@@ -280,6 +281,7 @@ export class EmailSyncService {
     // Implementation would use your encryption utilities
     // For now, return as-is (assuming it's stored in plain text for testing)
     // In production, use proper decryption
+    void iv;
     return encrypted;
   }
 

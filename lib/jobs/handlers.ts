@@ -5,7 +5,7 @@
  * Each handler processes a specific type of background job.
  */
 
-import { Job, JobType, JobResult, JobHandler } from './queue';
+import { Job, JobResult, JobHandler } from './queue';
 import { emailAIProcessor } from './email-ai-processor';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { logAuth } from '@/lib/observability/logger';
@@ -17,7 +17,7 @@ import { alertSuspiciousActivity } from '@/lib/observability/alerting';
  */
 export const emailTriageHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { messageId, threadId, tasks } = job.data;
+    const { messageId, threadId } = job.data;
 
     console.log(`[EmailTriage] Processing message ${messageId}, thread ${threadId}`);
 
@@ -40,7 +40,7 @@ export const emailTriageHandler: JobHandler = async (job: Job): Promise<JobResul
  */
 export const aiContentAnalysisHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { fileId, content, mimeType, vaultId, userId } = job.data;
+    const { fileId } = job.data;
 
     console.log(`[AIContentAnalysis] Analyzing file ${fileId}`);
 
@@ -79,6 +79,7 @@ export const aiContentAnalysisHandler: JobHandler = async (job: Job): Promise<Jo
  */
 export const sessionCleanupHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
+    void job;
     console.log('[SessionCleanup] Starting cleanup');
 
     const supabase = await createSupabaseServer();
@@ -117,7 +118,7 @@ export const sessionCleanupHandler: JobHandler = async (job: Job): Promise<JobRe
  */
 export const notificationSenderHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { type, recipient, subject, message, metadata } = job.data;
+    const { type, recipient, subject, message } = job.data;
 
     console.log(`[NotificationSender] Sending ${type} notification to ${recipient}`);
 
@@ -160,7 +161,7 @@ export const notificationSenderHandler: JobHandler = async (job: Job): Promise<J
  */
 export const webhookDeliveryHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { url, method, headers, body, signature, timeout } = job.data;
+    const { url, method, headers, body, timeout } = job.data;
 
     console.log(`[WebhookDelivery] Delivering to ${url}`);
 
@@ -213,7 +214,7 @@ export const webhookDeliveryHandler: JobHandler = async (job: Job): Promise<JobR
  */
 export const securityEventHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { event, context, severity } = job.data;
+    const { event, context } = job.data;
 
     console.log(`[SecurityEvent] Processing ${event} event`);
 
@@ -258,7 +259,7 @@ export const securityEventHandler: JobHandler = async (job: Job): Promise<JobRes
  */
 export const reportGeneratorHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { reportType, parameters, recipients } = job.data;
+    const { reportType, parameters } = job.data;
 
     console.log(`[ReportGenerator] Generating ${reportType} report`);
 
@@ -329,15 +330,18 @@ export const reportGeneratorHandler: JobHandler = async (job: Job): Promise<JobR
 // Helper functions for report generation
 async function generateUsageReport(parameters: any) {
   // TODO: Implement usage report generation
+  void parameters;
   return { placeholder: 'Usage report data' };
 }
 
 async function generateSecurityReport(parameters: any) {
   // TODO: Implement security report generation
+  void parameters;
   return { placeholder: 'Security report data' };
 }
 
 async function generatePerformanceReport(parameters: any) {
   // TODO: Implement performance report generation
+  void parameters;
   return { placeholder: 'Performance report data' };
 }

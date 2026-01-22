@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { UploadToken, UploadTokenUsage } from "@/types/quick-share";
-import { formatTokenForDisplay, CONTENT_TYPE_GROUPS } from "@/lib/quick-share/tokens";
+import { formatTokenForDisplay } from "@/lib/quick-share/tokens";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Quick Share Management Page

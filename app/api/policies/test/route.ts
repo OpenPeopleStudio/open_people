@@ -61,11 +61,17 @@ export async function POST(request: NextRequest) {
     };
 
     // 5. Evaluate policies
-    const trace = await evaluatePolicies(profile.tenant_id, context, {
-      policyIds: body.policy_ids,
-      includeInactive: body.include_inactive,
+    const evalOptions: { policyIds?: string[]; includeInactive?: boolean; includeTrace?: boolean } = {
       includeTrace: true,
-    });
+    };
+    if (body.policy_ids && body.policy_ids.length > 0) {
+      evalOptions.policyIds = body.policy_ids;
+    }
+    if (body.include_inactive !== undefined) {
+      evalOptions.includeInactive = body.include_inactive;
+    }
+
+    const trace = await evaluatePolicies(profile.tenant_id, context, evalOptions);
 
     // 6. Store simulation run for auditing
     await supabaseAdmin.from("policy_simulation_runs").insert({
@@ -83,16 +89,18 @@ export async function POST(request: NextRequest) {
     });
 
     // 7. Build response
+    const summary = {
+      decision: trace.decision,
+      primary_reason: trace.reasons[0] || "No reason",
+      policies_matched: trace.policies_evaluated.filter((p) => p.matched).length,
+      policies_evaluated: trace.policies_evaluated.length,
+      ...(context.risk_score !== undefined ? { risk_score: context.risk_score } : {}),
+      ...(context.risk_level ? { risk_level: context.risk_level } : {}),
+    };
+
     const response: TestBenchResponse = {
       trace,
-      summary: {
-        decision: trace.decision,
-        primary_reason: trace.reasons[0] || "No reason",
-        policies_matched: trace.policies_evaluated.filter((p) => p.matched).length,
-        policies_evaluated: trace.policies_evaluated.length,
-        risk_score: context.risk_score,
-        risk_level: context.risk_level,
-      },
+      summary,
     };
 
     return NextResponse.json(response);

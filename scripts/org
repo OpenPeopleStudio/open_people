@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  org run remote work <Role>
+  org run remote work --all
+
+Examples:
+  org run remote work Claude
+  org run remote work --all
+USAGE
+}
+
+if [[ "${1:-}" != "run" || "${2:-}" != "remote" || "${3:-}" != "work" ]]; then
+  usage
+  exit 1
+fi
+
+ROLE="${4:-}"
+if [[ -z "$ROLE" ]]; then
+  usage
+  exit 1
+fi
+
+if [[ "$ROLE" == "--all" ]]; then
+  bash scripts/org-run-remote-work.sh
+  exit 0
+fi
+
+bash scripts/org-run-remote-work.sh "$ROLE"

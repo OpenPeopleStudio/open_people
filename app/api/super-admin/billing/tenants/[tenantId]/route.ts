@@ -11,6 +11,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 const handleGetTenantBilling = withAuthAndAuthZ({
   role: UserRole.SUPER_ADMIN,
 })(async (auth, request: NextRequest) => {
+  void auth;
   const supabase = await createSupabaseServer();
   const tenantId = request.nextUrl.pathname.split('/').pop();
 

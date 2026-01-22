@@ -130,7 +130,7 @@ export class JobQueue {
     this.isProcessing = false;
     if (this.processingInterval) {
       clearInterval(this.processingInterval);
-      this.processingInterval = undefined;
+      delete this.processingInterval;
     }
     console.log(`[JobQueue:${this.queueName}] Stopped job processing`);
   }
@@ -228,14 +228,14 @@ export class JobQueue {
       maxRetries: jobData.max_retries,
       retryCount: jobData.retry_count,
       nextRunAt: new Date(jobData.next_run_at),
-      startedAt: jobData.started_at ? new Date(jobData.started_at) : undefined,
-      completedAt: jobData.completed_at ? new Date(jobData.completed_at) : undefined,
-      failedAt: jobData.failed_at ? new Date(jobData.failed_at) : undefined,
-      errorMessage: jobData.error_message,
       createdAt: new Date(jobData.created_at),
       updatedAt: new Date(jobData.updated_at),
-      createdBy: jobData.created_by,
-      correlationId: jobData.correlation_id,
+      ...(jobData.started_at ? { startedAt: new Date(jobData.started_at) } : {}),
+      ...(jobData.completed_at ? { completedAt: new Date(jobData.completed_at) } : {}),
+      ...(jobData.failed_at ? { failedAt: new Date(jobData.failed_at) } : {}),
+      ...(jobData.error_message ? { errorMessage: jobData.error_message } : {}),
+      ...(jobData.created_by ? { createdBy: jobData.created_by } : {}),
+      ...(jobData.correlation_id ? { correlationId: jobData.correlation_id } : {}),
     };
 
     const handler = this.handlers.get(job.type);
@@ -264,7 +264,7 @@ export class JobQueue {
         logPerformance(`job_${job.type}_duration`, Date.now() - startTime, 'ms', {
           jobId: job.id,
           success: false,
-          error: result.error,
+          ...(result.error ? { error: new Error(result.error) } : {}),
         });
       }
 
@@ -274,10 +274,11 @@ export class JobQueue {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       });
+      const errorObj = error instanceof Error ? error : new Error('Unknown error');
       logPerformance(`job_${job.type}_duration`, Date.now() - startTime, 'ms', {
         jobId: job.id,
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: errorObj,
       });
     }
   }

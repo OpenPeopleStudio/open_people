@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { withAuthAndAuthZ, UserRole } from "@/lib/auth/middleware";
+import { withAuthAndAuthZ } from "@/lib/auth/middleware";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 const handleGetSharing = withAuthAndAuthZ()(async (auth, request: NextRequest) => {
@@ -48,17 +48,21 @@ const handleGetSharing = withAuthAndAuthZ()(async (auth, request: NextRequest) =
     `)
     .eq('note_id', noteId);
 
-  const formattedCollaborators = collaborators?.map(collab => ({
-    id: collab.id,
-    note_id: collab.note_id,
-    user_id: collab.user_id,
-    permission: collab.permission,
-    invited_by: collab.invited_by,
-    invited_at: collab.invited_at,
-    accepted_at: collab.accepted_at,
-    user_email: collab.user?.email,
-    user_name: collab.user?.full_name,
-  })) || [];
+  const formattedCollaborators =
+    collaborators?.map((collab) => {
+      const userInfo = Array.isArray(collab.user) ? collab.user[0] : collab.user;
+      return {
+        id: collab.id,
+        note_id: collab.note_id,
+        user_id: collab.user_id,
+        permission: collab.permission,
+        invited_by: collab.invited_by,
+        invited_at: collab.invited_at,
+        accepted_at: collab.accepted_at,
+        user_email: userInfo?.email,
+        user_name: userInfo?.full_name,
+      };
+    }) || [];
 
   return NextResponse.json({
     isPublic: note.is_public,

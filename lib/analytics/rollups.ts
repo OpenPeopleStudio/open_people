@@ -265,7 +265,7 @@ function aggregateMetrics(
     p95_latency_ms: latencies.length > 0 ? percentile(latencies, 95) : 0,
     p99_latency_ms: latencies.length > 0 ? percentile(latencies, 99) : 0,
     total_cost_usd: totalCost,
-    avg_quality_score: qualityCount > 0 ? qualitySum / qualityCount : undefined,
+    ...(qualityCount > 0 ? { avg_quality_score: qualitySum / qualityCount } : {}),
     cache_hits: 0, // Would need to join with cache metrics
     cache_misses: 0,
     cache_hit_rate: 0,

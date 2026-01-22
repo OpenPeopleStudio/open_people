@@ -8,14 +8,12 @@ import { evaluatePolicies, loadPolicies } from "@/lib/policy/evaluator";
 import type {
   RequestContext,
   PolicyDecision,
-  EvaluationTrace,
   RoutingDecision,
   GatewayEvaluationResult,
   BudgetContext,
   RoutingConditionConfig,
   PolicyWithRelations,
 } from "@/types/policy";
-import type { AIProviderConfig } from "@/types/ai-providers";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -318,19 +316,21 @@ function evaluateRoutingConditions(
     }
   }
 
+  const modifiedRequest =
+    systemPromptPrefix || modifiedTemperature !== undefined
+      ? {
+          ...(systemPromptPrefix ? { system_prompt_prefix: systemPromptPrefix } : {}),
+          ...(modifiedTemperature !== undefined ? { temperature: modifiedTemperature } : {}),
+        }
+      : undefined;
+
   return {
-    provider_id: selectedProviderId,
-    model: selectedModel,
-    modified_request:
-      systemPromptPrefix || modifiedTemperature
-        ? {
-            system_prompt_prefix: systemPromptPrefix,
-            temperature: modifiedTemperature,
-          }
-        : undefined,
     routing_reasons: routingReasons,
-    routing_policy_id: routingPolicyId,
-    routing_policy_name: routingPolicyName,
+    ...(selectedProviderId ? { provider_id: selectedProviderId } : {}),
+    ...(selectedModel ? { model: selectedModel } : {}),
+    ...(modifiedRequest ? { modified_request: modifiedRequest } : {}),
+    ...(routingPolicyId ? { routing_policy_id: routingPolicyId } : {}),
+    ...(routingPolicyName ? { routing_policy_name: routingPolicyName } : {}),
   };
 }
 
@@ -359,9 +359,11 @@ export async function evaluateGatewayRequest(
   ]);
 
   // Evaluate access policies
-  const policyTrace = await evaluatePolicies(tenantId, context, {
-    includeTrace: options?.includeTrace,
-  });
+  const policyOptions: { includeTrace?: boolean } = {};
+  if (options?.includeTrace !== undefined) {
+    policyOptions.includeTrace = options.includeTrace;
+  }
+  const policyTrace = await evaluatePolicies(tenantId, context, policyOptions);
 
   // Evaluate routing conditions
   const routing = evaluateRoutingConditions(policies, context, providers, budget);
@@ -380,15 +382,19 @@ export async function evaluateGatewayRequest(
 
   const evaluationTimeMs = Date.now() - startTime;
 
-  return {
+  const evaluationResult: GatewayEvaluationResult = {
     policy_decision: policyTrace.decision,
     policy_reasons: policyTrace.reasons,
-    policy_trace: options?.includeTrace ? policyTrace : undefined,
     routing,
     request_id: requestId,
     tenant_id: tenantId,
     evaluation_time_ms: evaluationTimeMs,
   };
+  if (options?.includeTrace) {
+    evaluationResult.policy_trace = policyTrace;
+  }
+
+  return evaluationResult;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -409,12 +415,23 @@ export async function quickGatewayEvaluate(
     includeTrace: false,
   });
 
-  return {
+  const quickResult: {
+    decision: PolicyDecision;
+    provider_id?: string;
+    model?: string;
+    reasons: string[];
+  } = {
     decision: result.policy_decision,
-    provider_id: result.routing.provider_id,
-    model: result.routing.model,
     reasons: [...result.policy_reasons, ...result.routing.routing_reasons],
   };
+  if (result.routing.provider_id) {
+    quickResult.provider_id = result.routing.provider_id;
+  }
+  if (result.routing.model) {
+    quickResult.model = result.routing.model;
+  }
+
+  return quickResult;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

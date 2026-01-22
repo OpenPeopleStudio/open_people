@@ -145,14 +145,22 @@ export async function POST(request: NextRequest) {
         
         // Use Resend's DNS records - they have the correct DKIM values
         if (resendResult.dnsRecords && resendResult.dnsRecords.length > 0) {
-          dnsRecords = resendResult.dnsRecords.map((r) => ({
-            type: r.type as "TXT" | "MX" | "CNAME",
-            name: r.name,
-            value: r.value,
-            priority: (r as { priority?: number }).priority,
-            status: "pending" as const,
-            purpose: ((r as { purpose?: string }).purpose || "verification") as "dkim" | "spf" | "mx" | "return-path" | "verification",
-          }));
+          dnsRecords = resendResult.dnsRecords.map((r) => {
+            const priority = (r as { priority?: number }).priority;
+            return {
+              type: r.type as "TXT" | "MX" | "CNAME",
+              name: r.name,
+              value: r.value,
+              ...(priority !== undefined ? { priority } : {}),
+              status: "pending" as const,
+              purpose: ((r as { purpose?: string }).purpose || "verification") as
+                | "dkim"
+                | "spf"
+                | "mx"
+                | "return-path"
+                | "verification",
+            };
+          });
         }
       }
     } catch (resendError) {
@@ -264,11 +272,12 @@ export async function PUT(request: NextRequest) {
               purpose = "return-path";
             }
 
+            const priority = r.priority as number | undefined;
             return {
               type: r.type as "TXT" | "MX" | "CNAME",
               name: r.name,
               value: r.value,
-              priority: r.priority,
+              ...(priority !== undefined ? { priority } : {}),
               status: r.status === "verified" ? "verified" as const : "pending" as const,
               purpose: purpose as "dkim" | "spf" | "mx" | "return-path" | "verification",
             };

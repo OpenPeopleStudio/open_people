@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import type { VaultSearchParams, VaultSearchResponse, VaultFile } from "@/types/vault";
+import type { VaultSearchParams, VaultSearchResponse } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GET /api/vault/files
@@ -59,16 +59,27 @@ export async function GET(request: NextRequest) {
     
     // Parse search parameters
     const searchParams = request.nextUrl.searchParams;
+    const limit = parseInt(searchParams.get("limit") || "50");
+    const offset = parseInt(searchParams.get("offset") || "0");
+    const queryParam = searchParams.get("query") || undefined;
+    const categoryParam = searchParams.get("category") as VaultSearchParams["category"] | null;
+    const folderIdParam = searchParams.get("folder_id") || undefined;
+    const tagsParam = searchParams.get("tags")?.split(",") || undefined;
+    const sourceTypeParam =
+      (searchParams.get("source_type") as VaultSearchParams["source_type"] | null) || undefined;
+    const dateFromParam = searchParams.get("date_from") || undefined;
+    const dateToParam = searchParams.get("date_to") || undefined;
+
     const params: VaultSearchParams = {
-      query: searchParams.get("query") || undefined,
-      category: searchParams.get("category") as VaultSearchParams["category"] || undefined,
-      folder_id: searchParams.get("folder_id") || undefined,
-      tags: searchParams.get("tags")?.split(",") || undefined,
-      source_type: searchParams.get("source_type") as VaultSearchParams["source_type"] || undefined,
-      date_from: searchParams.get("date_from") || undefined,
-      date_to: searchParams.get("date_to") || undefined,
-      limit: parseInt(searchParams.get("limit") || "50"),
-      offset: parseInt(searchParams.get("offset") || "0"),
+      limit,
+      offset,
+      ...(queryParam ? { query: queryParam } : {}),
+      ...(categoryParam ? { category: categoryParam } : {}),
+      ...(folderIdParam ? { folder_id: folderIdParam } : {}),
+      ...(tagsParam ? { tags: tagsParam } : {}),
+      ...(sourceTypeParam ? { source_type: sourceTypeParam } : {}),
+      ...(dateFromParam ? { date_from: dateFromParam } : {}),
+      ...(dateToParam ? { date_to: dateToParam } : {}),
     };
     
     // Build query
@@ -113,7 +124,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Apply pagination
-    query = query.range(params.offset!, params.offset! + params.limit! - 1);
+    query = query.range(offset, offset + limit - 1);
     
     const { data: files, error: filesError, count } = await query;
     
@@ -136,7 +147,7 @@ export async function GET(request: NextRequest) {
     const response: VaultSearchResponse = {
       files: transformedFiles,
       total: count || 0,
-      has_more: (params.offset! + params.limit!) < (count || 0),
+      has_more: offset + limit < (count || 0),
     };
     
     // Update session activity

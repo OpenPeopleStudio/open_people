@@ -48,10 +48,12 @@ export function EmailWorkspace({
   isSuperAdmin = false,
   onRefresh,
 }: Props) {
+  void initialDomains;
+  void tenantSlug;
+  void onRefresh;
   const [accounts, setAccounts] = useState(initialAccounts);
   const [messages, setMessages] = useState(initialMessages);
   const [templates, setTemplates] = useState(initialTemplates);
-  const [domains, setDomains] = useState(initialDomains);
   const [managedDomains, setManagedDomains] = useState<ManagedEmailDomain[]>(initialManagedDomains);
   const [stats, setStats] = useState(initialStats);
   
@@ -264,6 +266,7 @@ export function EmailWorkspace({
           <span className="text-sm font-semibold text-[var(--text-primary)]">Email</span>
           <button
             onClick={() => setMobileNavOpen(false)}
+            aria-label="Close mail navigation"
             className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)]"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -407,6 +410,7 @@ export function EmailWorkspace({
       <div className="md:hidden flex items-center justify-between h-14 px-4 border-b border-[var(--border-subtle)] bg-[var(--void)] shrink-0">
         <button
           onClick={() => setMobileNavOpen(true)}
+          aria-label="Open mail navigation"
           className="p-2 -ml-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)]"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -416,6 +420,7 @@ export function EmailWorkspace({
         <span className="text-sm font-semibold text-[var(--text-primary)]">{getViewTitle()}</span>
         <button
           onClick={() => setShowCompose(true)}
+          aria-label="Compose message"
           className="p-2 -mr-2 rounded-lg text-[var(--electric-lime)] hover:bg-[var(--surface-1)]"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -455,7 +460,7 @@ export function EmailWorkspace({
           <SettingsView
             accounts={accounts}
             managedDomains={managedDomains}
-            tenantId={tenantId}
+            {...(tenantId ? { tenantId } : {})}
             isSuperAdmin={isSuperAdmin}
             onAccountsChange={async () => {
               // Refresh accounts
@@ -481,7 +486,7 @@ export function EmailWorkspace({
                 <AccountsManager
                   accounts={accounts}
                   onAccountsChange={setAccounts}
-                  tenantId={tenantId}
+                  {...(tenantId ? { tenantId } : {})}
                   isSuperAdmin={isSuperAdmin}
                 />
               ) : currentView === "logs" ? (
@@ -492,7 +497,6 @@ export function EmailWorkspace({
                   selectedMessage={selectedMessage}
                   onSelectMessage={handleMessageSelect}
                   onStar={handleStar}
-                  onDelete={handleDelete}
                   viewType={currentView}
                 />
               )}

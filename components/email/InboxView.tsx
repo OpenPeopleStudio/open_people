@@ -7,7 +7,6 @@ type Props = {
   selectedMessage: EmailMessage | null;
   onSelectMessage: (message: EmailMessage) => void;
   onStar: (message: EmailMessage) => void;
-  onDelete: (message: EmailMessage) => void;
   viewType: string;
 };
 
@@ -16,7 +15,6 @@ export function InboxView({
   selectedMessage,
   onSelectMessage,
   onStar,
-  onDelete,
   viewType,
 }: Props) {
   const getViewTitle = () => {
@@ -85,6 +83,8 @@ export function InboxView({
                     e.stopPropagation();
                     onStar(message);
                   }}
+                  aria-label={message.is_starred ? "Unstar message" : "Star message"}
+                  aria-pressed={message.is_starred}
                   className="hidden sm:block mt-1 p-1 rounded hover:bg-[var(--surface-2)] transition-colors shrink-0"
                 >
                   <svg

@@ -1,6 +1,6 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getDownloadUrl, getPublicUrl } from "@/lib/storage/r2";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Storage Download API
@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PLATFORM_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
 export async function GET(request: Request, context: any) {
+  void request;
   try {
     const { fileId } = context.params;
     const supabase = await createSupabaseServer();

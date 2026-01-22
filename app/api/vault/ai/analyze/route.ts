@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { createR2Client, getDownloadUrl } from "@/lib/storage/r2";
+import { getDownloadUrl } from "@/lib/storage/r2";
 import { analyzeDocument, type DocumentContext } from "@/lib/vault/ai-analysis";
-import { decryptFile } from "@/lib/vault/encryption";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    POST /api/vault/ai/analyze
@@ -117,6 +116,7 @@ export async function POST(request: NextRequest) {
         const response = await fetch(downloadUrl);
         if (response.ok) {
           const encryptedData = await response.arrayBuffer();
+          void encryptedData;
           
           // Decrypt the file
           // Note: In production, we'd need the master password to unwrap the DEK

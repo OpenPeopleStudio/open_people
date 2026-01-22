@@ -103,7 +103,15 @@ export default function NotesPage() {
               {["all", "draft", "published", "archived"].map(status => (
                 <button
                   key={status}
-                  onClick={() => setFilters(prev => ({ ...prev, status: status === "all" ? undefined : status }))}
+                  onClick={() =>
+                    setFilters((prev) => {
+                      if (status === "all") {
+                        const { status: _status, ...rest } = prev;
+                        return rest;
+                      }
+                      return { ...prev, status };
+                    })
+                  }
                   className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors ${
                     (status === "all" && !filters.status) || filters.status === status
                       ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
@@ -124,7 +132,13 @@ export default function NotesPage() {
               </h3>
               <div className="space-y-1">
                 <button
-                  onClick={() => setFilters(prev => ({ ...prev, category_id: undefined }))}
+                  onClick={() =>
+                    setFilters((prev) => {
+                      const { category_id, ...rest } = prev;
+                      void category_id;
+                      return rest;
+                    })
+                  }
                   className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors ${
                     !filters.category_id
                       ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
@@ -136,7 +150,7 @@ export default function NotesPage() {
                 {categories.map(cat => (
                   <button
                     key={cat.id}
-                    onClick={() => setFilters(prev => ({ ...prev, category_id: cat.id }))}
+                    onClick={() => setFilters((prev) => ({ ...prev, category_id: cat.id }))}
                     className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-2 ${
                       filters.category_id === cat.id
                         ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
@@ -162,7 +176,13 @@ export default function NotesPage() {
               </h3>
               <div className="space-y-1">
                 <button
-                  onClick={() => setFilters(prev => ({ ...prev, project_name: undefined }))}
+                  onClick={() =>
+                    setFilters((prev) => {
+                      const { project_name, ...rest } = prev;
+                      void project_name;
+                      return rest;
+                    })
+                  }
                   className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors ${
                     !filters.project_name
                       ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
@@ -397,7 +417,6 @@ function NewNoteModal({
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState<string>("");
   const [projectName, setProjectName] = useState("");
-  const [useTemplate, setUseTemplate] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -416,8 +435,8 @@ function NewNoteModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title.trim(),
-          category_id: categoryId || undefined,
-          project_name: projectName.trim() || undefined,
+          ...(categoryId ? { category_id: categoryId } : {}),
+          ...(projectName.trim() ? { project_name: projectName.trim() } : {}),
           content: `# ${title.trim()}\n\n`,
         }),
       });

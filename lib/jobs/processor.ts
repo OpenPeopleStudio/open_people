@@ -21,7 +21,6 @@ import {
   sessionCleanupHandler,
   notificationSenderHandler,
   webhookDeliveryHandler,
-  securityEventHandler,
   reportGeneratorHandler,
 } from './handlers';
 
@@ -96,8 +95,6 @@ export async function getJobQueueStats() {
  * Schedule recurring maintenance jobs
  */
 export async function scheduleMaintenanceJobs(): Promise<void> {
-  const supabase = await import('@/lib/supabase/server').then(m => m.createSupabaseServer());
-
   // Schedule session cleanup every hour
   try {
     await maintenanceJobQueue.addJob(
@@ -153,6 +150,7 @@ export function setupGracefulShutdown(): void {
   });
 
   process.on('unhandledRejection', (reason, promise) => {
+    void promise;
     console.error('Unhandled rejection in job processor:', reason);
     stopJobProcessing();
     process.exit(1);

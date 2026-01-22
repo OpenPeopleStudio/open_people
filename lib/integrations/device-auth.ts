@@ -132,8 +132,8 @@ export async function generatePluginToken(
   const attestation: DeviceAttestation = {
     platform: request.platform,
     fingerprint_hash: fingerprintHash,
-    user_agent: request.user_agent,
     created_at: new Date().toISOString(),
+    ...(request.user_agent ? { user_agent: request.user_agent } : {}),
   };
   
   // Store token in database
@@ -292,7 +292,7 @@ export async function revokeAllDeviceTokens(
 ): Promise<number> {
   const supabase = await createSupabaseAdmin();
   
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("plugin_tokens")
     .update({
       is_active: false,
@@ -436,13 +436,14 @@ export async function refreshPluginToken(
   }
   
   // Generate new token with same scopes
-  return generatePluginToken({
+  const tokenRequest: PluginTokenRequest = {
     tenant_id: validation.tenant_id!,
     user_id: validation.user_id!,
     device_fingerprint: deviceFingerprint,
     platform: (originalToken.attestation as DeviceAttestation).platform,
-    scopes: validation.scopes,
-  });
+    ...(validation.scopes ? { scopes: validation.scopes } : {}),
+  };
+  return generatePluginToken(tokenRequest);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

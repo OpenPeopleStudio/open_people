@@ -92,7 +92,10 @@ describe('Authentication Middleware', () => {
   describe('withRole', () => {
     it('should allow access for users with correct role', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((_requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((_requirements: any) => {
+        void _requirements;
+        return (handler: any) => handler;
+      });
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withRole(UserRole.OWNER)(mockHandler);
@@ -157,7 +160,10 @@ describe('Authentication Middleware', () => {
   describe('withAuthAndAuthZ', () => {
     it('should combine authentication and authorization', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((requirements: any) => {
+        void requirements;
+        return (handler: any) => handler;
+      });
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withAuthAndAuthZ({

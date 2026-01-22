@@ -97,19 +97,6 @@ export function DNSRecordsPanel({ domain, onVerify, onRefresh, onDelete }: Props
     }
   };
 
-  const getRecordTypeHelp = (type: string) => {
-    switch (type) {
-      case "TXT":
-        return "Text record - paste the entire value exactly as shown";
-      case "MX":
-        return "Mail exchange record - also set the priority value";
-      case "CNAME":
-        return "Canonical name record - points to another domain";
-      default:
-        return "";
-    }
-  };
-
   const allVerified = domain.status === "verified";
   const records = (domain.dns_records || []) as DNSRecord[];
 

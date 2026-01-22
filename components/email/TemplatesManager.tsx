@@ -11,6 +11,7 @@ type Props = {
 };
 
 export function TemplatesManager({ templates, plan, onTemplatesChange }: Props) {
+  void plan;
   const [showModal, setShowModal] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
   const [form, setForm] = useState({

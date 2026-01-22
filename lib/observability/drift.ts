@@ -7,6 +7,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
+const roundTo = (value: number, decimals = 6): number => Number(value.toFixed(decimals));
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
@@ -576,22 +578,21 @@ export async function completeAutoBaseline(
     .map((s) => s.quality_score)
     .filter((s): s is number => s !== null);
 
+  const avgQualityScoreRaw =
+    qualityScores.length > 0
+      ? qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length
+      : null;
+  const avgQualityScore = avgQualityScoreRaw !== null ? roundTo(avgQualityScoreRaw) : null;
+
   const baselineData = {
     sample_count: samples.length,
-    avg_quality_score:
-      qualityScores.length > 0
-        ? qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length
-        : null,
+    avg_quality_score: avgQualityScore,
     quality_std_dev:
-      qualityScores.length > 1
+      qualityScores.length > 1 && avgQualityScoreRaw !== null
         ? Math.sqrt(
             qualityScores.reduce(
               (sum, s) =>
-                sum +
-                Math.pow(
-                  s - qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length,
-                  2
-                ),
+                sum + Math.pow(s - avgQualityScoreRaw, 2),
               0
             ) /
               (qualityScores.length - 1)

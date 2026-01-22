@@ -61,8 +61,10 @@ export async function GET(request: NextRequest) {
     const config: SDKConfig = {
       experiments: (experiments || []).map((exp) => {
         const audiences = exp.audiences as { rules: unknown } | { rules: unknown }[] | null;
-        const audienceRules = Array.isArray(audiences) ? audiences[0]?.rules : audiences?.rules;
-        return {
+        const audienceRules = (Array.isArray(audiences) ? audiences[0]?.rules : audiences?.rules) as
+          | SDKConfig["experiments"][0]["audience_rules"]
+          | undefined;
+        const experimentConfig: SDKConfig["experiments"][0] = {
           id: exp.id,
           key: exp.key,
           type: exp.type as "ab_test" | "multivariate" | "feature_flag",
@@ -74,19 +76,27 @@ export async function GET(request: NextRequest) {
             weight: v.weight,
             is_control: v.is_control,
           })),
-          audience_rules: audienceRules as SDKConfig["experiments"][0]["audience_rules"],
         };
+        if (audienceRules && audienceRules.length > 0) {
+          experimentConfig.audience_rules = audienceRules;
+        }
+        return experimentConfig;
       }),
       flags: (flags || []).map((flag) => {
         const audiences = flag.audiences as { rules: unknown } | { rules: unknown }[] | null;
-        const audienceRules = Array.isArray(audiences) ? audiences[0]?.rules : audiences?.rules;
-        return {
+        const audienceRules = (Array.isArray(audiences) ? audiences[0]?.rules : audiences?.rules) as
+          | SDKConfig["flags"][0]["audience_rules"]
+          | undefined;
+        const flagConfig: SDKConfig["flags"][0] = {
           id: flag.id,
           key: flag.key,
           enabled: flag.enabled,
           rollout_percentage: flag.rollout_percentage,
-          audience_rules: audienceRules as SDKConfig["flags"][0]["audience_rules"],
         };
+        if (audienceRules && audienceRules.length > 0) {
+          flagConfig.audience_rules = audienceRules;
+        }
+        return flagConfig;
       }),
     };
 

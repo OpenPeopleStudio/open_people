@@ -62,13 +62,13 @@ export function CampaignsClient() {
   >(null);
   const [showCompose, setShowCompose] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = async () => {
     await Promise.all([loadCompanies(), loadGroups(), loadCampaigns(), loadAccounts()]);
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const loadCompanies = async () => {
     const res = await fetch("/api/super-admin/email/companies");
@@ -151,10 +151,10 @@ export function CampaignsClient() {
 
     await createGroup({
       name: suggestion.name,
-      description: suggestion.description,
-      strategy: suggestion.strategy,
-      tags: suggestion.tags,
       companyIds,
+      ...(suggestion.description ? { description: suggestion.description } : {}),
+      ...(suggestion.strategy ? { strategy: suggestion.strategy } : {}),
+      ...(suggestion.tags ? { tags: suggestion.tags } : {}),
     });
   };
 
@@ -336,14 +336,14 @@ export function CampaignsClient() {
         />
         <CampaignsList
           campaigns={campaigns}
-          onOpenComposer={
-            accounts.length > 0
-              ? (campaign) => {
+          {...(accounts.length > 0
+            ? {
+                onOpenComposer: (campaign: EmailCampaignDraft) => {
                   setComposeCampaign(campaign);
                   setShowCompose(true);
-                }
-              : undefined
-          }
+                },
+              }
+            : {})}
         />
       </div>
 
@@ -355,9 +355,9 @@ export function CampaignsClient() {
           templates={[]}
           prefill={{
             to: composeCampaign.recipients?.map((r) => r.to_email) || [],
-            subject: composeCampaign.subject || undefined,
-            body: composeCampaign.body_text || undefined,
             accountId: accounts[0]?.id || null,
+            ...(composeCampaign.subject ? { subject: composeCampaign.subject } : {}),
+            ...(composeCampaign.body_text ? { body: composeCampaign.body_text } : {}),
           }}
           onClose={() => {
             setShowCompose(false);

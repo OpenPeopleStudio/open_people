@@ -489,7 +489,9 @@ function ProviderCard({
               <input
                 type="password"
                 value={provider.apiKey || ""}
-                onChange={(e) => onUpdate({ apiKey: e.target.value || undefined })}
+                onChange={(e) =>
+                  onUpdate(e.target.value ? { apiKey: e.target.value } : {})
+                }
                 placeholder="Not required for local models"
                 className="w-full px-3 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm"
               />

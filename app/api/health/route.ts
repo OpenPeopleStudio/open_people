@@ -28,11 +28,16 @@ export async function GET() {
     });
 
     // Log health check result
-    logger.info('Health check completed', {
-      status: healthData.status,
-      response_time_ms: responseTime,
-      failed_services: Object.values(healthData.services).filter(s => s.status !== 'up').length,
-    });
+    logger.info(
+      {
+        status: healthData.status,
+        response_time_ms: responseTime,
+        failed_services: Object.values(healthData.services as Record<string, { status: string }>).filter(
+          (s) => s.status !== 'up'
+        ).length,
+      },
+      'Health check completed'
+    );
 
     return NextResponse.json(healthData, {
       status: healthData.status === 'healthy' ? 200 : 503,
@@ -41,10 +46,13 @@ export async function GET() {
   } catch (error) {
     const responseTime = Date.now() - startTime;
 
-    logger.error('Health check failed', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      response_time_ms: responseTime,
-    });
+    logger.error(
+      {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        response_time_ms: responseTime,
+      },
+      'Health check failed'
+    );
 
     return NextResponse.json({
       status: 'unhealthy',
@@ -112,7 +120,7 @@ async function performComprehensiveHealthChecks() {
 
     if (dbError) {
       // Fallback: basic connection test
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('tenants')
         .select('count', { count: 'exact', head: true });
 
@@ -206,7 +214,9 @@ async function performComprehensiveHealthChecks() {
   ];
 
   // Determine overall status
-  const serviceStatuses = Object.values(healthData.services).map(s => s.status);
+  const serviceStatuses = Object.values(healthData.services as Record<string, { status: string }>).map(
+    (s) => s.status
+  );
   if (serviceStatuses.includes('down')) {
     healthData.status = 'unhealthy';
   } else if (serviceStatuses.includes('degraded') || healthData.performance.memory_usage > 85) {
@@ -214,62 +224,4 @@ async function performComprehensiveHealthChecks() {
   }
 
   return healthData;
-}
-
-async function performCheck(
-  checks: any,
-  name: string,
-  checkFn: () => Promise<{ healthy: boolean; details?: any }>
-) {
-  const startTime = Date.now();
-
-  try {
-    const result = await checkFn();
-    const responseTime = Date.now() - startTime;
-
-    checks.details.push({
-      name,
-      healthy: result.healthy,
-      response_time_ms: responseTime,
-      details: result.details,
-    });
-
-    if (!result.healthy) {
-      checks.healthy = false;
-    }
-
-  } catch (error) {
-    const responseTime = Date.now() - startTime;
-
-    checks.details.push({
-      name,
-      healthy: false,
-      response_time_ms: responseTime,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
-
-    checks.healthy = false;
-  }
-}
-
-function getSystemMetrics() {
-  const memUsage = process.memoryUsage();
-
-  return {
-    memory: {
-      heap_used_mb: Math.round(memUsage.heapUsed / 1024 / 1024),
-      heap_total_mb: Math.round(memUsage.heapTotal / 1024 / 1024),
-      external_mb: Math.round(memUsage.external / 1024 / 1024),
-      rss_mb: Math.round(memUsage.rss / 1024 / 1024),
-    },
-    process: {
-      uptime_seconds: Math.round(process.uptime()),
-      pid: process.pid,
-      node_version: process.version,
-      platform: process.platform,
-    },
-    performance: {
-      recent_metrics: performanceMonitor.getMetrics().slice(-10), // Last 10 metrics
-    },
-  };
 }

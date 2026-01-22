@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button, Card, FormField, Input, Textarea, LoadingSpinner } from "@/lib/ui";
-import type { TenantSettings, TenantFeatureFlags } from "@/types/tenant";
+import type { TenantSettings, TenantFeatureFlags, TenantIntegrations, TenantTheme } from "@/types/tenant";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Tenant Creation Wizard
@@ -35,11 +34,7 @@ type WizardData = {
   features: TenantFeatureFlags;
 
   // Integrations
-  integrations: {
-    email: { provider: string };
-    payments: { provider: string };
-    ai: { provider: string; model: string };
-  };
+  integrations: WizardIntegrations;
 
   // Billing
   plan: 'starter' | 'pro' | 'enterprise' | 'custom';
@@ -50,6 +45,16 @@ type WizardData = {
   ownerEmail: string;
   ownerPassword: string;
   sendWelcomeEmail: boolean;
+};
+
+type EmailProvider = Exclude<NonNullable<TenantIntegrations["email"]>["provider"], undefined>;
+type AiProvider = Exclude<NonNullable<TenantIntegrations["ai"]>["provider"], undefined>;
+type PaymentProvider = Exclude<NonNullable<TenantIntegrations["payments"]>["provider"], undefined>;
+
+type WizardIntegrations = {
+  email: { provider: EmailProvider };
+  payments: { provider: PaymentProvider };
+  ai: { provider: AiProvider; model?: string };
 };
 
 interface TenantWizardProps {
@@ -68,7 +73,6 @@ const STEPS: { id: WizardStep; title: string; description: string }[] = [
 ];
 
 export function TenantWizard({ onComplete, onCancel }: TenantWizardProps) {
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<WizardStep>('details');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -120,10 +124,22 @@ export function TenantWizard({ onComplete, onCancel }: TenantWizardProps) {
   };
 
   const updateIntegrations = (updates: Partial<WizardData['integrations']>) => {
-    setWizardData(prev => ({
-      ...prev,
-      integrations: { ...prev.integrations, ...updates }
-    }));
+    setWizardData(prev => {
+      const nextIntegrations = { ...prev.integrations };
+      if (updates.email) {
+        nextIntegrations.email = { ...prev.integrations.email, ...updates.email };
+      }
+      if (updates.payments) {
+        nextIntegrations.payments = { ...prev.integrations.payments, ...updates.payments };
+      }
+      if (updates.ai) {
+        nextIntegrations.ai = { ...prev.integrations.ai, ...updates.ai };
+      }
+      return {
+        ...prev,
+        integrations: nextIntegrations,
+      };
+    });
   };
 
   const generateSlug = (name: string) => {
@@ -170,13 +186,18 @@ export function TenantWizard({ onComplete, onCancel }: TenantWizardProps) {
 
     try {
       // Prepare tenant settings
+      const theme: TenantTheme | undefined =
+        wizardData.brandName || wizardData.logoUrl
+          ? {
+              ...(wizardData.brandName ? { brand_name: wizardData.brandName } : {}),
+              ...(wizardData.logoUrl ? { logo_url: wizardData.logoUrl } : {}),
+            }
+          : undefined;
+
       const settings: TenantSettings = {
-        theme: wizardData.brandName || wizardData.logoUrl ? {
-          brand_name: wizardData.brandName,
-          logo_url: wizardData.logoUrl,
-        } : undefined,
+        ...(theme ? { theme } : {}),
         features: wizardData.features,
-        integrations: wizardData.integrations,
+        integrations: wizardData.integrations satisfies TenantIntegrations,
       };
 
       const payload = {
@@ -535,6 +556,24 @@ function IntegrationsStep({
   wizardData: WizardData;
   updateIntegrations: (updates: Partial<WizardData['integrations']>) => void;
 }) {
+  const emailProviders: { id: EmailProvider; name: string; recommended?: boolean }[] = [
+    { id: 'resend', name: 'Resend', recommended: true },
+    { id: 'sendgrid', name: 'SendGrid' },
+    { id: 'postmark', name: 'Postmark' },
+    { id: 'disabled', name: 'Disabled' },
+  ];
+
+  const aiProviders: { id: AiProvider; name: string; recommended?: boolean }[] = [
+    { id: 'openai', name: 'OpenAI', recommended: true },
+    { id: 'anthropic', name: 'Anthropic' },
+    { id: 'disabled', name: 'Disabled' },
+  ];
+
+  const paymentProviders: { id: PaymentProvider; name: string; recommended?: boolean }[] = [
+    { id: 'stripe', name: 'Stripe', recommended: true },
+    { id: 'manual', name: 'Manual Processing' },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="text-sm text-[var(--text-muted)] p-4 rounded-lg bg-[var(--info)]/10 border border-[var(--info)]/20">
@@ -545,11 +584,7 @@ function IntegrationsStep({
         <div>
           <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">Email Provider</h3>
           <div className="grid grid-cols-2 gap-3">
-            {[
-              { id: 'resend', name: 'Resend', recommended: true },
-              { id: 'sendgrid', name: 'SendGrid' },
-              { id: 'postmark', name: 'Postmark' },
-            ].map((provider) => (
+            {emailProviders.map((provider) => (
               <button
                 key={provider.id}
                 type="button"
@@ -578,15 +613,19 @@ function IntegrationsStep({
         <div>
           <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">AI Provider</h3>
           <div className="grid grid-cols-2 gap-3">
-            {[
-              { id: 'openai', name: 'OpenAI', recommended: true },
-              { id: 'anthropic', name: 'Anthropic' },
-            ].map((provider) => (
+            {aiProviders.map((provider) => (
               <button
                 key={provider.id}
                 type="button"
                 onClick={() => updateIntegrations({
-                  ai: { provider: provider.id, model: provider.id === 'openai' ? 'gpt-4' : 'claude-3' }
+                  ai: {
+                    provider: provider.id,
+                    ...(provider.id === 'openai'
+                      ? { model: 'gpt-4' }
+                      : provider.id === 'anthropic'
+                        ? { model: 'claude-3' }
+                        : {}),
+                  }
                 })}
                 className={`p-3 rounded-lg border text-left transition-all ${
                   wizardData.integrations.ai.provider === provider.id
@@ -610,10 +649,7 @@ function IntegrationsStep({
         <div>
           <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">Payment Provider</h3>
           <div className="grid grid-cols-2 gap-3">
-            {[
-              { id: 'stripe', name: 'Stripe', recommended: true },
-              { id: 'manual', name: 'Manual Processing' },
-            ].map((provider) => (
+            {paymentProviders.map((provider) => (
               <button
                 key={provider.id}
                 type="button"

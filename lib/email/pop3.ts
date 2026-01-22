@@ -160,21 +160,21 @@ function parseMailToPOP3Message(
   
   return {
     uid: messageNumber,
-    messageId: parsed.messageId,
-    inReplyTo,
     from,
     to,
-    cc,
-    replyTo,
-    subject: parsed.subject,
     bodyText,
-    bodyHtml: parsed.html || undefined,
     bodyPreview,
     attachments,
     hasAttachments: attachments.length > 0,
-    date: parsed.date,
     flags: [],
     mailbox: "INBOX",
+    ...(parsed.messageId ? { messageId: parsed.messageId } : {}),
+    ...(inReplyTo ? { inReplyTo } : {}),
+    ...(cc && cc.length > 0 ? { cc } : {}),
+    ...(replyTo ? { replyTo } : {}),
+    ...(parsed.subject ? { subject: parsed.subject } : {}),
+    ...(parsed.html ? { bodyHtml: parsed.html } : {}),
+    ...(parsed.date ? { date: parsed.date } : {}),
   };
 }
 
@@ -182,23 +182,24 @@ function parseAddress(addr: any): EmailAddress {
   if (!addr) return { email: "unknown@unknown.com" };
   
   if (addr.value && addr.value[0]) {
-    return {
-      email: addr.value[0].address || "",
-      name: addr.value[0].name,
-    };
+    const name = addr.value[0].name;
+    return name
+      ? { email: addr.value[0].address || "", name }
+      : { email: addr.value[0].address || "" };
   }
   
-  return { email: addr.address || "", name: addr.name };
+  return addr.name
+    ? { email: addr.address || "", name: addr.name }
+    : { email: addr.address || "" };
 }
 
 function parseAddresses(addrs: any): EmailAddress[] {
   if (!addrs) return [];
   
   if (addrs.value) {
-    return addrs.value.map((a: any) => ({
-      email: a.address || "",
-      name: a.name,
-    }));
+    return addrs.value.map((a: any) =>
+      a.name ? { email: a.address || "", name: a.name } : { email: a.address || "" }
+    );
   }
   
   if (Array.isArray(addrs)) {

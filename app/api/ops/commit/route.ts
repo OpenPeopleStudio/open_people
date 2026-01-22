@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { indexEntity } from "@/lib/workflows/search";
+import { errors } from "@/lib/http/responses";
+import { parseJsonBody } from "@/lib/http/validation";
+import { opsCommitRequestSchema } from "@/lib/schemas/ops";
 import {
   OPS_WORKER_TAG,
   SOURCE_TAGS,
@@ -26,15 +29,23 @@ export async function POST(request: NextRequest) {
       error: authError,
     } = await supabase.auth.getUser();
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return errors.unauthorized("Unauthorized");
     }
 
     // 2. Parse request
-    const body: OpsCommitRequest = await request.json();
-
-    if (!body.run_id) {
-      return NextResponse.json({ error: "run_id is required" }, { status: 400 });
+    const bodyResult = await parseJsonBody(request, opsCommitRequestSchema);
+    if ("error" in bodyResult) {
+      return bodyResult.error;
     }
+    const overrides = bodyResult.data.overrides as
+      | Record<string, Partial<ProposedActionItem>>
+      | undefined;
+    const body: OpsCommitRequest = {
+      run_id: bodyResult.data.run_id,
+      selected_task_ids: bodyResult.data.selected_task_ids ?? [],
+      selected_update_ids: bodyResult.data.selected_update_ids ?? [],
+      ...(overrides ? { overrides } : {}),
+    };
 
     // 3. Fetch the ops run
     const { data: opsRun, error: runError } = await supabase
@@ -45,20 +56,20 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (runError || !opsRun) {
-      return NextResponse.json({ error: "Ops run not found" }, { status: 404 });
+      return errors.notFound("Ops run not found");
     }
 
     if (opsRun.status === "committed") {
-      return NextResponse.json({ error: "This run has already been committed" }, { status: 400 });
+      return errors.badRequest("This run has already been committed");
     }
 
     if (opsRun.status !== "completed") {
-      return NextResponse.json({ error: "Ops run is not in completed status" }, { status: 400 });
+      return errors.badRequest("Ops run is not in completed status");
     }
 
     const proposal = opsRun.proposal as OpsProposal | null;
     if (!proposal) {
-      return NextResponse.json({ error: "No proposal found in ops run" }, { status: 400 });
+      return errors.badRequest("No proposal found in ops run");
     }
 
     // 4. Get decision source for tagging
@@ -68,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     // 5. Process selected tasks to create
     const createdTasks: OpsCommitResponse["created_tasks"] = [];
-    const errors: OpsCommitResponse["errors"] = [];
+    const commitErrors: OpsCommitResponse["errors"] = [];
 
     const selectedCreateIds = new Set(body.selected_task_ids || []);
     const tasksToCreate = proposal.tasks_to_create.filter((t) => selectedCreateIds.has(t.id));
@@ -133,7 +144,7 @@ export async function POST(request: NextRequest) {
           .single();
 
         if (createError || !newTask) {
-          errors.push({
+          commitErrors.push({
             proposal_id: task.id,
             error: createError?.message || "Failed to create task",
           });
@@ -149,7 +160,7 @@ export async function POST(request: NextRequest) {
           title: newTask.title,
         });
       } catch (err) {
-        errors.push({
+        commitErrors.push({
           proposal_id: proposedTask.id,
           error: err instanceof Error ? err.message : "Unknown error",
         });
@@ -220,7 +231,7 @@ export async function POST(request: NextRequest) {
           .single();
 
         if (updateError || !updatedTask) {
-          errors.push({
+          commitErrors.push({
             proposal_id: proposedUpdate.task_id,
             error: updateError?.message || "Failed to update task",
           });
@@ -232,7 +243,7 @@ export async function POST(request: NextRequest) {
           title: updatedTask.title,
         });
       } catch (err) {
-        errors.push({
+        commitErrors.push({
           proposal_id: proposedUpdate.task_id,
           error: err instanceof Error ? err.message : "Unknown error",
         });
@@ -269,15 +280,14 @@ export async function POST(request: NextRequest) {
     const response: OpsCommitResponse = {
       created_tasks: createdTasks,
       updated_tasks: updatedTasks,
-      errors,
+      errors: commitErrors,
     };
 
     return NextResponse.json(response);
   } catch (error) {
     console.error("Ops commit error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Internal server error" },
-      { status: 500 }
-    );
+    return errors.serverError("Internal server error", {
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 }

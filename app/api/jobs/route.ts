@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { withAuthAndAuthZ, UserRole } from "@/lib/auth/middleware";
-import { getJobQueueStats, scheduleMaintenanceJobs } from "@/lib/jobs/processor";
+import { getJobQueueStats } from "@/lib/jobs/processor";
 import { appJobQueue, emailJobQueue, aiJobQueue, maintenanceJobQueue, JobType, JobPriority } from "@/lib/jobs/queue";
 
 /**
@@ -16,6 +16,7 @@ import { appJobQueue, emailJobQueue, aiJobQueue, maintenanceJobQueue, JobType, J
 const handleGetJobs = withAuthAndAuthZ({
   role: UserRole.ADMIN, // Admin or higher
 })(async (auth) => {
+  void auth;
   const stats = await getJobQueueStats();
 
   return NextResponse.json({
@@ -104,32 +105,6 @@ const handleCreateJob = withAuthAndAuthZ({
     console.error('Failed to create job:', error);
     return NextResponse.json(
       { error: 'Failed to create job' },
-      { status: 500 }
-    );
-  }
-});
-
-/**
- * POST /api/jobs/maintenance
- * Trigger maintenance jobs
- */
-const handleTriggerMaintenance = withAuthAndAuthZ({
-  role: UserRole.SUPER_ADMIN, // Only super admins
-})(async (auth) => {
-  try {
-    await scheduleMaintenanceJobs();
-
-    return NextResponse.json({
-      message: 'Maintenance jobs scheduled',
-      jobs: [
-        'cleanup_expired_sessions',
-        'generate_reports',
-      ],
-    });
-  } catch (error) {
-    console.error('Failed to schedule maintenance jobs:', error);
-    return NextResponse.json(
-      { error: 'Failed to schedule maintenance jobs' },
       { status: 500 }
     );
   }

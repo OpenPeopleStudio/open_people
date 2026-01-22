@@ -9,6 +9,7 @@ import { logActivity } from "@/lib/mlf/activity";
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export async function GET(request: Request, context: any) {
+  void request;
   try {
     const { factId } = context.params;
     const supabase = await createSupabaseServer();

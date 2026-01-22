@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/lib/auth/auth";
 import { createSupabaseAdmin, createSupabaseServer } from "@/lib/supabase/server";
 import { UserRole } from "@/lib/auth/authorization";
+import { errors } from "@/lib/http/responses";
+import { parseJsonBody } from "@/lib/http/validation";
+import { userInviteSchema } from "@/lib/schemas/v1-users";
 
 function isSuperAdmin(role?: string | null) {
   return role === UserRole.SUPER_ADMIN;
@@ -14,7 +17,7 @@ function canInvite(role?: string | null) {
 export async function GET(request: NextRequest) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
-    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    return errors.unauthorized("Authentication required");
   }
 
   const supabase = await createSupabaseServer();
@@ -25,7 +28,7 @@ export async function GET(request: NextRequest) {
 
   if (!isSuperAdmin(auth.user.profile.role)) {
     if (!auth.user.profile.tenant_id) {
-      return NextResponse.json({ error: "Tenant context required" }, { status: 400 });
+      return errors.badRequest("Tenant context required");
     }
     query = query.eq("tenant_id", auth.user.profile.tenant_id);
   }
@@ -34,7 +37,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("Failed to list users", error);
-    return NextResponse.json({ error: "Failed to list users" }, { status: 500 });
+    return errors.serverError("Failed to list users");
   }
 
   return NextResponse.json({ data: data || [] });
@@ -43,26 +46,21 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const auth = await authenticateUser(request);
   if (!auth?.user?.profile) {
-    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    return errors.unauthorized("Authentication required");
   }
   if (!canInvite(auth.user.profile.role)) {
-    return NextResponse.json({ error: "Insufficient role" }, { status: 403 });
+    return errors.forbidden("Insufficient role");
   }
 
-  const body = await request.json().catch(() => null);
-  if (!body || !body.email || !body.role) {
-    return NextResponse.json(
-      { error: "email and role are required" },
-      { status: 400 }
-    );
+  const bodyResult = await parseJsonBody(request, userInviteSchema);
+  if ("error" in bodyResult) {
+    return bodyResult.error;
   }
+  const body = bodyResult.data;
 
   const tenantId = body.tenant_id || auth.user.profile.tenant_id;
   if (!tenantId) {
-    return NextResponse.json(
-      { error: "tenant_id is required" },
-      { status: 400 }
-    );
+    return errors.badRequest("tenant_id is required");
   }
 
   // Soft-invite placeholder: record in invitations table if available, otherwise return accepted.
@@ -83,7 +81,7 @@ export async function POST(request: NextRequest) {
   if (error && error.code !== "42P01") {
     // 42P01 = table does not exist; fall back to accepted response
     console.error("Failed to create invitation", error);
-    return NextResponse.json({ error: "Failed to invite user" }, { status: 500 });
+    return errors.serverError("Failed to invite user");
   }
 
   return NextResponse.json(

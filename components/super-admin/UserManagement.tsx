@@ -139,20 +139,20 @@ export function UserManagement({ className = '' }: UserManagementProps) {
     await updateUser(userId, { status: newStatus });
   };
 
-  const getRoleColor = (role: string) => {
+  const getRoleColor = (role: string): "info" | "error" | "success" | "pending" | "warning" => {
     switch (role) {
       case 'super_admin': return 'error';
       case 'admin': return 'warning';
       case 'owner': return 'info';
-      default: return 'secondary';
+      default: return 'info';
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): "info" | "error" | "success" | "pending" | "warning" => {
     switch (status) {
       case 'active': return 'success';
       case 'suspended': return 'error';
-      default: return 'secondary';
+      default: return 'pending';
     }
   };
 

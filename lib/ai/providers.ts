@@ -8,24 +8,31 @@ import type {
   AIProviderConfig,
   ChatCompletionRequest,
   ChatCompletionResponse,
-  EmbeddingRequest,
-  EmbeddingResponse,
   ProviderStatus,
-  ModelsResponse,
 } from "@/types/ai-providers";
 
 /**
  * Create an OpenAI-compatible client for any provider
  */
 export function createProviderClient(config: AIProviderConfig): OpenAI {
-  return new OpenAI({
-    apiKey: config.apiKey || "not-needed",  // Local models often don't need keys
+  const clientOptions: {
+    apiKey: string;
+    baseURL: string;
+    timeout: number;
+    defaultHeaders?: { Authorization: string };
+  } = {
+    apiKey: config.apiKey || "not-needed", // Local models often don't need keys
     baseURL: config.baseUrl,
     // Disable timeout for local models which can be slow
     timeout: config.type === "openai" ? 60000 : 300000,
-    // Don't send API key header if not provided
-    defaultHeaders: config.apiKey ? undefined : { Authorization: "" },
-  });
+  };
+
+  // Don't send API key header if not provided
+  if (!config.apiKey) {
+    clientOptions.defaultHeaders = { Authorization: "" };
+  }
+
+  return new OpenAI(clientOptions);
 }
 
 /**
@@ -50,16 +57,29 @@ export async function chatCompletion(
   request: ChatCompletionRequest
 ): Promise<ChatCompletionResponse> {
   const client = createProviderClient(config);
+  const model = request.model ?? config.defaultModel;
+
+  if (!model) {
+    throw new Error(`No model configured for provider ${config.name}`);
+  }
   
   try {
     const response = await client.chat.completions.create({
-      model: request.model || config.defaultModel,
+      model,
       messages: request.messages,
       temperature: request.temperature ?? 0.7,
       max_tokens: request.max_tokens ?? 4000,
       stream: false,
     });
-    
+
+    const usage = response.usage
+      ? {
+          prompt_tokens: response.usage.prompt_tokens,
+          completion_tokens: response.usage.completion_tokens,
+          total_tokens: response.usage.total_tokens,
+        }
+      : undefined;
+
     return {
       id: response.id,
       object: response.object,
@@ -73,11 +93,7 @@ export async function chatCompletion(
         },
         finish_reason: choice.finish_reason || "stop",
       })),
-      usage: response.usage ? {
-        prompt_tokens: response.usage.prompt_tokens,
-        completion_tokens: response.usage.completion_tokens,
-        total_tokens: response.usage.total_tokens,
-      } : undefined,
+      ...(usage ? { usage } : {}),
     };
   } catch (error) {
     console.error(`Chat completion failed for provider ${config.name}:`, error);

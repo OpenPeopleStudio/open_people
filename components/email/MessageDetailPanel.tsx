@@ -37,6 +37,7 @@ export function MessageDetailPanel({
         <div className="flex items-center gap-2">
           <button
             onClick={onClose}
+            aria-label="Close message"
             className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -48,6 +49,7 @@ export function MessageDetailPanel({
         <div className="flex items-center gap-1">
           <button
             onClick={() => onReply(message)}
+            aria-label="Reply to message"
             className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
             title="Reply"
           >
@@ -58,6 +60,7 @@ export function MessageDetailPanel({
           
           <button
             onClick={() => onStar(message)}
+            aria-label={message.is_starred ? "Unstar message" : "Star message"}
             className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)] transition-colors"
             title={message.is_starred ? "Unstar" : "Star"}
           >
@@ -74,6 +77,7 @@ export function MessageDetailPanel({
           
           <button
             onClick={() => onDelete(message)}
+            aria-label="Delete message"
             className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--error)] hover:bg-[var(--surface-1)] transition-colors"
             title="Delete"
           >

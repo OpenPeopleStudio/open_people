@@ -15,15 +15,21 @@ const handleGetNotes = withAuthAndAuthZ({
     
     // Parse filters
     const { searchParams } = new URL(request.url);
-    const filters: NoteFilters = {
-      category_id: searchParams.get("category_id") || undefined,
-      project_name: searchParams.get("project_name") || undefined,
-      status: searchParams.get("status") || undefined,
-      is_pinned: searchParams.get("is_pinned") === "true" ? true : undefined,
-      is_template: searchParams.get("is_template") === "true" ? true : 
-                   searchParams.get("is_template") === "false" ? false : undefined,
-      search: searchParams.get("search") || undefined,
-    };
+    const filters: NoteFilters = {};
+    const categoryId = searchParams.get("category_id");
+    const projectName = searchParams.get("project_name");
+    const status = searchParams.get("status");
+    const search = searchParams.get("search");
+    const isPinned = searchParams.get("is_pinned");
+    const isTemplate = searchParams.get("is_template");
+
+    if (categoryId) filters.category_id = categoryId;
+    if (projectName) filters.project_name = projectName;
+    if (status) filters.status = status;
+    if (search) filters.search = search;
+    if (isPinned === "true") filters.is_pinned = true;
+    if (isTemplate === "true") filters.is_template = true;
+    if (isTemplate === "false") filters.is_template = false;
     
   // Build query
   let query = supabase

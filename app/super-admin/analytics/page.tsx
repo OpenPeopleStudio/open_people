@@ -1,5 +1,4 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import Link from "next/link";
 import { EMAIL_PLANS, formatEmailCount } from "@/types/email";
 import { STORAGE_PLANS, formatBytes as formatStorageBytes } from "@/types/storage";
 import { NOTIFICATION_PLANS } from "@/types/notifications";
@@ -480,11 +479,6 @@ function formatBytes(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
-}
-
 export default async function AnalyticsPage() {
   const [metrics, emailMetrics, storageMetrics, notificationMetrics, experimentMetrics] = await Promise.all([
     getPlatformMetrics(),
@@ -493,37 +487,6 @@ export default async function AnalyticsPage() {
     getNotificationMetrics(),
     getExperimentMetrics(),
   ]);
-
-  const overviewCards = [
-    {
-      label: "Total Tenants",
-      value: metrics.totalTenants.toString(),
-      subtext: `${metrics.activeTenants} active`,
-      icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
-      color: "var(--electric-lime)",
-    },
-    {
-      label: "Total Users",
-      value: formatNumber(metrics.totalUsers),
-      subtext: "Across all tenants",
-      icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
-      color: "var(--electric-cyan)",
-    },
-    {
-      label: "AI API Calls",
-      value: formatNumber(metrics.totalAiCalls),
-      subtext: "All time",
-      icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
-      color: "var(--electric-violet)",
-    },
-    {
-      label: "Total Storage",
-      value: formatBytes(metrics.totalStorage),
-      subtext: "Used by all tenants",
-      icon: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4",
-      color: "var(--success)",
-    },
-  ];
 
   const maxSignups = Math.max(...metrics.recentSignups.map((s) => s.count), 1);
 

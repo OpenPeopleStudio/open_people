@@ -159,13 +159,18 @@ export default function ChiefOfStaffWorker() {
     try {
       const request: WeekPlanRequest = {
         start_date: startDate,
-        available_hours: availableHours ? parseInt(availableHours) : undefined,
-        non_negotiables: nonNegotiables
-          ? nonNegotiables.split("\n").map(s => s.trim()).filter(Boolean)
-          : undefined,
-        focus_goal_ids: focusGoalIds.length > 0 ? focusGoalIds : undefined,
-        focus_project_ids: focusProjectIds.length > 0 ? focusProjectIds : undefined,
-        additional_context: additionalContext || undefined,
+        ...(availableHours ? { available_hours: parseInt(availableHours) } : {}),
+        ...(nonNegotiables
+          ? {
+              non_negotiables: nonNegotiables
+                .split("\n")
+                .map((s) => s.trim())
+                .filter(Boolean),
+            }
+          : {}),
+        ...(focusGoalIds.length > 0 ? { focus_goal_ids: focusGoalIds } : {}),
+        ...(focusProjectIds.length > 0 ? { focus_project_ids: focusProjectIds } : {}),
+        ...(additionalContext ? { additional_context: additionalContext } : {}),
       };
 
       // Enqueue async job (returns immediately)
@@ -299,7 +304,7 @@ export default function ChiefOfStaffWorker() {
       setAppliedResult({
         created: createdTaskIds.length,
         updated: updatedTaskIds.length,
-        noteId,
+        ...(noteId ? { noteId } : {}),
       });
       
     } catch (err) {

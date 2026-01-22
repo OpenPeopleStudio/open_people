@@ -10,10 +10,6 @@ import type {
   Strength,
   GrowthArea,
   Passion,
-  CommunicationStyle,
-  FormalityLevel,
-  DetailPreference,
-  EmotionalSupportLevel,
 } from "@/types/ai-profile";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -715,6 +711,26 @@ function CommunicationSection({
     const matchCount = checks.filter(Boolean).length;
     return matchCount >= 7;
   }
+
+  function buildStylePayload(style: AIConversationStyle): Partial<AIUserProfile> {
+    return {
+      ...(style.communication_style !== null
+        ? { communication_style: style.communication_style }
+        : {}),
+      ...(style.formality_level !== null ? { formality_level: style.formality_level } : {}),
+      ...(style.detail_preference !== null
+        ? { detail_preference: style.detail_preference }
+        : {}),
+      ...(style.emotional_support_level !== null
+        ? { emotional_support_level: style.emotional_support_level }
+        : {}),
+      ...(style.challenge_me !== null ? { challenge_me: style.challenge_me } : {}),
+      ...(style.use_analogies !== null ? { use_analogies: style.use_analogies } : {}),
+      ...(style.use_humor !== null ? { use_humor: style.use_humor } : {}),
+      ...(style.be_philosophical !== null ? { be_philosophical: style.be_philosophical } : {}),
+      ...(style.action_oriented !== null ? { action_oriented: style.action_oriented } : {}),
+    };
+  }
   
   async function saveCustomStyle() {
     if (!newStyleName.trim()) return;
@@ -784,17 +800,7 @@ function CommunicationSection({
             return (
               <button
                 key={style.id}
-                onClick={() => onSave({
-                  communication_style: style.communication_style || undefined,
-                  formality_level: style.formality_level || undefined,
-                  detail_preference: style.detail_preference || undefined,
-                  emotional_support_level: style.emotional_support_level || undefined,
-                  challenge_me: style.challenge_me ?? undefined,
-                  use_analogies: style.use_analogies ?? undefined,
-                  use_humor: style.use_humor ?? undefined,
-                  be_philosophical: style.be_philosophical ?? undefined,
-                  action_oriented: style.action_oriented ?? undefined,
-                })}
+                onClick={() => onSave(buildStylePayload(style))}
                 className={`p-4 rounded-xl border text-left transition-colors ${
                   isActive
                     ? "bg-[var(--electric-lime)]/10 border-[var(--electric-lime)]"
@@ -851,17 +857,7 @@ function CommunicationSection({
                       <p className="text-sm text-[var(--text-muted)] mb-3">{style.description}</p>
                     )}
                     <button
-                      onClick={() => onSave({
-                        communication_style: style.communication_style || undefined,
-                        formality_level: style.formality_level || undefined,
-                        detail_preference: style.detail_preference || undefined,
-                        emotional_support_level: style.emotional_support_level || undefined,
-                        challenge_me: style.challenge_me ?? undefined,
-                        use_analogies: style.use_analogies ?? undefined,
-                        use_humor: style.use_humor ?? undefined,
-                        be_philosophical: style.be_philosophical ?? undefined,
-                        action_oriented: style.action_oriented ?? undefined,
-                      })}
+                      onClick={() => onSave(buildStylePayload(style))}
                       className="text-sm text-[var(--electric-cyan)] hover:underline"
                     >
                       Apply this style

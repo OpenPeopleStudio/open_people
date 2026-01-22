@@ -203,7 +203,6 @@ async function dispatchBatch(
 
 async function dispatchEvent(event: EventOutboxRow): Promise<boolean> {
   const supabase = await createSupabaseAdmin();
-  const startTime = Date.now();
   const sinkResults: SinkDispatchResult[] = [];
 
   try {

@@ -34,12 +34,20 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "50");
     const offset = parseInt(searchParams.get("offset") || "0");
 
-    const result = await emailWorkspace.getInboxThreads(profile.tenant_id, accountId, {
-      filter,
-      search,
-      limit,
-      offset,
-    });
+    const threadOptions: {
+      filter?: "urgent" | "inbox" | "spam" | "assigned" | "waiting" | "delegated";
+      search?: string;
+      limit?: number;
+      offset?: number;
+    } = { limit, offset };
+    if (filter) {
+      threadOptions.filter = filter;
+    }
+    if (search) {
+      threadOptions.search = search;
+    }
+
+    const result = await emailWorkspace.getInboxThreads(profile.tenant_id, accountId, threadOptions);
 
     return NextResponse.json(result);
   } catch (error) {

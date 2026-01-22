@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EMAIL_PLANS, formatEmailCount } from "@/types/email";
-import { EXPERIMENT_PLANS, formatEventCount } from "@/types/experiments";
+import { formatEventCount } from "@/types/experiments";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Analytics Tabs

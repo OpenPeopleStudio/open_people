@@ -165,7 +165,9 @@ export async function processIncomingEmail(
   // 4. If rule.auto_approve, mark as approved and move to target folder
   // 5. Trigger AI analysis
   
-  console.log(`[Automation] Processing email from ${email.from} with ${email.attachments.length} attachments`);
+  console.log(
+    `[Automation] Processing email for vault ${vaultId} from ${email.from} with ${email.attachments.length} attachments`
+  );
   console.log(`[Automation] Matched ${matches.length} rules`);
   
   return { processed, autoApproved };

@@ -8,7 +8,6 @@
 import sharp from 'sharp';
 import { getUploadUrl } from '@/lib/storage/r2';
 import { encryptFileForUpload } from './client-crypto';
-import type { VaultEncryptionKey } from '@/types/vault';
 
 const THUMBNAIL_SIZE = 256; // pixels
 const THUMBNAIL_QUALITY = 85; // JPEG quality
@@ -20,8 +19,7 @@ export async function generateImageThumbnail(
   imageBuffer: ArrayBuffer,
   contentType: string,
   vaultId: string,
-  fileId: string,
-  encryptionKey: VaultEncryptionKey
+  fileId: string
 ): Promise<{ thumbnailKey: string; thumbnailSize: number } | null> {
   try {
     // Skip if not an image
@@ -46,7 +44,7 @@ export async function generateImageThumbnail(
 
     // Encrypt the thumbnail
     const encryptedThumbnail = await encryptFileForUpload(
-      new File([thumbnailBuffer], 'thumbnail.jpg', { type: 'image/jpeg' })
+      new File([new Uint8Array(thumbnailBuffer)], 'thumbnail.jpg', { type: 'image/jpeg' })
     );
 
     // Get upload URL for thumbnail

@@ -298,14 +298,14 @@ export function compileRetentionPolicy(
       table_name: mapping.table,
       retention_days: retentionDays,
       action,
-      condition_sql: conditionSql,
       cleanup_query: cleanupQuery,
+      ...(conditionSql ? { condition_sql: conditionSql } : {}),
     });
   }
 
   return {
     tenant_id: policy.tenant_id,
-    policy_id: policy.id,
+    ...(policy.id ? { policy_id: policy.id } : {}),
     compiled_at: new Date().toISOString(),
     rules,
     summary: {
@@ -531,6 +531,6 @@ export async function getRetentionSummary(
   return {
     policy,
     compilation,
-    last_execution: lastExecution || undefined,
+    ...(lastExecution ? { last_execution: lastExecution } : {}),
   };
 }

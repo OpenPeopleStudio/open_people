@@ -138,8 +138,8 @@ export async function getMessageStatus(
 
     return {
       status: message.status,
-      errorCode: message.errorCode || undefined,
-      errorMessage: message.errorMessage || undefined,
+      ...(message.errorCode ? { errorCode: message.errorCode } : {}),
+      ...(message.errorMessage ? { errorMessage: message.errorMessage } : {}),
     };
   } catch (error) {
     console.error("Get message status error:", error);

@@ -5,10 +5,8 @@ import Link from "next/link";
 import type { 
   VaultSpace, 
   VaultFile, 
-  VaultFolder, 
-  VaultInboxItem, 
-  VaultSuggestion,
-  AICategory 
+  VaultFolder,
+  AICategory
 } from "@/types/vault";
 import { formatBytes, getCategoryIcon, getCategoryColor, getCategoryLabel } from "@/types/vault";
 
@@ -34,6 +32,7 @@ interface VaultStats {
 }
 
 export function VaultDashboard({ vault, sessionId, encryptionKey, onLock }: VaultDashboardProps) {
+  void encryptionKey;
   const [stats, setStats] = useState<VaultStats | null>(null);
   const [recentFiles, setRecentFiles] = useState<VaultFile[]>([]);
   const [folders, setFolders] = useState<VaultFolder[]>([]);
@@ -144,6 +143,7 @@ export function VaultDashboard({ vault, sessionId, encryptionKey, onLock }: Vaul
       }
       
       const { file_id, upload_url, encryption_iv } = await initRes.json();
+      void encryption_iv;
       
       // 2. Read file and encrypt (simplified - in production use streaming)
       const fileBuffer = await file.arrayBuffer();

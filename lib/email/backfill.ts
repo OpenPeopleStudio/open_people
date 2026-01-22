@@ -48,6 +48,11 @@ export class EmailBackfillService {
             }
 
             // Create webhook payload with full content
+            const inReplyTo =
+              "in_reply_to" in fullEmail ? (fullEmail as { in_reply_to?: string }).in_reply_to : undefined;
+            const references =
+              "references" in fullEmail ? (fullEmail as { references?: string[] }).references : undefined;
+
             const webhookPayload = {
               type: "email.received",
               data: {
@@ -61,8 +66,8 @@ export class EmailBackfillService {
                 html: fullEmail.html,
                 created_at: fullEmail.created_at,
                 attachments: fullEmail.attachments || [],
-                in_reply_to: fullEmail.in_reply_to,
-                references: fullEmail.references,
+                ...(inReplyTo ? { in_reply_to: inReplyTo } : {}),
+                ...(references ? { references } : {}),
               },
             };
 
@@ -217,9 +222,14 @@ export class EmailBackfillService {
   /**
    * Get domains that need backfilling
    */
-  private async getDomainsToBackfill(tenantId?: string, domain?: string): Promise<Array<{domain: string, tenant_id: string}>> {
+  private async getDomainsToBackfill(
+    tenantId?: string,
+    domain?: string
+  ): Promise<Array<{ domain: string; tenant_id: string }>> {
     // This would query the database for domains to backfill
     // For now, return a placeholder
+    void tenantId;
+    void domain;
     return [
       // This should be replaced with actual database query
       // SELECT domain, tenant_id FROM managed_email_domains WHERE status = 'verified'
@@ -235,6 +245,7 @@ export class EmailBackfillService {
   } = {}) {
     // Implementation for IMAP/POP3 backfill would go here
     // This would connect to IMAP servers and fetch historical emails
+    void options;
     console.log(`[Email Backfill] IMAP backfill not implemented yet for account: ${accountId}`);
     return { success: false, error: "IMAP backfill not implemented" };
   }

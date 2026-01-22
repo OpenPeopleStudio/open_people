@@ -8,9 +8,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
-import { logAuth, logAuthZ } from '@/lib/observability/logger';
+import { logAuth } from '@/lib/observability/logger';
 import { performanceMonitor } from '@/lib/observability/performance';
-import { alertFailedLogin, alertSuspiciousActivity } from '@/lib/observability/alerting';
+import { alertSuspiciousActivity } from '@/lib/observability/alerting';
 import type { User } from '@supabase/supabase-js';
 
 export interface AuthenticatedUser extends User {
@@ -47,19 +47,21 @@ export async function authenticateUser(
         reason: authError?.message || 'no_user',
       });
 
-      logAuth('request', false, {
-        error: authError?.message || 'No authenticated user',
-        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        userAgent: request.headers.get('user-agent'),
+      const authIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip');
+      const userAgent = request.headers.get('user-agent');
+      logAuth('failed_login', false, {
+        error: authError ?? new Error('No authenticated user'),
+        ...(authIp ? { ip: authIp } : {}),
+        ...(userAgent ? { userAgent } : {}),
       });
 
       // Check for potential brute force attempts
-      const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip');
-      if (ip) {
+      const alertIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip');
+      if (alertIp) {
         // This would be implemented with a rate limiter/cache
         // For now, just log suspicious patterns
         await alertSuspiciousActivity('failed_auth_attempt', {
-          ip,
+          ip: alertIp,
           userAgent: request.headers.get('user-agent'),
           endpoint: request.url,
         });
@@ -77,13 +79,17 @@ export async function authenticateUser(
 
     const authenticatedUser: AuthenticatedUser = {
       ...user,
-      profile: profile ? {
-        id: profile.id,
-        role: profile.role,
-        tenant_id: profile.tenant_id,
-        email: profile.email,
-        full_name: profile.full_name,
-      } : undefined,
+      ...(profile
+        ? {
+            profile: {
+              id: profile.id,
+              role: profile.role,
+              tenant_id: profile.tenant_id,
+              email: profile.email,
+              full_name: profile.full_name,
+            },
+          }
+        : {}),
     };
 
     // Record successful auth
@@ -92,11 +98,12 @@ export async function authenticateUser(
       tenant_id: profile?.tenant_id || 'unknown',
     });
 
-    logAuth('request', true, {
+    const sessionIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip');
+    logAuth('session_created', true, {
       userId: user.id,
       role: profile?.role,
       tenantId: profile?.tenant_id,
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+      ...(sessionIp ? { ip: sessionIp } : {}),
     });
 
     return {
@@ -112,13 +119,13 @@ export async function authenticateUser(
 /**
  * Require authentication - returns 401 if not authenticated
  */
-export async function requireAuth(request: NextRequest): Promise<AuthResult> {
+export async function requireAuth(request: NextRequest): Promise<AuthResult | NextResponse> {
   const auth = await authenticateUser(request);
   if (!auth) {
     return NextResponse.json(
       { error: 'Authentication required' },
       { status: 401 }
-    ) as any;
+    );
   }
   return auth;
 }
@@ -128,7 +135,7 @@ export async function requireAuth(request: NextRequest): Promise<AuthResult> {
  * Wraps route handlers to automatically handle authentication
  */
 export function withAuth<T extends any[], R>(
-  handler: (auth: AuthResult, ...args: T) => Promise<R> | R
+  handler: (auth: AuthResult, request: NextRequest, ...args: T) => Promise<R> | R
 ) {
   return async (request: NextRequest, ...args: T): Promise<R | NextResponse> => {
     const auth = await authenticateUser(request);
