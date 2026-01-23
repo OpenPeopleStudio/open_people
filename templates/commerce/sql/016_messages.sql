@@ -33,7 +33,7 @@ CREATE POLICY "Admins can view all messages"
 ON messages FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -44,7 +44,7 @@ CREATE POLICY "Admins can send messages"
 ON messages FOR INSERT
 WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -56,7 +56,7 @@ CREATE POLICY "Admins can update messages"
 ON messages FOR UPDATE
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

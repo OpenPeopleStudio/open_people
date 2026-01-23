@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role, full_name, staff_location_opt_in')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -170,7 +170,7 @@ export async function GET(request: Request) {
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role, full_name')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -224,7 +224,7 @@ export async function GET(request: Request) {
 
   const userIds = Array.from(new Set(locations.map((row) => row.user_id)))
   let profilesQuery = supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('id, full_name, role')
     .in('id', userIds)
 

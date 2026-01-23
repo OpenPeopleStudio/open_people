@@ -23,7 +23,7 @@ export async function POST(
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant.id)
@@ -87,7 +87,7 @@ export async function POST(
 
     if (inviteData?.user) {
       await adminClient
-        .from('709_profiles')
+        .from('profiles')
         .upsert({
           id: inviteData.user.id,
           role: 'owner',

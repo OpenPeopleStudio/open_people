@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   // Check admin role
   let profileQuery = supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
   if (tenant?.id) {

@@ -1,4 +1,5 @@
 import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { JobPriority, JobType } from "@/lib/jobs/queue";
 import { createResendClient, parseWebhookEvent, mapWebhookEventToStatus } from "./resend";
 import type {
   EmailMessage,
@@ -9,15 +10,17 @@ import type {
 } from "@/types/email";
 import crypto from "crypto";
 
+type SupabaseAdminClient = Awaited<ReturnType<typeof createSupabaseAdmin>>;
+
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Workspace Service
    Handles inbound/outbound email flow, threading, AI processing queue
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export class EmailWorkspaceService {
-  private supabase: any = null;
+  private supabase: SupabaseAdminClient | null = null;
 
-  private async getSupabase() {
+  private async getSupabase(): Promise<SupabaseAdminClient> {
     if (!this.supabase) {
       this.supabase = await createSupabaseAdmin();
     }
@@ -33,7 +36,7 @@ export class EmailWorkspaceService {
     webhookSecret: string
   ): Promise<{ success: boolean; threadId?: string; messageId?: string; error?: string }> {
     try {
-      console.log("[Email Webhook] Processing webhook payload:", JSON.stringify(payload, null, 2));
+      console.log("[Email Webhook] Processing webhook payload");
 
       // Verify webhook signature
       if (!this.verifyWebhookSignature(payload, signature, webhookSecret)) {
@@ -108,12 +111,7 @@ export class EmailWorkspaceService {
   }> {
     const supabase = await this.getSupabase();
 
-    console.log("[Email Webhook] Processing inbound email:", {
-      email_id: data.email_id,
-      from: data.from,
-      to: data.to,
-      subject: data.subject,
-    });
+    console.log("[Email Webhook] Processing inbound email");
 
     const {
       email_id: resendId,
@@ -139,11 +137,11 @@ export class EmailWorkspaceService {
     }
 
     // Find the appropriate account for this email
-    let account = await this.findAccountForInboundEmail(toAddressList);
+    const account = await this.findAccountForInboundEmail(toAddressList);
 
     // If no account found through proper tenant routing, this indicates a configuration issue
     if (!account) {
-      console.error("[Email Webhook] Email routing failed - no account found for:", toAddresses);
+      console.error("[Email Webhook] Email routing failed - no account found");
       console.error("[Email Webhook] Check that:");
       console.error("[Email Webhook] 1. The domain is properly configured for a tenant");
       console.error("[Email Webhook] 2. The tenant has email accounts set up");
@@ -155,7 +153,7 @@ export class EmailWorkspaceService {
       };
     }
 
-    console.log(`[Email Webhook] Processing with account: ${account.id} (${account.email_address}) for tenant: ${account.tenant_id}`);
+    console.log("[Email Webhook] Account resolved for inbound email");
 
     // Check if message already exists (globally, not just per account)
     const { data: existingMessage } = await supabase
@@ -165,7 +163,7 @@ export class EmailWorkspaceService {
       .single();
 
     if (existingMessage) {
-      console.log(`[Email Webhook] Duplicate message ${resendId} already processed`);
+    console.log("[Email Webhook] Duplicate message already processed");
       return { success: true, messageId: existingMessage.id };
     }
 
@@ -306,32 +304,32 @@ export class EmailWorkspaceService {
     const domain = firstTo.split("@")[1]?.toLowerCase();
     if (!domain) return null;
 
-    console.log(`[Email Routing] Routing email to domain: ${domain}`);
+    console.log("[Email Routing] Routing inbound email");
 
     // Step 1: Find which tenant owns this domain
     const tenantId = await this.findTenantForDomain(supabase, domain);
     if (!tenantId) {
-      console.log(`[Email Routing] No tenant found for domain: ${domain}`);
+      console.log("[Email Routing] No tenant found for inbound domain");
       return null;
     }
 
-    console.log(`[Email Routing] Found tenant ${tenantId} for domain ${domain}`);
+    console.log("[Email Routing] Tenant found for inbound domain");
 
     // Step 2: Within the tenant, find the appropriate account
     const account = await this.findAccountInTenant(supabase, tenantId, domain, firstTo);
     if (account) {
-      console.log(`[Email Routing] Found account ${account.id} (${account.email_address}) for ${firstTo}`);
+      console.log("[Email Routing] Found account for inbound email");
       return account;
     }
 
-    console.log(`[Email Routing] No account found for ${firstTo} in tenant ${tenantId}`);
+    console.log("[Email Routing] No account found for inbound email");
     return null;
   }
 
   /**
    * Find which tenant owns a given domain
    */
-  private async findTenantForDomain(supabase: any, domain: string): Promise<string | null> {
+  private async findTenantForDomain(supabase: SupabaseAdminClient, domain: string): Promise<string | null> {
     // Check managed email domains first (these are explicitly configured for email)
     const { data: managedDomain } = await supabase
       .from("managed_email_domains")
@@ -389,12 +387,12 @@ export class EmailWorkspaceService {
    * Find the appropriate account within a tenant for an email address
    */
   private async findAccountInTenant(
-    supabase: any,
+    supabase: SupabaseAdminClient,
     tenantId: string,
     domain: string,
     fullEmailAddress: string
   ): Promise<EmailAccount | null> {
-    console.log(`[Email Routing] Looking for account in tenant ${tenantId} for ${fullEmailAddress}`);
+    console.log("[Email Routing] Looking for account in tenant");
 
     // 1. Check for exact email address match (highest priority)
     const { data: exactMatchAccount } = await supabase
@@ -405,7 +403,7 @@ export class EmailWorkspaceService {
       .single();
 
     if (exactMatchAccount) {
-      console.log(`[Email Routing] Found exact match account: ${exactMatchAccount.email_address}`);
+      console.log("[Email Routing] Found exact match account");
       return exactMatchAccount;
     }
 
@@ -422,7 +420,7 @@ export class EmailWorkspaceService {
       .single();
 
     if (managedDomainAccount) {
-      console.log(`[Email Routing] Found managed domain account for ${domain}: ${managedDomainAccount.email_address}`);
+      console.log("[Email Routing] Found managed domain account");
       return managedDomainAccount;
     }
 
@@ -436,7 +434,7 @@ export class EmailWorkspaceService {
       .single();
 
     if (tenantCatchAll) {
-      console.log(`[Email Routing] Using tenant catch-all account: ${tenantCatchAll.email_address}`);
+      console.log("[Email Routing] Using tenant catch-all account");
       return tenantCatchAll;
     }
 
@@ -450,7 +448,7 @@ export class EmailWorkspaceService {
       .single();
 
     if (defaultAccount) {
-      console.log(`[Email Routing] Using tenant default account: ${defaultAccount.email_address}`);
+      console.log("[Email Routing] Using tenant default account");
       return defaultAccount;
     }
 
@@ -464,11 +462,11 @@ export class EmailWorkspaceService {
       .single();
 
     if (anyManagedAccount) {
-      console.log(`[Email Routing] Using fallback managed account: ${anyManagedAccount.email_address}`);
+      console.log("[Email Routing] Using fallback managed account");
       return anyManagedAccount;
     }
 
-    console.log(`[Email Routing] No suitable account found in tenant ${tenantId}`);
+    console.log("[Email Routing] No suitable account found in tenant");
     return null;
   }
 
@@ -555,6 +553,23 @@ export class EmailWorkspaceService {
       tasks,
       priority: 0, // Default priority
     });
+
+    try {
+      const jobId = `job_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      await supabase.from("job_queue").insert({
+        id: jobId,
+        type: JobType.EMAIL_TRIAGE,
+        priority: JobPriority.NORMAL,
+        data: { messageId, threadId },
+        status: "pending",
+        max_retries: 3,
+        retry_count: 0,
+        next_run_at: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("[Email AI Queue] Failed to enqueue job");
+      console.error(error);
+    }
   }
 
   /**

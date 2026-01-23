@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { emailWorkspace } from "@/lib/email/workspace";
 import { NextRequest, NextResponse } from "next/server";
+import { logPerformance } from "@/lib/observability/logger";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Workspace Threads API
@@ -29,10 +30,23 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const accountId = searchParams.get("accountId") || undefined;
-    const filter = searchParams.get("filter") as any || undefined;
+    const filterOptions = [
+      "urgent",
+      "inbox",
+      "spam",
+      "assigned",
+      "waiting",
+      "delegated",
+    ] as const;
+    type ThreadFilter = typeof filterOptions[number];
+    const filterParam = searchParams.get("filter");
+    const filter = filterParam && filterOptions.includes(filterParam as ThreadFilter)
+      ? (filterParam as ThreadFilter)
+      : undefined;
     const search = searchParams.get("search") || undefined;
     const limit = parseInt(searchParams.get("limit") || "50");
     const offset = parseInt(searchParams.get("offset") || "0");
+    const startTime = Date.now();
 
     const threadOptions: {
       filter?: "urgent" | "inbox" | "spam" | "assigned" | "waiting" | "delegated";
@@ -48,6 +62,20 @@ export async function GET(request: NextRequest) {
     }
 
     const result = await emailWorkspace.getInboxThreads(profile.tenant_id, accountId, threadOptions);
+    const durationMs = Date.now() - startTime;
+    const threadCount = Array.isArray((result as { threads?: unknown[] }).threads)
+      ? (result as { threads?: unknown[] }).threads!.length
+      : 0;
+
+    logPerformance("email_threads_fetch_duration", durationMs, "ms", {
+      success: "true",
+      filter: filter ?? "all",
+      has_search: search ? "true" : "false",
+      limit: limit.toString(),
+    });
+    logPerformance("email_threads_fetch_count", threadCount, "count", {
+      filter: filter ?? "all",
+    });
 
     return NextResponse.json(result);
   } catch (error) {

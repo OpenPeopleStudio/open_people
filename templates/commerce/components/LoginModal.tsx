@@ -93,7 +93,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
       } else if (data.session?.user) {
         // Successfully logged in - redirect based on role
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('role')
           .eq('id', data.session.user.id)
           .eq('tenant_id', tenantId)

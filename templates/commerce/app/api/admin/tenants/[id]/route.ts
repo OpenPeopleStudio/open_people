@@ -23,7 +23,7 @@ export async function PATCH(
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant.id)

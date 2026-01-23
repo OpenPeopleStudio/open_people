@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { EmailMessage } from "@/types/email";
 
 type Props = {
@@ -8,6 +9,8 @@ type Props = {
   onSelectMessage: (message: EmailMessage) => void;
   onStar: (message: EmailMessage) => void;
   viewType: string;
+  onCompose?: () => void;
+  accountLabel?: string;
 };
 
 export function InboxView({
@@ -16,7 +19,15 @@ export function InboxView({
   onSelectMessage,
   onStar,
   viewType,
+  onCompose,
+  accountLabel,
 }: Props) {
+  const [density, setDensity] = useState<"comfortable" | "compact">("comfortable");
+  const [filter, setFilter] = useState<"all" | "unread">("all");
+
+  const displayedMessages = filter === "unread"
+    ? messages.filter((message) => !message.is_read)
+    : messages;
   const getViewTitle = () => {
     switch (viewType) {
       case "inbox": return "Inbox";
@@ -51,27 +62,86 @@ export function InboxView({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 border-b border-[var(--border-subtle)]">
-        <h2 className="text-base md:text-lg font-semibold text-[var(--text-primary)]">{getViewTitle()}</h2>
-        <span className="text-xs md:text-sm text-[var(--text-muted)]">{messages.length} messages</span>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3 md:px-4 py-2.5 md:py-3 border-b border-[var(--border-subtle)]">
+        <div className="flex items-center gap-3">
+          <h2 className="text-base md:text-lg font-semibold text-[var(--text-primary)]">{getViewTitle()}</h2>
+          {accountLabel && (
+            <span className="hidden sm:inline-flex items-center px-2 py-1 rounded-full text-xs border border-[var(--border-subtle)] text-[var(--text-muted)]">
+              {accountLabel}
+            </span>
+          )}
+          <div className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
+            <button
+              onClick={() => setFilter("all")}
+              className={`px-2 py-1 rounded-full border border-[var(--border-subtle)] transition-colors ${
+                filter === "all"
+                  ? "text-[var(--text-primary)] bg-[var(--surface-1)]"
+                  : "hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter("unread")}
+              className={`px-2 py-1 rounded-full border border-[var(--border-subtle)] transition-colors ${
+                filter === "unread"
+                  ? "text-[var(--text-primary)] bg-[var(--surface-1)]"
+                  : "hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              Unread
+            </button>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-xs md:text-sm text-[var(--text-muted)]">
+          <div className="hidden sm:flex items-center gap-1">
+            <button
+              onClick={() => setDensity("compact")}
+              className={`px-2 py-1 rounded-md border border-[var(--border-subtle)] transition-colors ${
+                density === "compact" ? "text-[var(--text-primary)] bg-[var(--surface-1)]" : "hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              Compact
+            </button>
+            <button
+              onClick={() => setDensity("comfortable")}
+              className={`px-2 py-1 rounded-md border border-[var(--border-subtle)] transition-colors ${
+                density === "comfortable" ? "text-[var(--text-primary)] bg-[var(--surface-1)]" : "hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              Comfortable
+            </button>
+          </div>
+          <span>{displayedMessages.length} messages</span>
+        </div>
       </div>
 
       {/* Message List */}
       <div className="flex-1 overflow-y-auto">
-        {messages.length === 0 ? (
+        {displayedMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center p-6 md:p-8">
             <svg className="w-10 h-10 md:w-12 md:h-12 text-[var(--text-muted)] mb-3 md:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
             <p className="text-sm md:text-base text-[var(--text-muted)]">No messages</p>
+            {onCompose && (
+              <button
+                onClick={onCompose}
+                className="mt-4 px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Compose first message
+              </button>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-[var(--border-subtle)]">
-            {messages.map((message) => (
+            {displayedMessages.map((message) => (
               <div
                 key={message.id}
                 onClick={() => onSelectMessage(message)}
-                className={`flex items-start gap-2 md:gap-3 px-3 md:px-4 py-2.5 md:py-3 cursor-pointer transition-colors active:bg-[var(--surface-2)] ${
+                className={`flex items-start gap-2 md:gap-3 px-3 md:px-4 ${
+                  density === "compact" ? "py-2" : "py-2.5 md:py-3"
+                } cursor-pointer transition-colors active:bg-[var(--surface-2)] ${
                   selectedMessage?.id === message.id
                     ? "bg-[var(--electric-lime)]/5"
                     : "hover:bg-[var(--surface-1)]"

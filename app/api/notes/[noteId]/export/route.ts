@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,9 +6,12 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Export a note as markdown file
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ noteId: string }> }
+) {
   try {
-    const { noteId } = context.params;
+    const { noteId } = await params;
     const { searchParams } = new URL(request.url);
     const format = searchParams.get("format") || "md";
     const includeFrontmatter = searchParams.get("frontmatter") !== "false";

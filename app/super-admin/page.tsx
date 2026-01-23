@@ -145,7 +145,7 @@ async function getDashboardStats(opts?: { demoMode?: boolean }): Promise<Dashboa
 
   // Get total users
   const { count: totalUsers, error: totalUsersError } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("*", { count: "exact", head: true });
   if (totalUsersError) {
     console.error("Get users count error:", totalUsersError);

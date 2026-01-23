@@ -93,7 +93,7 @@ async function loadActivePolicies(
 ): Promise<HITLPolicy[]> {
   const supabase = await createSupabaseAdmin();
 
-  let query = supabase
+  const query = supabase
     .from("hitl_policies")
     .select("*")
     .eq("tenant_id", tenantId)

@@ -111,7 +111,7 @@ CREATE POLICY "Admins can manage consignor access"
 ON consignor_portal_access FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

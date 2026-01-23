@@ -19,7 +19,7 @@ async function checkAdminAuth(
   if (!user) return { error: 'Unauthorized', status: 401 }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenantId)

@@ -27,7 +27,7 @@ const handleGetUser = withAuthAndAuthZ({
 
   // Get user profile with tenant information
   const { data: profile, error: profileError } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select(`
       id,
       email,
@@ -89,7 +89,7 @@ const handleUpdateUser = withAuthAndAuthZ({
   if (updates.role && updates.role === 'super_admin' && auth.user.id !== userId) {
     // Additional check: don't allow non-super-admins to create super admins
     const { data: currentUser } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role')
       .eq('id', auth.user.id)
       .single();
@@ -105,7 +105,7 @@ const handleUpdateUser = withAuthAndAuthZ({
   try {
     // Update profile
     const { error: profileError } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .update({
         full_name: updates.full_name,
         role: updates.role,
@@ -184,14 +184,14 @@ const handleDeleteUser = withAuthAndAuthZ({
   try {
     // Get user info for logging before deletion
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('email, role, tenant_id')
       .eq('id', userId)
       .single();
 
     // Delete profile first (due to foreign key constraints)
     const { error: profileError } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .delete()
       .eq('id', userId);
 

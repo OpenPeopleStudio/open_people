@@ -88,14 +88,14 @@ export function useE2EEncryption(userId: string | null) {
 
         // Sync public key to server if changed
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('public_key')
           .eq('id', userId)
           .single()
 
         if (profile?.public_key !== keys.publicKey) {
           await supabase
-            .from('709_profiles')
+            .from('profiles')
             .update({ 
               public_key: keys.publicKey,
               public_key_updated_at: new Date().toISOString()
@@ -120,7 +120,7 @@ export function useE2EEncryption(userId: string | null) {
     recipientId: string
   ): Promise<string | null> => {
     const { data } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('public_key')
       .eq('id', recipientId)
       .single()
@@ -286,7 +286,7 @@ export function useE2EEncryption(userId: string | null) {
     // Sync to server
     if (userId) {
       await supabase
-        .from('709_profiles')
+        .from('profiles')
         .update({ 
           public_key: restored.publicKey,
           public_key_updated_at: new Date().toISOString()
@@ -361,7 +361,7 @@ export function useE2EEncryption(userId: string | null) {
     setShortFingerprint(sfp)
 
     await supabase
-      .from('709_profiles')
+      .from('profiles')
       .update({
         public_key: updated.publicKey,
         public_key_updated_at: new Date().toISOString(),

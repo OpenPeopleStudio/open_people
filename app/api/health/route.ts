@@ -12,6 +12,66 @@ import { createSupabaseServer } from '@/lib/supabase/server';
 
 const logger = createLogger({ component: 'health-check' });
 
+type HealthStatus = 'healthy' | 'degraded' | 'unhealthy';
+type ServiceStatus = 'up' | 'down' | 'degraded';
+
+type DatabaseServiceHealth = {
+  status: ServiceStatus;
+  response_time: number;
+  connection_count: number;
+  active_queries: number;
+};
+
+type StorageServiceHealth = {
+  status: ServiceStatus;
+  response_time: number;
+  total_files: number;
+  total_size: number;
+};
+
+type EmailServiceHealth = {
+  status: ServiceStatus;
+  response_time: number;
+  queue_size: number;
+};
+
+type HealthServices = {
+  database: DatabaseServiceHealth;
+  storage: StorageServiceHealth;
+  email: EmailServiceHealth;
+};
+
+type HealthAlert = {
+  id: string;
+  type: 'error' | 'warning' | 'info';
+  message: string;
+  timestamp: string;
+  resolved: boolean;
+};
+
+type HealthActivity = {
+  timestamp: string;
+  event: string;
+  details: string;
+  status: 'success' | 'error' | 'warning';
+};
+
+type HealthData = {
+  status: HealthStatus;
+  timestamp: string;
+  uptime: number;
+  services: HealthServices;
+  performance: {
+    memory_usage: number;
+    cpu_usage: number;
+    response_time_avg: number;
+    error_rate: number;
+    active_connections: number;
+  };
+  alerts: HealthAlert[];
+  recent_activity: HealthActivity[];
+};
+
 export async function GET() {
   const startTime = Date.now();
 
@@ -32,7 +92,7 @@ export async function GET() {
       {
         status: healthData.status,
         response_time_ms: responseTime,
-        failed_services: Object.values(healthData.services as Record<string, { status: string }>).filter(
+        failed_services: Object.values(healthData.services).filter(
           (s) => s.status !== 'up'
         ).length,
       },
@@ -67,29 +127,29 @@ async function performComprehensiveHealthChecks() {
   const supabase = await createSupabaseServer();
 
   // Initialize health data structure
-  const healthData = {
-    status: 'healthy' as 'healthy' | 'degraded' | 'unhealthy',
+  const healthData: HealthData = {
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     services: {
       database: {
-        status: 'up' as 'up' | 'down' | 'degraded',
+        status: 'up',
         response_time: 0,
         connection_count: 0,
         active_queries: 0,
       },
       storage: {
-        status: 'up' as 'up' | 'down' | 'degraded',
+        status: 'up',
         response_time: 0,
         total_files: 0,
         total_size: 0,
       },
       email: {
-        status: 'up' as 'up' | 'down' | 'degraded',
+        status: 'up',
         response_time: 0,
         queue_size: 0,
       },
-    } as any,
+    },
     performance: {
       memory_usage: 0,
       cpu_usage: 0,
@@ -97,19 +157,8 @@ async function performComprehensiveHealthChecks() {
       error_rate: 0,
       active_connections: 0,
     },
-    alerts: [] as Array<{
-      id: string;
-      type: 'error' | 'warning' | 'info';
-      message: string;
-      timestamp: string;
-      resolved: boolean;
-    }>,
-    recent_activity: [] as Array<{
-      timestamp: string;
-      event: string;
-      details: string;
-      status: 'success' | 'error' | 'warning';
-    }>,
+    alerts: [],
+    recent_activity: [],
   };
 
   // Database health check
@@ -134,7 +183,7 @@ async function performComprehensiveHealthChecks() {
       healthData.services.database.connection_count = dbStats?.connection_count || 1;
       healthData.services.database.active_queries = dbStats?.active_queries || 0;
     }
-  } catch (error) {
+  } catch {
     healthData.services.database.status = 'down';
     healthData.services.database.response_time = 0;
     healthData.status = 'degraded';
@@ -148,7 +197,7 @@ async function performComprehensiveHealthChecks() {
     healthData.services.storage.response_time = Date.now() - storageStart;
     healthData.services.storage.total_files = 1000; // Mock
     healthData.services.storage.total_size = 1024 * 1024 * 1024 * 5; // 5GB mock
-  } catch (error) {
+  } catch {
     healthData.services.storage.status = 'degraded';
     healthData.status = 'degraded';
   }
@@ -160,7 +209,7 @@ async function performComprehensiveHealthChecks() {
     healthData.services.email.status = 'up';
     healthData.services.email.response_time = Date.now() - emailStart;
     healthData.services.email.queue_size = 0; // Mock
-  } catch (error) {
+  } catch {
     healthData.services.email.status = 'degraded';
     healthData.status = 'degraded';
   }
@@ -214,7 +263,7 @@ async function performComprehensiveHealthChecks() {
   ];
 
   // Determine overall status
-  const serviceStatuses = Object.values(healthData.services as Record<string, { status: string }>).map(
+  const serviceStatuses = Object.values(healthData.services).map(
     (s) => s.status
   );
   if (serviceStatuses.includes('down')) {

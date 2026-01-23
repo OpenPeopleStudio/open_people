@@ -213,7 +213,7 @@ CREATE POLICY "Admins can view isolation alerts"
 ON tenant_isolation_alerts FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -224,7 +224,7 @@ CREATE POLICY "Admins can manage isolation alerts"
 ON tenant_isolation_alerts FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -235,7 +235,7 @@ CREATE POLICY "Admins can view test results"
 ON tenant_isolation_tests FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

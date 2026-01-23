@@ -18,11 +18,11 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 // Handle context menu clicks
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info) => {
   if (info.menuItemId === "upload-image-to-vault" && info.srcUrl) {
-    await uploadFromUrl(info.srcUrl, "image");
+    await uploadFromUrl(info.srcUrl);
   } else if (info.menuItemId === "upload-to-vault" && info.linkUrl) {
-    await uploadFromUrl(info.linkUrl, "link");
+    await uploadFromUrl(info.linkUrl);
   }
 });
 
@@ -54,7 +54,7 @@ async function getConfig() {
   });
 }
 
-async function uploadFromUrl(url, type) {
+async function uploadFromUrl(url) {
   const config = await getConfig();
   
   if (!config.endpoint || !config.token) {

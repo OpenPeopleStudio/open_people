@@ -80,8 +80,8 @@ export default async function EmailInboxPage() {
   }
 
   const { data: profile } = await supabase
-    .from("709_profiles")
-    .select("tenant_id")
+    .from("profiles")
+    .select("tenant_id, role")
     .eq("id", user.id)
     .single();
 
@@ -91,11 +91,14 @@ export default async function EmailInboxPage() {
 
   const data = await getInboxData(profile.tenant_id);
 
+  const isAdmin = profile?.role ? ["owner", "admin", "super_admin"].includes(profile.role) : false;
+
   return (
     <EmailInboxClient
       accounts={data.accounts}
       messages={data.messages}
       stats={data.stats}
+      isAdmin={isAdmin}
     />
   );
 }

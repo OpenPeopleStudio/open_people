@@ -206,7 +206,7 @@ create policy "Users can view their email accounts"
   on email_accounts for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -215,7 +215,7 @@ create policy "Users can manage their email accounts"
   on email_accounts for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -225,7 +225,7 @@ create policy "Users can view their email messages"
   on email_messages for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -234,7 +234,7 @@ create policy "Users can manage their email messages"
   on email_messages for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -244,7 +244,7 @@ create policy "Users can view their email attachments"
   on email_attachments for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -253,7 +253,7 @@ create policy "Users can manage their email attachments"
   on email_attachments for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -566,7 +566,7 @@ create policy "Users can view their email accounts"
   on email_accounts for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -575,7 +575,7 @@ create policy "Users can manage their email accounts"
   on email_accounts for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -585,7 +585,7 @@ create policy "Users can view their email messages"
   on email_messages for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -594,7 +594,7 @@ create policy "Users can manage their email messages"
   on email_messages for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -604,7 +604,7 @@ create policy "Users can view their email attachments"
   on email_attachments for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -613,7 +613,7 @@ create policy "Users can manage their email attachments"
   on email_attachments for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 

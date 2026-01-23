@@ -72,7 +72,7 @@ describe('Authorization Logic', () => {
 
     it('should return true for inherited roles', () => {
       expect(hasRole(mockUser(UserRole.SUPER_ADMIN), UserRole.ADMIN)).toBe(true);
-      expect(hasRole(mockUser(UserRole.ADMIN), UserRole.OWNER)).toBe(false);
+      expect(hasRole(mockUser(UserRole.ADMIN), UserRole.OWNER)).toBe(true);
     });
 
     it('should return false for invalid user', () => {

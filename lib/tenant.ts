@@ -110,7 +110,8 @@ export function isSuperAdminDomain(host: string): boolean {
 /**
  * Determine the route type from a host
  */
-export function getRouteType(host: string): RouteType {
+export function getRouteType(host?: string | null): RouteType {
+  if (!host || normalizeHost(host) === "") return "marketing";
   if (isMarketingDomain(host)) return "marketing";
   if (isSuperAdminDomain(host)) return "super-admin";
   return "tenant";
@@ -307,7 +308,7 @@ export async function getTenantForUser(userId: string): Promise<TenantContextVal
   const supabase = await createSupabaseServer();
   
   const { data: profile } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("tenant_id")
     .eq("id", userId)
     .single();

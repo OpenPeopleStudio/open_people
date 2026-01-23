@@ -16,6 +16,7 @@ type Props = {
   accounts: EmailAccount[];
   messages: EmailMessage[];
   stats: EmailInboxStats;
+  isAdmin: boolean;
 };
 
 type ViewType = "inbox" | "sent" | "starred" | "drafts" | "archive" | "spam" | "trash";
@@ -24,6 +25,7 @@ export function EmailInboxClient({
   accounts, 
   messages: initialMessages, 
   stats: initialStats,
+  isAdmin,
 }: Props) {
   const [messages, setMessages] = useState(initialMessages);
   const [stats, setStats] = useState(initialStats);
@@ -360,6 +362,7 @@ export function EmailInboxClient({
               onReply={handleReply}
               onStar={handleStar}
               onDelete={handleDelete}
+              canViewAdminPanels={isAdmin}
             />
           </div>
         )}

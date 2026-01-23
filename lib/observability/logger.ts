@@ -26,7 +26,7 @@ export interface LogContext {
   duration?: number;
   statusCode?: number;
   error?: Error;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -36,6 +36,19 @@ export interface LogContext {
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Create logger instance
+type HttpRequestLike = {
+  method?: string;
+  url?: string;
+  headers?: Record<string, string>;
+  remoteAddress?: string;
+  remotePort?: number;
+};
+
+type HttpResponseLike = {
+  statusCode?: number;
+  header?: unknown;
+};
+
 const logger = pino({
   level: process.env.LOG_LEVEL || (isDevelopment ? 'debug' : 'info'),
   formatters: {
@@ -43,14 +56,14 @@ const logger = pino({
   },
   serializers: {
     error: pino.stdSerializers.err,
-    req: (req: any) => ({
+    req: (req: HttpRequestLike) => ({
       method: req.method,
       url: req.url,
-      headers: req.headers,
+      headers: sanitizeHeaders(req.headers),
       remoteAddress: req.remoteAddress,
       remotePort: req.remotePort,
     }),
-    res: (res: any) => ({
+    res: (res: HttpResponseLike) => ({
       statusCode: res.statusCode,
       header: res.header,
     }),
@@ -100,6 +113,29 @@ export function createLogger(context: LogContext = {}) {
  */
 export function generateCorrelationId(): string {
   return `req_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+}
+
+function sanitizeHeaders(headers: Record<string, string> | undefined) {
+  if (!headers) return headers;
+  const allowlist = new Set([
+    'accept',
+    'accept-language',
+    'content-type',
+    'host',
+    'origin',
+    'referer',
+    'user-agent',
+    'x-forwarded-for',
+    'x-real-ip',
+    'x-request-id',
+    'x-correlation-id',
+  ]);
+  const redacted: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    const normalized = key.toLowerCase();
+    redacted[key] = allowlist.has(normalized) ? value : '[redacted]';
+  }
+  return redacted;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -286,8 +322,10 @@ export function logPerformance(
 /**
  * Create request context middleware
  */
-export function withRequestContext(handler: Function) {
-  return async (request: NextRequest, ...args: any[]) => {
+type RequestHandler = (request: NextRequest, ...args: unknown[]) => Promise<unknown>;
+
+export function withRequestContext(handler: RequestHandler) {
+  return async (request: NextRequest, ...args: unknown[]) => {
     const correlationId = generateCorrelationId();
     const userAgent = request.headers.get('user-agent');
 

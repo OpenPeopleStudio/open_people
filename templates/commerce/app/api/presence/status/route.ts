@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch presence data for requested users
     const { data: profiles, error: fetchError } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, is_online, last_active_at')
       .in('id', userIds)
 

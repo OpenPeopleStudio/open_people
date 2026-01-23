@@ -1,12 +1,14 @@
 # Favicon and Open Graph Assets
 
+Owner: Lisa
+
 This directory contains the favicon and Open Graph image assets for OpenPeople.ai.
 
 ## Favicon
 
 The favicon uses a clean, modern design with interconnected human figures representing "Open People" - the concept of connecting and collaborating openly.
 
-### Files:
+### Files
 - `favicon.ico` - Traditional favicon (16x16, 32x32)
 - `favicon.svg` - Modern SVG favicon with electric lime (#00FF88) background
 - `favicon-16x16.png` - 16x16 PNG
@@ -17,25 +19,25 @@ The favicon uses a clean, modern design with interconnected human figures repres
 - `android-chrome-512x512.png` - Android PWA icon
 - `manifest.json` - Web App Manifest for PWA support
 
-### Design:
+### Design
 - **Color**: Electric lime (#00FF88) background
 - **Icon**: Stylized interconnected human figures
 - **Style**: Clean, modern, geometric
 
 ## Open Graph Images
 
-### Static OG Images:
+### Static OG Images
 - `og-image.png` - 1200x630 Facebook Open Graph image
 - `twitter-image.png` - 1200x600 Twitter Card image
 
-### Dynamic OG Images:
+### Dynamic OG Images
 - `/api/og` - Dynamic OG image generation endpoint using @vercel/og
 - Supports different content types (website, note, profile)
 - Customizable title, description, and styling
 
 ## Usage
 
-### Static Images:
+### Static Images
 ```typescript
 // In metadata
 openGraph: {
@@ -54,7 +56,7 @@ twitter: {
 },
 ```
 
-### Dynamic Images:
+### Dynamic Images
 ```typescript
 // For shared notes
 const ogUrl = `/api/og?title=${encodeURIComponent(noteTitle)}&description=${encodeURIComponent(noteExcerpt)}&type=note`;
@@ -65,14 +67,14 @@ const ogUrl = `/api/og?title=${encodeURIComponent(userName)}&description=${encod
 
 ## Implementation Details
 
-### Favicon Implementation:
+### Favicon Implementation
 - SVG favicon for crisp scaling on all devices
 - Multiple PNG fallbacks for older browsers
 - Apple touch icons for iOS devices
 - Web App Manifest for PWA support
 - Theme colors for mobile browsers
 
-### OG Image Design:
+### OG Image Design
 - **Background**: Pure black (#000000)
 - **Accent Color**: Electric lime (#00FF88)
 - **Typography**: Inter font family
@@ -81,14 +83,14 @@ const ogUrl = `/api/og?title=${encodeURIComponent(userName)}&description=${encod
 
 ## Browser Support
 
-### Favicon:
+### Favicon
 - ✅ Chrome 4+
 - ✅ Firefox 3.5+
 - ✅ Safari 3.1+
 - ✅ Edge 12+
 - ✅ IE 9+
 
-### OG Images:
+### OG Images
 - ✅ Facebook
 - ✅ Twitter
 - ✅ LinkedIn
@@ -98,22 +100,22 @@ const ogUrl = `/api/og?title=${encodeURIComponent(userName)}&description=${encod
 
 ## Customization
 
-### For Custom OG Images:
+### For Custom OG Images
 Modify the `/api/og/route.tsx` file to add new content types or styling options.
 
-### For Custom Favicons:
+### For Custom Favicons
 1. Update the SVG design in `public/favicon.svg`
 2. Regenerate PNG versions using a tool like ImageMagick or online converters
 3. Update color scheme if needed
 
 ## Testing
 
-### Favicon Testing:
+### Favicon Testing
 - Check browser tab icons
 - Test on different devices (mobile, tablet, desktop)
 - Verify PWA installation icons
 
-### OG Image Testing:
+### OG Image Testing
 - Use Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/)
 - Use Twitter's [Card Validator](https://cards-dev.twitter.com/validator)
 - Test sharing on various platforms

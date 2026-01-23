@@ -72,7 +72,7 @@ export async function authenticateUser(
 
     // Get user profile with role information
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, role, tenant_id, email, full_name')
       .eq('id', user.id)
       .single();
@@ -168,7 +168,7 @@ export const getUserProfile = cache(async (userId: string) => {
   const supabase = await createSupabaseServer();
 
   const { data: profile, error } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('id, role, tenant_id, email, full_name')
     .eq('id', userId)
     .single();

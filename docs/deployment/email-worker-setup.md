@@ -97,7 +97,7 @@ VAULT_WEBHOOK_SECRET = "your-secure-webhook-secret"
 R2_ACCESS_KEY_ID = "your-r2-access-key"
 R2_SECRET_ACCESS_KEY = "your-r2-secret-key"
 R2_BUCKET_NAME = "vault-files"
-R2_ACCOUNT_ID = "your-cloudflare-account-id"
+CLOUDFLARE_ACCOUNT_ID = "your-cloudflare-account-id"
 DATABASE_URL = "your-database-connection-string"
 
 # Monitoring & Observability

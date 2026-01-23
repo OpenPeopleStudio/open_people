@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { UpdateNoteRequest } from "@/types/notes";
 
@@ -7,10 +7,13 @@ import type { UpdateNoteRequest } from "@/types/notes";
    Get a single note with version history
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ noteId: string }> }
+) {
   void request;
   try {
-    const { noteId } = context.params;
+    const { noteId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -62,9 +65,12 @@ export async function GET(request: Request, context: any) {
    Update a note
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(request: Request, context: any) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ noteId: string }> }
+) {
   try {
-    const { noteId } = context.params;
+    const { noteId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -150,10 +156,13 @@ export async function PATCH(request: Request, context: any) {
    Delete a note
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ noteId: string }> }
+) {
   void request;
   try {
-    const { noteId } = context.params;
+    const { noteId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

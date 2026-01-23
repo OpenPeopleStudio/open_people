@@ -1,6 +1,39 @@
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
+type ManagedDomainRow = {
+  id: string;
+  domain: string;
+  status: string;
+  tenant_id: string | null;
+  account_id: string | null;
+  resend_domain_id: string | null;
+  verified_at: string | null;
+  last_check_at: string | null;
+  error_message: string | null;
+  dns_records: unknown;
+};
+
+type ManagedAccountRow = {
+  id: string;
+  name: string | null;
+  email_address: string | null;
+  provider: string | null;
+  mode: string | null;
+  sync_enabled: boolean | null;
+  tenant_id: string | null;
+};
+
+type RecentInboundRow = {
+  id: string;
+  from_address: string | null;
+  to_addresses: unknown;
+  subject: string | null;
+  received_at: string | null;
+  account_id: string | null;
+  tenant_id: string | null;
+};
+
 /* ═══════════════════════════════════════════════════════════════════════════
    Inbound Email Debug Endpoint
    GET /api/email/inbound/debug - Check webhook and domain configuration
@@ -22,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     // Get user's tenant
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -42,7 +75,7 @@ export async function GET(request: NextRequest) {
     };
 
     // Check managed domains
-    let managedDomains: any[] = [];
+    let managedDomains: ManagedDomainRow[] = [];
     let domainsError: string | null = null;
 
     try {
@@ -63,7 +96,7 @@ export async function GET(request: NextRequest) {
         if (error) {
           domainsError = error.message;
         } else {
-          managedDomains = data || [];
+          managedDomains = (data || []) as ManagedDomainRow[];
         }
       } else if (profile?.tenant_id) {
         const { data, error } = await supabase
@@ -75,7 +108,7 @@ export async function GET(request: NextRequest) {
         if (error) {
           domainsError = error.message;
         } else {
-          managedDomains = data || [];
+          managedDomains = (data || []) as ManagedDomainRow[];
         }
       }
     } catch (e) {
@@ -83,7 +116,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check email accounts with managed mode
-    let managedAccounts: any[] = [];
+    let managedAccounts: ManagedAccountRow[] = [];
     let accountsError: string | null = null;
 
     try {
@@ -101,14 +134,14 @@ export async function GET(request: NextRequest) {
       if (error) {
         accountsError = error.message;
       } else {
-        managedAccounts = data || [];
+        managedAccounts = (data || []) as ManagedAccountRow[];
       }
     } catch (e) {
       accountsError = e instanceof Error ? e.message : "Unknown error";
     }
 
     // Check recent inbound emails (last 24 hours)
-    let recentInbound: any[] = [];
+    let recentInbound: RecentInboundRow[] = [];
     let inboundError: string | null = null;
 
     try {
@@ -131,7 +164,7 @@ export async function GET(request: NextRequest) {
       if (error) {
         inboundError = error.message;
       } else {
-        recentInbound = data || [];
+        recentInbound = (data || []) as RecentInboundRow[];
       }
     } catch (e) {
       inboundError = e instanceof Error ? e.message : "Unknown error";

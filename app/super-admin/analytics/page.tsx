@@ -78,7 +78,7 @@ async function getPlatformMetrics(): Promise<PlatformMetrics> {
 
   // Get user count
   const { count: totalUsers } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("*", { count: "exact", head: true });
 
   // Get usage totals

@@ -49,7 +49,7 @@ export async function GET(
 
     // Check user role
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role, tenant_id')
       .eq('id', user.id)
       .single()
@@ -65,7 +65,7 @@ export async function GET(
 
     // Fetch customer profile
     const { data: customerProfile, error: profileError } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, full_name, role, created_at, is_online, last_active_at, public_key')
       .eq('id', customerId)
       .eq('tenant_id', tenantId)

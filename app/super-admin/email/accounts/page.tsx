@@ -55,7 +55,7 @@ export default async function EmailAccountsPage() {
 
   // Verify super admin access
   const { data: profile } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();

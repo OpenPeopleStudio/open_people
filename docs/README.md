@@ -1,10 +1,12 @@
 # OpenPeople.ai Documentation
 
+Owner: Coder
+
 Welcome to the comprehensive documentation for OpenPeople.ai, a multi-tenant SaaS platform for AI alignment and governance.
 
 ## 📖 Documentation Overview
 
-This documentation is organized into several key sections to help you understand, develop, deploy, and maintain the OpenPeople.ai platform.
+This documentation is organized by company ownership and functional areas to help you understand, develop, deploy, and maintain the OpenPeople.ai platform.
 
 ## 🎬 Demo walkthrough (5–10 minutes)
 
@@ -23,67 +25,70 @@ A typical demo flow:
 - **Chat + Knowledge**: capture a fact/note from chat actions (`/admin/chat`)
 - **Workflows**: create tasks + run an ops proposal (`/admin/workflows`)
 
-### 🚀 Quick Start
+### ✅ Start Here
 - **[Getting Started](../README.md)** - Platform overview, tech stack, and basic setup
-- **[Company Docs](./company/README.md)** - Org structure, roles, and doc ownership
-- **[Development Setup](./development/setup.md)** - Local development environment and contribution guidelines
-- **[Deployment Guide](./deployment/overview.md)** - Production deployment and operations
-- **[AI Playbook](./AI/PLAYBOOK.md)** - Agent and newcomer recipes
-- **[Safety Guardrails](./SAFETY.md)** - High-risk areas and data handling rules
-- **[Runbook](./RUNBOOK.md)** - Debug/ops quick reference
-
-### 🏗️ Architecture & Design
-- **[System Architecture](./architecture/overview.md)** - Platform architecture, data flows, and design decisions
-- **[Database Schema](./architecture/database.md)** - Database design and migrations
-- **[Security Architecture](./security/overview.md)** - Security model, authentication, and authorization
-
-### 📋 Features & Specifications
-- **[Feature Overview](./features/README.md)** - Complete feature specifications and roadmap
-- **[AI Alignment & Governance](./features/ai-alignment-governance/)** - Core AI governance features
-- **[Safety & Compliance](./features/safety-compliance/)** - Content moderation and compliance tools
-- **[Monitoring & Observability](./features/monitoring-observability/)** - Analytics and monitoring capabilities
-- **[Developer Experience](./features/developer-experience/)** - Developer tools and SDKs
-- **[Business Intelligence](./features/business-intelligence/)** - Usage analytics and ROI tracking
-- **[Integration Layer](./features/integration-layer/)** - Third-party integrations and webhooks
-
-### 🔌 API Documentation
-- **[API Overview](./api/overview.md)** - API design principles and authentication
-- **[OpenAPI Spec](./api/openapi.md)** - Generated OpenAPI contract and usage
-- **[Authentication](./api/core/auth.md)** - Supabase Auth usage for API routes
-- **[Tenants](./api/core/tenants.md)** - Tenant management and domain status
-- **[Onboarding](./api/core/onboarding.md)** - Tenant onboarding records and updates
-- **[Profile](./api/core/profile.md)** - User profile and preferences
-- **[AI Governance](./api/features/ai-governance.md)** - AI model registry and audit logs
-- **[AI Workers](./api/features/ai-workers.md)** - AI Team hub, worker routes, Chief of Staff planning, budgets
-- **[Ops Worker](./api/features/ops-worker.md)** - Decision → propose tasks → commit
-- **[Chat](./api/features/chat.md)** - Conversations, messages, memories, and action routes
-- **[Email](./api/features/email.md)** - Email accounts, inbox, templates, domains, sending
-- **[Notes](./api/features/notes.md)** - Notes, templates, versions, and graph
-- **[Notifications](./api/features/notifications.md)** - In-app, SMS, preferences, delivery logs
-- **[Storage](./api/features/storage.md)** - Buckets, files, presigned upload/download
-- **[Workflows](./api/features/workflows.md)** - Projects and tasks
-- **[API Keys](./api/features/api-keys.md)** - Encrypted API keys (create/list/test/reveal)
-- **[Vault](./api/features/vault.md)** - Encrypted vault (unlock/files/folders/AI analysis)
-
-### 🛠️ Development Resources
-- **[Contributing Guidelines](./development/contributing.md)** - How to contribute to the platform
-- **[Testing Strategy](./development/testing.md)** - Testing approaches and guidelines (unit, integration, E2E)
-
-### 🚢 Deployment & Operations
+- **[Development Setup](./development/setup.md)** - Local development environment
 - **[Deployment Overview](./deployment/overview.md)** - Production deployment guide
-- **[Infrastructure](./deployment/infrastructure.md)** - Infrastructure as code and cloud setup
-- **[Monitoring](./deployment/monitoring.md)** - Production monitoring and alerting
-- **[Backup & Recovery](./deployment/backup.md)** - Data backup and disaster recovery
-- **[Scaling & Performance](./deployment/scaling.md)** - Performance optimization and scaling strategies
 
-### 🔒 Security & Compliance
-- **[Security Overview](./security/overview.md)** - Security principles and practices
-- **[Compliance](./security/compliance.md)** - Regulatory compliance and certifications
-- **[Privacy](./security/privacy.md)** - Data privacy and protection measures
+### 🧭 Company Structure & Ownership
+- **[Company Docs](./company/README.md)** - Org structure, roles, and governance
+- **[Ownership Map](./company/ownership-map.md)** - Roles ↔ doc areas
+- **[Shareholder Workflow](./company/workflow.md)** - Chain of command and execution rules
+- **[Coordination Log](./company/coordination.md)** - Cross-terminal handoffs
+- **[Locks](./company/locks.md)** - Active edit locks and policy
+- **[Docs TODO](./TODO.md)** - Documentation task queue
+- **[Suggestions Inbox](./suggestions-inbox.md)** - Untriaged ideas
+- **[Vault TODO](./vault-todo.md)** - Vault backlog
 
-### ❓ Support & Troubleshooting
-- **[FAQ](./support/faq.md)** - Frequently asked questions
-- **[Troubleshooting](./support/troubleshooting.md)** - Common issues and solutions
+### 🏗️ Product & Platform (Owner: CTO)
+- **[Architecture Index](./architecture/README.md)** - System, DB, multi-tenancy, auth, events
+- **[Feature Index](./features/README.md)** - Specs and roadmap
+- **[API Index](./api/README.md)** - Core + feature APIs, standards, OpenAPI
+- **[Decision Records](./DECISIONS/README.md)** - ADRs and product decisions
+
+### 🛠️ Engineering Delivery (Owner: CTO)
+- **[Development Index](./development/README.md)** - Setup, contributing, testing, build isolation
+- **[Deployment Index](./deployment/README.md)** - Infrastructure, monitoring, scaling, workers
+
+## OSS Quickstart (Local, 10 minutes)
+
+1) Clone + install
+   - `git clone https://github.com/OpenPeopleStudio/open_people.git`
+   - `cd open_people && npm install`
+2) Configure env
+   - `cp .env.local.example .env.local`
+   - Fill required keys in `.env.local`
+3) Run the app
+   - `npm run dev`
+   - Visit `http://localhost:3000`
+4) Optional: seed Mars tenant data
+   - `npm run db:migrate`
+   - `npm run db:seed`
+   - Visit `http://mars.localhost:3000/admin`
+5) Before opening a PR
+   - `npm run lint`
+   - `npm run typecheck`
+
+See **[Development Setup](./development/setup.md)** and **[Contributing](./development/contributing.md)** for details.
+
+### 🔒 Security, Safety & Privacy (Owner: Mr Robot)
+- **[Security Index](./security/README.md)** - Security, compliance, privacy
+- **[Safety Guardrails](./SAFETY.md)** - High-risk areas and data handling rules
+- **[Personal Data Index](./personal-data/README.md)** - Ingestion, access, backups
+
+### 🚢 Operations & Support (Owner: Linus)
+- **[Runbook](./RUNBOOK.md)** - Debug/ops quick reference
+- **[Support Index](./support/README.md)** - FAQ + troubleshooting
+- **[Bug Triage](./bugs.md)** - Cross-team bug routing
+
+### 🤖 AI Ops & Agent Workflows (Owner: CTO + Coder)
+- **[AI Ops Index](./AI/README.md)** - Playbook, guardrails, tasks, context
+- **[AI Agent Company Playbook](./company/ai-agent-company-playbook.md)** - Operating system for scaling agents
+- **[Open Source Agent Workflow](./company/open-source-agent-workflow.md)** - OSS stewardship
+
+### 🧩 Admin & Assets (Owner: Lisa)
+- **[Super Admin Index](./super-admin/README.md)** - Admin surface docs
+- **[Assets](./assets/README.md)** - Favicons and OG images
 
 ## 🎯 Development Priority
 
@@ -140,5 +145,5 @@ We welcome contributions to our documentation! Here's how you can help:
 
 ---
 
-**Last Updated**: January 22, 2026
+**Last Updated**: January 23, 2026
 **Platform Version**: v0.1.0

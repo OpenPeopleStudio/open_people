@@ -152,7 +152,7 @@ CREATE TABLE profiles (
 | `avatar_url` | TEXT | Profile image URL |
 | `role` | TEXT | User role (super_admin/owner/admin/member/customer) |
 
-**Note**: The `709_profiles` view provides backward compatibility with legacy code.
+**Note**: The `profiles` view provides backward compatibility with legacy code.
 
 ### tenant_domains
 

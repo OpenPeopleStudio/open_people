@@ -4,7 +4,7 @@
 -- Helper function to get current user's tenant_id
 create or replace function auth.current_user_tenant_id()
 returns uuid as $$
-  select tenant_id from public."709_profiles"
+  select tenant_id from public."profiles"
   where id = auth.uid()
   limit 1;
 $$ language sql stable;
@@ -13,7 +13,7 @@ $$ language sql stable;
 create or replace function auth.is_super_admin()
 returns boolean as $$
   select exists (
-    select 1 from public."709_profiles"
+    select 1 from public."profiles"
     where id = auth.uid()
     and role = 'super_admin'
   );
@@ -23,7 +23,7 @@ $$ language sql stable;
 create or replace function auth.is_tenant_admin()
 returns boolean as $$
   select exists (
-    select 1 from public."709_profiles"
+    select 1 from public."profiles"
     where id = auth.uid()
     and role in ('admin', 'owner')
   );
@@ -69,17 +69,17 @@ on tenant_billing for all
 using (auth.is_super_admin());
 
 -- Profiles: Users can only see profiles in their tenant
-drop policy if exists "Users read own profile" on "709_profiles";
+drop policy if exists "Users read own profile" on "profiles";
 create policy "Users read own profile"
-on "709_profiles" for select
+on "profiles" for select
 using (
   auth.is_super_admin() or
   (auth.uid() = id and tenant_id = auth.current_user_tenant_id())
 );
 
-drop policy if exists "Admins read tenant profiles" on "709_profiles";
+drop policy if exists "Admins read tenant profiles" on "profiles";
 create policy "Admins read tenant profiles"
-on "709_profiles" for select
+on "profiles" for select
 using (
   auth.is_super_admin() or
   (auth.is_tenant_admin() and tenant_id = auth.current_user_tenant_id())

@@ -22,7 +22,7 @@ WITH CHECK (
   bucket_id = 'assets' 
   AND (storage.foldername(name))[1] = 'tenant-logos'
   AND auth.uid() IN (
-    SELECT id FROM "709_profiles" 
+    SELECT id FROM "profiles" 
     WHERE role IN ('admin', 'owner')
     AND tenant_id = (
       SELECT id FROM tenants 
@@ -47,7 +47,7 @@ USING (
   bucket_id = 'assets'
   AND (storage.foldername(name))[1] = 'tenant-logos'
   AND auth.uid() IN (
-    SELECT id FROM "709_profiles" 
+    SELECT id FROM "profiles" 
     WHERE role IN ('admin', 'owner')
     AND tenant_id = (
       SELECT id FROM tenants 
@@ -65,7 +65,7 @@ USING (
   bucket_id = 'assets'
   AND (storage.foldername(name))[1] = 'tenant-logos'
   AND auth.uid() IN (
-    SELECT id FROM "709_profiles" 
+    SELECT id FROM "profiles" 
     WHERE role IN ('admin', 'owner')
     AND tenant_id = (
       SELECT id FROM tenants 

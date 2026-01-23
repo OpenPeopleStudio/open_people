@@ -101,7 +101,9 @@ Create the following environment variables in your deployment platform:
 NEXT_PUBLIC_APP_URL=https://openpeople.ai
 NEXT_PUBLIC_ROOT_DOMAIN=openpeople.ai
 NEXT_PUBLIC_DEFAULT_TENANT_SLUG=default
+NEXT_PUBLIC_SUPER_ADMIN_DOMAIN=app.openpeople.ai
 SUPER_ADMIN_DOMAIN=app.openpeople.ai
+# Keep both SUPER_ADMIN_DOMAIN and NEXT_PUBLIC_SUPER_ADMIN_DOMAIN in sync
 
 # Node environment
 NODE_ENV=production
@@ -116,13 +118,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 
 # Server-side only
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
+# Optional (only needed for external tooling)
 SUPABASE_JWT_SECRET=your-jwt-secret
 ```
 
 #### Cloudflare R2 (Storage Add-on)
 
 ```bash
-R2_ACCOUNT_ID=your-account-id
+CLOUDFLARE_ACCOUNT_ID=your-account-id
 R2_ACCESS_KEY_ID=your-access-key
 R2_SECRET_ACCESS_KEY=your-secret-key
 R2_BUCKET_NAME=openpeople-storage
@@ -133,7 +136,8 @@ R2_PUBLIC_URL=https://storage.openpeople.ai
 
 ```bash
 RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=noreply@openpeople.ai
+RESEND_WEBHOOK_SECRET=whsec_...
+DEFAULT_FROM_NAME=OpenPeople
 ```
 
 #### Twilio (Notifications Add-on)

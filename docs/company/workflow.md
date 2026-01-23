@@ -5,6 +5,9 @@ Owner: CEO + CTO
 ## Purpose
 Provide a clear chain of command for shareholder directives so prompts flow through each level of the org, with refinement and delegation at each step.
 
+Note: The CEO/CTO/Coder/Employee "roles" referenced here are AI worker personas used for routing and automation in
+this repository. Names are codenames and do not refer to real people.
+
 ## Chain of Command
 1) Shareholder submits a directive.
 2) CEO translates it into vision and non-negotiables.
@@ -20,6 +23,13 @@ Provide a clear chain of command for shareholder directives so prompts flow thro
 - Cross-terminal handoffs and updates go in `docs/company/coordination.md`.
 - All coordination entries must include a role tag in the form `To: <Role>` (e.g., `To: Claude`).
 - For role-specific triggers, run `bash scripts/org-run-remote-work.sh "<Role>"` (e.g., `"Claude"`).
+
+## Decision Gate (Major Changes)
+
+For any major scope change, new dependency, or data/auth boundary change:
+- Write an ADR before implementation (see `docs/company/adr.md`).
+- CTO approval required before work begins.
+- Link ADR in `docs/TODO.md` tasks.
 
 ## Hiring Workflow (Standard)
 

@@ -212,8 +212,8 @@ export async function POST(request: NextRequest) {
       }
 
       // 4. Create user profile linked to tenant
-      // Uses 709_profiles table from the existing schema
-      const { error: profileError } = await supabase.from("709_profiles").insert({
+      // Uses profiles table from the existing schema
+      const { error: profileError } = await supabase.from("profiles").insert({
         id: authData.user.id,
         tenant_id: tenant.id,
         full_name: body.fullName.trim(),
@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
       if (profileError) {
         // Profile might be auto-created by trigger - check if it exists
         const { data: existingProfile } = await supabase
-          .from("709_profiles")
+          .from("profiles")
           .select("id")
           .eq("id", authData.user.id)
           .single();
@@ -233,7 +233,7 @@ export async function POST(request: NextRequest) {
         } else {
           // Update existing profile with tenant_id and role
           await supabase
-            .from("709_profiles")
+            .from("profiles")
             .update({ tenant_id: tenant.id, role: "owner" })
             .eq("id", authData.user.id);
         }

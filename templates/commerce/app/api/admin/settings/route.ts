@@ -14,7 +14,7 @@ async function getAuthedRole(request: Request) {
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role, full_name')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
 
     if (tab === 'users') {
       const { data: profiles } = await auth.supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('id, role, full_name, created_at')
         .eq('tenant_id', auth.tenant?.id)
         .order('created_at', { ascending: false })
@@ -194,7 +194,7 @@ export async function POST(request: Request) {
   }
 
   const { data: customers, error: customersError } = await adminClient
-    .from('709_profiles')
+    .from('profiles')
     .select('id')
     .eq('role', 'customer')
     .eq('tenant_id', auth.tenant?.id)

@@ -15,6 +15,7 @@ vi.mock('@/lib/supabase/server', () => ({
 // Mock logger
 vi.mock('@/lib/observability/logger', () => ({
   logAuth: vi.fn(),
+  logPerformance: vi.fn(),
 }));
 
 describe('Authentication Utilities', () => {

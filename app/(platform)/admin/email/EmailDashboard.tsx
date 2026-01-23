@@ -94,7 +94,7 @@ export function EmailDashboard({
       } else {
         setSendResult({ success: false, message: data.error || "Failed to send email" });
       }
-    } catch (error) {
+    } catch {
       setSendResult({ success: false, message: "An error occurred" });
     } finally {
       setSending(false);
@@ -131,7 +131,7 @@ export function EmailDashboard({
       } else {
         alert(data.error || "Failed to save template");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setSavingTemplate(false);
@@ -154,7 +154,7 @@ export function EmailDashboard({
         const data = await res.json();
         alert(data.error || "Failed to delete template");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     }
   };
@@ -179,7 +179,7 @@ export function EmailDashboard({
       } else {
         alert(data.error || "Failed to add domain");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setAddingDomain(false);
@@ -202,7 +202,7 @@ export function EmailDashboard({
         const data = await res.json();
         alert(data.error || "Failed to delete domain");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     }
   };

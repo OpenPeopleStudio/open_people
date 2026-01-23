@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   try {
     // Get user profile
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role, created_at, message_retention_enabled, message_retention_days, staff_location_opt_in')
       .eq('id', user.id)
       .eq('tenant_id', tenant?.id)

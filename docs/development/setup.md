@@ -92,7 +92,6 @@ R2_BUCKET_NAME=openpeople-storage
 # Resend (for email sending)
 RESEND_API_KEY=re_your_resend_api_key
 RESEND_WEBHOOK_SECRET=whsec_your_webhook_secret
-DEFAULT_FROM_EMAIL=noreply@yourdomain.com
 DEFAULT_FROM_NAME=OpenPeople
 
 # Twilio (for SMS notifications)
@@ -106,8 +105,11 @@ NEXT_PUBLIC_SENTRY_DSN=your_sentry_dsn
 LOG_LEVEL=debug
 
 # Deployment Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_ROOT_DOMAIN=yourdomain.com
+NEXT_PUBLIC_DEFAULT_TENANT_SLUG=default
 NEXT_PUBLIC_SUPER_ADMIN_DOMAIN=app.yourdomain.com
+SUPER_ADMIN_DOMAIN=app.yourdomain.com
 ```
 
 ### Development vs Production

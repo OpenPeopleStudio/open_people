@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Get user's tenant (super-admin uses platform tenant)
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -116,7 +116,7 @@ export async function DELETE(request: NextRequest) {
 
     // Get user's tenant (super-admin uses platform tenant)
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

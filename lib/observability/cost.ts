@@ -294,7 +294,7 @@ export async function getCostOutcomeSummary(
   const since = new Date();
   since.setDate(since.getDate() - days);
 
-  let query = supabase
+  const query = supabase
     .from("cost_outcome_metrics")
     .select("*")
     .eq("tenant_id", tenantId)

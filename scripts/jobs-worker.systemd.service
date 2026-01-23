@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenPeople Job Queue Worker
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/open_people
+ExecStart=/usr/bin/npm run jobs:worker
+Restart=always
+RestartSec=5
+Environment=NEXT_PUBLIC_SUPABASE_URL=REPLACE_ME
+Environment=SUPABASE_SERVICE_ROLE_KEY=REPLACE_ME
+
+[Install]
+WantedBy=multi-user.target

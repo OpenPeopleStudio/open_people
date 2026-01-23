@@ -96,7 +96,7 @@ create policy "Users can view their managed domains"
   on managed_email_domains for select
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 
@@ -105,7 +105,7 @@ create policy "Users can manage their managed domains"
   on managed_email_domains for all
   using (
     tenant_id in (
-      select tenant_id from "709_profiles" where id = auth.uid()
+      select tenant_id from "profiles" where id = auth.uid()
     )
   );
 

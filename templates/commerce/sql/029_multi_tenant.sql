@@ -102,7 +102,7 @@ on conflict (slug) do update
 set name = excluded.name;
 
 -- Tenant ownership on core tables
-alter table "709_profiles" add column if not exists tenant_id uuid references tenants(id);
+alter table "profiles" add column if not exists tenant_id uuid references tenants(id);
 alter table products add column if not exists tenant_id uuid references tenants(id);
 alter table product_variants add column if not exists tenant_id uuid references tenants(id);
 alter table product_images add column if not exists tenant_id uuid references tenants(id);
@@ -146,7 +146,7 @@ alter table consignors drop constraint if exists consignors_email_key;
 create unique index if not exists idx_consignors_tenant_email on consignors(tenant_id, email);
 
 -- Tenant indexes
-create index if not exists idx_profiles_tenant_id on "709_profiles"(tenant_id);
+create index if not exists idx_profiles_tenant_id on "profiles"(tenant_id);
 create index if not exists idx_products_tenant_id on products(tenant_id);
 create index if not exists idx_variants_tenant_id on product_variants(tenant_id);
 create index if not exists idx_product_images_tenant_id on product_images(tenant_id);
@@ -180,7 +180,7 @@ declare
 begin
   select id into default_tenant from tenants where slug = '709exclusive' limit 1;
 
-  update "709_profiles" set tenant_id = default_tenant where tenant_id is null;
+  update "profiles" set tenant_id = default_tenant where tenant_id is null;
   update products set tenant_id = default_tenant where tenant_id is null;
 
   update product_variants pv
@@ -219,7 +219,7 @@ begin
 
   update messages m
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where m.tenant_id is null and m.customer_id = p.id;
   update messages set tenant_id = default_tenant where tenant_id is null;
 
@@ -238,31 +238,31 @@ begin
 
   update wishlist_items wi
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where wi.tenant_id is null and wi.user_id = p.id;
   update wishlist_items set tenant_id = default_tenant where tenant_id is null;
 
   update stock_alerts sa
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where sa.tenant_id is null and sa.user_id = p.id;
   update stock_alerts set tenant_id = default_tenant where tenant_id is null;
 
   update drop_alerts da
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where da.tenant_id is null and da.user_id = p.id;
   update drop_alerts set tenant_id = default_tenant where tenant_id is null;
 
   update recently_viewed rv
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where rv.tenant_id is null and rv.user_id = p.id;
   update recently_viewed set tenant_id = default_tenant where tenant_id is null;
 
   update user_preferences up
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where up.tenant_id is null and up.user_id = p.id;
   update user_preferences set tenant_id = default_tenant where tenant_id is null;
 
@@ -275,13 +275,13 @@ begin
   update site_flags set tenant_id = default_tenant where tenant_id is null;
   update staff_locations sl
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where sl.tenant_id is null and sl.user_id = p.id;
   update staff_locations set tenant_id = default_tenant where tenant_id is null;
 
   update activity_logs al
   set tenant_id = p.tenant_id
-  from "709_profiles" p
+  from "profiles" p
   where al.tenant_id is null and al.user_id = p.id;
   update activity_logs set tenant_id = default_tenant where tenant_id is null;
 
@@ -379,7 +379,7 @@ begin
     select id into resolved_tenant from public.tenants where slug = '709exclusive' limit 1;
   end if;
 
-  insert into public."709_profiles" (id, role, full_name, tenant_id, created_at)
+  insert into public."profiles" (id, role, full_name, tenant_id, created_at)
   values (
     new.id,
     'customer',

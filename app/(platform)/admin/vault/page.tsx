@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { VaultSpace } from "@/types/vault";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -18,11 +18,7 @@ export default function TenantVaultPage() {
   const [state, setState] = useState<VaultState>({ status: "loading" });
   const [error, setError] = useState<string | null>(null);
   
-  useEffect(() => {
-    checkVaultStatus();
-  }, []);
-  
-  async function checkVaultStatus() {
+  const checkVaultStatus = useCallback(async () => {
     try {
       const response = await fetch("/api/vault/status");
       
@@ -68,7 +64,11 @@ export default function TenantVaultPage() {
       console.error("Vault status error:", err);
       setError("Failed to load vault status");
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    checkVaultStatus();
+  }, [checkVaultStatus]);
   
   if (state.status === "loading") {
     return (
@@ -352,11 +352,7 @@ function VaultDashboard({
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   
-  useEffect(() => {
-    loadFiles();
-  }, []);
-  
-  async function loadFiles() {
+  const loadFiles = useCallback(async () => {
     try {
       const res = await fetch("/api/vault/files", {
         headers: { "x-vault-session": sessionId },
@@ -370,7 +366,11 @@ function VaultDashboard({
     } finally {
       setLoading(false);
     }
-  }
+  }, [sessionId]);
+
+  useEffect(() => {
+    loadFiles();
+  }, [loadFiles]);
   
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];

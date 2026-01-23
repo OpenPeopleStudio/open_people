@@ -21,7 +21,7 @@ create policy "Admins can insert product images"
 on product_images for insert
 with check (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )
@@ -31,7 +31,7 @@ create policy "Admins can delete product images"
 on product_images for delete
 using (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )

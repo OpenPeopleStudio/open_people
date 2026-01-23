@@ -81,7 +81,7 @@ export async function POST(req: Request) {
 
 async function getUserRole(supabase: SupabaseClient, userId: string, tenantId?: string): Promise<string | undefined> {
   let query = supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', userId)
 

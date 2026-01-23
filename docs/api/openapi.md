@@ -1,9 +1,11 @@
-# OpenAPI Specification
+# OpenAPI Specification (stable)
 
 Owner: CTO
 
 This document explains where the OpenAPI contract lives, how it is generated,
 and how to consume it.
+
+Envelope: `{ data, error, traceId }` for responses unless otherwise noted.
 
 ## What this is
 

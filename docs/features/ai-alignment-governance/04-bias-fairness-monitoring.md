@@ -317,7 +317,7 @@ GET    /api/ai/fairness/reports           # Generate report
 
 - **Existing:** AI Audit Logs (as data source)
 - **Related:** Content Moderation, Quality Scoring
-- **External:** 
+- **External:**
   - Stereotype detection model (can use off-the-shelf or custom)
   - Statistical analysis libraries
 

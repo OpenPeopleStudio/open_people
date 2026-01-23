@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
-import { withRequestContext, logRequest } from "@/lib/observability/logger";
-import { withCorrelationId } from "@/lib/observability/correlation";
+import { withRequestContext, logRequest } from "@/lib/observability/edge-logger";
+import { withCorrelationId } from "@/lib/observability/edge-correlation";
 import { checkRateLimit, getRateLimitHeaders } from "@/lib/security/rate-limit";
 
 const PUBLIC_API_PATHS: RegExp[] = [

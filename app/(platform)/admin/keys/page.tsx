@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { ApiKey, ApiKeyFilters } from "@/types/api-keys";
 import { PROVIDERS, ENVIRONMENTS, getProviderInfo } from "@/lib/api-keys/encryption";
 import type { ProviderId, EnvironmentId } from "@/lib/api-keys/encryption";
@@ -16,11 +16,7 @@ export default function TenantKeysPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [filters, setFilters] = useState<ApiKeyFilters>({});
   
-  useEffect(() => {
-    loadKeys();
-  }, [filters]);
-  
-  async function loadKeys() {
+  const loadKeys = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -40,7 +36,11 @@ export default function TenantKeysPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [filters]);
+  
+  useEffect(() => {
+    loadKeys();
+  }, [loadKeys]);
   
   function handleKeyCreated(newKey: ApiKey) {
     setKeys(prev => [newKey, ...prev]);
@@ -109,7 +109,8 @@ export default function TenantKeysPage() {
                 const value = e.target.value;
                 setFilters((prev) => {
                   if (!value) {
-                    const { provider, ...rest } = prev;
+                    const { provider: removedProvider, ...rest } = prev;
+                    void removedProvider;
                     return rest;
                   }
                   return { ...prev, provider: value };
@@ -129,7 +130,8 @@ export default function TenantKeysPage() {
                 const value = e.target.value;
                 setFilters((prev) => {
                   if (!value) {
-                    const { environment, ...rest } = prev;
+                    const { environment: removedEnvironment, ...rest } = prev;
+                    void removedEnvironment;
                     return rest;
                   }
                   return { ...prev, environment: value };

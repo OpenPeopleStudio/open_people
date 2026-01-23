@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -235,7 +235,7 @@ async function getStaffEfficiencyAnalytics(supabase: any, tenantId: string | und
   const staffIds = new Set(locations?.map((l: any) => l.user_id) || [])
   
   const { data: staffProfiles } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('id, role')
     .in('id', Array.from(staffIds))
     .in('role', ['staff', 'admin', 'owner'])

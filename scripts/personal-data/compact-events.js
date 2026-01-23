@@ -27,7 +27,6 @@ const s3AccessKey =
   process.env.PERSONAL_DATA_S3_ACCESS_KEY ?? process.env.MINIO_ROOT_USER;
 const s3SecretKey =
   process.env.PERSONAL_DATA_S3_SECRET_KEY ?? process.env.MINIO_ROOT_PASSWORD;
-const rawBucket = process.env.PERSONAL_DATA_S3_BUCKET_RAW ?? "personal-raw";
 const curatedBucket =
   process.env.PERSONAL_DATA_S3_BUCKET_CURATED ?? "personal-curated";
 

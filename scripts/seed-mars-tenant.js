@@ -53,7 +53,7 @@ async function seedMarsTenant() {
 
     // 1. Ensure the mars tenant exists
     console.log('📋 Checking for mars tenant...');
-    let { data: tenant, error: tenantError } = await supabase
+    const { data: tenant, error: tenantError } = await supabase
       .from('tenants')
       .select('id, name, slug')
       .eq('slug', 'mars')

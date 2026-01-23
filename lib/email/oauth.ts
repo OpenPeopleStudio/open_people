@@ -15,6 +15,48 @@ export interface OAuthTokens {
   token_type?: string;
 }
 
+type EmailAccountRow = {
+  id: string;
+  provider?: string | null;
+  oauth_access_token?: string | null;
+  oauth_refresh_token?: string | null;
+  oauth_expires_at?: number | null;
+  email_address?: string | null;
+};
+
+type GmailHeader = { name: string; value: string };
+
+type GmailMessage = {
+  id?: string;
+  internalDate?: string;
+  snippet?: string;
+  payload?: {
+    headers?: GmailHeader[];
+  };
+};
+
+type OutlookRecipient = { emailAddress?: { address?: string } };
+
+type OutlookMessage = {
+  id?: string;
+  internetMessageId?: string;
+  sender?: OutlookRecipient;
+  toRecipients?: OutlookRecipient[];
+  subject?: string;
+  bodyPreview?: string;
+  receivedDateTime?: string;
+};
+
+type OAuthEmailPayload = {
+  email_id: string;
+  message_id: string;
+  from?: string;
+  to?: string[];
+  subject?: string;
+  text?: string;
+  created_at?: string;
+};
+
 export class EmailOAuthService {
   private supabase = createSupabaseAdmin();
 
@@ -285,32 +327,33 @@ export class EmailOAuthService {
   /**
    * Private helper methods
    */
-  private async getAccountWithTokens(accountId: string): Promise<any> {
+  private async getAccountWithTokens(accountId: string): Promise<EmailAccountRow | null> {
     const { data: account } = await this.supabase
       .from("email_accounts")
       .select("*")
       .eq("id", accountId)
       .single();
 
-    return account;
+    return account as EmailAccountRow | null;
   }
 
-  private isTokenExpired(expiresAt?: number): boolean {
+  private isTokenExpired(expiresAt?: number | null): boolean {
     if (!expiresAt) return true;
     // Add 5 minute buffer
     return Date.now() >= (expiresAt - 5 * 60 * 1000);
   }
 
-  private async refreshGmailTokens(account: any): Promise<boolean> {
+  private async refreshGmailTokens(account: EmailAccountRow): Promise<boolean> {
     try {
       const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET
       );
 
-      oauth2Client.setCredentials({
-        refresh_token: account.oauth_refresh_token,
-      });
+      const refreshCredentials = account.oauth_refresh_token
+        ? { refresh_token: account.oauth_refresh_token }
+        : {};
+      oauth2Client.setCredentials(refreshCredentials);
 
       const { credentials } = await oauth2Client.refreshAccessToken();
       const newTokens = credentials;
@@ -333,10 +376,13 @@ export class EmailOAuthService {
     }
   }
 
-  private async refreshOutlookTokens(account: any): Promise<boolean> {
+  private async refreshOutlookTokens(account: EmailAccountRow): Promise<boolean> {
     try {
       const clientId = process.env.OUTLOOK_CLIENT_ID;
       const clientSecret = process.env.OUTLOOK_CLIENT_SECRET;
+      if (!account.oauth_refresh_token) {
+        return false;
+      }
 
       const tokenResponse = await fetch("https://login.microsoftonline.com/common/oauth2/v2.0/token", {
         method: "POST",
@@ -351,7 +397,15 @@ export class EmailOAuthService {
         }),
       });
 
-      const tokens = await tokenResponse.json();
+      const tokens = await tokenResponse.json() as {
+        access_token?: string;
+        refresh_token?: string;
+        expires_in?: number;
+        error?: string;
+        error_description?: string;
+        trace_id?: string;
+        correlation_id?: string;
+      };
 
       if (!tokenResponse.ok) {
         console.error("Outlook token refresh failed:", {
@@ -370,7 +424,7 @@ export class EmailOAuthService {
         .update({
           oauth_access_token: tokens.access_token,
           oauth_refresh_token: tokens.refresh_token || account.oauth_refresh_token,
-          oauth_expires_at: Date.now() + (tokens.expires_in * 1000),
+          oauth_expires_at: Date.now() + ((tokens.expires_in || 0) * 1000),
           updated_at: new Date().toISOString(),
         })
         .eq("id", account.id);
@@ -383,11 +437,12 @@ export class EmailOAuthService {
     }
   }
 
-  private async performGmailSync(account: any): Promise<number> {
+  private async performGmailSync(account: EmailAccountRow): Promise<number> {
     const oauth2Client = new google.auth.OAuth2();
-    oauth2Client.setCredentials({
-      access_token: account.oauth_access_token,
-    });
+    if (!account.oauth_access_token) {
+      throw new Error("Missing Gmail access token");
+    }
+    oauth2Client.setCredentials({ access_token: account.oauth_access_token });
 
     const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
@@ -419,7 +474,7 @@ export class EmailOAuthService {
             format: "full",
           });
 
-          const emailData = this.parseGmailMessage(fullMessage.data);
+          const emailData = this.parseGmailMessage(fullMessage.data as GmailMessage);
 
           // Process through workspace
           const webhookPayload = {
@@ -444,10 +499,14 @@ export class EmailOAuthService {
     return processed;
   }
 
-  private async performOutlookSync(account: any): Promise<number> {
+  private async performOutlookSync(account: EmailAccountRow): Promise<number> {
+    const accessToken = account.oauth_access_token;
+    if (!accessToken) {
+      throw new Error("Missing Outlook access token");
+    }
     const client = Client.init({
       authProvider: (done) => {
-        done(null, account.oauth_access_token);
+        done(null, accessToken);
       },
     });
 
@@ -461,7 +520,8 @@ export class EmailOAuthService {
 
     let processed = 0;
 
-    for (const message of messages.value) {
+    const messageList = Array.isArray(messages.value) ? (messages.value as OutlookMessage[]) : [];
+    for (const message of messageList) {
       try {
         // Check if already processed
         const existing = await this.supabase
@@ -496,33 +556,59 @@ export class EmailOAuthService {
     return processed;
   }
 
-  private parseGmailMessage(message: any): any {
+  private parseGmailMessage(message: GmailMessage): OAuthEmailPayload {
     // Parse Gmail message format - simplified implementation
-    const headers = message.payload.headers;
-    const getHeader = (name: string) => headers.find((h: any) => h.name === name)?.value;
-
-    return {
-      email_id: message.id,
-      message_id: getHeader("Message-ID") || message.id,
-      from: getHeader("From"),
-      to: [getHeader("To")].filter(Boolean),
-      subject: getHeader("Subject"),
-      text: message.snippet,
-      created_at: new Date(parseInt(message.internalDate)).toISOString(),
+    const headers = message.payload?.headers || [];
+    const getHeader = (name: string) => headers.find((h) => h.name === name)?.value;
+    const messageId = message.id || `gmail-${Date.now()}`;
+    const internalDate = message.internalDate ? parseInt(message.internalDate, 10) : Date.now();
+    const payload: OAuthEmailPayload = {
+      email_id: messageId,
+      message_id: getHeader("Message-ID") || messageId,
+      created_at: new Date(internalDate).toISOString(),
     };
+    const from = getHeader("From");
+    if (from) {
+      payload.from = from;
+    }
+    const to = [getHeader("To")].filter(Boolean) as string[];
+    if (to.length > 0) {
+      payload.to = to;
+    }
+    const subject = getHeader("Subject");
+    if (subject) {
+      payload.subject = subject;
+    }
+    if (message.snippet) {
+      payload.text = message.snippet;
+    }
+    return payload;
   }
 
-  private parseOutlookMessage(message: any): any {
+  private parseOutlookMessage(message: OutlookMessage): OAuthEmailPayload {
     // Parse Outlook message format
-    return {
-      email_id: message.id,
-      message_id: message.internetMessageId || message.id,
-      from: message.sender?.emailAddress?.address,
-      to: message.toRecipients?.map((r: any) => r.emailAddress.address) || [],
-      subject: message.subject,
-      text: message.bodyPreview,
-      created_at: message.receivedDateTime,
+    const messageId = message.id || `outlook-${Date.now()}`;
+    const payload: OAuthEmailPayload = {
+      email_id: messageId,
+      message_id: message.internetMessageId || messageId,
+      created_at: message.receivedDateTime || new Date().toISOString(),
     };
+    const from = message.sender?.emailAddress?.address;
+    if (from) {
+      payload.from = from;
+    }
+    const to =
+      message.toRecipients?.map((r) => r.emailAddress?.address).filter(Boolean) as string[] | undefined;
+    if (to && to.length > 0) {
+      payload.to = to;
+    }
+    if (message.subject) {
+      payload.subject = message.subject;
+    }
+    if (message.bodyPreview) {
+      payload.text = message.bodyPreview;
+    }
+    return payload;
   }
 }
 

@@ -43,7 +43,7 @@ export default async function EmailTemplatesPage() {
   }
 
   const { data: profile } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("tenant_id")
     .eq("id", user.id)
     .single();

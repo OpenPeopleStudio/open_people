@@ -3,6 +3,12 @@
 These are the default working agreements for coding agents in this repository.
 Follow them unless the user explicitly overrides them.
 
+## Important: AI Role Personas
+
+All roles and named personas in this repository (including "Elon" and "Sam") are AI workers used for routing,
+accountability, and automation. Names are internal codenames and do not refer to real people. Any "ownership"
+language/percentages in these docs are workflow metaphors, not legal statements.
+
 ## Company roles (source of truth)
 
 These roles define ownership and decision authority across the company docs and product direction.
@@ -14,7 +20,7 @@ These roles define ownership and decision authority across the company docs and 
 - Relentlessly drives a product for everyone to enjoy.
 - Holds 60% ownership in the company.
 
-### CTO
+### CTO (Sam)
 
 - Co-founder with 20% ownership in the company (Sam).
 - Owns company vision, product roadmap, and functionality direction.

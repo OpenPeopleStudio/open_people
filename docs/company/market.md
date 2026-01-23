@@ -1,5 +1,7 @@
 # Org Market Update
 
+Owner: CEO
+
 Latest update: January 22, 2026
 
 ## Snapshot

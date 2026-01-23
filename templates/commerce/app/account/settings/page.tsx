@@ -74,7 +74,7 @@ export default function AccountSettingsPage() {
       setPurchaseLoaded(true)
 
       let profileQuery = supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('role, staff_location_opt_in')
         .eq('id', user.id)
 
@@ -183,7 +183,7 @@ export default function AccountSettingsPage() {
       }
       const updates = { staff_location_opt_in: !locationOptIn }
       let query = supabase
-        .from('709_profiles')
+        .from('profiles')
         .update(updates)
         .eq('id', userId)
 

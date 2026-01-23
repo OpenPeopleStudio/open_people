@@ -244,7 +244,7 @@ begin
     v_secret.secret_type,
     v_secret.secret_name,
     p_accessor_id,
-    (select role from "709_profiles" where id = p_accessor_id),
+    (select role from "profiles" where id = p_accessor_id),
     p_access_type,
     p_access_granted,
     p_denial_reason,
@@ -282,12 +282,12 @@ security definer
 as $$
 declare
   v_secret encrypted_secrets;
-  v_profile "709_profiles";
+  v_profile "profiles";
   v_break_glass break_glass_access;
 begin
   -- Get secret and user info
   select * into v_secret from encrypted_secrets where id = p_secret_id and deleted_at is null;
-  select * into v_profile from "709_profiles" where id = p_user_id;
+  select * into v_profile from "profiles" where id = p_user_id;
   
   if v_secret is null or v_profile is null then
     return false;
@@ -376,7 +376,7 @@ create policy "Tenant admins can insert secrets"
   with check (
     tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )
@@ -393,7 +393,7 @@ create policy "Tenant admins can view tenant access logs"
   using (
     tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )

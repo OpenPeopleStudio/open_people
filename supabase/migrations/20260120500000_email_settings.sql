@@ -61,7 +61,7 @@ CREATE POLICY "Users can read own tenant email settings"
   ON email_settings FOR SELECT
   USING (
     tenant_id IN (
-      SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid()
+      SELECT tenant_id FROM "profiles" WHERE id = auth.uid()
     )
   );
 
@@ -70,7 +70,7 @@ CREATE POLICY "Users can insert own tenant email settings"
   ON email_settings FOR INSERT
   WITH CHECK (
     tenant_id IN (
-      SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid()
+      SELECT tenant_id FROM "profiles" WHERE id = auth.uid()
     )
   );
 
@@ -79,7 +79,7 @@ CREATE POLICY "Users can update own tenant email settings"
   ON email_settings FOR UPDATE
   USING (
     tenant_id IN (
-      SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid()
+      SELECT tenant_id FROM "profiles" WHERE id = auth.uid()
     )
   );
 
@@ -88,7 +88,7 @@ CREATE POLICY "Super admins can manage all email settings"
   ON email_settings FOR ALL
   USING (
     EXISTS (
-      SELECT 1 FROM "709_profiles" 
+      SELECT 1 FROM "profiles" 
       WHERE id = auth.uid() AND role = 'super_admin'
     )
   );

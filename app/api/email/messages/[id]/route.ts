@@ -1,5 +1,6 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { logPerformance } from "@/lib/observability/logger";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Message API
@@ -8,11 +9,14 @@ import { NextResponse } from "next/server";
    DELETE /api/email/messages/[id] - Delete message
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+type RouteContext = { params: Promise<{ id: string }> };
+
+export async function GET(request: NextRequest, context: RouteContext) {
   void request;
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const supabase = await createSupabaseServer();
+    const startTime = Date.now();
 
     const {
       data: { user },
@@ -24,7 +28,7 @@ export async function GET(request: Request, context: any) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();
@@ -41,6 +45,10 @@ export async function GET(request: Request, context: any) {
       .single();
 
     if (error || !message) {
+      logPerformance("email_message_detail_fetch_duration", Date.now() - startTime, "ms", {
+        success: "false",
+        status: "not_found",
+      });
       return NextResponse.json({ error: "Message not found" }, { status: 404 });
     }
 
@@ -51,6 +59,17 @@ export async function GET(request: Request, context: any) {
         .update({ is_read: true })
         .eq("id", id);
     }
+
+    const attachmentCount = Array.isArray(message.attachments) ? message.attachments.length : 0;
+    logPerformance("email_message_detail_fetch_duration", Date.now() - startTime, "ms", {
+      success: "true",
+      has_attachments: attachmentCount > 0 ? "true" : "false",
+      attachments_count: attachmentCount.toString(),
+      status: message.status || "unknown",
+    });
+    logPerformance("email_message_detail_attachments_count", attachmentCount, "count", {
+      status: message.status || "unknown",
+    });
 
     return NextResponse.json({
       message: {
@@ -65,9 +84,9 @@ export async function GET(request: Request, context: any) {
   }
 }
 
-export async function PUT(request: Request, context: any) {
+export async function PUT(request: NextRequest, context: RouteContext) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const supabase = await createSupabaseServer();
 
     const {
@@ -80,7 +99,7 @@ export async function PUT(request: Request, context: any) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();
@@ -100,7 +119,7 @@ export async function PUT(request: Request, context: any) {
       "labels",
     ];
 
-    const updates: Record<string, any> = {};
+    const updates: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         updates[field] = body[field];
@@ -131,9 +150,9 @@ export async function PUT(request: Request, context: any) {
   }
 }
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const supabase = await createSupabaseServer();
 
     const {
@@ -146,7 +165,7 @@ export async function DELETE(request: Request, context: any) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();

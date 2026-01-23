@@ -64,3 +64,16 @@ This doc defines how AI agents capture feedback after completing tasks to keep i
 - State changes must be logged: todo → in-progress → done.
 - Response SLAs: align to severity (P0 same-day, P1 2 days, P2 5 days, P3 10 days).
 - End-of-task note: shipped, next steps, risks.
+
+## Quarterly Agent Performance Review (Template)
+
+Owner: CTO
+
+- Agent:
+- Quarter:
+- Outcomes shipped (with links):
+- Quality metrics (bugs/regressions/incident impact):
+- Tenant safety adherence (Mr Robot sign-offs):
+- Cycle time and throughput:
+- Collaboration notes (handoffs, clarity, ownership):
+- Improvement focus next quarter:

@@ -44,7 +44,7 @@ SELECT
     ELSE 'No Key'
   END as encryption_status,
   public_key_updated_at
-FROM "709_profiles"
+FROM "profiles"
 ORDER BY created_at DESC
 LIMIT 10;
 

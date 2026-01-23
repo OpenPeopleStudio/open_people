@@ -101,6 +101,9 @@ export function hasPermission(
   permission: Permission,
   resourceOwnerId?: string
 ): boolean {
+  if (!user || typeof user !== 'object') {
+    return false;
+  }
   const userRole = user.profile?.role as UserRole;
   if (!userRole) {
     logAuthZ('permission_check', false, {
@@ -198,6 +201,9 @@ export function hasAllPermissions(
  * Check if user has a specific role or higher
  */
 export function hasRole(user: AuthenticatedUser, requiredRole: UserRole): boolean {
+  if (!user || typeof user !== 'object') {
+    return false;
+  }
   const userRole = user.profile?.role as UserRole;
   if (!userRole) {
     logAuthZ('role_check', false, {

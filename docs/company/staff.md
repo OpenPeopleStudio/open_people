@@ -2,7 +2,9 @@
 
 Owner: CEO
 
-This is a human-readable roster of current staff, their focus areas, and when to loop them in. Keep it current.
+This is an operator-readable roster of current roles/personas, their focus areas, and when to loop them in.
+All entries here are AI workers used for org automation; names are codenames and do not refer to real people.
+Keep it current.
 
 ## Leadership
 

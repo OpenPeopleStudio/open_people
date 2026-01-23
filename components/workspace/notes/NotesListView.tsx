@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import type { Note, NoteCategory, NoteFilters } from "@/types/notes";
 import { LoadingText, EmptyState } from "@/lib/ui";
@@ -14,17 +14,70 @@ interface NotesListViewProps {
   basePath: string; // e.g., "/super-admin" or "/admin"
 }
 
+interface TemplatePreset {
+  id: string;
+  label: string;
+  title: string;
+  content: string;
+}
+
+const NOTE_TEMPLATE_PRESETS: TemplatePreset[] = [
+  {
+    id: "meeting",
+    label: "Meeting Notes",
+    title: "Meeting Notes",
+    content: "# Meeting Notes\n\n## Attendees\n\n- \n\n## Agenda\n\n- \n\n## Notes\n\n- \n\n## Action Items\n\n- [ ] \n",
+  },
+  {
+    id: "api-docs",
+    label: "API Docs",
+    title: "API Documentation",
+    content: "# API Documentation\n\n## Overview\n\n## Endpoints\n\n## Auth\n\n## Examples\n",
+  },
+  {
+    id: "decision",
+    label: "Decision Log",
+    title: "Decision Log",
+    content: "# Decision Log\n\n## Context\n\n## Decision\n\n## Alternatives\n\n## Risks\n",
+  },
+];
+
 export function NotesListView({ basePath }: NotesListViewProps) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [categories, setCategories] = useState<NoteCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<NoteFilters>({});
   const [showNewModal, setShowNewModal] = useState(false);
+  const [templatePreset, setTemplatePreset] = useState<TemplatePreset | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "compact" | "cards">("list");
+  const searchRef = useRef<HTMLInputElement | null>(null);
   
   useEffect(() => {
     loadNotes();
     loadCategories();
   }, [filters]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      const tagName = target?.tagName?.toLowerCase();
+      const isTyping = target?.isContentEditable || tagName === "input" || tagName === "textarea" || tagName === "select";
+
+      if (!isTyping && event.key === "/") {
+        event.preventDefault();
+        searchRef.current?.focus();
+      }
+
+      if (!isTyping && event.key.toLowerCase() === "n") {
+        event.preventDefault();
+        setTemplatePreset(null);
+        setShowNewModal(true);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   
   async function loadNotes() {
     try {
@@ -68,35 +121,127 @@ export function NotesListView({ basePath }: NotesListViewProps) {
   // Group notes by pinned status
   const pinnedNotes = notes.filter(n => n.is_pinned);
   const regularNotes = notes.filter(n => !n.is_pinned);
+
+  const statusCounts = useMemo(() => {
+    return notes.reduce<Record<string, number>>((acc, note) => {
+      acc[note.status] = (acc[note.status] || 0) + 1;
+      return acc;
+    }, {});
+  }, [notes]);
+
+  const categoryCounts = useMemo(() => {
+    return notes.reduce<Record<string, number>>((acc, note) => {
+      if (note.category_id) {
+        acc[note.category_id] = (acc[note.category_id] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  }, [notes]);
+
+  const projectCounts = useMemo(() => {
+    return notes.reduce<Record<string, number>>((acc, note) => {
+      if (note.project_name) {
+        acc[note.project_name] = (acc[note.project_name] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  }, [notes]);
+
+  const activeFilters = useMemo(() => {
+    const items: Array<{ label: string; onClear: () => void }> = [];
+    if (filters.search) {
+      items.push({
+        label: `Search: ${filters.search}`,
+        onClear: () => setFilters(prev => {
+          const next = { ...prev };
+          delete next.search;
+          return next;
+        }),
+      });
+    }
+    if (filters.status) {
+      items.push({
+        label: `Status: ${filters.status}`,
+        onClear: () => setFilters(prev => {
+          const next = { ...prev };
+          delete next.status;
+          return next;
+        }),
+      });
+    }
+    if (filters.category_id) {
+      const category = categories.find(cat => cat.id === filters.category_id);
+      items.push({
+        label: `Category: ${category?.name || "Unknown"}`,
+        onClear: () => setFilters(prev => {
+          const next = { ...prev };
+          delete next.category_id;
+          return next;
+        }),
+      });
+    }
+    if (filters.project_name) {
+      items.push({
+        label: `Project: ${filters.project_name}`,
+        onClear: () => setFilters(prev => {
+          const next = { ...prev };
+          delete next.project_name;
+          return next;
+        }),
+      });
+    }
+    return items;
+  }, [categories, filters]);
+
+  function handleTemplatePreset(preset: TemplatePreset) {
+    setTemplatePreset(preset);
+    setShowNewModal(true);
+  }
   
   return (
     <div className="flex h-[calc(100vh-4rem)]">
       {/* Sidebar */}
-      <div className="w-64 border-r border-[var(--border-subtle)] p-4 overflow-y-auto">
+      <div className="w-72 border-r border-[var(--border-subtle)] p-4 overflow-y-auto">
         {/* Quick Actions */}
         <button
-          onClick={() => setShowNewModal(true)}
-          className="w-full mb-6 px-4 py-2.5 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all flex items-center justify-center gap-2"
+          onClick={() => {
+            setTemplatePreset(null);
+            setShowNewModal(true);
+          }}
+          className="w-full mb-4 px-4 py-2.5 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all flex items-center justify-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           New Note
         </button>
-        
-        {/* Search */}
-        <div className="relative mb-4">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Search notes..."
-            value={filters.search || ""}
-            onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
-          />
-        </div>
+
+        {/* Active Filters */}
+        {activeFilters.length > 0 && (
+          <div className="mb-5 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs uppercase tracking-wider text-[var(--text-muted)]">Active</span>
+              <button
+                onClick={() => setFilters({})}
+                className="text-xs text-[var(--electric-lime)] hover:underline"
+              >
+                Clear all
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {activeFilters.map(item => (
+                <button
+                  key={item.label}
+                  onClick={item.onClear}
+                  className="flex items-center gap-1 rounded-full bg-[var(--surface-2)] px-2.5 py-1 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                >
+                  <span className="truncate max-w-[140px]">{item.label}</span>
+                  <span className="text-[var(--text-muted)]">x</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         
         {/* Filters */}
         <div className="space-y-4">
@@ -120,13 +265,16 @@ export function NotesListView({ basePath }: NotesListViewProps) {
                       return next;
                     })
                   }
-                  className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors ${
+                  className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-2 ${
                     (status === "all" && !filters.status) || filters.status === status
                       ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
                       : "text-[var(--text-secondary)] hover:bg-[var(--surface-1)]"
                   }`}
                 >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                  <span>{status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                  <span className="ml-auto text-xs text-[var(--text-muted)]">
+                    {status === "all" ? notes.length : (statusCounts[status] || 0)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -171,7 +319,10 @@ export function NotesListView({ basePath }: NotesListViewProps) {
                       className="w-2 h-2 rounded-full"
                       style={{ backgroundColor: cat.color }}
                     />
-                    {cat.name}
+                    <span>{cat.name}</span>
+                    <span className="ml-auto text-xs text-[var(--text-muted)]">
+                      {categoryCounts[cat.id] || 0}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -207,13 +358,16 @@ export function NotesListView({ basePath }: NotesListViewProps) {
                     onClick={() =>
                       setFilters(prev => ({ ...prev, project_name: project }))
                     }
-                    className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors truncate ${
+                    className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-2 ${
                       filters.project_name === project
                         ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
                         : "text-[var(--text-secondary)] hover:bg-[var(--surface-1)]"
                     }`}
                   >
-                    {project}
+                    <span className="truncate">{project}</span>
+                    <span className="ml-auto text-xs text-[var(--text-muted)]">
+                      {projectCounts[project] || 0}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -245,17 +399,63 @@ export function NotesListView({ basePath }: NotesListViewProps) {
       </div>
       
       {/* Main Content */}
-      <div className="flex-1 p-8 overflow-y-auto">
-        <div className="max-w-4xl">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
-              Notes
-            </h1>
-            <p className="text-sm text-[var(--text-muted)]">
-              Documentation, context, and knowledge for your projects
-            </p>
+      <div className="flex-1 overflow-y-auto">
+        <div className="sticky top-0 z-10 border-b border-[var(--border-subtle)] bg-[var(--surface-0)]/90 backdrop-blur">
+          <div className="max-w-6xl mx-auto px-8 py-4 flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-semibold text-[var(--text-primary)]">
+                  Notes
+                </h1>
+                <p className="text-sm text-[var(--text-muted)]">
+                  Documentation, context, and knowledge for your projects
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setTemplatePreset(null);
+                    setShowNewModal(true);
+                  }}
+                  className="px-4 py-2.5 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all"
+                >
+                  New Note
+                </button>
+                <div className="flex items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-1)] p-1">
+                  {(["list", "compact", "cards"] as const).map(mode => (
+                    <button
+                      key={mode}
+                      onClick={() => setViewMode(mode)}
+                      className={`px-2.5 py-1 text-xs rounded-full transition-colors ${
+                        viewMode === mode
+                          ? "bg-[var(--electric-lime)]/15 text-[var(--electric-lime)]"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                      }`}
+                    >
+                      {mode}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search notes by title, tags, or content..."
+                value={filters.search || ""}
+                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                ref={searchRef}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm focus:outline-none focus:border-[var(--electric-lime)]"
+              />
+            </div>
           </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-8 py-8">
           
           {loading ? (
             <div className="flex items-center justify-center h-64">
@@ -271,12 +471,28 @@ export function NotesListView({ basePath }: NotesListViewProps) {
               title="No notes yet"
               description="Create your first note to start documenting your projects, APIs, and architecture decisions."
               action={
-                <button
-                  onClick={() => setShowNewModal(true)}
-                  className="px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all"
-                >
-                  Create First Note
-                </button>
+                <div className="flex flex-col items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setTemplatePreset(null);
+                      setShowNewModal(true);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium hover:brightness-110 transition-all"
+                  >
+                    Create First Note
+                  </button>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {NOTE_TEMPLATE_PRESETS.map(preset => (
+                      <button
+                        key={preset.id}
+                        onClick={() => handleTemplatePreset(preset)}
+                        className="px-3 py-1.5 rounded-full border border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--electric-lime)] transition-colors"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               }
             />
           ) : (
@@ -284,15 +500,18 @@ export function NotesListView({ basePath }: NotesListViewProps) {
               {/* Pinned Notes */}
               {pinnedNotes.length > 0 && (
                 <div>
-                  <h2 className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-2">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                     </svg>
-                    Pinned
-                  </h2>
-                  <div className="space-y-2">
+                    Pinned ({pinnedNotes.length})
+                    </h2>
+                    <span className="text-xs text-[var(--text-muted)]">Quick access</span>
+                  </div>
+                  <div className={viewMode === "cards" ? "grid gap-3 sm:grid-cols-2" : "space-y-2"}>
                     {pinnedNotes.map(note => (
-                      <NoteCard key={note.id} note={note} basePath={basePath} />
+                      <NoteCard key={note.id} note={note} basePath={basePath} viewMode={viewMode} />
                     ))}
                   </div>
                 </div>
@@ -302,12 +521,12 @@ export function NotesListView({ basePath }: NotesListViewProps) {
               <div>
                 {pinnedNotes.length > 0 && (
                   <h2 className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-3">
-                    All Notes
+                    All Notes ({regularNotes.length})
                   </h2>
                 )}
-                <div className="space-y-2">
+                <div className={viewMode === "cards" ? "grid gap-3 sm:grid-cols-2 lg:grid-cols-3" : "space-y-2"}>
                   {regularNotes.map(note => (
-                    <NoteCard key={note.id} note={note} basePath={basePath} />
+                    <NoteCard key={note.id} note={note} basePath={basePath} viewMode={viewMode} />
                   ))}
                 </div>
               </div>
@@ -319,13 +538,18 @@ export function NotesListView({ basePath }: NotesListViewProps) {
       {/* New Note Modal */}
       {showNewModal && (
         <NewNoteModal
-          onClose={() => setShowNewModal(false)}
+          onClose={() => {
+            setShowNewModal(false);
+            setTemplatePreset(null);
+          }}
           onCreated={(note) => {
             setNotes(prev => [note, ...prev]);
             setShowNewModal(false);
+            setTemplatePreset(null);
           }}
           categories={categories}
           basePath={basePath}
+          preset={templatePreset}
         />
       )}
     </div>
@@ -336,7 +560,15 @@ export function NotesListView({ basePath }: NotesListViewProps) {
    Note Card Component
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function NoteCard({ note, basePath }: { note: Note; basePath: string }) {
+function NoteCard({
+  note,
+  basePath,
+  viewMode,
+}: {
+  note: Note;
+  basePath: string;
+  viewMode: "list" | "compact" | "cards";
+}) {
   const statusColors = {
     draft: "bg-[var(--warning)]/10 text-[var(--warning)]",
     published: "bg-[var(--success)]/10 text-[var(--success)]",
@@ -346,33 +578,35 @@ function NoteCard({ note, basePath }: { note: Note; basePath: string }) {
   return (
     <Link
       href={`${basePath}/notes/${note.id}`}
-      className="block p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] hover:border-[var(--border)] transition-colors"
+      className={`group block rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-1)] transition-all hover:-translate-y-[1px] hover:border-[var(--border)] ${
+        viewMode === "compact" ? "p-3" : "p-4"
+      } ${note.is_pinned ? "border-l-4 border-l-[var(--electric-lime)]" : "border-l-4 border-l-transparent"}`}
     >
-      <div className="flex items-start justify-between gap-4">
+      <div className={`flex items-start gap-4 ${viewMode === "cards" ? "flex-col" : "justify-between"}`}>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-sm font-medium text-[var(--text-primary)] truncate">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <h3 className={`font-semibold text-[var(--text-primary)] truncate ${viewMode === "compact" ? "text-sm" : "text-base"}`}>
               {note.title}
             </h3>
-            <span className={`px-1.5 py-0.5 text-xs rounded ${statusColors[note.status]}`}>
+            <span className={`px-2 py-0.5 text-xs rounded-full ${statusColors[note.status]}`}>
               {note.status}
             </span>
             {note.is_api_accessible && (
-              <span className="px-1.5 py-0.5 text-xs rounded bg-[var(--electric-cyan)]/10 text-[var(--electric-cyan)]">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--electric-cyan)]/10 text-[var(--electric-cyan)]">
                 API
               </span>
             )}
           </div>
           
           {note.excerpt && (
-            <p className="text-sm text-[var(--text-muted)] line-clamp-2 mb-2">
+            <p className={`text-sm text-[var(--text-muted)] mb-2 ${viewMode === "compact" ? "line-clamp-1" : "line-clamp-2"}`}>
               {note.excerpt}
             </p>
           )}
           
-          <div className="flex items-center gap-3 text-xs text-[var(--text-muted)]">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--text-muted)]">
             {note.category && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 text-[var(--text-primary)]">
                 <span
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: note.category.color }}
@@ -381,7 +615,7 @@ function NoteCard({ note, basePath }: { note: Note; basePath: string }) {
               </span>
             )}
             {note.project_name && (
-              <span className="px-1.5 py-0.5 rounded bg-[var(--surface-2)]">
+              <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)]">
                 {note.project_name}
               </span>
             )}
@@ -391,16 +625,18 @@ function NoteCard({ note, basePath }: { note: Note; basePath: string }) {
                 {note.tags.length > 3 && ` +${note.tags.length - 3}`}
               </span>
             )}
-            <span>v{note.version}</span>
-            <span>
-              {new Date(note.updated_at).toLocaleDateString()}
+            <span className="text-[var(--text-muted)]">/</span>
+            <span className="text-[var(--text-muted)]">
+              Updated {new Date(note.updated_at).toLocaleDateString()}
             </span>
           </div>
         </div>
         
-        <svg className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-        </svg>
+        {viewMode !== "cards" && (
+          <svg className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        )}
       </div>
     </Link>
   );
@@ -415,17 +651,30 @@ function NewNoteModal({
   onCreated,
   categories,
   basePath,
+  preset,
 }: {
   onClose: () => void;
   onCreated: (note: Note) => void;
   categories: NoteCategory[];
   basePath: string;
+  preset: TemplatePreset | null;
 }) {
   const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState<string>("");
   const [projectName, setProjectName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (preset) {
+      setTitle(preset.title);
+      setContent(preset.content);
+    } else {
+      setTitle("");
+      setContent("");
+    }
+  }, [preset]);
   
   async function handleCreate() {
     if (!title.trim()) {
@@ -444,7 +693,7 @@ function NewNoteModal({
           title: title.trim(),
           ...(categoryId ? { category_id: categoryId } : {}),
           ...(projectName.trim() ? { project_name: projectName.trim() } : {}),
-          content: `# ${title.trim()}\n\n`,
+          content: content.trim() ? content : `# ${title.trim()}\n\n`,
         }),
       });
       
@@ -470,6 +719,11 @@ function NewNoteModal({
           <h2 className="text-lg font-semibold text-[var(--text-primary)]">
             New Note
           </h2>
+          {preset && (
+            <p className="text-xs text-[var(--text-muted)] mt-1">
+              Starting from {preset.label}
+            </p>
+          )}
         </div>
         
         <div className="p-6 space-y-4">

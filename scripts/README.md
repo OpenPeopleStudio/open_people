@@ -10,7 +10,7 @@ Seeds `tom@openpeople.ai` as a super admin user for the Open People platform.
 
 **What it does:**
 - Creates or updates the user `tom@openpeople.ai` in Supabase Auth
-- Creates/updates their profile in the `709_profiles` table with `owner` role
+- Creates/updates their profile in the `profiles` table with `owner` role
 - Grants super admin access to the platform
 
 **Usage:**

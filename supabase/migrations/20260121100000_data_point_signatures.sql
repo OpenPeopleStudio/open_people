@@ -139,24 +139,26 @@ begin
         );
       end if;
 
-      -- If the table is partitioned, also attach triggers to all current partitions.
-      for v_partition in
-        select c_child.relname as partition_name
-        from pg_inherits i
-        join pg_class c_child on c_child.oid = i.inhrelid
-        join pg_class c_parent on c_parent.oid = i.inhparent
-        join pg_namespace n_parent on n_parent.oid = c_parent.relnamespace
-        where n_parent.nspname = 'public'
-          and c_parent.relname = v_table
-      loop
-        execute format('drop trigger if exists %I on %I.%I', 'zzz_set_row_signature', 'public', v_partition.partition_name);
-        execute format(
-          'create trigger %I before insert or update on %I.%I for each row execute function set_row_signature()',
-          'zzz_set_row_signature',
-          'public',
-          v_partition.partition_name
-        );
-      end loop;
+      -- If the table is partitioned, attach triggers to partitions only on Postgres < 14.
+      if v_is_partitioned and v_server_version_num < 140000 then
+        for v_partition in
+          select c_child.relname as partition_name
+          from pg_inherits i
+          join pg_class c_child on c_child.oid = i.inhrelid
+          join pg_class c_parent on c_parent.oid = i.inhparent
+          join pg_namespace n_parent on n_parent.oid = c_parent.relnamespace
+          where n_parent.nspname = 'public'
+            and c_parent.relname = v_table
+        loop
+          execute format('drop trigger if exists %I on %I.%I', 'zzz_set_row_signature', 'public', v_partition.partition_name);
+          execute format(
+            'create trigger %I before insert or update on %I.%I for each row execute function set_row_signature()',
+            'zzz_set_row_signature',
+            'public',
+            v_partition.partition_name
+          );
+        end loop;
+      end if;
     end if;
   end loop;
 end;
@@ -303,26 +305,27 @@ begin
         );
       end if;
 
-      -- If the table is partitioned, also attach triggers to all current partitions.
-      for v_partition in
-        select c_child.relname as partition_name
-        from pg_inherits i
-        join pg_class c_child on c_child.oid = i.inhrelid
-        join pg_class c_parent on c_parent.oid = i.inhparent
-        join pg_namespace n_parent on n_parent.oid = c_parent.relnamespace
-        where n_parent.nspname = 'public'
-          and c_parent.relname = v_table
-      loop
-        execute format('drop trigger if exists %I on %I.%I', 'zzz_set_row_signature', 'public', v_partition.partition_name);
-        execute format(
-          'create trigger %I before insert or update on %I.%I for each row execute function set_row_signature()',
-          'zzz_set_row_signature',
-          'public',
-          v_partition.partition_name
-        );
-      end loop;
+      -- If the table is partitioned, attach triggers to partitions only on Postgres < 14.
+      if v_is_partitioned and v_server_version_num < 140000 then
+        for v_partition in
+          select c_child.relname as partition_name
+          from pg_inherits i
+          join pg_class c_child on c_child.oid = i.inhrelid
+          join pg_class c_parent on c_parent.oid = i.inhparent
+          join pg_namespace n_parent on n_parent.oid = c_parent.relnamespace
+          where n_parent.nspname = 'public'
+            and c_parent.relname = v_table
+        loop
+          execute format('drop trigger if exists %I on %I.%I', 'zzz_set_row_signature', 'public', v_partition.partition_name);
+          execute format(
+            'create trigger %I before insert or update on %I.%I for each row execute function set_row_signature()',
+            'zzz_set_row_signature',
+            'public',
+            v_partition.partition_name
+          );
+        end loop;
+      end if;
     end if;
   end loop;
 end;
 $$;
-

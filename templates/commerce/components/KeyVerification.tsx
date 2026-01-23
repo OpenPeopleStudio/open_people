@@ -133,7 +133,7 @@ export default function KeyVerification({
 
       // Find the user with this public key
       const { data: profiles } = await supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('id, full_name, email')
         .eq('public_key', scannedData.publicKey)
         .limit(1)
@@ -187,7 +187,7 @@ export default function KeyVerification({
 
       // Get their public key
       const { data: profile } = await supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('public_key')
         .eq('id', theirId)
         .single()

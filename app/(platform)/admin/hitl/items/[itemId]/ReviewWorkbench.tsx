@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -84,36 +84,7 @@ export function ReviewWorkbench({
   const [error, setError] = useState<string | null>(null);
   const [reviewStartedAt] = useState(new Date().toISOString());
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if typing in an input
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      // Find matching decision option by shortcut
-      const option = decisionOptions.find(
-        (o) => o.keyboard_shortcut?.toLowerCase() === e.key.toLowerCase()
-      );
-      if (option) {
-        setSelectedDecision(option.decision_value);
-      }
-
-      // Enter to submit if decision selected
-      if (e.key === "Enter" && selectedDecision && !submitting) {
-        handleSubmit();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [decisionOptions, selectedDecision, submitting]);
-
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (!selectedDecision) return;
 
     const option = decisionOptions.find((o) => o.decision_value === selectedDecision);
@@ -152,7 +123,46 @@ export function ReviewWorkbench({
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [
+    selectedDecision,
+    decisionOptions,
+    reason,
+    modifiedOutput,
+    aiCorrect,
+    tags,
+    reviewStartedAt,
+    item.id,
+    router,
+  ]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if typing in an input
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      // Find matching decision option by shortcut
+      const option = decisionOptions.find(
+        (o) => o.keyboard_shortcut?.toLowerCase() === e.key.toLowerCase()
+      );
+      if (option) {
+        setSelectedDecision(option.decision_value);
+      }
+
+      // Enter to submit if decision selected
+      if (e.key === "Enter" && selectedDecision && !submitting) {
+        handleSubmit();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [decisionOptions, selectedDecision, submitting, handleSubmit]);
 
   const handleAction = async (
     actionType: "create_guardrail" | "create_eval_case" | "open_incident"

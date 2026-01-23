@@ -31,10 +31,7 @@ export async function POST(request: NextRequest) {
     // Verify webhook signature if configured
     const sharedSecretSignature = request.headers.get("x-webhook-signature");
     const svixSignature = request.headers.get("svix-signature");
-    console.log(`[Inbound Webhook ${requestId}] Signatures:`, {
-      x_webhook_signature: sharedSecretSignature ? "present" : "none",
-      svix_signature: svixSignature ? "present" : "none",
-    });
+    console.log(`[Inbound Webhook ${requestId}] Signatures present`);
     
     // NOTE:
     // - `INBOUND_WEBHOOK_SECRET` is a simple shared-secret header intended for custom forwarders.
@@ -78,7 +75,7 @@ export async function POST(request: NextRequest) {
       }
 
       const body = JSON.parse(payload);
-      console.log(`[Inbound Webhook ${requestId}] JSON payload type: ${body.type || "unknown"}`);
+      console.log(`[Inbound Webhook ${requestId}] JSON payload parsed`);
       emailData = parseJsonPayload(body);
     } else if (contentType.includes("multipart/form-data")) {
       // Form data payload (e.g., forwarded email)
@@ -93,13 +90,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unsupported content type", requestId }, { status: 400 });
     }
 
-    console.log(`[Inbound Webhook ${requestId}] Parsed email summary:`, { 
-      hasFrom: Boolean(emailData.from),
-      toCount: Array.isArray(emailData.to) ? emailData.to.length : 1,
-      hasSubject: Boolean(emailData.subject),
-      hasMessageId: Boolean(emailData.messageId),
-      hasResendEmailId: Boolean(emailData.resendEmailId),
-    });
+    console.log(`[Inbound Webhook ${requestId}] Parsed email summary`);
 
     const normalizedFrom = parseAddressString(emailData.from).email;
     const normalizedTo = normalizeAddressList(
@@ -107,9 +98,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!normalizedFrom || normalizedTo.length === 0) {
-      console.log(
-        `[Inbound Webhook ${requestId}] Missing required fields - from: ${emailData.from}, to: ${emailData.to}`
-      );
+      console.log(`[Inbound Webhook ${requestId}] Missing required fields`);
       return NextResponse.json({ error: "Missing required fields", requestId }, { status: 400 });
     }
 
@@ -125,9 +114,16 @@ export async function POST(request: NextRequest) {
         const resend = createResendClient();
         const { data } = await resend.emails.receiving.get(emailData.resendEmailId);
         if (data) {
-          emailData.text = (data as any).text || emailData.text;
-          emailData.html = (data as any).html || emailData.html;
-          emailData.rawHeaders = (data as any).headers || emailData.rawHeaders;
+          const received = data as ResendReceivedEmail;
+          if (received.text) {
+            emailData.text = received.text;
+          }
+          if (received.html) {
+            emailData.html = received.html;
+          }
+          if (received.headers) {
+            emailData.rawHeaders = received.headers;
+          }
         }
       } catch (e) {
         console.error("[Inbound Webhook] Failed to fetch Resend received email content:", e);
@@ -178,7 +174,7 @@ export async function POST(request: NextRequest) {
         requestId,
       });
     } else {
-      console.log(`[Inbound Webhook ${requestId}] ✗ Email processing failed:`, result.error);
+      console.log(`[Inbound Webhook ${requestId}] ✗ Email processing failed`);
       return NextResponse.json({
         received: true,
         stored: false,
@@ -219,34 +215,95 @@ interface InboundEmailData {
   rawHeaders?: Record<string, string>;
 }
 
+type ResendReceivedEmail = {
+  text?: string;
+  html?: string;
+  headers?: Record<string, string>;
+};
+
+type ResendWebhookAddress = string | { address?: string; email?: string; name?: string };
+
+type ResendWebhookAttachment = {
+  filename?: string;
+  name?: string;
+  content_type?: string;
+  type?: string;
+  size?: number;
+};
+
+type ResendWebhookData = {
+  email_id?: string;
+  message_id?: string;
+  from?: ResendWebhookAddress;
+  to?: ResendWebhookAddress[];
+  cc?: ResendWebhookAddress[];
+  subject?: string;
+  text?: string;
+  html?: string;
+  date?: string;
+  in_reply_to?: string;
+  references?: string[];
+  attachments?: ResendWebhookAttachment[];
+};
+
+type ResendWebhookPayload = {
+  type?: string;
+  data?: ResendWebhookData;
+};
+
+type AddressValue = { address?: string | undefined; name?: string | undefined };
+type AddressLike =
+  | { value?: AddressValue[]; address?: string | undefined; name?: string | undefined }
+  | AddressValue
+  | string
+  | null
+  | undefined;
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Payload Parsers
 // ═══════════════════════════════════════════════════════════════════════════
 
-function parseJsonPayload(body: any): InboundEmailData {
+function parseJsonPayload(body: unknown): InboundEmailData {
   // Resend inbound webhook format
-  if (body.type === "email.received" && body.data) {
-    const data = body.data;
+  const payload = (typeof body === "object" && body !== null) ? (body as ResendWebhookPayload) : null;
+  if (payload?.type === "email.received" && payload.data) {
+    const data = payload.data;
     const fromParsed = parseAddressString(data.from);
-    const toList = (data.to || []).map((t: any) =>
-      typeof t === "string" ? t : t.address || t.email || ""
-    );
-    const ccList = (data.cc || []).map((c: any) =>
-      typeof c === "string" ? c : c.address || c.email || ""
-    );
-    const attachments = data.attachments?.map((a: any) => ({
-      filename: a.filename || a.name,
-      content_type: a.content_type || a.type,
-      size: a.size,
-    }));
+    const toList = (data.to || [])
+      .map((t) => (typeof t === "string" ? t : t.address || t.email || ""))
+      .filter(Boolean);
+    const ccList = (data.cc || [])
+      .map((c) => (typeof c === "string" ? c : c.address || c.email || ""))
+      .filter(Boolean);
+    const attachments = data.attachments?.map((a) => {
+      const meta: EmailAttachmentMeta = {
+        filename: a.filename || a.name || "attachment",
+      };
+      const contentType = a.content_type || a.type;
+      if (contentType) {
+        meta.content_type = contentType;
+      }
+      if (a.size !== undefined) {
+        meta.size = a.size;
+      }
+      return meta;
+    });
+
+    const fromValue = data.from;
+    const fallbackFrom =
+      typeof fromValue === "string"
+        ? fromValue
+        : fromValue?.address || fromValue?.email || "";
 
     const parsed: InboundEmailData = {
       ...(data.email_id ? { resendEmailId: data.email_id } : {}),
       ...(data.message_id ? { messageId: data.message_id } : {}),
-      from: fromParsed.email || (data.from?.address || data.from || ""),
+      from: fromParsed.email || fallbackFrom,
       to: toList,
     };
-    const fromName = fromParsed.name || data.from?.name;
+    const fromName =
+      fromParsed.name ||
+      (typeof fromValue === "object" && fromValue ? fromValue.name : undefined);
     if (fromName) {
       parsed.fromName = fromName;
     }
@@ -278,43 +335,91 @@ function parseJsonPayload(body: any): InboundEmailData {
   }
 
   // Generic JSON format
-  const fromParsed = parseAddressString(body.from);
+  const genericBody =
+    typeof body === "object" && body !== null ? (body as Record<string, unknown>) : {};
+  const fromParsed = parseAddressString(genericBody.from);
+  const fromRecord =
+    typeof genericBody.from === "object" && genericBody.from !== null
+      ? (genericBody.from as Record<string, unknown>)
+      : null;
+  const fromFallback =
+    fromRecord && typeof fromRecord.address === "string"
+      ? fromRecord.address
+      : typeof genericBody.from === "string"
+        ? genericBody.from
+        : "";
+  const toValue = genericBody.to;
+  const to = Array.isArray(toValue)
+    ? toValue
+        .map((value) => (typeof value === "string" ? value : parseAddressString(value).email))
+        .filter(Boolean)
+    : typeof toValue === "string"
+      ? toValue
+      : parseAddressString(toValue).email;
+
   const generic: InboundEmailData = {
-    ...(body.message_id || body.messageId ? { messageId: body.message_id || body.messageId } : {}),
-    from: fromParsed.email || body.from?.address || body.from,
-    to: body.to,
+    ...(genericBody.message_id || genericBody.messageId
+      ? { messageId: (genericBody.message_id || genericBody.messageId) as string }
+      : {}),
+    from: fromParsed.email || fromFallback,
+    to,
   };
-  const fromName = fromParsed.name || body.from?.name || body.fromName;
+  const fromName =
+    fromParsed.name ||
+    (fromRecord && typeof fromRecord.name === "string" ? fromRecord.name : undefined) ||
+    (typeof genericBody.fromName === "string" ? genericBody.fromName : undefined);
   if (fromName) {
     generic.fromName = fromName;
   }
-  const cc = Array.isArray(body.cc) ? body.cc : body.cc ? [body.cc] : [];
+  const ccValue = genericBody.cc;
+  const cc = Array.isArray(ccValue)
+    ? ccValue
+        .map((value) => (typeof value === "string" ? value : parseAddressString(value).email))
+        .filter(Boolean)
+    : ccValue
+      ? [typeof ccValue === "string" ? ccValue : parseAddressString(ccValue).email].filter(Boolean)
+      : [];
   if (cc.length > 0) {
     generic.cc = cc;
   }
-  if (body.subject) {
-    generic.subject = body.subject;
+  if (typeof genericBody.subject === "string") {
+    generic.subject = genericBody.subject;
   }
-  const text = body.text || body.body_text;
+  const text =
+    typeof genericBody.text === "string"
+      ? genericBody.text
+      : typeof genericBody.body_text === "string"
+        ? genericBody.body_text
+        : undefined;
   if (text) {
     generic.text = text;
   }
-  const html = body.html || body.body_html;
+  const html =
+    typeof genericBody.html === "string"
+      ? genericBody.html
+      : typeof genericBody.body_html === "string"
+        ? genericBody.body_html
+        : undefined;
   if (html) {
     generic.html = html;
   }
-  if (body.date) {
-    generic.date = new Date(body.date);
+  if (typeof genericBody.date === "string") {
+    generic.date = new Date(genericBody.date);
   }
-  const inReplyTo = body.in_reply_to || body.inReplyTo;
+  const inReplyTo =
+    typeof genericBody.in_reply_to === "string"
+      ? genericBody.in_reply_to
+      : typeof genericBody.inReplyTo === "string"
+        ? genericBody.inReplyTo
+        : undefined;
   if (inReplyTo) {
     generic.inReplyTo = inReplyTo;
   }
-  if (body.references) {
-    generic.references = body.references;
+  if (Array.isArray(genericBody.references)) {
+    generic.references = genericBody.references as string[];
   }
-  if (body.attachments) {
-    generic.attachments = body.attachments;
+  if (Array.isArray(genericBody.attachments)) {
+    generic.attachments = genericBody.attachments as EmailAttachmentMeta[];
   }
   return generic;
 }
@@ -391,16 +496,25 @@ async function parseFormDataPayload(formData: FormData): Promise<InboundEmailDat
 async function parseRawEmail(rawEmail: string): Promise<InboundEmailData> {
   const parsed = await simpleParser(rawEmail);
 
-  const getAddress = (addr: any): string => {
+  const getAddress = (addr: AddressLike): string => {
     if (!addr) return "";
-    if (addr.value && addr.value[0]) return addr.value[0].address || "";
+    if (typeof addr === "object" && addr && "value" in addr) {
+      const value = (addr as { value?: AddressValue[] }).value;
+      if (value && value[0]) return value[0].address || "";
+    }
     if (typeof addr === "string") return addr;
-    return addr.address || "";
+    if (typeof addr === "object" && addr && "address" in addr) {
+      return (addr as AddressValue).address || "";
+    }
+    return "";
   };
 
-  const getAddresses = (addrs: any): string[] => {
+  const getAddresses = (addrs: AddressLike | AddressLike[]): string[] => {
     if (!addrs) return [];
-    if (addrs.value) return addrs.value.map((a: any) => a.address || "");
+    if (typeof addrs === "object" && addrs && "value" in addrs) {
+      const value = (addrs as { value?: AddressValue[] }).value;
+      if (value) return value.map((a) => a.address || "");
+    }
     if (Array.isArray(addrs)) return addrs.map(getAddress);
     return [getAddress(addrs)];
   };

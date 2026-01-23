@@ -86,7 +86,7 @@ describe("Quality Slices", () => {
       const scores = [0.8, 0.9, 0.7, 0.6];
       const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
       
-      expect(avg).toBe(0.75);
+      expect(avg).toBeCloseTo(0.75, 6);
     });
   });
 });
@@ -336,7 +336,7 @@ describe("Auto-Baseline", () => {
       const scores = samples.map(s => s.quality_score);
       const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
       
-      expect(avg).toBe(0.8125);
+      expect(avg).toBeCloseTo(0.8125, 6);
     });
 
     it("should compute standard deviation", () => {

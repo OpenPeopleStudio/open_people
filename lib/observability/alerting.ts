@@ -29,7 +29,7 @@ export interface SecurityAlert {
   description: string;
   severity: AlertSeverity;
   event: string;
-  context: Record<string, any>;
+  context: Record<string, unknown>;
   timestamp: Date;
   tenantId?: string;
   userId?: string;
@@ -44,7 +44,7 @@ export interface AlertRule {
   channels: AlertChannel[];
   enabled: boolean;
   cooldownMinutes?: number; // Prevent alert spam
-  conditions?: Record<string, any>; // Additional conditions
+  conditions?: Record<string, unknown>; // Additional conditions
 }
 
 /**
@@ -110,7 +110,7 @@ export class AlertManager {
    */
   async processSecurityEvent(
     event: string,
-    context: Record<string, any> = {},
+    context: Record<string, unknown> = {},
     severity?: AlertSeverity
   ): Promise<void> {
     // Log the security event first
@@ -123,7 +123,10 @@ export class AlertManager {
 
     for (const rule of matchingRules) {
       // Check cooldown
-      const cooldownKey = `${rule.id}_${context.tenantId || 'global'}`;
+      const tenantId = typeof context["tenantId"] === "string" ? context["tenantId"] : undefined;
+      const userId = typeof context["userId"] === "string" ? context["userId"] : undefined;
+      const ipAddress = typeof context["ipAddress"] === "string" ? context["ipAddress"] : undefined;
+      const cooldownKey = `${rule.id}_${tenantId || 'global'}`;
       const lastAlert = this.recentAlerts.get(cooldownKey);
 
       if (lastAlert && rule.cooldownMinutes) {
@@ -147,10 +150,16 @@ export class AlertManager {
         event,
         context,
         timestamp: new Date(),
-        tenantId: context.tenantId,
-        userId: context.userId,
-        ipAddress: context.ipAddress,
       };
+      if (tenantId) {
+        alert.tenantId = tenantId;
+      }
+      if (userId) {
+        alert.userId = userId;
+      }
+      if (ipAddress) {
+        alert.ipAddress = ipAddress;
+      }
 
       await this.sendAlert(alert, rule.channels);
 
@@ -311,7 +320,7 @@ export class AlertManager {
     }
   }
 
-  private checkConditions(context: Record<string, any>, conditions: Record<string, any>): boolean {
+  private checkConditions(context: Record<string, unknown>, conditions: Record<string, unknown>): boolean {
     // Simple condition checking - can be extended for more complex logic
     for (const [key, expectedValue] of Object.entries(conditions)) {
       const actualValue = context[key];
@@ -322,12 +331,14 @@ export class AlertManager {
     return true;
   }
 
-  private generateAlertDescription(event: string, context: Record<string, any>): string {
+  private generateAlertDescription(event: string, context: Record<string, unknown>): string {
+    const userId = typeof context.userId === "string" ? context.userId : "unknown";
+    const ipAddress = typeof context.ipAddress === "string" ? context.ipAddress : "unknown";
     const descriptions: Record<string, string> = {
-      failed_login: `Multiple failed login attempts detected for user ${context.userId || 'unknown'} from IP ${context.ipAddress || 'unknown'}`,
-      vault_unlock: `Vault was unlocked from IP ${context.ipAddress || 'unknown'} at ${new Date().toISOString()}`,
-      privilege_escalation: `Privilege escalation detected for user ${context.userId || 'unknown'}`,
-      api_rate_limit_exceeded: `API rate limit exceeded for IP ${context.ipAddress || 'unknown'}`,
+      failed_login: `Multiple failed login attempts detected for user ${userId} from IP ${ipAddress}`,
+      vault_unlock: `Vault was unlocked from IP ${ipAddress} at ${new Date().toISOString()}`,
+      privilege_escalation: `Privilege escalation detected for user ${userId}`,
+      api_rate_limit_exceeded: `API rate limit exceeded for IP ${ipAddress}`,
     };
 
     return descriptions[event] || `Security event: ${event}`;
@@ -362,7 +373,7 @@ export const alertManager = new AlertManager();
  */
 export async function alertSecurityEvent(
   event: string,
-  context: Record<string, any> = {},
+  context: Record<string, unknown> = {},
   severity: AlertSeverity = AlertSeverity.MEDIUM
 ): Promise<void> {
   await alertManager.processSecurityEvent(event, context, severity);
@@ -403,7 +414,7 @@ export async function alertVaultUnlock(
  */
 export async function alertSuspiciousActivity(
   activity: string,
-  context: Record<string, any>
+  context: Record<string, unknown>
 ): Promise<void> {
   await alertSecurityEvent('suspicious_activity', {
     activity,

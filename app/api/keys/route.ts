@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     
     // Get profile to check permissions (super_admin, owner, or admin can manage keys)
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("role, tenant_id")
       .eq("id", user.id)
       .single();
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     
     // Get profile to check permissions (super_admin, owner, or admin can create keys)
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("role, tenant_id")
       .eq("id", user.id)
       .single();

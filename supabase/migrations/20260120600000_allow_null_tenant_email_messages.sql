@@ -61,7 +61,7 @@ CREATE POLICY "Super admins can manage platform email messages"
   ON email_messages FOR ALL
   USING (
     tenant_id IS NULL AND EXISTS (
-      SELECT 1 FROM "709_profiles" 
+      SELECT 1 FROM "profiles" 
       WHERE id = auth.uid() AND role = 'super_admin'
     )
   );
@@ -71,7 +71,7 @@ CREATE POLICY "Super admins can manage platform email accounts"
   ON email_accounts FOR ALL
   USING (
     tenant_id IS NULL AND EXISTS (
-      SELECT 1 FROM "709_profiles" 
+      SELECT 1 FROM "profiles" 
       WHERE id = auth.uid() AND role = 'super_admin'
     )
   );

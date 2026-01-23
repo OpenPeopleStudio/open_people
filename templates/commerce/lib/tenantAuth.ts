@@ -31,7 +31,7 @@ export async function getTenantAuth(request?: Request): Promise<TenantAuthContex
 
   // Fetch user profile
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single()

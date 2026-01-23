@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { KnowledgeFact, KnowledgeDocument, FactType } from "@/types/mlf";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -14,27 +14,20 @@ export default function KnowledgePage() {
   const [documents, setDocuments] = useState<KnowledgeDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const searchRef = useRef(search);
   const [selectedFactType, setSelectedFactType] = useState<FactType | "">("");
   const [showAddFact, setShowAddFact] = useState(false);
   const [showAddDoc, setShowAddDoc] = useState(false);
   
-  useEffect(() => {
-    if (activeTab === "facts") {
-      loadFacts();
-    } else {
-      loadDocuments();
-    }
-  }, [activeTab, selectedFactType]);
-  
-  async function loadFacts() {
+  const loadFacts = useCallback(async (searchTerm: string) => {
     try {
       setLoading(true);
       let url = "/api/mlf/facts?limit=100";
       if (selectedFactType) {
         url += `&type=${selectedFactType}`;
       }
-      if (search) {
-        url += `&search=${encodeURIComponent(search)}`;
+      if (searchTerm) {
+        url += `&search=${encodeURIComponent(searchTerm)}`;
       }
       
       const res = await fetch(url);
@@ -47,14 +40,14 @@ export default function KnowledgePage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedFactType]);
   
-  async function loadDocuments() {
+  const loadDocuments = useCallback(async (searchTerm: string) => {
     try {
       setLoading(true);
       let url = "/api/mlf/knowledge?limit=100";
-      if (search) {
-        url += `&search=${encodeURIComponent(search)}`;
+      if (searchTerm) {
+        url += `&search=${encodeURIComponent(searchTerm)}`;
       }
       
       const res = await fetch(url);
@@ -67,7 +60,15 @@ export default function KnowledgePage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "facts") {
+      loadFacts(searchRef.current);
+    } else {
+      loadDocuments(searchRef.current);
+    }
+  }, [activeTab, loadFacts, loadDocuments]);
   
   async function deleteFact(id: string) {
     if (!confirm("Delete this fact?")) return;
@@ -163,8 +164,17 @@ export default function KnowledgePage() {
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && (activeTab === "facts" ? loadFacts() : loadDocuments())}
+            onChange={(e) => {
+              const value = e.target.value;
+              searchRef.current = value;
+              setSearch(value);
+            }}
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              (activeTab === "facts"
+                ? loadFacts(searchRef.current)
+                : loadDocuments(searchRef.current))
+            }
             placeholder={`Search ${activeTab}...`}
             className="w-full px-4 py-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border-subtle)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--electric-lime)]"
           />

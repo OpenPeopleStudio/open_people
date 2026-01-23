@@ -54,6 +54,8 @@ export async function GET(request: NextRequest) {
           ai_category,
           ai_summary,
           ai_tags,
+          error_message,
+          source_metadata,
           created_at
         ),
         rule:vault_automation_rules(
@@ -75,7 +77,19 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    return NextResponse.json({ items: items || [] });
+    const normalizedItems = (items || []).map((item) => ({
+      ...item,
+      source_metadata: {
+        email_from: item.source_email_from ?? undefined,
+        email_subject: item.source_email_subject ?? undefined,
+        email_date: item.source_email_date ?? undefined,
+        content_hash_error:
+          item.file?.source_metadata?.content_hash_error ||
+          (item.file?.error_message ? "missing_content_hash" : null),
+      },
+    }));
+
+    return NextResponse.json({ items: normalizedItems });
     
   } catch (error) {
     console.error("Inbox error:", error);
@@ -197,6 +211,7 @@ export async function PATCH(request: NextRequest) {
           metadata: {
             source: item.source_type,
             rule_id: item.rule_id,
+            error_message: item.file?.error_message ?? null,
           },
         });
       

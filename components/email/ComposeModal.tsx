@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { EmailAccount, EmailMessage, EmailTemplate } from "@/types/email";
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   templates: EmailTemplate[];
   onClose: () => void;
   onSent: () => void;
+  variant?: "modal" | "inline";
   prefill?: {
     to?: string[];
     subject?: string;
@@ -25,6 +26,7 @@ export function ComposeModal({
   templates,
   onClose,
   onSent,
+  variant = "modal",
   prefill,
 }: Props) {
   const [accountId, setAccountId] = useState(
@@ -51,9 +53,18 @@ export function ComposeModal({
   const [error, setError] = useState("");
   const [showCc, setShowCc] = useState(false);
   const [showBcc, setShowBcc] = useState(false);
+  const [draftStatus, setDraftStatus] = useState<"idle" | "saving" | "saved">("idle");
 
   const selectedAccount = accounts.find(a => a.id === accountId);
   const selectedTemplate = templates.find(t => t.id === templateId);
+  const isInline = variant === "inline";
+
+  useEffect(() => {
+    if (sending) return;
+    setDraftStatus("saving");
+    const timer = setTimeout(() => setDraftStatus("saved"), 700);
+    return () => clearTimeout(timer);
+  }, [to, cc, bcc, subject, body, templateId, templateVariables, sending]);
 
   const handleTemplateChange = (id: string) => {
     setTemplateId(id);
@@ -116,12 +127,26 @@ export function ComposeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className={
+        isInline
+          ? "h-full"
+          : "fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+      }
+    >
+      {!isInline && (
+        <div
+          className="absolute inset-0 bg-[var(--void)]/80 backdrop-blur-sm"
+          onClick={onClose}
+        />
+      )}
       <div
-        className="absolute inset-0 bg-[var(--void)]/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative bg-[var(--surface-1)] border border-[var(--border-subtle)] rounded-2xl w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col">
+        className={`relative bg-[var(--surface-1)] border border-[var(--border-subtle)] flex flex-col shadow-xl ${
+          isInline
+            ? "w-full h-full rounded-xl"
+            : "rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl mx-0 sm:mx-4 max-h-[92vh] sm:max-h-[90vh]"
+        }`}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)]">
           <h2 className="text-lg font-semibold text-[var(--text-primary)]">
@@ -136,6 +161,36 @@ export function ComposeModal({
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
+        </div>
+
+        {/* Status */}
+        <div
+          className={`flex items-center justify-between px-4 py-2 text-xs border-b border-[var(--border-subtle)] ${
+            error ? "bg-[var(--error)]/10 text-[var(--error)]" : "text-[var(--text-muted)]"
+          }`}
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-2 h-2 rounded-full ${
+                error
+                  ? "bg-[var(--error)]"
+                  : sending
+                    ? "bg-[var(--warning)] animate-pulse"
+                    : "bg-[var(--success)]"
+              }`}
+            />
+            {error
+              ? "Send failed — check details below"
+              : sending
+                ? "Sending…"
+                : draftStatus === "saving"
+                  ? "Saving draft…"
+                  : "Draft saved locally"}
+          </div>
+          <div className="hidden sm:block">
+            {selectedAccount ? `From ${selectedAccount.email_address}` : "Choose an account"}
+          </div>
         </div>
 
         {/* Form */}

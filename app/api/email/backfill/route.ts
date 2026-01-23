@@ -44,13 +44,10 @@ export async function POST(request: NextRequest) {
       batchSize = 50,
     } = body;
 
-    console.log(`[Email Backfill API] Starting backfill`, {
+    console.log("[Email Backfill API] Starting backfill", {
       provider,
-      tenantId,
-      domain,
       daysBack,
       batchSize,
-      user: user.id,
     });
 
     let result;

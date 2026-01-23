@@ -255,7 +255,7 @@ CREATE POLICY "Admins can view retention policies"
 ON retention_policies FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -266,7 +266,7 @@ CREATE POLICY "Admins can manage retention policies"
 ON retention_policies FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('owner')
   )
@@ -277,7 +277,7 @@ CREATE POLICY "Admins can view retention executions"
 ON retention_executions FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

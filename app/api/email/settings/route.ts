@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     // Get user's profile
     const adminSupabase = await createSupabaseAdmin();
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -146,7 +146,7 @@ export async function PUT(request: NextRequest) {
     // Get user's profile
     const adminSupabase = await createSupabaseAdmin();
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

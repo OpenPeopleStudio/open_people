@@ -2,6 +2,12 @@
 
 Owner: CEO
 
+## Important: AI Role Personas (Source of Truth)
+
+All roles and named personas in this repository are AI workers used for routing, accountability, and automation
+in the Shareholder Workflow. Names like "Elon" and "Sam" are internal codenames for AI roles and do not refer
+to real people. Any "ownership" language/percentages in these docs are workflow metaphors, not legal statements.
+
 ## Executive Leadership
 
 ### CEO (Elon)
@@ -29,11 +35,36 @@ Owner: CEO
 
 ### Coding Team (Employees)
 
-- Employees (split among founding group) ownership stake.
+- Employees have no legal ownership stake (any ownership language here is a workflow metaphor).
 - Lisa — design and UX.
 - Mr Robot — data privacy and security.
 - Linus — operating systems.
 - Claude — large slice integration.
+
+### Admin/UI API (Lisa)
+
+Scope (tenant admin only):
+- Owns tenant-admin UI workflows and the APIs that power them.
+- Owns admin workspace data-read patterns (dashboard, inbox, settings, notes, workflows).
+- Owns cross-module navigation + shared UI components in tenant admin.
+- Owns UX state management for admin flows (loading, error, permissions, empty states).
+
+Out of scope:
+- Super-admin surfaces (`/app/super-admin/*`) and their APIs.
+- Core tenant/auth resolution (`lib/tenant`, `middleware.ts`) — owned by Tenant/Core API.
+- Low-level email sync/worker pipelines — owned by Email API.
+- Storage and vault encryption internals — owned by Vault API.
+
+UX constraints (non-negotiables):
+- Tenant isolation must be visible; no cross-tenant hints in errors.
+- Permissions surfaced clearly (admin-only affordances, read-only member states).
+- AI suggestions labeled as AI-origin with safe fallbacks.
+- Safe-by-default errors: no PII in UI toasts/logs.
+
+Coordination rules:
+- Auth/tenant routing changes require CTO approval.
+- Email/webhook ingestion changes require Email API owner review.
+- UI changes affecting audit/logging or PII require Mr Robot review.
 
 ## AI Agents
 
@@ -81,6 +112,11 @@ Tier 3: Growth + Compliance (24+ months)
 
 - Add Compliance/Legal, Growth Marketing, Partnerships.
 - Goal: Enterprise readiness and partner-driven expansion.
+
+## OKRs + Scorecards
+
+- Quarterly OKRs: `docs/company/okrs.md`
+- Role scorecards: `docs/company/metrics.md`
 
 ## Role Ownership Map
 

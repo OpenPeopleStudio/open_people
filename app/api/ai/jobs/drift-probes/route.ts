@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
 
       // Create a mock executor (in production, this would call the actual AI model)
       const executor = async (_input: string) => {
+        void _input;
         // This is a placeholder - in production, you'd call the AI model
         // based on the install's application_id and model_id
         const startTime = Date.now();

@@ -19,9 +19,7 @@ import type { SalesPrepRequest, SalesPrepResponse } from "@/lib/ai/prompts/sales
    ═══════════════════════════════════════════════════════════════════════════ */
 
 declare global {
-  // eslint-disable-next-line no-var
   var __aiWorkerRunnerStarted: boolean | undefined;
-  // eslint-disable-next-line no-var
   var __aiWorkerRunnerInterval: NodeJS.Timeout | undefined;
 }
 
@@ -214,4 +212,3 @@ async function runSalesDeskPrep(
     response,
   };
 }
-

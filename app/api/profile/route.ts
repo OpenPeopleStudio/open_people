@@ -12,11 +12,12 @@ const handleGetProfile = withAuthAndAuthZ()(async (auth) => {
   const supabase = await createSupabaseServer();
 
   // Try to get existing profile
-  let { data: profile, error } = await supabase
+  const { data: profileData, error } = await supabase
     .from("ai_user_profiles")
     .select("*")
     .eq("user_id", auth.user.id)
     .single();
+  let profile = profileData;
 
   // If no profile exists, create one
   if (error?.code === "PGRST116" || !profile) {

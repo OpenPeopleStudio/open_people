@@ -534,7 +534,7 @@ export async function applyScenarioPack(
   const supabase = await createSupabaseAdmin();
   let policiesCreated = 0;
   let guardrailsCreated = 0;
-  let conversationsCreated = 0;
+  const conversationsCreated = 0;
 
   try {
     // Apply policies

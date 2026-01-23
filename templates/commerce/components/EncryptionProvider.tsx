@@ -107,14 +107,14 @@ export default function EncryptionProvider({ children }: EncryptionProviderProps
 
         // Check if public key needs to be synced to server
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('public_key')
           .eq('id', user.id)
           .single()
 
         if (profile?.public_key !== keys.publicKey) {
           await supabase
-            .from('709_profiles')
+            .from('profiles')
             .update({
               public_key: keys.publicKey,
               public_key_updated_at: new Date().toISOString()
@@ -202,7 +202,7 @@ export default function EncryptionProvider({ children }: EncryptionProviderProps
 
     // Sync to server
     await supabase
-      .from('709_profiles')
+      .from('profiles')
       .update({
         public_key: restored.publicKey,
         public_key_updated_at: new Date().toISOString()

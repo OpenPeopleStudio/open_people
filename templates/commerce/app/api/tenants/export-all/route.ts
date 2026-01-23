@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -99,7 +99,7 @@ export async function GET(request: Request) {
 
     // Customers (profiles)
     const { data: customers } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, role, full_name, created_at')
       .eq('tenant_id', tenant.id)
     exportData.customers = customers || []

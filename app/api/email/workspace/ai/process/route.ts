@@ -1,5 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createSupabaseAdmin } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { JobType, JobPriority } from "@/lib/jobs/queue";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email AI Processing API
@@ -80,8 +81,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: queueError.message }, { status: 500 });
     }
 
-    // TODO: Trigger actual AI job processing (integrate with job queue system)
-    // For now, we'll rely on a background job processor
+    try {
+      const admin = createSupabaseAdmin();
+      const jobId = `job_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      await admin.from("job_queue").insert({
+        id: jobId,
+        type: JobType.EMAIL_TRIAGE,
+        priority: JobPriority.NORMAL,
+        data: { messageId: message_id, threadId: message.thread_id },
+        status: "pending",
+        max_retries: 3,
+        retry_count: 0,
+        next_run_at: new Date().toISOString(),
+        created_by: user.id,
+      });
+    } catch (queueError) {
+      console.error("Queue job error:", queueError);
+    }
 
     return NextResponse.json({
       success: true,

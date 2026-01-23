@@ -155,8 +155,8 @@ export async function processIncomingEmail(
 ): Promise<{ processed: number; autoApproved: number }> {
   const matches = matchEmailToRules(email, rules);
   
-  let processed = 0;
-  let autoApproved = 0;
+  const processed = 0;
+  const autoApproved = 0;
   
   // TODO: For each attachment:
   // 1. Upload to R2 (already encrypted by worker)

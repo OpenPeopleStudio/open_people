@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();
@@ -214,7 +214,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();

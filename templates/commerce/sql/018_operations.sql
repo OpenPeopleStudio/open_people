@@ -75,7 +75,7 @@ CREATE POLICY "Admins can manage returns"
 ON returns FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -85,7 +85,7 @@ CREATE POLICY "Admins can manage consignors"
 ON consignors FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -95,7 +95,7 @@ CREATE POLICY "Admins can manage consignment items"
 ON consignment_items FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -105,7 +105,7 @@ CREATE POLICY "Admins can manage consignment payouts"
 ON consignment_payouts FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

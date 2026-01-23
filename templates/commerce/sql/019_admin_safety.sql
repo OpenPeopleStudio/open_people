@@ -39,7 +39,7 @@ CREATE POLICY "Admins can view activity logs"
 ON activity_logs FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -53,7 +53,7 @@ CREATE POLICY "Admins can insert activity logs"
 ON activity_logs FOR INSERT
 WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -65,7 +65,7 @@ CREATE POLICY "Admins can manage pricing rules"
 ON pricing_rules FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

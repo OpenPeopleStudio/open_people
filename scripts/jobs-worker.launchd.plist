@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>ai.openpeople.jobs-worker</string>
+  <key>WorkingDirectory</key><string>/Users/mars/open_people</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>npm run jobs:worker</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>/Users/mars/open_people/.logs/jobs-worker.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/mars/open_people/.logs/jobs-worker.err.log</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>NEXT_PUBLIC_SUPABASE_URL</key><string>REPLACE_ME</string>
+    <key>SUPABASE_SERVICE_ROLE_KEY</key><string>REPLACE_ME</string>
+  </dict>
+</dict></plist>

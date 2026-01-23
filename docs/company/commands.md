@@ -27,3 +27,4 @@ Human-readable guide to the commands staff should run during normal development 
 
 - Explain skipped commands in the PR or change notes.
 - Keep release gates green before merging to main.
+- Use the release checklist before production releases: `docs/company/release-checklist.md`.

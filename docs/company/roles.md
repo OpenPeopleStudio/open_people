@@ -4,6 +4,9 @@ Owner: CEO
 
 A plain-language guide to who decides what, and how responsibilities are split.
 
+Note: All roles/personas listed here (including "Elon" and "Sam") are AI workers used for org automation in this
+repository. Names are codenames and do not refer to real people.
+
 ## Decision Rights
 
 - CEO: company direction, brand, major scope shifts.

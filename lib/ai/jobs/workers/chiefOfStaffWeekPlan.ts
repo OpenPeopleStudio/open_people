@@ -42,7 +42,7 @@ export async function generateWeekPlanForUser(params: {
 
   // 2) Tenant context (optional)
   const { data: profileTenant } = await supabaseAdmin
-    .from("709_profiles")
+    .from("profiles")
     .select("tenant_id")
     .eq("id", ownerId)
     .single();

@@ -21,6 +21,7 @@ Applies to all employees, contractors, and long-term collaborators unless a role
 - If availability changes for more than one day, notify the team with a brief handoff note.
 - Default overlap window (if a team has not set one): 9:00am–12:00pm PT, Mon–Thu.
 - Urgent issues (incidents or tenant risk): acknowledge within 30 minutes during overlap hours.
+- Default check-in times (NST): 8:00am, 5:00pm, 12:00am daily.
 
 ## Communication Norms
 - Use `docs/company/coordination.md` for cross-role handoffs and blockers.
@@ -46,11 +47,41 @@ Applies to all employees, contractors, and long-term collaborators unless a role
 - Lock screens when away and avoid public networks without approved protection.
 - Use approved password managers and 2FA on all work accounts.
 
+## On-Call Roster and Escalation
+
+Source of truth: `docs/company/coordination.md`
+
+### Roster (fill in weekly)
+
+| Week (Mon–Sun) | Primary | Secondary | Timezone | Notes |
+| --- | --- | --- | --- | --- |
+| TBD | TBD | TBD | NST | Rotation owner: CTO |
+
+### Check-in Cadence
+
+- Check-ins at 8:00am NST, 5:00pm NST, 12:00am NST (daily).
+
+### Escalation Ladder
+
+1) Primary on-call (acknowledge within 30 minutes during overlap hours).
+2) Secondary on-call (if no response in 30 minutes).
+3) CTO + Linus (if incident impacts tenant isolation, auth, or uptime).
+4) CEO (if public impact, customer comms, or revenue risk).
+
 ## Handoffs and Incident Coverage
 
 - Use a short handoff note when work crosses time zones.
 - For incidents: log a summary, current status, and next owner in `docs/company/coordination.md`.
 - If you are primary on-call, keep contact status current and respond quickly during overlap.
+
+## Release-Gate Handoff Protocol
+
+- If a release gate is failing, post a handoff note in `docs/company/coordination.md`.
+- Handoff timing: no later than 30 minutes before the end of the overlap window.
+- Include: failing gate, suspected area, last known good state, and next action owner.
+
+## Current Status (2026-01-23)
+We are in a stabilization window while debugging completes. Expect async-first collaboration and minimal meetings until the push window begins. Any changes to schedules or process should be logged in `docs/company/coordination.md`.
 
 ## Travel or Time-Zone Changes
 - Notify the team if time zone shifts for more than one week.

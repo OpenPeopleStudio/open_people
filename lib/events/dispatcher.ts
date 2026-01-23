@@ -28,9 +28,7 @@ const POLL_INTERVAL_MS = 1000;
 const MAX_SINK_TIMEOUT_MS = 30000;
 
 declare global {
-  // eslint-disable-next-line no-var
   var __eventDispatcherStarted: boolean | undefined;
-  // eslint-disable-next-line no-var
   var __eventDispatcherInterval: NodeJS.Timeout | undefined;
 }
 

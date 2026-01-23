@@ -588,7 +588,7 @@ create policy "Tenant admins can view own events"
     tenant_id is not null
     and tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )
@@ -600,7 +600,7 @@ create policy "Tenant admins can view own dispatch logs"
     exists (
       select 1 
       from event_outbox o
-      join "709_profiles" p on p.tenant_id = o.tenant_id
+      join "profiles" p on p.tenant_id = o.tenant_id
       where o.id = event_dispatch_log.outbox_id
       and p.id = auth.uid()
       and p.role in ('admin', 'owner')
@@ -613,7 +613,7 @@ create policy "Tenant admins can view own DLQ"
     tenant_id is not null
     and tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )
@@ -624,7 +624,7 @@ create policy "Tenant admins can manage sink config"
   using (
     tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )

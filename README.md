@@ -88,6 +88,14 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the marketing site.
 
+### OSS Quickstart (10 minutes)
+
+If you're new to the repo, start here:
+
+- OSS quickstart checklist: `docs/README.md`
+- Local dev setup: `docs/development/setup.md`
+- Contributing guidelines: `docs/development/contributing.md`
+
 ### Repo map (fast orientation)
 - Architecture: `docs/architecture/overview.md`
 - Development setup: `docs/development/setup.md`
@@ -98,6 +106,11 @@ Open [http://localhost:3000](http://localhost:3000) to see the marketing site.
 - Runbook: `docs/RUNBOOK.md`
 - Migrations: `supabase/`
 - Scripts: `scripts/`
+
+### Decision Records (ADR)
+
+Use ADRs for significant changes (dependencies, schema, auth boundaries, major scope).
+See `docs/company/adr.md` for workflow and template.
 
 ### Development URLs
 
@@ -263,7 +276,6 @@ Powered by Resend for reliable email delivery.
 ```env
 RESEND_API_KEY=re_xxxxxxxxxxxx
 RESEND_WEBHOOK_SECRET=whsec_xxxxxxxxxxxx
-DEFAULT_FROM_EMAIL=noreply@mail.openpeople.ai
 DEFAULT_FROM_NAME=OpenPeople
 ```
 
@@ -411,7 +423,6 @@ R2_BUCKET_NAME=openpeople-storage
 # Resend (Email)
 RESEND_API_KEY=re_xxxxxxxxxxxx
 RESEND_WEBHOOK_SECRET=whsec_xxxxxxxxxxxx
-DEFAULT_FROM_EMAIL=noreply@mail.openpeople.ai
 DEFAULT_FROM_NAME=OpenPeople
 
 # Twilio (Notifications)
@@ -420,8 +431,12 @@ TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_FROM_NUMBER=+1234567890
 
 # Deployment
+NEXT_PUBLIC_APP_URL=https://openpeople.ai
 NEXT_PUBLIC_ROOT_DOMAIN=openpeople.ai
+NEXT_PUBLIC_DEFAULT_TENANT_SLUG=default
 NEXT_PUBLIC_SUPER_ADMIN_DOMAIN=app.openpeople.ai
+SUPER_ADMIN_DOMAIN=app.openpeople.ai
+# Keep both SUPER_ADMIN_DOMAIN and NEXT_PUBLIC_SUPER_ADMIN_DOMAIN in sync
 ```
 
 ## Deployment

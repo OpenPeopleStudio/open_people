@@ -78,7 +78,7 @@ export async function sendSMS(
 // Normalize phone number to E.164 format
 export function normalizePhoneNumber(phone: string): string {
   // Remove all non-digit characters
-  let digits = phone.replace(/\D/g, "");
+  const digits = phone.replace(/\D/g, "");
 
   // If starts with country code, ensure + prefix
   if (digits.length === 11 && digits.startsWith("1")) {

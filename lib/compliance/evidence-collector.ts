@@ -144,7 +144,7 @@ async function collectRBACSnapshot(
 
   // Get profiles with roles
   let query = supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("id, email, display_name, role, is_active, created_at, updated_at")
     .eq("tenant_id", tenantId);
 

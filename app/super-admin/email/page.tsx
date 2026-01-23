@@ -121,7 +121,7 @@ export default async function SuperAdminEmailPage() {
   
   if (user) {
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();
