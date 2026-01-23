@@ -38,6 +38,13 @@ Each task must have: owner, scope, files, and definition of done.
    Files: docs/company/api-ownership.md
    Done: Runbook and rollback checklist confirmed; incident escalation explicit.
 
+6. Owner: Open Source Agent (Codex)
+   Scope: OSS prep for push (repo health + community plan + OSS → pilot conversion)
+   Files: docs/TODO.md, docs/company/coordination.md, docs/company/open-source-agent-workflow.md, docs/company/locks.md
+   Success metrics: OSS plan shipped with owners/dates; CI failure root cause documented; community SLAs set; initial pilot lead list defined.
+   Validation steps: Confirm GH issues/PRs triaged (or none); capture CI status + failure reason; note security/PII scan summary.
+   Done: OSS plan and coordination note posted; CI failure called out with fix owner; conversion list drafted.
+
 ## Backlog (Pick next when Active is done)
 
 - Add “API Ownership” link to docs/company/README.md index.

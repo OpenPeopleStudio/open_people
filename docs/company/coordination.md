@@ -29,3 +29,23 @@ Ask: Identify reliability/perf risks and propose operational checks/metrics for 
 [Watch Trigger] To: Lisa — please acknowledge watcher pickup.
 [Watch Trigger] To: Mr Robot — please acknowledge watcher pickup.
 [Watch Trigger] To: Linus — please acknowledge watcher pickup.
+
+[2026-01-23] From: Open Source Agent (Codex) → To: CEO, CTO, Coder
+Topic: OSS prep for push — repo health + weekly plan + OSS → pilot conversion
+Notes:
+- Repo health: GH issues = 0, PRs = 0. CI failing on `main` (last run 2026-01-22) due to npm peer conflict: `@sentry/nextjs@8.55.0` expects Next ^13-15 but repo is on Next 16.1.3. Fix owner: CTO/Coder to decide pin/downgrade/upgrade path.
+- Dependabot alerts: disabled (403). Recommend enabling alerts or adding lightweight dependency audit weekly.
+- Secret/PII scan (quick `rg`): no keys found; one placeholder example in `docs/architecture/rag/README.md` (`sk_live_...`).
+
+OSS weekly artifacts (next 7 days):
+- 2026-01-24 (Owner: Open Source Agent): Publish “OSS Quickstart + local dev” doc update (target: docs/README.md + docs/development/README.md).
+- 2026-01-28 (Owner: Open Source Agent): Release notes + upgrade guide for Email Workspace v1 reliability changes (target: CHANGELOG.md + docs/README.md).
+
+Community response SLAs (effective 2026-01-23):
+- Issues/PRs triage within 72 hours.
+- Discussions/questions respond within 48 hours.
+- Security reports acknowledged within 24 hours (Mr Robot escalation).
+
+OSS → pilot conversion list (initial targets):
+- Build list of 5 candidate teams by 2026-01-29 (Owner: CEO + Open Source Agent): security-conscious SaaS teams needing email workflow automation.
+- Draft outreach sequence + pilot offer template by 2026-01-30 (Owner: CEO).

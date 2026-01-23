@@ -1,7 +1,33 @@
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { emailWorkspace } from "./workspace";
 import { emailOAuth } from "./oauth";
-import * as imap from "imap-simple";
+import { fetchIMAPEmails } from "./imap";
+
+type ImapAccountRow = {
+  id: string;
+  email_address: string;
+  imap_host: string;
+  imap_port: number;
+  imap_secure: boolean;
+  imap_user: string;
+  imap_password_encrypted: string;
+  imap_password_iv: string;
+  last_sync_uid?: string | number | null;
+};
+
+type ParsedImapEmail = {
+  message_id: string;
+  from: string;
+  to: string[];
+  cc: string[];
+  subject: string;
+  text: string;
+  html: string | null;
+  date: string;
+  attachments: [];
+  in_reply_to?: string;
+  references: string[];
+};
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Sync Service
@@ -20,7 +46,7 @@ export class EmailSyncService {
   } = {}) {
     const { fullSync = false, maxEmails = 50 } = options;
 
-    console.log(`[Email Sync] Starting IMAP sync for account: ${accountId}`);
+    console.log("[Email Sync] Starting IMAP sync");
 
     try {
       // Get account details
@@ -55,12 +81,12 @@ export class EmailSyncService {
         })
         .eq("id", accountId);
 
-      console.log(`[Email Sync] Completed IMAP sync for ${accountId}. Synced ${syncedEmails} emails.`);
+      console.log(`[Email Sync] Completed IMAP sync. Synced ${syncedEmails} emails.`);
 
       return { success: true, synced: syncedEmails };
 
     } catch (error) {
-      console.error(`[Email Sync] IMAP sync failed for account ${accountId}:`, error);
+      console.error("[Email Sync] IMAP sync failed:", error);
 
       // Update sync error
       await this.supabase
@@ -78,154 +104,107 @@ export class EmailSyncService {
   /**
    * Perform actual IMAP synchronization
    */
-  private async performImapSync(account: any, options: { fullSync: boolean; maxEmails: number }): Promise<number> {
+  private async performImapSync(account: ImapAccountRow, options: { fullSync: boolean; maxEmails: number }): Promise<number> {
     const { fullSync, maxEmails } = options;
 
-    console.log(`[Email Sync] Starting IMAP sync for account: ${account.email_address}`);
-    console.log(`[Email Sync] Connecting to: ${account.imap_host}:${account.imap_port}`);
+    console.log("[Email Sync] Starting IMAP sync for account");
 
     let processed = 0;
 
     try {
-      // IMAP connection config
       const config = {
-        imap: {
-          user: account.imap_user,
-          password: this.decryptPassword(account.imap_password_encrypted, account.imap_password_iv),
-          host: account.imap_host,
-          port: account.imap_port,
-          tls: account.imap_secure,
-          tlsOptions: {
-            rejectUnauthorized: false, // For self-signed certificates
-          },
-          authTimeout: 30000,
-        },
+        host: account.imap_host,
+        port: account.imap_port,
+        secure: account.imap_secure,
+        user: account.imap_user,
+        password: this.decryptPassword(account.imap_password_encrypted, account.imap_password_iv),
       };
 
-      console.log(`[Email Sync] Connecting to IMAP server...`);
+      const fetchResult = await fetchIMAPEmails(config, {
+        mailbox: "INBOX",
+        limit: maxEmails,
+        includeRead: true,
+        sinceUID: fullSync ? undefined : account.last_sync_uid?.toString(),
+        markSeen: false,
+      });
 
-      // Connect to IMAP server
-      const connection = await imap.connect(config);
-
-      try {
-        // Open INBOX mailbox
-        await connection.openBox("INBOX");
-        console.log(`[Email Sync] Opened INBOX for ${account.email_address}`);
-
-        // Get mailbox info
-        const box = connection.imap.box;
-        console.log(`[Email Sync] Mailbox has ${box.messages.total} total messages`);
-
-        // Determine which messages to fetch
-        let fetchRange: string;
-
-        if (fullSync || !account.last_sync_uid) {
-          // Fetch recent messages (last maxEmails)
-          const startSeq = Math.max(1, box.messages.total - maxEmails + 1);
-          fetchRange = `${startSeq}:${box.messages.total}`;
-          console.log(`[Email Sync] Full sync: fetching messages ${startSeq} to ${box.messages.total}`);
-        } else {
-          // Fetch messages since last sync UID
-          fetchRange = `${account.last_sync_uid}:*`;
-          console.log(`[Email Sync] Incremental sync: fetching from UID ${account.last_sync_uid}`);
-        }
-        console.log(`[Email Sync] Fetch range: ${fetchRange}`);
-
-        // Search for messages in range
-        const searchCriteria = ["ALL"];
-        const fetchOptions = {
-          bodies: ["HEADER", "TEXT"],
-          markSeen: false, // Don't mark as read
-          struct: true,    // Include structure info for attachments
-        };
-
-        console.log(`[Email Sync] Searching for messages with criteria:`, searchCriteria);
-
-        const messages = await connection.search(searchCriteria, fetchOptions);
-
-        console.log(`[Email Sync] Found ${messages.length} messages to process`);
-
-        // Sort messages by date (newest first) and limit
-        const sortedMessages = messages
-          .sort((a: any, b: any) => {
-            const dateA = new Date(a.parts[0].body.date || 0);
-            const dateB = new Date(b.parts[0].body.date || 0);
-            return dateB.getTime() - dateA.getTime();
-          })
-          .slice(0, maxEmails);
-
-        // Process each message
-        for (const message of sortedMessages) {
-          try {
-            const emailData = this.parseImapMessage(message);
-
-            // Skip if we already processed this message
-            const existingCheck = await this.supabase
-              .from("email_messages")
-              .select("id")
-              .eq("provider_id", emailData.message_id)
-              .single();
-
-            if (existingCheck.data) {
-              console.log(`[Email Sync] Skipping already processed message: ${emailData.message_id}`);
-              continue;
-            }
-
-            // Process through email workspace
-            const webhookPayload = {
-              type: "email.received",
-              data: {
-                email_id: emailData.message_id,
-                message_id: emailData.message_id,
-                from: emailData.from,
-                to: emailData.to,
-                cc: emailData.cc,
-                subject: emailData.subject,
-                text: emailData.text,
-                html: emailData.html,
-                created_at: emailData.date,
-                attachments: emailData.attachments,
-                in_reply_to: emailData.in_reply_to,
-                references: emailData.references,
-              },
-            };
-
-            const result = await emailWorkspace.processInboundWebhook(
-              webhookPayload,
-              "imap-sync-signature",
-              "dummy-secret"
-            );
-
-            if (result.success) {
-              processed++;
-              console.log(`[Email Sync] Successfully processed IMAP email: ${emailData.message_id}`);
-            } else {
-              console.error(`[Email Sync] Failed to process IMAP email ${emailData.message_id}:`, result.error);
-            }
-
-          } catch (error) {
-            console.error(`[Email Sync] Error processing IMAP message:`, error);
-          }
-        }
-
-        // Update last sync UID
-        const lastMessage = sortedMessages[0];
-        if (lastMessage) {
-          const lastUid = lastMessage.attributes.uid;
-          await this.supabase
-            .from("email_accounts")
-            .update({ last_sync_uid: lastUid.toString() })
-            .eq("id", account.id);
-        }
-
-      } finally {
-        // Close connection
-        connection.end();
-        console.log(`[Email Sync] Closed IMAP connection for ${account.email_address}`);
+      if (!fetchResult.success) {
+        throw new Error(fetchResult.error || "IMAP fetch failed");
       }
 
+      const sortedMessages = fetchResult.messages
+        .slice()
+        .sort((a, b) => {
+          const dateA = a.date ? new Date(a.date).getTime() : 0;
+          const dateB = b.date ? new Date(b.date).getTime() : 0;
+          return dateB - dateA;
+        });
+
+      for (const message of sortedMessages) {
+        try {
+          const emailData = this.parseImapMessage(message);
+
+          const existingCheck = await this.supabase
+            .from("email_messages")
+            .select("id")
+            .eq("provider_id", emailData.message_id)
+            .single();
+
+          if (existingCheck.data) {
+            console.log("[Email Sync] Skipping already processed message");
+            continue;
+          }
+
+          const webhookPayload = {
+            type: "email.received",
+            data: {
+              email_id: emailData.message_id,
+              message_id: emailData.message_id,
+              from: emailData.from,
+              to: emailData.to,
+              cc: emailData.cc,
+              subject: emailData.subject,
+              text: emailData.text,
+              html: emailData.html,
+              created_at: emailData.date,
+              attachments: emailData.attachments,
+              in_reply_to: emailData.in_reply_to,
+              references: emailData.references,
+            },
+          };
+
+          const result = await emailWorkspace.processInboundWebhook(
+            webhookPayload,
+            "imap-sync-signature",
+            "dummy-secret"
+          );
+
+          if (result.success) {
+            processed++;
+            console.log("[Email Sync] Successfully processed IMAP email");
+          } else {
+            console.error("[Email Sync] Failed to process IMAP email:", result.error);
+          }
+        } catch (error) {
+          console.error("[Email Sync] Error processing IMAP message:", error);
+        }
+      }
+
+      const maxUid = fetchResult.messages.reduce<number | null>((current, message) => {
+        const uidValue = Number.parseInt(message.uid, 10);
+        if (!Number.isFinite(uidValue)) return current;
+        return current === null ? uidValue : Math.max(current, uidValue);
+      }, null);
+
+      const lastUid = fetchResult.lastUID || (maxUid !== null ? maxUid.toString() : undefined);
+      if (lastUid) {
+        await this.supabase
+          .from("email_accounts")
+          .update({ last_sync_uid: lastUid })
+          .eq("id", account.id);
+      }
     } catch (error) {
-      console.error(`[Email Sync] IMAP sync failed for ${account.email_address}:`, error);
+      console.error("[Email Sync] IMAP sync failed:", error);
 
       // Update sync error
       await this.supabase
@@ -244,34 +223,46 @@ export class EmailSyncService {
   /**
    * Parse IMAP message into email format
    */
-  private parseImapMessage(message: any): any {
-    const header = message.parts[0].body;
-    const text = message.parts[1]?.body || "";
+  private parseImapMessage(message: {
+    uid: string;
+    messageId?: string;
+    inReplyTo?: string;
+    references?: string[];
+    from: { email: string };
+    to: { email: string }[];
+    cc?: { email: string }[];
+    subject?: string;
+    bodyText?: string;
+    bodyHtml?: string;
+    attachments: Array<{ filename?: string; size?: number; content_type?: string }>;
+    date?: Date;
+  }): ParsedImapEmail {
+    const from = message.from?.email || "";
+    const to = (message.to || []).map((entry) => entry.email).filter(Boolean);
+    const cc = (message.cc || []).map((entry) => entry.email).filter(Boolean);
+    const messageId = message.messageId;
+    const subject = message.subject || "";
+    const inReplyTo = message.inReplyTo;
+    const references = message.references || [];
 
-    // Parse email addresses
-    const parseAddress = (addr: string) => {
-      if (!addr) return "";
-      const match = addr.match(/<([^>]+)>/);
-      return match ? match[1] : addr;
+    const parsed: ParsedImapEmail = {
+      message_id: messageId || `imap-${message.uid}`,
+      from,
+      to,
+      cc,
+      subject,
+      text: message.bodyText || "",
+      html: message.bodyHtml || null,
+      date: message.date ? message.date.toISOString() : new Date().toISOString(),
+      attachments: message.attachments || [],
+      references,
     };
 
-    const from = Array.isArray(header.from) ? header.from[0] : header.from;
-    const to = Array.isArray(header.to) ? header.to.map(parseAddress) : [parseAddress(header.to)];
-    const cc = header.cc ? (Array.isArray(header.cc) ? header.cc.map(parseAddress) : [parseAddress(header.cc)]) : [];
+    if (inReplyTo) {
+      parsed.in_reply_to = inReplyTo;
+    }
 
-    return {
-      message_id: header["message-id"]?.[0] || `imap-${Date.now()}`,
-      from: parseAddress(from),
-      to: to,
-      cc: cc,
-      subject: header.subject?.[0] || "",
-      text: text,
-      html: null, // IMAP simple doesn't parse HTML by default
-      date: header.date?.[0] ? new Date(header.date[0]).toISOString() : new Date().toISOString(),
-      attachments: [], // Would need additional parsing for attachments
-      in_reply_to: header["in-reply-to"]?.[0],
-      references: header.references?.[0]?.split(/\s+/) || [],
-    };
+    return parsed;
   }
 
   /**
@@ -342,11 +333,11 @@ export class EmailSyncService {
               await this.syncOutlookAccount(account.id);
               break;
             default:
-              console.log(`[Email Sync] Skipping account ${account.id} - provider ${account.provider} not supported for sync`);
+              console.log("[Email Sync] Skipping account - provider not supported for sync");
           }
 
         } catch (accountError) {
-          console.error(`[Email Sync] Error syncing account ${account.id}:`, accountError);
+          console.error("[Email Sync] Error syncing account:", accountError);
         }
       }
 
