@@ -24,7 +24,7 @@ type ParsedImapEmail = {
   text: string;
   html: string | null;
   date: string;
-  attachments: [];
+  attachments: Array<{ filename?: string; size?: number; content_type?: string }>;
   in_reply_to?: string;
   references: string[];
 };
