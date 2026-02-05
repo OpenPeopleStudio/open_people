@@ -48,7 +48,7 @@ export async function POST(
     }
 
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role, tenant_id')
       .eq('id', user.id)
       .single()
@@ -63,7 +63,7 @@ export async function POST(
 
     // Verify customer belongs to tenant
     const { data: customerProfile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, tenant_id')
       .eq('id', customerId)
       .eq('tenant_id', tenant.id)

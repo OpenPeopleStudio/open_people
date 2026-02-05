@@ -7,7 +7,7 @@ export async function getCurrentUser() {
 
 export async function getUserProfile(userId: string, tenantId?: string) {
   let query = supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('*')
     .eq('id', userId)
 

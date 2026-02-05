@@ -1,6 +1,46 @@
 import { createResendClient } from "./resend";
 import { EmailWorkspaceService } from "./workspace";
 
+type ResendClient = ReturnType<typeof createResendClient>;
+
+type ResendEmailListItem = {
+  id: string;
+  to?: string[];
+  created_at: string;
+};
+
+type ResendEmailListResponse = {
+  data?: ResendEmailListItem[];
+  next?: string;
+};
+
+type ResendReceivingEmail = {
+  message_id?: string;
+  from?: string;
+  to?: string[];
+  cc?: string[];
+  subject?: string;
+  text?: string;
+  html?: string;
+  created_at?: string;
+  attachments?: unknown[];
+  in_reply_to?: string;
+  references?: string[];
+};
+
+type ForwardedEmail = {
+  id?: string;
+  message_id?: string;
+  from?: string;
+  to?: string[];
+  subject?: string;
+  text?: string;
+  html?: string;
+  date?: string;
+  created_at?: string;
+  attachments?: unknown[];
+};
+
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Backfill Service
    Imports historical emails from Resend and other providers
@@ -20,7 +60,7 @@ export class EmailBackfillService {
   } = {}) {
     const { tenantId, domain, daysBack = 30, batchSize = 50 } = options;
 
-    console.log(`[Email Backfill] Starting Resend backfill`, { tenantId, domain, daysBack, batchSize });
+    console.log("[Email Backfill] Starting Resend backfill");
 
     try {
       const resend = createResendClient();
@@ -31,41 +71,46 @@ export class EmailBackfillService {
       let totalProcessed = 0;
 
       for (const domainInfo of domainsToProcess) {
-        console.log(`[Email Backfill] Processing domain: ${domainInfo.domain} for tenant: ${domainInfo.tenant_id}`);
+        console.log("[Email Backfill] Processing managed domain");
 
         const emails = await this.fetchResendEmailsForDomain(resend, domainInfo.domain, daysBack, batchSize);
 
         for (const email of emails) {
           try {
             // Fetch full email content using the receiving API
-            console.log(`[Email Backfill] Fetching full content for email: ${email.id}`);
+            console.log("[Email Backfill] Fetching full email content");
 
             const { data: fullEmail, error: fetchError } = await resend.emails.receiving.get(email.id);
 
             if (fetchError) {
-              console.error(`[Email Backfill] Failed to fetch full email ${email.id}:`, fetchError);
+              console.error("[Email Backfill] Failed to fetch full email:", fetchError);
+              continue;
+            }
+            if (!fullEmail) {
               continue;
             }
 
+            const received = fullEmail as ResendReceivingEmail;
+
             // Create webhook payload with full content
             const inReplyTo =
-              "in_reply_to" in fullEmail ? (fullEmail as { in_reply_to?: string }).in_reply_to : undefined;
+              "in_reply_to" in received ? received.in_reply_to : undefined;
             const references =
-              "references" in fullEmail ? (fullEmail as { references?: string[] }).references : undefined;
+              "references" in received ? received.references : undefined;
 
             const webhookPayload = {
               type: "email.received",
               data: {
                 email_id: email.id,
-                message_id: fullEmail.message_id || email.id,
-                from: fullEmail.from,
-                to: fullEmail.to,
-                cc: fullEmail.cc,
-                subject: fullEmail.subject,
-                text: fullEmail.text,
-                html: fullEmail.html,
-                created_at: fullEmail.created_at,
-                attachments: fullEmail.attachments || [],
+                message_id: received.message_id || email.id,
+                from: received.from,
+                to: received.to,
+                cc: received.cc,
+                subject: received.subject,
+                text: received.text,
+                html: received.html,
+                created_at: received.created_at,
+                attachments: received.attachments || [],
                 ...(inReplyTo ? { in_reply_to: inReplyTo } : {}),
                 ...(references ? { references } : {}),
               },
@@ -79,16 +124,16 @@ export class EmailBackfillService {
 
             if (result.success) {
               totalProcessed++;
-              console.log(`[Email Backfill] Successfully processed email: ${email.id}`);
+              console.log("[Email Backfill] Successfully processed email");
             } else {
-              console.error(`[Email Backfill] Failed to process email ${email.id}:`, result.error);
+              console.error("[Email Backfill] Failed to process email:", result.error);
             }
 
             // Small delay to avoid overwhelming the system
             await new Promise(resolve => setTimeout(resolve, 500));
 
           } catch (error) {
-            console.error(`[Email Backfill] Error processing email ${email.id}:`, error);
+            console.error("[Email Backfill] Error processing email:", error);
           }
         }
       }
@@ -107,22 +152,22 @@ export class EmailBackfillService {
    * Uses Resend's receiving API to get historical emails
    */
   private async fetchResendEmailsForDomain(
-    resend: any,
+    resend: ResendClient,
     domain: string,
     daysBack: number,
     batchSize: number
-  ): Promise<any[]> {
-    const emails: any[] = [];
+  ): Promise<ResendEmailListItem[]> {
+    const emails: ResendEmailListItem[] = [];
     const cutoffDate = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000);
 
-    console.log(`[Email Backfill] Fetching received emails for domain: ${domain}, days back: ${daysBack}`);
+    console.log("[Email Backfill] Fetching received emails");
 
     try {
       let hasMore = true;
       let cursor: string | undefined;
 
       while (hasMore && emails.length < 1000) { // Safety limit
-        const params: any = {
+        const params: { limit: number; cursor?: string } = {
           limit: Math.min(batchSize, 100), // Resend limit is 100
         };
 
@@ -130,19 +175,22 @@ export class EmailBackfillService {
           params.cursor = cursor;
         }
 
-        console.log(`[Email Backfill] Fetching batch with params:`, params);
+        console.log("[Email Backfill] Fetching batch");
 
         // Use Resend's receiving API
-        const { data, error } = await resend.emails.receiving.list(params);
+        const { data, error } = await resend.emails.receiving.list(params) as {
+          data?: ResendEmailListResponse;
+          error?: { message?: string } | null;
+        };
 
         if (error) {
-          console.error(`[Email Backfill] Error fetching emails for ${domain}:`, error);
+          console.error("[Email Backfill] Error fetching emails:", error);
           break;
         }
 
         if (data?.data && Array.isArray(data.data)) {
           // Filter emails for our domain and date range
-          const domainEmails = data.data.filter((email: any) => {
+          const domainEmails = data.data.filter((email) => {
             const emailDomain = email.to?.[0]?.split('@')[1];
             const emailDate = new Date(email.created_at);
 
@@ -151,7 +199,7 @@ export class EmailBackfillService {
 
           emails.push(...domainEmails);
 
-          console.log(`[Email Backfill] Found ${domainEmails.length} emails for ${domain} in this batch`);
+          console.log(`[Email Backfill] Found ${domainEmails.length} emails in this batch`);
 
           // Check if there are more pages
           if (data.next && emails.length < 1000) {
@@ -168,18 +216,19 @@ export class EmailBackfillService {
       }
 
     } catch (error) {
-      console.error(`[Email Backfill] Error fetching emails for domain ${domain}:`, error);
+      console.error("[Email Backfill] Error fetching emails:", error);
     }
 
-    console.log(`[Email Backfill] Total emails found for ${domain}: ${emails.length}`);
+    console.log(`[Email Backfill] Total emails found: ${emails.length}`);
     return emails;
   }
 
   /**
    * Alternative: Backfill from email forwarding or manual import
    */
-  async backfillFromForwardedEmails(tenantId: string, emailData: any[]) {
-    console.log(`[Email Backfill] Processing ${emailData.length} forwarded emails for tenant ${tenantId}`);
+  async backfillFromForwardedEmails(tenantId: string, emailData: ForwardedEmail[]) {
+    console.log(`[Email Backfill] Processing ${emailData.length} forwarded emails`);
+    void tenantId;
 
     let processed = 0;
 
@@ -212,7 +261,7 @@ export class EmailBackfillService {
         }
 
       } catch (error) {
-        console.error(`[Email Backfill] Error processing forwarded email:`, error);
+        console.error("[Email Backfill] Error processing forwarded email:", error);
       }
     }
 
@@ -245,8 +294,9 @@ export class EmailBackfillService {
   } = {}) {
     // Implementation for IMAP/POP3 backfill would go here
     // This would connect to IMAP servers and fetch historical emails
+    void accountId;
     void options;
-    console.log(`[Email Backfill] IMAP backfill not implemented yet for account: ${accountId}`);
+    console.log("[Email Backfill] IMAP backfill not implemented yet for account");
     return { success: false, error: "IMAP backfill not implemented" };
   }
 }

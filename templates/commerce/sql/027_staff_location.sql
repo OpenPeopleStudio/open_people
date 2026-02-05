@@ -30,7 +30,7 @@ ON staff_locations FOR INSERT
 WITH CHECK (
   auth.uid() = user_id
   AND EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
   )
@@ -42,7 +42,7 @@ ON staff_locations FOR SELECT
 USING (
   auth.uid() = user_id
   AND EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
   )
@@ -53,7 +53,7 @@ CREATE POLICY "Admins read staff locations"
 ON staff_locations FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

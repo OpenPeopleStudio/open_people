@@ -96,6 +96,7 @@ export interface VaultFile {
   ai_confidence: number | null;
   ai_analyzed_at: string | null;
   ai_error: string | null;
+  error_message?: string | null;
   thumbnail_key: string | null;
   source_type: SourceType;
   source_metadata: SourceMetadata;

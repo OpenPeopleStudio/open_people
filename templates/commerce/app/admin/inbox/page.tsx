@@ -225,7 +225,7 @@ export default function InboxPage() {
         // Get profiles for encryption status
         const customerIds = Array.from(customerMap.keys())
         const { data: profiles, error: profilesError } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('id, public_key, is_online, last_active_at')
           .in('id', customerIds)
           .eq('tenant_id', tenantId)

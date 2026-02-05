@@ -22,7 +22,7 @@
 
 -- Option A: If you know the user ID (replace 'USER_ID_HERE' with actual UUID):
 /*
-UPDATE "709_profiles"
+UPDATE "profiles"
 SET role = 'owner'
 WHERE id = 'USER_ID_HERE';
 */
@@ -46,15 +46,15 @@ BEGIN
     RAISE NOTICE 'Check "Auto confirm user"';
   ELSE
     -- Check if profile exists
-    IF EXISTS (SELECT 1 FROM "709_profiles" WHERE id = user_id) THEN
+    IF EXISTS (SELECT 1 FROM "profiles" WHERE id = user_id) THEN
       -- Update existing profile to owner role
-      UPDATE "709_profiles"
+      UPDATE "profiles"
       SET role = 'staff'
       WHERE id = user_id;
       RAISE NOTICE 'Updated existing profile to owner role for user: %', user_id;
     ELSE
       -- Insert new profile with owner role
-      INSERT INTO "709_profiles" (id, role, full_name)
+      INSERT INTO "profiles" (id, role, full_name)
       VALUES (user_id, 'staff', 'Site Administrator');
       RAISE NOTICE 'Created owner profile for user: %', user_id;
     END IF;
@@ -71,6 +71,6 @@ SELECT
   p.full_name,
   u.created_at
 FROM auth.users u
-LEFT JOIN "709_profiles" p ON p.id = u.id
+LEFT JOIN "profiles" p ON p.id = u.id
 WHERE p.role IN ('staff')
 ORDER BY u.created_at DESC;

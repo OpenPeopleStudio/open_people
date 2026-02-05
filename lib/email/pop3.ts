@@ -135,8 +135,34 @@ export async function getPOP3MessageCount(config: POP3Config): Promise<number> {
 /**
  * Parse mailparser output for POP3
  */
+type AddressValue = { address?: string | undefined; name?: string | undefined };
+type AddressLike =
+  | { value?: AddressValue[]; address?: string | undefined; name?: string | undefined }
+  | AddressValue
+  | string
+  | null
+  | undefined;
+
+type ParsedMailLike = {
+  from?: AddressLike;
+  to?: AddressLike | AddressLike[];
+  cc?: AddressLike | AddressLike[];
+  replyTo?: AddressLike;
+  text?: string | undefined;
+  attachments?: Array<{
+    filename?: string | undefined;
+    contentType?: string | undefined;
+    size?: number | undefined;
+  }>;
+  inReplyTo?: string | string[] | undefined;
+  messageId?: string | undefined;
+  subject?: string | undefined;
+  html?: string | false | undefined;
+  date?: Date | undefined;
+};
+
 function parseMailToPOP3Message(
-  parsed: any,
+  parsed: ParsedMailLike,
   messageNumber: string
 ): ParsedEmailMessage {
   const from = parseAddress(parsed.from);
@@ -147,11 +173,18 @@ function parseMailToPOP3Message(
   const bodyText = parsed.text || "";
   const bodyPreview = bodyText.slice(0, 200).replace(/\s+/g, " ").trim();
   
-  const attachments: EmailAttachmentMeta[] = (parsed.attachments || []).map((att: any) => ({
-    filename: att.filename || "attachment",
-    content_type: att.contentType,
-    size: att.size,
-  }));
+  const attachments: EmailAttachmentMeta[] = (parsed.attachments || []).map((att) => {
+    const meta: EmailAttachmentMeta = {
+      filename: att.filename || "attachment",
+    };
+    if (att.contentType) {
+      meta.content_type = att.contentType;
+    }
+    if (att.size !== undefined) {
+      meta.size = att.size;
+    }
+    return meta;
+  });
   
   let inReplyTo: string | undefined;
   if (parsed.inReplyTo) {
@@ -178,26 +211,36 @@ function parseMailToPOP3Message(
   };
 }
 
-function parseAddress(addr: any): EmailAddress {
+function parseAddress(addr: AddressLike): EmailAddress {
   if (!addr) return { email: "unknown@unknown.com" };
   
-  if (addr.value && addr.value[0]) {
-    const name = addr.value[0].name;
-    return name
-      ? { email: addr.value[0].address || "", name }
-      : { email: addr.value[0].address || "" };
+  if (typeof addr === "object" && addr && "value" in addr) {
+    const value = (addr as { value?: AddressValue[] }).value;
+    if (!value || !value[0]) return { email: "unknown@unknown.com" };
+    const name = value[0].name;
+    return name ? { email: value[0].address || "", name } : { email: value[0].address || "" };
   }
   
-  return addr.name
-    ? { email: addr.address || "", name: addr.name }
-    : { email: addr.address || "" };
+  if (typeof addr === "string") {
+    return { email: addr };
+  }
+
+  if (typeof addr === "object" && addr) {
+    const name = (addr as AddressValue).name;
+    return name
+      ? { email: (addr as AddressValue).address || "", name }
+      : { email: (addr as AddressValue).address || "" };
+  }
+
+  return { email: "unknown@unknown.com" };
 }
 
-function parseAddresses(addrs: any): EmailAddress[] {
+function parseAddresses(addrs: AddressLike | AddressLike[]): EmailAddress[] {
   if (!addrs) return [];
   
-  if (addrs.value) {
-    return addrs.value.map((a: any) =>
+  if (typeof addrs === "object" && addrs && "value" in addrs) {
+    const value = (addrs as { value?: AddressValue[] }).value || [];
+    return value.map((a) =>
       a.name ? { email: a.address || "", name: a.name } : { email: a.address || "" }
     );
   }

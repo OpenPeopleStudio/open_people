@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     const adminSupabase = await createSupabaseAdmin();
 
     const { data: profile, error: profileError } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -245,7 +245,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -260,7 +260,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Handle password updates
-    const updateData: Record<string, any> = { ...updates };
+    const updateData: Record<string, unknown> = { ...updates };
     delete updateData.smtp_password;
     delete updateData.imap_password;
     delete updateData.pop3_password;
@@ -331,7 +331,7 @@ export async function DELETE(request: NextRequest) {
     const adminSupabase = await createSupabaseAdmin();
 
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

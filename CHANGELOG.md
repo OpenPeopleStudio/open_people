@@ -28,16 +28,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Multi-tenant access control and isolation
   - Resource ownership validation
 - Easy-to-use middleware decorators for API routes
+- Email Workspace v1 reliability improvements
+  - Per-message triage queueing (no double-queueing)
+  - AI queue metadata-only tracking and idempotent upserts
+  - Draft + attachment fetch performance metrics and alerts
+  - Super-admin email read-path safeguards (tenant scoped)
 
 ### Changed
 
 - Migrated to Next.js 16 App Router
 - Updated supabase integration patterns
 - Enhanced TypeScript coverage across codebase
+- Email Workspace processing favors async workers over webhook inline work
 
 ### Fixed
 
 - Various bug fixes and performance improvements
+- Reduced webhook latency risk by moving heavy email AI work off the inbound path
+
+### Upgrade Notes (Email Workspace v1)
+
+- Ensure the jobs worker is running in each environment: `npm run jobs:worker` (registers `JobType.EMAIL_TRIAGE`).
+- Verify migrations applied: `supabase/migrations/20260120800000_email_workspace_schema.sql` (email tables + `email_ai_queue`) and `supabase/migrations/20260120900000_job_queue_system.sql` (job queue).
+- Validate inbox and message-detail p95 alerts after deploy (see `docs/RUNBOOK.md`).
+- Confirm AI suggestion reads remain admin-only and tenant-scoped.
 
 ## [0.1.0] - 2026-01-18
 

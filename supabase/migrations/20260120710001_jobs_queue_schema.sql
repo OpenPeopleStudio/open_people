@@ -585,55 +585,64 @@ alter table job_tenant_limits enable row level security;
 alter table job_dlq enable row level security;
 
 -- Service role has full access
+drop policy if exists "Service role full access to jobs" on jobs;
 create policy "Service role full access to jobs"
   on jobs for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to job_tenant_limits" on job_tenant_limits;
 create policy "Service role full access to job_tenant_limits"
   on job_tenant_limits for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to job_dlq" on job_dlq;
 create policy "Service role full access to job_dlq"
   on job_dlq for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
 -- Users can view and create their own jobs
+drop policy if exists "Users can view own jobs" on jobs;
 create policy "Users can view own jobs"
   on jobs for select
   using (auth.uid() = owner_id);
 
+drop policy if exists "Users can insert own jobs" on jobs;
 create policy "Users can insert own jobs"
   on jobs for insert
   with check (auth.uid() = owner_id);
 
 -- Tenant admins can view tenant jobs
+drop policy if exists "Tenant admins can view tenant jobs" on jobs;
 create policy "Tenant admins can view tenant jobs"
   on jobs for select
   using (
     tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )
   );
 
+drop policy if exists "Tenant admins can view tenant DLQ" on job_dlq;
 create policy "Tenant admins can view tenant DLQ"
   on job_dlq for select
   using (
     tenant_id = (
       select p.tenant_id 
-      from "709_profiles" p 
+      from "profiles" p 
       where p.id = auth.uid() 
       and p.role in ('admin', 'owner')
     )
   );
 
 -- Super admins can view all
+drop policy if exists "Super admins can view all jobs" on jobs;
 create policy "Super admins can view all jobs"
   on jobs for select
   using (is_super_admin());
 
+drop policy if exists "Super admins can view all DLQ" on job_dlq;
 create policy "Super admins can view all DLQ"
   on job_dlq for select
   using (is_super_admin());

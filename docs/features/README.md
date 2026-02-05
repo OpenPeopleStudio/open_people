@@ -1,5 +1,7 @@
 # AI Alignment Platform - Feature Specifications
 
+Owner: CTO
+
 This directory contains detailed specifications for planned features in the Open People AI Alignment Platform.
 
 ## Overview

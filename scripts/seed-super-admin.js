@@ -82,7 +82,7 @@ async function seedSuperAdmin() {
 
     // Check if profile exists
     const { data: existingProfile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, role')
       .eq('id', userId)
       .single();
@@ -91,7 +91,7 @@ async function seedSuperAdmin() {
       // Update existing profile
       console.log('📝 Updating existing profile...');
       const { error: updateError } = await supabase
-        .from('709_profiles')
+        .from('profiles')
         .update({
           role: superAdminRole,
           full_name: fullName,
@@ -109,7 +109,7 @@ async function seedSuperAdmin() {
       // Create new profile
       console.log('📝 Creating new profile...');
       const { error: profileError } = await supabase
-        .from('709_profiles')
+        .from('profiles')
         .insert({
           id: userId,
           role: superAdminRole,
@@ -126,7 +126,7 @@ async function seedSuperAdmin() {
 
     // Verify the setup
     const { data: verification } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role, full_name')
       .eq('id', userId)
       .single();

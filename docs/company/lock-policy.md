@@ -1,5 +1,7 @@
 # Lock Policy
 
+Owner: Coder
+
 Purpose: enable parallel work without overlapping diffs or surprise conflicts.
 
 ## Lock Types

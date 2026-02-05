@@ -34,7 +34,7 @@ export default async function SuperAdminLayout({ children }: { children: React.R
   if (!user) redirect('/login')
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single()

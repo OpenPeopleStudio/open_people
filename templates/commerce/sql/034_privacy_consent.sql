@@ -220,7 +220,7 @@ CREATE POLICY "Admins can view all consents"
 ON user_consents FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -232,7 +232,7 @@ CREATE POLICY "Admins can view all consent audits"
 ON consent_audit FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

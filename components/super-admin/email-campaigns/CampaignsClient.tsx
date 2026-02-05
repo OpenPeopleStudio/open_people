@@ -55,20 +55,13 @@ export function CampaignsClient() {
   const [body, setBody] = useState(templates.thoughtful.body);
   const [audienceDescription, setAudienceDescription] = useState("");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [statusTone, setStatusTone] = useState<"neutral" | "success" | "error">("neutral");
   const [savingDraft, setSavingDraft] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<AiCompanyGroupSuggestion[]>([]);
   const [composeCampaign, setComposeCampaign] = useState<
     (EmailCampaignDraft & { recipients?: EmailCampaignRecipient[] }) | null
   >(null);
   const [showCompose, setShowCompose] = useState(false);
-
-  const loadData = async () => {
-    await Promise.all([loadCompanies(), loadGroups(), loadCampaigns(), loadAccounts()]);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const loadCompanies = async () => {
     const res = await fetch("/api/super-admin/email/companies");
@@ -100,6 +93,15 @@ export function CampaignsClient() {
     const data = await res.json();
     if (res.ok) setAccounts(data.accounts || []);
   };
+
+  const loadData = async () => {
+    await Promise.all([loadCompanies(), loadGroups(), loadCampaigns(), loadAccounts()]);
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data fetch on mount
+    loadData();
+  }, []);
 
   const createCompany = async (input: Partial<AiCompany> & { name: string }) => {
     const res = await fetch("/api/super-admin/email/companies", {
@@ -163,18 +165,15 @@ export function CampaignsClient() {
     setBody(templates[templateMode].body);
   };
 
-  const selectedGroup = groups.find((g) => g.id === selectedGroupId);
-
-  const groupMemberIds = useMemo(
-    () => (selectedGroup?.members || []).map((m: any) => m.company_id),
-    [selectedGroup],
-  );
-
-  useEffect(() => {
-    if (selectedGroupId && groupMemberIds.length) {
-      setSelectedCompanyIds(groupMemberIds);
+  const handleSelectGroup = (groupId: string | null) => {
+    setSelectedGroupId(groupId);
+    if (!groupId) return;
+    const group = groups.find((g) => g.id === groupId);
+    const memberIds = (group?.members || []).map((m: any) => m.company_id);
+    if (memberIds.length) {
+      setSelectedCompanyIds(memberIds);
     }
-  }, [selectedGroupId, groupMemberIds]);
+  };
 
   const selectionRecipients = useMemo(() => {
     const emailMap = new Map<string, DraftRecipient>();
@@ -212,6 +211,8 @@ export function CampaignsClient() {
     return Array.from(map.values());
   }, [selectionRecipients, manualRecipients]);
 
+  const selectedGroup = groups.find((group) => group.id === selectedGroupId) || null;
+
   const addManualRecipient = (input: { email: string; name?: string }) => {
     setManualRecipients((prev) => [
       ...prev,
@@ -234,15 +235,18 @@ export function CampaignsClient() {
   const saveDraft = async () => {
     if (!subject || !body) {
       setStatusMessage("Subject and body are required.");
+      setStatusTone("error");
       return;
     }
     if (recipients.length === 0) {
       setStatusMessage("Select at least one recipient.");
+      setStatusTone("error");
       return;
     }
 
     setSavingDraft(true);
     setStatusMessage(null);
+    setStatusTone("neutral");
 
     const payload = {
       name: `Draft - ${new Date().toLocaleDateString()}`,
@@ -269,82 +273,132 @@ export function CampaignsClient() {
 
     if (res.ok) {
       setStatusMessage("Draft saved.");
+      setStatusTone("success");
       setCampaigns((prev) => [data.campaign, ...prev]);
     } else {
       setStatusMessage(data.error || "Failed to save draft.");
+      setStatusTone("error");
     }
 
     setSavingDraft(false);
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[320px_320px_1fr] gap-4">
-      <div className="space-y-4">
-        <CompaniesPanel
-          companies={companies}
-          selectedCompanyIds={selectedCompanyIds}
-          onSelectCompany={setSelectedCompanyIds}
-          onCreateCompany={createCompany}
-        />
-        <GroupsPanel
-          groups={groups}
-          selectedGroupId={selectedGroupId}
-          onSelectGroup={setSelectedGroupId}
-          onCreateGroup={createGroup}
-          suggestions={aiSuggestions}
-          onSuggestGroups={suggestGroups}
-          onAdoptSuggestion={adoptSuggestion}
-        />
+    <div className="space-y-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Campaign builder</h2>
+          <p className="text-xs text-[var(--text-muted)]">
+            Build targeted outreach with curated companies and groups.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
+          <span className="px-2.5 py-1 rounded-full border border-[var(--border-subtle)]">
+            {selectedCompanyIds.length} companies
+          </span>
+          <span className="px-2.5 py-1 rounded-full border border-[var(--border-subtle)]">
+            {recipients.length} recipients
+          </span>
+          {selectedGroup && (
+            <span className="px-2.5 py-1 rounded-full border border-[var(--border-subtle)]">
+              Group: {selectedGroup.name}
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-4">
-        <MessageBuilder
-          mode={mode}
-          subject={subject}
-          body={body}
-          onModeChange={setMode}
-          onSubjectChange={setSubject}
-          onBodyChange={setBody}
-          onApplyTemplate={applyTemplate}
-        />
-
-        <div className="space-y-2">
-          <label className="text-xs text-[var(--text-muted)]">Audience notes</label>
-          <textarea
-            className="w-full px-3 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-sm min-h-[80px]"
-            value={audienceDescription}
-            onChange={(e) => setAudienceDescription(e.target.value)}
-            placeholder="eg. Early AI infra vendors we love; keep it playful."
+      <div className="grid grid-cols-1 xl:grid-cols-[320px_320px_1fr] gap-4">
+        <div className="space-y-4">
+          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-3">
+            <p className="text-xs text-[var(--text-muted)]">Step 1</p>
+            <p className="text-sm font-medium text-[var(--text-primary)]">Define your audience</p>
+          </div>
+          <CompaniesPanel
+            companies={companies}
+            selectedCompanyIds={selectedCompanyIds}
+            onSelectCompany={setSelectedCompanyIds}
+            onCreateCompany={createCompany}
+          />
+          <GroupsPanel
+            groups={groups}
+            selectedGroupId={selectedGroupId}
+            onSelectGroup={handleSelectGroup}
+            onCreateGroup={createGroup}
+            suggestions={aiSuggestions}
+            onSuggestGroups={suggestGroups}
+            onAdoptSuggestion={adoptSuggestion}
           />
         </div>
 
-        <button
-          onClick={saveDraft}
-          disabled={savingDraft}
-          className="w-full px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] text-sm font-semibold disabled:opacity-50"
-        >
-          {savingDraft ? "Saving..." : "Save draft (no sending)"}
-        </button>
-        {statusMessage && <div className="text-xs text-[var(--text-muted)]">{statusMessage}</div>}
-      </div>
+        <div className="space-y-4">
+          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-3">
+            <p className="text-xs text-[var(--text-muted)]">Step 2</p>
+            <p className="text-sm font-medium text-[var(--text-primary)]">Craft the message</p>
+          </div>
+          <MessageBuilder
+            mode={mode}
+            subject={subject}
+            body={body}
+            onModeChange={setMode}
+            onSubjectChange={setSubject}
+            onBodyChange={setBody}
+            onApplyTemplate={applyTemplate}
+          />
 
-      <div className="space-y-4">
-        <RecipientsReview
-          recipients={recipients}
-          onRemove={removeRecipient}
-          onAddManual={addManualRecipient}
-        />
-        <CampaignsList
-          campaigns={campaigns}
-          {...(accounts.length > 0
-            ? {
-                onOpenComposer: (campaign: EmailCampaignDraft) => {
-                  setComposeCampaign(campaign);
-                  setShowCompose(true);
-                },
-              }
-            : {})}
-        />
+          <div className="space-y-2">
+            <label className="text-xs text-[var(--text-muted)]">Audience notes</label>
+            <textarea
+              className="w-full px-3 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border-subtle)] text-sm min-h-[80px]"
+              value={audienceDescription}
+              onChange={(e) => setAudienceDescription(e.target.value)}
+              placeholder="eg. Early AI infra vendors we love; keep it playful."
+            />
+          </div>
+
+          <button
+            onClick={saveDraft}
+            disabled={savingDraft}
+            className="w-full px-4 py-2 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] text-sm font-semibold disabled:opacity-50"
+          >
+            {savingDraft ? "Saving..." : "Save draft (no sending)"}
+          </button>
+          {statusMessage && (
+            <div
+              className={`text-xs rounded-lg border px-3 py-2 ${
+                statusTone === "success"
+                  ? "border-[var(--success)]/30 text-[var(--success)] bg-[var(--success)]/10"
+                  : statusTone === "error"
+                    ? "border-[var(--error)]/30 text-[var(--error)] bg-[var(--error)]/10"
+                    : "border-[var(--border-subtle)] text-[var(--text-muted)] bg-[var(--surface-1)]"
+              }`}
+            >
+              {statusMessage}
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-3">
+            <p className="text-xs text-[var(--text-muted)]">Step 3</p>
+            <p className="text-sm font-medium text-[var(--text-primary)]">Review & send</p>
+          </div>
+          <RecipientsReview
+            recipients={recipients}
+            onRemove={removeRecipient}
+            onAddManual={addManualRecipient}
+          />
+          <CampaignsList
+            campaigns={campaigns}
+            {...(accounts.length > 0
+              ? {
+                  onOpenComposer: (campaign: EmailCampaignDraft) => {
+                    setComposeCampaign(campaign);
+                    setShowCompose(true);
+                  },
+                }
+              : {})}
+          />
+        </div>
       </div>
 
       {showCompose && composeCampaign && (
@@ -365,6 +419,7 @@ export function CampaignsClient() {
           }}
           onSent={() => {
             setStatusMessage("Sent via composer.");
+            setStatusTone("success");
             setShowCompose(false);
             setComposeCampaign(null);
           }}

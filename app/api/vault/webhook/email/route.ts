@@ -30,6 +30,15 @@ import crypto from "crypto";
 
 const WEBHOOK_SECRET = process.env.VAULT_WEBHOOK_SECRET;
 
+function computeFallbackContentHash(
+  r2Key: string,
+  messageId: string,
+  filename: string
+): string {
+  const seed = `${r2Key}:${messageId}:${filename}`;
+  return crypto.createHash("sha256").update(seed).digest("hex");
+}
+
 /**
  * POST /api/vault/webhook/email
  * Process incoming email from Cloudflare Worker
@@ -84,6 +93,12 @@ export async function POST(request: NextRequest) {
     if (!vault_id || !attachments || attachments.length === 0) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
+    const attachmentsMissingHash = new Set<number>();
+    attachments.forEach((attachment: { content_hash?: string }, index: number) => {
+      if (!attachment?.content_hash) {
+        attachmentsMissingHash.add(index);
+      }
+    });
     
     const supabase = await createSupabaseAdmin();
     
@@ -138,6 +153,16 @@ export async function POST(request: NextRequest) {
     const createdFiles: string[] = [];
     
     for (const attachment of attachments) {
+      const contentHash =
+        attachment.content_hash ||
+        computeFallbackContentHash(
+          attachment.r2_key,
+          message_id,
+          attachment.filename
+        );
+      const hasHashError = !attachment.content_hash;
+      const shouldAutoApprove = matchedRule?.auto_approve && !hasHashError;
+
       // Create file record
       const { data: file, error: fileError } = await supabase
         .from("vault_files")
@@ -149,6 +174,7 @@ export async function POST(request: NextRequest) {
           encryption_key_id: encryptionKey.id,
           encryption_iv: attachment.encryption_iv,
           size_bytes: attachment.size_bytes,
+          content_hash: contentHash,
           content_type: attachment.content_type,
           source_type: "email",
           source_metadata: {
@@ -156,8 +182,12 @@ export async function POST(request: NextRequest) {
             email_from: from,
             email_subject: subject,
             received_at,
+            content_hash_error: hasHashError ? "missing_content_hash" : null,
           },
-          status: matchedRule?.auto_approve ? "active" : "pending",
+          status: shouldAutoApprove ? "active" : "pending",
+          ...(hasHashError
+            ? { error_message: "Missing content_hash from email worker payload." }
+            : {}),
         })
         .select()
         .single();
@@ -170,18 +200,16 @@ export async function POST(request: NextRequest) {
       createdFiles.push(file.id);
       
       // Create inbox item if not auto-approved
-      if (!matchedRule?.auto_approve) {
+      if (!shouldAutoApprove) {
         await supabase
           .from("vault_inbox")
           .insert({
             vault_id,
             file_id: file.id,
             source_type: "email",
-            source_metadata: {
-              message_id,
-              email_from: from,
-              email_subject: subject,
-            },
+            source_email_from: from,
+            source_email_subject: subject,
+            source_email_date: received_at,
             rule_id: matchedRule?.id || null,
             suggested_folder_id: matchedRule?.target_folder_id || null,
             status: "pending",
@@ -208,6 +236,7 @@ export async function POST(request: NextRequest) {
           files_created: createdFiles.length,
           auto_approved: matchedRule?.auto_approve || false,
           rule_id: matchedRule?.id || null,
+          missing_content_hash_count: attachmentsMissingHash.size,
         },
       });
     

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { ApiKeysEncryptionConfigError, decryptApiKey } from "@/lib/api-keys/encryption";
 
@@ -9,9 +9,12 @@ import { ApiKeysEncryptionConfigError, decryptApiKey } from "@/lib/api-keys/encr
    This is a sensitive operation and is logged.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(request: Request, context: any) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ keyId: string }> }
+) {
   try {
-    const { keyId } = context.params;
+    const { keyId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

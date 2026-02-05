@@ -117,7 +117,7 @@ export default async function EmailPage() {
   }
 
   const { data: profile } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("tenant_id")
     .eq("id", user.id)
     .single();

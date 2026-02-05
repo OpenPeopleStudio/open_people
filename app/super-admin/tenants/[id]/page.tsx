@@ -125,7 +125,7 @@ async function getTenantUsers(tenantId: string): Promise<TenantUser[]> {
   const supabase = await createSupabaseServer();
 
   const { data } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("id, email, full_name, role, created_at, last_sign_in_at")
     .eq("tenant_id", tenantId)
     .order("created_at", { ascending: false });

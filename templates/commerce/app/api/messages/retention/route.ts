@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   const { customerId, enabled, days } = await request.json()
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   const retentionEnabled = Boolean(enabled)
 
   const { error } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .update({
       message_retention_enabled: retentionEnabled,
       message_retention_days: retentionEnabled ? retentionDays : null,
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
   const customerId = url.searchParams.get('customerId')
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
   }
 
   const { data: targetProfile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('message_retention_enabled, message_retention_days')
     .eq('id', targetCustomerId)
     .eq('tenant_id', tenant?.id)

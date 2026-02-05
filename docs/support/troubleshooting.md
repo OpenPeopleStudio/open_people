@@ -536,7 +536,7 @@ console.log('Domain record:', data);
 
 ```typescript
 // Check R2 credentials
-console.log('R2 Account:', process.env.R2_ACCOUNT_ID ? 'Set' : 'Missing');
+console.log('R2 Account:', process.env.CLOUDFLARE_ACCOUNT_ID ? 'Set' : 'Missing');
 console.log('R2 Key:', process.env.R2_ACCESS_KEY_ID ? 'Set' : 'Missing');
 
 // Test connection

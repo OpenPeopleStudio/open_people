@@ -17,7 +17,7 @@ export async function DELETE(request: Request) {
 
   // Check owner/admin role for deleting users
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -36,7 +36,7 @@ export async function DELETE(request: Request) {
 
     // Check target user exists and is not owner
     const { data: targetProfile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role, full_name')
       .eq('id', userId)
     .eq('tenant_id', tenant?.id)
@@ -92,7 +92,7 @@ export async function DELETE(request: Request) {
     
     // 9. Delete the profile
     const { error: profileError } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .delete()
       .eq('id', userId)
       .eq('tenant_id', tenant?.id)
@@ -155,7 +155,7 @@ export async function POST(request: Request) {
 
   // Check owner role for inviting users
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -265,7 +265,7 @@ export async function POST(request: Request) {
 
     if (invitedUserId) {
       const { error: updateError } = await adminClient
-        .from('709_profiles')
+        .from('profiles')
         .update({ role, tenant_id: tenant?.id })
         .eq('id', invitedUserId)
       if (updateError) {
@@ -308,7 +308,7 @@ export async function PATCH(request: Request) {
 
   // Check owner role for changing roles
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .eq('tenant_id', tenant?.id)
@@ -323,7 +323,7 @@ export async function PATCH(request: Request) {
 
     // Can't change owner role
     const { data: targetProfile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role')
       .eq('id', userId)
     .eq('tenant_id', tenant?.id)
@@ -335,7 +335,7 @@ export async function PATCH(request: Request) {
 
     // Update role
     const { error } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .update({ role })
       .eq('id', userId)
       .eq('tenant_id', tenant?.id)

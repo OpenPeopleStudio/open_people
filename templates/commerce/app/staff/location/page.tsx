@@ -12,7 +12,7 @@ export default async function StaffLocationPage() {
   }
 
   const { data: profile } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('role, full_name')
     .eq('id', user.id)
     .single()

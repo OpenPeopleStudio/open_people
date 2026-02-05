@@ -5,7 +5,7 @@ begin
   end if;
 end $$;
 
-create table if not exists "709_profiles" (
+create table if not exists "profiles" (
   id uuid primary key references auth.users on delete cascade,
   role user_role default 'customer',
   full_name text,

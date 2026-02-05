@@ -1,5 +1,5 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { parseWebhookEvent, mapWebhookEventToStatus } from "@/lib/email/resend";
+import { createResendClient, parseWebhookEvent, mapWebhookEventToStatus } from "@/lib/email/resend";
 import { NextRequest, NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -9,18 +9,35 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify webhook signature (in production, verify with Resend's signing secret)
     const webhookSecret = process.env.RESEND_WEBHOOK_SECRET;
+    const signature = request.headers.get("svix-signature");
+    const payload = await request.text();
+
     if (webhookSecret) {
-      const signature = request.headers.get("svix-signature");
-      // TODO: Implement proper signature verification
       if (!signature) {
         console.warn("Missing webhook signature");
+        return NextResponse.json({ error: "Missing webhook signature" }, { status: 401 });
+      }
+
+      try {
+        const resend = createResendClient();
+        resend.webhooks.verify({
+          payload,
+          headers: {
+            id: request.headers.get("svix-id") || "",
+            timestamp: request.headers.get("svix-timestamp") || "",
+            signature,
+          },
+          webhookSecret,
+        });
+      } catch (error) {
+        console.error("Invalid webhook signature:", error);
+        return NextResponse.json({ error: "Invalid webhook signature" }, { status: 400 });
       }
     }
 
-    const payload = await request.json();
-    const event = parseWebhookEvent(payload);
+    const parsedPayload = JSON.parse(payload);
+    const event = parseWebhookEvent(parsedPayload);
 
     if (!event) {
       return NextResponse.json({ error: "Invalid webhook payload" }, { status: 400 });

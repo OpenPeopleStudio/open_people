@@ -63,8 +63,10 @@ export function createResponseWithCorrelationId(
 /**
  * Middleware to handle correlation IDs
  */
-export function withCorrelationId(handler: Function) {
-  return async (request: NextRequest, ...args: any[]) => {
+type CorrelationHandler = (request: NextRequest, ...args: unknown[]) => Promise<unknown>;
+
+export function withCorrelationId(handler: CorrelationHandler) {
+  return async (request: NextRequest, ...args: unknown[]) => {
     const correlationId = getCorrelationIdFromRequest(request);
 
     // Set correlation ID in request context

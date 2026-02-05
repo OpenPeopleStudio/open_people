@@ -3,34 +3,65 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  withAuthentication,
-  withRole,
-  withPermission,
-  withTenantAccess,
-  withAuthAndAuthZ,
-  UserRole,
-  Permission,
-} from '@/lib/auth/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import { beforeAll } from 'vitest';
+
+let withAuthentication: typeof import('@/lib/auth/middleware').withAuthentication;
+let withRole: typeof import('@/lib/auth/middleware').withRole;
+let withPermission: typeof import('@/lib/auth/middleware').withPermission;
+let withTenantAccess: typeof import('@/lib/auth/middleware').withTenantAccess;
+let withAuthAndAuthZ: typeof import('@/lib/auth/middleware').withAuthAndAuthZ;
+let UserRole: typeof import('@/lib/auth/middleware').UserRole;
+let Permission: typeof import('@/lib/auth/middleware').Permission;
 
 // Mock the auth functions
-vi.mock('@/lib/auth/auth', () => ({
-  authenticateUser: vi.fn(),
-  requireAuth: vi.fn(),
-}));
+vi.mock('@/lib/auth/auth', async () => {
+  const { NextResponse } = await import('next/server');
+  const authenticateUser = vi.fn();
+  const requireAuth = vi.fn();
+  const withAuth = (handler: any) => async (request: NextRequest, ...args: any[]) => {
+    const auth = await authenticateUser(request);
+    if (!auth) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+    try {
+      return await handler(auth, request, ...args);
+    } catch {
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+  };
+  return {
+    authenticateUser,
+    requireAuth,
+    withAuth,
+  };
+});
 
-vi.mock('@/lib/auth/authorization', () => ({
-  requirePermission: vi.fn(),
-  requireRole: vi.fn(),
-  requireTenantAccess: vi.fn(),
-  requireAuth: vi.fn(),
-}));
+vi.mock('@/lib/auth/authorization', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return {
+    ...actual,
+    requirePermission: vi.fn(),
+    requireRole: vi.fn(),
+    requireTenantAccess: vi.fn(),
+    requireAuth: vi.fn(),
+  };
+});
 
 import { authenticateUser, requireAuth } from '@/lib/auth/auth';
 import { requireAuth as requireAuthZ } from '@/lib/auth/authorization';
 
 describe('Authentication Middleware', () => {
+  beforeAll(async () => {
+    const mod = await import('@/lib/auth/middleware');
+    withAuthentication = mod.withAuthentication;
+    withRole = mod.withRole;
+    withPermission = mod.withPermission;
+    withTenantAccess = mod.withTenantAccess;
+    withAuthAndAuthZ = mod.withAuthAndAuthZ;
+    UserRole = mod.UserRole;
+    Permission = mod.Permission;
+  });
   const mockAuthResult = {
     user: {
       id: 'user-123',
@@ -111,7 +142,7 @@ describe('Authentication Middleware', () => {
     it('should deny access for users without correct role', async () => {
       const authZMiddleware = vi.fn().mockResolvedValue(NextResponse.json({ error: 'Forbidden' }, { status: 403 }));
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockReturnValue(authZMiddleware);
+      (requireAuthZ as any).mockReturnValue(() => authZMiddleware);
 
       const mockHandler = vi.fn();
       const wrappedHandler = withRole(UserRole.ADMIN)(mockHandler);
@@ -126,7 +157,10 @@ describe('Authentication Middleware', () => {
   describe('withPermission', () => {
     it('should allow access for users with correct permission', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((_requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((_requirements: any) => {
+        void _requirements;
+        return (handler: any) => handler;
+      });
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withPermission(Permission.NOTES_READ)(mockHandler);
@@ -143,7 +177,10 @@ describe('Authentication Middleware', () => {
   describe('withTenantAccess', () => {
     it('should allow access for users in correct tenant', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockImplementation((_requirements: any) => (handler: any) => handler);
+      (requireAuthZ as any).mockImplementation((_requirements: any) => {
+        void _requirements;
+        return (handler: any) => handler;
+      });
 
       const mockHandler = vi.fn().mockResolvedValue({ success: true });
       const wrappedHandler = withTenantAccess('tenant-456')(mockHandler);
@@ -198,7 +235,7 @@ describe('Authentication Middleware', () => {
 
     it('should handle authorization failures', async () => {
       (requireAuth as any).mockResolvedValue(mockAuthResult);
-      (requireAuthZ as any).mockReturnValue(() =>
+      (requireAuthZ as any).mockReturnValue(() => async () =>
         NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       );
 

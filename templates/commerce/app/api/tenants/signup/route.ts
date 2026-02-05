@@ -153,7 +153,7 @@ export async function POST(request: Request) {
   }
 
   const { error: profileError } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .update({
       role: 'owner',
       tenant_id: tenant.id,

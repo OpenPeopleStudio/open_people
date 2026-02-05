@@ -723,103 +723,122 @@ alter table kb_pii_chunk_detections enable row level security;
 alter table kb_pii_policies enable row level security;
 
 -- Service role full access
+drop policy if exists "Service role full access to kb_source_connectors" on kb_source_connectors;
 create policy "Service role full access to kb_source_connectors"
   on kb_source_connectors for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_document_lineage" on kb_document_lineage;
 create policy "Service role full access to kb_document_lineage"
   on kb_document_lineage for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_chunk_lineage" on kb_chunk_lineage;
 create policy "Service role full access to kb_chunk_lineage"
   on kb_chunk_lineage for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_retrieval_sessions" on kb_retrieval_sessions;
 create policy "Service role full access to kb_retrieval_sessions"
   on kb_retrieval_sessions for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_retrieval_results" on kb_retrieval_results;
 create policy "Service role full access to kb_retrieval_results"
   on kb_retrieval_results for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_retrieval_result_chunks" on kb_retrieval_result_chunks;
 create policy "Service role full access to kb_retrieval_result_chunks"
   on kb_retrieval_result_chunks for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_retrieval_feedback" on kb_retrieval_feedback;
 create policy "Service role full access to kb_retrieval_feedback"
   on kb_retrieval_feedback for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_eval_test_sets" on kb_eval_test_sets;
 create policy "Service role full access to kb_eval_test_sets"
   on kb_eval_test_sets for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_eval_test_cases" on kb_eval_test_cases;
 create policy "Service role full access to kb_eval_test_cases"
   on kb_eval_test_cases for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_eval_runs" on kb_eval_runs;
 create policy "Service role full access to kb_eval_runs"
   on kb_eval_runs for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_eval_case_results" on kb_eval_case_results;
 create policy "Service role full access to kb_eval_case_results"
   on kb_eval_case_results for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_pii_scan_results" on kb_pii_scan_results;
 create policy "Service role full access to kb_pii_scan_results"
   on kb_pii_scan_results for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_pii_chunk_detections" on kb_pii_chunk_detections;
 create policy "Service role full access to kb_pii_chunk_detections"
   on kb_pii_chunk_detections for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
+drop policy if exists "Service role full access to kb_pii_policies" on kb_pii_policies;
 create policy "Service role full access to kb_pii_policies"
   on kb_pii_policies for all
   using (auth.jwt() ->> 'role' = 'service_role');
 
 -- Tenant access policies
+drop policy if exists "Tenant access to source connectors" on kb_source_connectors;
 create policy "Tenant access to source connectors"
   on kb_source_connectors for all
   using (
     tenant_id = (
-      select p.tenant_id from "709_profiles" p 
+      select p.tenant_id from "profiles" p 
       where p.id = auth.uid() and p.role in ('admin', 'owner')
     )
   );
 
+drop policy if exists "Tenant access to retrieval sessions" on kb_retrieval_sessions;
 create policy "Tenant access to retrieval sessions"
   on kb_retrieval_sessions for select
   using (
     tenant_id = (
-      select p.tenant_id from "709_profiles" p where p.id = auth.uid()
+      select p.tenant_id from "profiles" p where p.id = auth.uid()
     )
     or user_id = auth.uid()
   );
 
+drop policy if exists "Tenant access to retrieval results" on kb_retrieval_results;
 create policy "Tenant access to retrieval results"
   on kb_retrieval_results for select
   using (
     tenant_id = (
-      select p.tenant_id from "709_profiles" p where p.id = auth.uid()
+      select p.tenant_id from "profiles" p where p.id = auth.uid()
     )
   );
 
+drop policy if exists "Tenant access to eval test sets" on kb_eval_test_sets;
 create policy "Tenant access to eval test sets"
   on kb_eval_test_sets for all
   using (
     tenant_id = (
-      select p.tenant_id from "709_profiles" p 
+      select p.tenant_id from "profiles" p 
       where p.id = auth.uid() and p.role in ('admin', 'owner')
     )
   );
 
+drop policy if exists "Tenant access to PII policies" on kb_pii_policies;
 create policy "Tenant access to PII policies"
   on kb_pii_policies for all
   using (
     tenant_id = (
-      select p.tenant_id from "709_profiles" p 
+      select p.tenant_id from "profiles" p 
       where p.id = auth.uid() and p.role in ('admin', 'owner')
     )
   );

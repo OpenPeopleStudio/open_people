@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
     // Check if user is super-admin
     const { data: profile, error: profileError } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single();

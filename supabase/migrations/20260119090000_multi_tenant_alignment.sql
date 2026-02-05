@@ -67,8 +67,8 @@ alter table public.profiles add column if not exists updated_at timestamptz defa
 -- Enable RLS
 alter table public.profiles enable row level security;
 
--- 2) Create compatibility view "709_profiles" pointing to profiles
---    (code/RLS helpers that reference "709_profiles" will still work)
+-- 2) Create compatibility view "profiles" pointing to profiles
+--    (code/RLS helpers that reference "profiles" will still work)
 --    First drop table if it exists, then create view
 do $$
 declare
@@ -77,39 +77,39 @@ declare
   v_has_avatar_url boolean;
   v_sql text;
 begin
-  -- Check if 709_profiles is a table (not a view)
+  -- Check if profiles is a table (not a view)
   if exists (
     select 1 from pg_class c
     join pg_namespace n on n.oid = c.relnamespace
-    where n.nspname = 'public' and c.relname = '709_profiles' and c.relkind = 'r'
+    where n.nspname = 'public' and c.relname = 'profiles' and c.relkind = 'r'
   ) then
-    -- Check which columns exist in 709_profiles
-    select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = '709_profiles' and column_name = 'email') into v_has_email;
-    select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = '709_profiles' and column_name = 'full_name') into v_has_full_name;
-    select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = '709_profiles' and column_name = 'avatar_url') into v_has_avatar_url;
+    -- Check which columns exist in profiles
+    select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'profiles' and column_name = 'email') into v_has_email;
+    select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'profiles' and column_name = 'full_name') into v_has_full_name;
+    select exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'profiles' and column_name = 'avatar_url') into v_has_avatar_url;
 
-    -- Migrate data from 709_profiles table to profiles before dropping
+    -- Migrate data from profiles table to profiles before dropping
     -- Only copy id, tenant_id, role (guaranteed to exist) plus any optional columns
     insert into public.profiles (id, tenant_id, role)
     select id, tenant_id, role::text
-    from public."709_profiles"
+    from public."profiles"
     on conflict (id) do update
       set tenant_id = excluded.tenant_id,
           role = excluded.role;
 
     -- Drop the table
-    drop table public."709_profiles" cascade;
+    drop table public."profiles" cascade;
   elsif exists (
     select 1 from pg_class c
     join pg_namespace n on n.oid = c.relnamespace
-    where n.nspname = 'public' and c.relname = '709_profiles' and c.relkind = 'v'
+    where n.nspname = 'public' and c.relname = 'profiles' and c.relkind = 'v'
   ) then
     -- It's already a view, drop it to recreate
-    drop view public."709_profiles" cascade;
+    drop view public."profiles" cascade;
   end if;
 end $$;
 
-create or replace view public."709_profiles" as
+create or replace view public."profiles" as
 select
   id,
   tenant_id,

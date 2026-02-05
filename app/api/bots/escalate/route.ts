@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     if (user) {
       // Get tenant from user profile
       const { data: profile } = await supabase
-        .from("709_profiles")
+        .from("profiles")
         .select("tenant_id")
         .eq("id", user.id)
         .single();
@@ -194,7 +194,7 @@ export async function GET(req: NextRequest) {
 
     // Get tenant
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

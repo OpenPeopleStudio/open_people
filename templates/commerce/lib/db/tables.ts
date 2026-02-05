@@ -11,8 +11,8 @@
  */
 
 // User-related tables
-// Change these from '709_profiles' to 'profiles' after running the migration
-export const PROFILES_TABLE = '709_profiles' as const
+// Change these from 'profiles' to 'profiles' after running the migration
+export const PROFILES_TABLE = 'profiles' as const
 export const VERIFIED_CONTACTS_TABLE = '709_verified_contacts' as const
 
 // Alias for backwards compatibility

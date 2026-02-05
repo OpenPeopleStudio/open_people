@@ -26,7 +26,7 @@ Sentry.init({
   ],
 
   // Before send hook to add context
-  beforeSend(event, hint) {
+  beforeSend(event) {
     // Add correlation ID if available
     if (typeof window !== 'undefined') {
       const cookieMatch = document.cookie.match(/(?:^|; )correlation-id=([^;]+)/);

@@ -89,6 +89,47 @@ Escalation:
 - Rollback plan documented
 - Monitoring/alerts verified
 
+## Contract Ownership (source of truth)
+
+Each API surface must publish and maintain:
+
+- **Contract doc**: endpoints, request/response schemas, error shapes, auth requirements.
+- **Versioning policy**: how breaking changes are handled and communicated.
+- **Integration notes**: rate limits, pagination, idempotency, retries.
+- **Test artifacts**: contract tests + sample payloads (fixtures) for critical endpoints.
+
+Primary artifact locations:
+- API docs: `docs/api/*`
+- Contract tests: `__tests__/contracts/*` (OpenAPI or direct route tests)
+- Schemas: `lib/schemas/*` (when available)
+
+## Contract Testing Expectations
+
+For each critical endpoint, include:
+
+- **Schema validation**: request + response (including error payloads).
+- **Auth coverage**: unauthenticated, insufficient role, correct role.
+- **Tenant isolation**: cross-tenant access returns 404/403.
+- **Pagination/filters**: happy path + edge cases (empty, large, bad inputs).
+- **Idempotency**: if applicable (e.g., webhook retries, PUT/PATCH).
+
+Minimum bar: at least 1 contract test per critical endpoint, plus auth/tenant isolation coverage.
+
+## Integration Checklist (before merge)
+
+- Route is tenant-scoped (explicit `tenant_id` guard).
+- Error responses use the documented shape.
+- Rate limits documented or enforced where needed.
+- Logs exclude PII and secrets.
+- Docs updated with request/response examples.
+- Contract tests added/updated.
+
+## Versioning & Deprecation
+
+- **Breaking changes** require a new versioned path or explicit deprecation window.
+- **Deprecation window**: minimum 30 days unless CTO waives for security.
+- **Client compatibility**: provide migration notes and sample payload diffs.
+
 ## Approval Matrix (single source of truth)
 
 - Breaking change: CTO approval required
@@ -120,13 +161,36 @@ Escalation:
 
 ## First API Pods (initial)
 
-## First API Pods (initial)
-
 - Email API — Owner: Claude — Backup: Lisa
 - Vault API — Owner: Mr Robot — Backup: Linus
 - Ops API — Owner: Linus — Backup: Mr Robot
 - Tenant/Core API (auth + tenant mgmt) — Owner: Sam — Backup: Coder
 - Admin/UI API (tenant admin workflows) — Owner: Lisa — Backup: Coder
+
+## Admin/UI API Scope + UX Constraints
+
+Scope (tenant admin only):
+- Tenant-admin UI workflows + the APIs that power them.
+- Admin workspace data-read patterns (dashboard, inbox, settings, notes, workflows).
+- Cross-module navigation + shared UI components in tenant admin.
+- UX state management for admin flows (loading, error, permissions, empty states).
+
+Out of scope:
+- Super-admin surfaces (`/app/super-admin/*`) and their APIs.
+- Core tenant/auth resolution (`lib/tenant`, `middleware.ts`) — Tenant/Core API.
+- Email sync/worker pipelines — Email API.
+- Storage and vault encryption internals — Vault API.
+
+UX constraints (non-negotiables):
+- Tenant isolation must be visible; errors never hint at cross-tenant data.
+- Permissions are explicit (admin-only affordances, read-only member states).
+- AI suggestions labeled as AI-origin with safe fallbacks.
+- Safe-by-default errors: no PII in UI toasts/logs.
+
+Coordination rules:
+- Auth/tenant routing changes require CTO approval.
+- Email/webhook ingestion changes require Email API owner review.
+- UI changes affecting audit/logging or PII require Mr Robot review.
 
 ## Autonomy Placement (initial)
 
@@ -146,3 +210,12 @@ Escalation:
 - Performance-only changes (index, query tweak): Level 2+ can ship if no schema changes.
 - Schema change with migration: CTO approval + rollback notes required.
 - Update documentation/runbooks: any level can ship without approval.
+
+## Example Contract Test (template)
+
+For a `GET /api/foo/[id]` endpoint:
+
+- Valid ID returns 200 with expected shape.
+- Missing auth returns 401.
+- Cross-tenant ID returns 404/403.
+- Invalid ID returns 400 with error shape.

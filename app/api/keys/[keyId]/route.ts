@@ -9,10 +9,13 @@ import { updateApiKeySchema } from "@/lib/schemas/api-keys";
    Get a specific API key with usage history
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: NextRequest, context: any) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ keyId: string }> }
+) {
   void request;
   try {
-    const { keyId } = context.params;
+    const { keyId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -62,9 +65,12 @@ export async function GET(request: NextRequest, context: any) {
    Update an API key
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(request: NextRequest, context: any) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ keyId: string }> }
+) {
   try {
-    const { keyId } = context.params;
+    const { keyId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user
@@ -158,10 +164,13 @@ export async function PATCH(request: NextRequest, context: any) {
    Delete an API key
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(request: NextRequest, context: any) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ keyId: string }> }
+) {
   void request;
   try {
-    const { keyId } = context.params;
+    const { keyId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

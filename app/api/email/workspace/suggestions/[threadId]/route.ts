@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { emailWorkspace } from "@/lib/email/workspace";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Workspace Suggestions API
@@ -8,7 +8,11 @@ import { NextResponse } from "next/server";
    POST /api/email/workspace/suggestions/[threadId] - Use a suggestion
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(request: Request, context: any) {
+type RouteContext = { params: Promise<{ threadId: string }> };
+type AdminRole = "owner" | "admin" | "super_admin";
+const ADMIN_ROLES: AdminRole[] = ["owner", "admin", "super_admin"];
+
+export async function GET(request: NextRequest, context: RouteContext) {
   void request;
   try {
     const supabase = createClient();
@@ -18,12 +22,12 @@ export async function GET(request: Request, context: any) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { threadId } = context.params;
+    const { threadId } = await context.params;
 
     // Verify user has access to the thread
     const { data: thread } = await supabase
       .from("email_threads")
-      .select("tenant_id")
+      .select("tenant_id, ai_summary, ai_intent, ai_sentiment, ai_priority_score, ai_processed_at")
       .eq("id", threadId)
       .single();
 
@@ -34,17 +38,29 @@ export async function GET(request: Request, context: any) {
     // Check if user belongs to the tenant
     const { data: profile } = await supabase
       .from("profiles")
-      .select("tenant_id")
+      .select("tenant_id, role")
       .eq("id", user.id)
       .single();
 
     if (!profile || profile.tenant_id !== thread.tenant_id) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
+    if (!profile.role || !ADMIN_ROLES.includes(profile.role as AdminRole)) {
+      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    }
 
     const suggestions = await emailWorkspace.getThreadSuggestions(threadId);
 
-    return NextResponse.json({ suggestions });
+    return NextResponse.json({
+      suggestions,
+      thread: {
+        ai_summary: thread.ai_summary,
+        ai_intent: thread.ai_intent,
+        ai_sentiment: thread.ai_sentiment,
+        ai_priority_score: thread.ai_priority_score,
+        ai_processed_at: thread.ai_processed_at,
+      },
+    });
   } catch (error) {
     console.error("Get suggestions error:", error);
     return NextResponse.json(
@@ -54,7 +70,7 @@ export async function GET(request: Request, context: any) {
   }
 }
 
-export async function POST(request: Request, context: any) {
+export async function POST(request: NextRequest, context: RouteContext) {
   try {
     const supabase = createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -63,7 +79,7 @@ export async function POST(request: Request, context: any) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { threadId } = context.params;
+    const { threadId } = await context.params;
     const body = await request.json();
     const { suggestion_id } = body;
 
@@ -88,12 +104,15 @@ export async function POST(request: Request, context: any) {
     // Check if user belongs to the tenant
     const { data: profile } = await supabase
       .from("profiles")
-      .select("tenant_id")
+      .select("tenant_id, role")
       .eq("id", user.id)
       .single();
 
     if (!profile || profile.tenant_id !== thread.tenant_id) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+    if (!profile.role || !ADMIN_ROLES.includes(profile.role as AdminRole)) {
+      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     }
 
     const success = await emailWorkspace.useSuggestion(suggestion_id);

@@ -57,14 +57,14 @@ create policy "Admins can manage shipping methods"
 on shipping_methods for all
 using (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )
 )
 with check (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )
@@ -78,14 +78,14 @@ create policy "Admins can manage local delivery zones"
 on local_delivery_zones for all
 using (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )
 )
 with check (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )

@@ -1,5 +1,6 @@
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { logPerformance } from "@/lib/observability/logger";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Email Inbox API
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -104,12 +105,29 @@ export async function GET(request: NextRequest) {
       query = query.or(`subject.ilike.%${search}%,from_address.ilike.%${search}%,body_preview.ilike.%${search}%`);
     }
 
+    const startTime = Date.now();
     const { data: messages, count, error } = await query;
+    const durationMs = Date.now() - startTime;
 
     if (error) {
       console.error("List inbox error:", error);
       return NextResponse.json({ error: "Failed to list messages" }, { status: 500 });
     }
+
+    const messageCount = (messages || []).length;
+    logPerformance("email_inbox_list_duration", durationMs, "ms", {
+      success: "true",
+      mailbox: mailbox || "INBOX",
+      direction: direction || "any",
+      status: status || "any",
+      has_search: search ? "true" : "false",
+      unread_only: unreadOnly ? "true" : "false",
+      starred_only: starredOnly ? "true" : "false",
+    });
+    logPerformance("email_inbox_list_count", messageCount, "count", {
+      status: status || "any",
+      mailbox: mailbox || "INBOX",
+    });
 
     return NextResponse.json({
       messages: (messages || []).map((msg) => ({

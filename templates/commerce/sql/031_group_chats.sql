@@ -8,7 +8,7 @@ CREATE POLICY "Admins can view all messages"
 ON messages FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
   )
@@ -19,7 +19,7 @@ CREATE POLICY "Admins can send messages"
 ON messages FOR INSERT
 WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
   )
@@ -31,7 +31,7 @@ CREATE POLICY "Admins can update messages"
 ON messages FOR UPDATE
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
   )
@@ -93,7 +93,7 @@ CREATE POLICY "Staff can create chat threads"
 ON chat_threads FOR INSERT
 WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
     AND tenant_id = chat_threads.tenant_id
@@ -118,7 +118,7 @@ CREATE POLICY "Staff can add chat members"
 ON chat_members FOR INSERT
 WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "709_profiles" AS actor
+    SELECT 1 FROM "profiles" AS actor
     WHERE actor.id = auth.uid()
     AND actor.role IN ('staff', 'admin', 'owner')
   )
@@ -126,14 +126,14 @@ WITH CHECK (
     SELECT 1 FROM chat_threads
     WHERE chat_threads.id = chat_members.thread_id
     AND chat_threads.tenant_id = (
-      SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid()
+      SELECT tenant_id FROM "profiles" WHERE id = auth.uid()
     )
   )
   AND EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = chat_members.user_id
     AND tenant_id = (
-      SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid()
+      SELECT tenant_id FROM "profiles" WHERE id = auth.uid()
     )
     AND role IN ('staff', 'admin', 'owner')
   )

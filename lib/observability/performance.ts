@@ -269,14 +269,14 @@ export function measureSync<T>(
 /**
  * Create a performance monitoring wrapper for database operations
  */
-export function withDatabaseMonitoring<T extends any[], R>(
+export function withDatabaseMonitoring<T extends unknown[], R>(
   operation: string,
   fn: (...args: T) => Promise<R>
 ) {
   return async (...args: T): Promise<R> => {
     void operation;
     const startTime = Date.now();
-    let queryCount = 0;
+    const queryCount = 0;
 
     // This is a simplified example - in reality you'd need to instrument
     // the database client to count actual queries
@@ -306,7 +306,7 @@ export function withDatabaseMonitoring<T extends any[], R>(
 /**
  * Create a performance monitoring wrapper for API calls
  */
-export function withAPIMonitoring<T extends any[], R>(
+export function withAPIMonitoring<T extends unknown[], R>(
   endpoint: string,
   method: string,
   fn: (...args: T) => Promise<R>

@@ -15,7 +15,7 @@ USING (
   customer_id = auth.uid()
   AND (
     tenant_id IS NULL 
-    OR tenant_id = (SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid())
+    OR tenant_id = (SELECT tenant_id FROM "profiles" WHERE id = auth.uid())
   )
 );
 
@@ -27,7 +27,7 @@ WITH CHECK (
   AND sender_type = 'customer'
   AND (
     tenant_id IS NULL 
-    OR tenant_id = (SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid())
+    OR tenant_id = (SELECT tenant_id FROM "profiles" WHERE id = auth.uid())
   )
   AND EXISTS (
     SELECT 1 FROM orders
@@ -35,7 +35,7 @@ WITH CHECK (
     AND status IN ('pending', 'paid', 'fulfilled', 'shipped')
     AND (
       tenant_id IS NULL 
-      OR tenant_id = (SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid())
+      OR tenant_id = (SELECT tenant_id FROM "profiles" WHERE id = auth.uid())
     )
   )
 );
@@ -47,7 +47,7 @@ USING (
   customer_id = auth.uid()
   AND (
     tenant_id IS NULL 
-    OR tenant_id = (SELECT tenant_id FROM "709_profiles" WHERE id = auth.uid())
+    OR tenant_id = (SELECT tenant_id FROM "profiles" WHERE id = auth.uid())
   )
 );
 
@@ -56,7 +56,7 @@ CREATE POLICY "Admins can view all messages"
 ON messages FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
     AND (
@@ -72,7 +72,7 @@ ON messages FOR INSERT
 WITH CHECK (
   sender_type = 'admin'
   AND EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
     AND (
@@ -87,7 +87,7 @@ CREATE POLICY "Admins can update messages"
 ON messages FOR UPDATE
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('staff', 'admin', 'owner')
     AND (

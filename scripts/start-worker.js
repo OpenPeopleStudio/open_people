@@ -11,8 +11,6 @@ const { Queue, Worker, QueueEvents } = require('bullmq');
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const connection = { connection: { url: redisUrl } };
 
-const queues = ['ai-analysis', 'thumbnail', 'notifications'];
-
 function createQueue(name, handler, opts = {}) {
   const queue = new Queue(name, connection);
   const events = new QueueEvents(name, connection);

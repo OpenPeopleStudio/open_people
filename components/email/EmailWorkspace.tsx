@@ -69,6 +69,21 @@ export function EmailWorkspace({
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const selectedAccount = accounts.find(a => a.id === selectedAccountId);
+  const connectionStatus = (() => {
+    if (!selectedAccount) {
+      return { label: "All accounts", tone: "muted" as const };
+    }
+    if (!selectedAccount.is_active) {
+      return { label: "Inactive", tone: "muted" as const };
+    }
+    if (selectedAccount.last_sync_error) {
+      return { label: "Sync issue", tone: "error" as const };
+    }
+    return { label: "Connected", tone: "success" as const };
+  })();
+  const lastSyncLabel = selectedAccount?.last_sync_at
+    ? `Last sync ${new Date(selectedAccount.last_sync_at).toLocaleString()}`
+    : "Not synced yet";
 
   // Lock body scroll when mobile nav is open
   useEffect(() => {
@@ -172,6 +187,8 @@ export function EmailWorkspace({
 
   const handleMessageSelect = async (message: EmailMessage) => {
     setSelectedMessage(message);
+    setShowCompose(false);
+    setReplyTo(null);
     
     // Mark as read if not already
     if (!message.is_read) {
@@ -195,6 +212,7 @@ export function EmailWorkspace({
   const handleReply = (message: EmailMessage) => {
     setReplyTo(message);
     setShowCompose(true);
+    setSelectedMessage(null);
   };
 
   const handleComposeSent = () => {
@@ -281,6 +299,8 @@ export function EmailWorkspace({
         <button
           onClick={() => {
             setShowCompose(true);
+            setSelectedMessage(null);
+            setReplyTo(null);
             if (isMobile) setMobileNavOpen(false);
           }}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[var(--electric-lime)] text-[var(--void)] font-medium text-sm hover:opacity-90 transition-opacity"
@@ -323,7 +343,8 @@ export function EmailWorkspace({
               setSelectedMessage(null);
               if (isMobile) setMobileNavOpen(false);
             }}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+            aria-current={currentView === item.id ? "page" : undefined}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--electric-lime)] ${
               currentView === item.id
                 ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
                 : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)]"
@@ -353,7 +374,8 @@ export function EmailWorkspace({
               setSelectedMessage(null);
               if (isMobile) setMobileNavOpen(false);
             }}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+            aria-current={currentView === item.id ? "page" : undefined}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--electric-lime)] ${
               currentView === item.id
                 ? "bg-[var(--electric-lime)]/10 text-[var(--electric-lime)]"
                 : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-1)]"
@@ -419,7 +441,11 @@ export function EmailWorkspace({
         </button>
         <span className="text-sm font-semibold text-[var(--text-primary)]">{getViewTitle()}</span>
         <button
-          onClick={() => setShowCompose(true)}
+          onClick={() => {
+            setShowCompose(true);
+            setSelectedMessage(null);
+            setReplyTo(null);
+          }}
           aria-label="Compose message"
           className="p-2 -mr-2 rounded-lg text-[var(--electric-lime)] hover:bg-[var(--surface-1)]"
         >
@@ -454,7 +480,39 @@ export function EmailWorkspace({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--border-subtle)] bg-[var(--void)]">
+          <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+            <span
+              className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-[var(--border-subtle)] ${
+                connectionStatus.tone === "error"
+                  ? "text-[var(--error)]"
+                  : connectionStatus.tone === "success"
+                    ? "text-[var(--success)]"
+                    : "text-[var(--text-muted)]"
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  connectionStatus.tone === "error"
+                    ? "bg-[var(--error)]"
+                    : connectionStatus.tone === "success"
+                      ? "bg-[var(--success)]"
+                      : "bg-[var(--text-muted)]"
+                }`}
+              />
+              {connectionStatus.label}
+            </span>
+            <span className="hidden sm:inline">{lastSyncLabel}</span>
+          </div>
+          {selectedAccount?.last_sync_error && (
+            <span className="text-xs text-[var(--error)] truncate max-w-[50%]">
+              {selectedAccount.last_sync_error}
+            </span>
+          )}
+        </div>
+
+        <div className="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
         {/* Settings View takes full width */}
         {currentView === "settings" ? (
           <SettingsView
@@ -475,7 +533,7 @@ export function EmailWorkspace({
         ) : (
           <>
             {/* Message List / Settings View */}
-            <div className={`${selectedMessage ? "hidden md:flex md:w-2/5" : "flex-1"} border-r border-[var(--border-subtle)] flex flex-col min-h-0`}>
+            <div className={`${selectedMessage || showCompose ? "hidden md:flex md:w-2/5" : "flex-1"} border-r border-[var(--border-subtle)] flex flex-col min-h-0`}>
               {currentView === "templates" ? (
                 <TemplatesManager
                   templates={templates}
@@ -498,6 +556,12 @@ export function EmailWorkspace({
                   onSelectMessage={handleMessageSelect}
                   onStar={handleStar}
                   viewType={currentView}
+                  onCompose={() => {
+                    setShowCompose(true);
+                    setSelectedMessage(null);
+                    setReplyTo(null);
+                  }}
+                  accountLabel={selectedAccount ? selectedAccount.name : "All accounts"}
                 />
               )}
             </div>
@@ -514,24 +578,27 @@ export function EmailWorkspace({
                 />
               </div>
             )}
+
+            {showCompose && (
+              <div className="flex-1 flex flex-col min-h-0 p-4">
+                <ComposeModal
+                  accounts={accounts}
+                  selectedAccountId={selectedAccountId}
+                  replyTo={replyTo}
+                  templates={templates}
+                  variant="inline"
+                  onClose={() => {
+                    setShowCompose(false);
+                    setReplyTo(null);
+                  }}
+                  onSent={handleComposeSent}
+                />
+              </div>
+            )}
           </>
         )}
+        </div>
       </div>
-
-      {/* Compose Modal */}
-      {showCompose && (
-        <ComposeModal
-          accounts={accounts}
-          selectedAccountId={selectedAccountId}
-          replyTo={replyTo}
-          templates={templates}
-          onClose={() => {
-            setShowCompose(false);
-            setReplyTo(null);
-          }}
-          onSent={handleComposeSent}
-        />
-      )}
     </div>
   );
 }

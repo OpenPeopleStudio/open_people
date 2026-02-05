@@ -3,6 +3,14 @@ import { generateManagedDNSRecords, type DNSRecord } from "@/types/email";
 import { verifyDomain, checkDomainStatus } from "@/lib/email/resend";
 import { NextRequest, NextResponse } from "next/server";
 
+type ResendDomainRecord = {
+  name: string;
+  type: string;
+  value?: string;
+  status?: string;
+  priority?: number;
+};
+
 /* ═══════════════════════════════════════════════════════════════════════════
    Managed Email Domains API
    GET    /api/email/domains/managed         - List managed domains
@@ -28,7 +36,7 @@ export async function GET(request: NextRequest) {
     const adminSupabase = await createSupabaseAdmin();
 
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -83,7 +91,7 @@ export async function POST(request: NextRequest) {
     const adminSupabase = await createSupabaseAdmin();
 
     const { data: profile, error: profileError } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -150,7 +158,7 @@ export async function POST(request: NextRequest) {
             return {
               type: r.type as "TXT" | "MX" | "CNAME",
               name: r.name,
-              value: r.value,
+              value: r.value ?? "",
               ...(priority !== undefined ? { priority } : {}),
               status: "pending" as const,
               purpose: ((r as { purpose?: string }).purpose || "verification") as
@@ -221,7 +229,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();
@@ -257,7 +265,7 @@ export async function PUT(request: NextRequest) {
         
         if (resendStatus.records && resendStatus.records.length > 0) {
           // Map Resend records to our format with purposes
-          const refreshedRecords: DNSRecord[] = resendStatus.records.map((r: any) => {
+          const refreshedRecords: DNSRecord[] = (resendStatus.records as ResendDomainRecord[]).map((r) => {
             let purpose = "verification";
             const name = r.name.toLowerCase();
             if (name.includes("_domainkey")) {
@@ -276,7 +284,7 @@ export async function PUT(request: NextRequest) {
             return {
               type: r.type as "TXT" | "MX" | "CNAME",
               name: r.name,
-              value: r.value,
+              value: r.value ?? "",
               ...(priority !== undefined ? { priority } : {}),
               status: r.status === "verified" ? "verified" as const : "pending" as const,
               purpose: purpose as "dkim" | "spf" | "mx" | "return-path" | "verification",
@@ -312,7 +320,7 @@ export async function PUT(request: NextRequest) {
     // Handle verify action
     if (action === "verify") {
       // Check domain verification status with Resend
-      let verificationResult: { verified: boolean; records: any[] } = { verified: false, records: [] };
+      let verificationResult: { verified: boolean; records: ResendDomainRecord[] } = { verified: false, records: [] };
       
       if (domain.resend_domain_id) {
         try {
@@ -329,7 +337,7 @@ export async function PUT(request: NextRequest) {
       // Update DNS record statuses based on verification
       const updatedRecords = (domain.dns_records as DNSRecord[]).map((record) => {
         const resendRecord = verificationResult.records.find(
-          (r: any) => r.type === record.type && r.name === record.name
+          (r) => r.type === record.type && r.name === record.name
         );
         return {
           ...record,
@@ -404,7 +412,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

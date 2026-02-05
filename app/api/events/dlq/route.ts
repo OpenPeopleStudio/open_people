@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     // Get user's profile for tenant context
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role, is_super_admin")
       .eq("id", user.id)
       .single();
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
     // Check admin permissions
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role, is_super_admin")
       .eq("id", user.id)
       .single();
@@ -204,7 +204,7 @@ export async function DELETE(request: NextRequest) {
 
     // Check admin permissions
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role, is_super_admin")
       .eq("id", user.id)
       .single();

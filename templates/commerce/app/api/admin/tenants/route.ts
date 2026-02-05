@@ -250,7 +250,7 @@ export async function POST(request: Request) {
           
           // Update profile with role and tenant
           await adminClient
-            .from('709_profiles')
+            .from('profiles')
             .upsert({
               id: inviteData.user.id,
               role: 'owner',

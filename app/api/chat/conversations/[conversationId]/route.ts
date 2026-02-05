@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -6,9 +6,11 @@ import { createSupabaseServer } from "@/lib/supabase/server";
    Get conversation with messages
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function GET(_request: Request, context: any) {
+type RouteContext = { params: { conversationId: string } | Promise<{ conversationId: string }> };
+
+export async function GET(_request: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = context.params;
+    const { conversationId } = await Promise.resolve(context.params);
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -51,9 +53,9 @@ export async function GET(_request: Request, context: any) {
    Update conversation settings
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function PATCH(request: Request, context: any) {
+export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = context.params;
+    const { conversationId } = await Promise.resolve(context.params);
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -115,9 +117,9 @@ export async function PATCH(request: Request, context: any) {
    Delete conversation
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function DELETE(_request: Request, context: any) {
+export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = context.params;
+    const { conversationId } = await Promise.resolve(context.params);
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();

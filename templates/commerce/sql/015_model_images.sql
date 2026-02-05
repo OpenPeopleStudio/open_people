@@ -27,7 +27,7 @@ create policy "Admins can insert product models"
 on product_models for insert
 with check (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )
@@ -37,7 +37,7 @@ create policy "Admins can update product models"
 on product_models for update
 using (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )
@@ -54,7 +54,7 @@ create policy "Admins can manage model images"
 on model_images for all
 using (
   exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin','owner')
   )

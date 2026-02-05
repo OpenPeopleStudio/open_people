@@ -10,7 +10,7 @@ as $$
 begin
   -- Only allow if user is admin/owner
   if not exists (
-    select 1 from "709_profiles"
+    select 1 from "profiles"
     where id = auth.uid()
     and role in ('admin', 'owner')
   ) then

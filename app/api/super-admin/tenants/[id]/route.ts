@@ -14,7 +14,7 @@ export async function DELETE(request: Request, context: any) {
 
     // Get all users for this tenant
     const { data: profiles } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("id")
       .eq("tenant_id", id);
 

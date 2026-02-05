@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import OpenAI from "openai";
 import { generateEmbedding, extractMemories, summarizeMemory } from "@/lib/ai-chat/memory";
@@ -21,9 +21,11 @@ const openai = new OpenAI({
    Send a message and get AI response
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(request: Request, context: any) {
+type RouteContext = { params: { conversationId: string } | Promise<{ conversationId: string }> };
+
+export async function POST(request: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = context.params;
+    const { conversationId } = await Promise.resolve(context.params);
     const supabase = await createSupabaseServer();
     
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -369,7 +371,7 @@ export async function POST(request: Request, context: any) {
     }
     
     // 13. Extract suggested notes/facts (async but return in response)
-    let suggestions: {
+    const suggestions: {
       notes: { title: string; content: string }[];
       facts: { fact: string; fact_type: string }[];
     } = { notes: [], facts: [] };

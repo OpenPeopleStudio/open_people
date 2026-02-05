@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Workflows Page - Tenant Admin
@@ -41,12 +41,7 @@ export default function WorkflowsPage() {
   const [filterStatus, setFilterStatus] = useState<string>("active");
   const [filterProject, setFilterProject] = useState<string>("");
   
-  useEffect(() => {
-    loadProjects();
-    loadTasks();
-  }, [filterStatus, filterProject]);
-  
-  async function loadProjects() {
+  const loadProjects = useCallback(async () => {
     try {
       const res = await fetch("/api/workflows/projects?include_tasks=true");
       if (res.ok) {
@@ -56,9 +51,9 @@ export default function WorkflowsPage() {
     } catch (err) {
       console.error("Failed to load projects:", err);
     }
-  }
+  }, []);
   
-  async function loadTasks() {
+  const loadTasks = useCallback(async () => {
     try {
       setLoading(true);
       let url = "/api/workflows/tasks?limit=100";
@@ -79,7 +74,12 @@ export default function WorkflowsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [filterStatus, filterProject]);
+
+  useEffect(() => {
+    loadProjects();
+    loadTasks();
+  }, [filterStatus, filterProject, loadProjects, loadTasks]);
   
   async function updateTaskStatus(taskId: string, status: string) {
     try {

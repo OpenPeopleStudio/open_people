@@ -24,7 +24,7 @@ export default function BottomNav() {
       
       if (user) {
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('role')
           .eq('id', user.id)
           .eq('tenant_id', tenantId)
@@ -40,7 +40,7 @@ export default function BottomNav() {
       
       if (session?.user) {
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('role')
           .eq('id', session.user.id)
           .eq('tenant_id', tenantId)

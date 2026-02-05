@@ -14,7 +14,6 @@
  * npm run generate-assets
  */
 
-const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
@@ -26,7 +25,7 @@ console.log('🎨 Generating OpenPeople.ai assets...\n');
 try {
   execSync('convert -version', { stdio: 'pipe' });
   console.log('✅ ImageMagick found');
-} catch (error) {
+} catch {
   console.log('❌ ImageMagick not found. Please install it to generate PNG assets.');
   console.log('   macOS: brew install imagemagick');
   console.log('   Ubuntu: sudo apt-get install imagemagick');
@@ -44,7 +43,7 @@ faviconSizes.forEach(size => {
   try {
     execSync(`convert ${input} -resize ${size}x${size} ${output}`);
     console.log(`   ✅ favicon-${size}x${size}.png`);
-  } catch (error) {
+  } catch {
     console.log(`   ❌ Failed to generate favicon-${size}x${size}.png`);
   }
 });
@@ -54,7 +53,7 @@ const appleIconPath = path.join(PUBLIC_DIR, 'apple-touch-icon.png');
 try {
   execSync(`convert ${path.join(PUBLIC_DIR, 'favicon.svg')} -resize 180x180 ${appleIconPath}`);
   console.log('   ✅ apple-touch-icon.png');
-} catch (error) {
+} catch {
   console.log('   ❌ Failed to generate apple-touch-icon.png');
 }
 
@@ -65,7 +64,7 @@ androidSizes.forEach(size => {
   try {
     execSync(`convert ${path.join(PUBLIC_DIR, 'favicon.svg')} -resize ${size}x${size} ${output}`);
     console.log(`   ✅ android-chrome-${size}x${size}.png`);
-  } catch (error) {
+  } catch {
     console.log(`   ❌ Failed to generate android-chrome-${size}x${size}.png`);
   }
 });
@@ -75,7 +74,7 @@ const icoPath = path.join(PUBLIC_DIR, 'favicon.ico');
 try {
   execSync(`convert ${path.join(PUBLIC_DIR, 'favicon.svg')} -resize 32x32 ${icoPath}`);
   console.log('   ✅ favicon.ico');
-} catch (error) {
+} catch {
   console.log('   ❌ Failed to generate favicon.ico');
 }
 
@@ -83,9 +82,6 @@ console.log('\n🖼️  Generating OG images...');
 
 // Note: OG images would typically be created using a design tool like Figma, Canva, or programmatically
 // For now, we'll create placeholder files with instructions
-
-const ogImagePath = path.join(PUBLIC_DIR, 'og-image.png');
-const twitterImagePath = path.join(PUBLIC_DIR, 'twitter-image.png');
 
 console.log('   📝 OG images need to be created manually or programmatically:');
 console.log('   - og-image.png (1200x630) for Facebook/LinkedIn');

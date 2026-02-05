@@ -103,7 +103,7 @@ BEGIN
   DELETE FROM recently_viewed WHERE user_id = p_user_id AND tenant_id = p_tenant_id;
   
   -- Clear profile PII (keep record for audit but remove identifiable info)
-  UPDATE "709_profiles"
+  UPDATE "profiles"
   SET 
     full_name = 'Deleted User',
     public_key = NULL,
@@ -135,7 +135,7 @@ CREATE POLICY "Admins can view all exports"
 ON data_exports FOR SELECT
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )
@@ -154,7 +154,7 @@ CREATE POLICY "Admins can manage deletions"
 ON account_deletions FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM "709_profiles"
+    SELECT 1 FROM "profiles"
     WHERE id = auth.uid()
     AND role IN ('admin', 'owner')
   )

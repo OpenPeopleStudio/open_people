@@ -45,7 +45,7 @@ export async function GET(request: Request, context: any) {
 
       // Check if user belongs to the same tenant (super-admin can access platform tenant)
       const { data: profile } = await supabase
-        .from("709_profiles")
+        .from("profiles")
         .select("tenant_id, role")
         .eq("id", user.id)
         .single();

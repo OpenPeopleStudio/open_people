@@ -35,7 +35,7 @@ export async function PATCH(
 
   const supabase = await createSupabaseAdmin();
   const { data, error } = await supabase
-    .from("709_profiles")
+    .from("profiles")
     .update(update)
     .eq("id", user_id)
     .select("id, email, full_name, role, tenant_id, created_at")

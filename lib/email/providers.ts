@@ -15,7 +15,6 @@ import type {
   EmailDirection,
   ManagedEmailDomain,
 } from "@/types/email";
-import { isManagedAccount } from "@/types/email";
 import { sendEmail as sendResendEmail } from "./resend";
 import { sendSMTPEmail, verifySMTPConnection, type SMTPConfig } from "./smtp";
 import {
@@ -32,6 +31,36 @@ import {
   type POP3FetchOptions,
 } from "./pop3";
 import { decryptCredential } from "./encryption";
+
+type EmailAccountConfig = {
+  provider?: string | null;
+  mode?: string | null;
+  smtp_host?: string | null;
+  smtp_port?: number | null;
+  smtp_secure?: boolean | null;
+  smtp_user?: string | null;
+  smtp_password_encrypted?: string | null;
+  smtp_password_iv?: string | null;
+  imap_host?: string | null;
+  imap_port?: number | null;
+  imap_secure?: boolean | null;
+  imap_user?: string | null;
+  imap_password_encrypted?: string | null;
+  imap_password_iv?: string | null;
+  pop3_host?: string | null;
+  pop3_port?: number | null;
+  pop3_secure?: boolean | null;
+  pop3_user?: string | null;
+  pop3_password_encrypted?: string | null;
+  pop3_password_iv?: string | null;
+  email_address?: string | null;
+  name?: string | null;
+  resend_domain?: string | null;
+};
+
+function isManagedAccountConfig(account: EmailAccountConfig): boolean {
+  return account.mode === "managed" || account.provider === "managed";
+}
 
 export interface SendResult {
   success: boolean;
@@ -50,8 +79,8 @@ export interface FetchResult {
 /**
  * Get SMTP config from account
  */
-export function getSMTPConfig(account: any): SMTPConfig | null {
-  if (!account.smtp_host || !account.smtp_user) return null;
+export function getSMTPConfig(account: EmailAccountConfig): SMTPConfig | null {
+  if (!account.smtp_host || !account.smtp_user || !account.email_address) return null;
   
   let password = "";
   if (account.smtp_password_encrypted && account.smtp_password_iv) {
@@ -61,21 +90,24 @@ export function getSMTPConfig(account: any): SMTPConfig | null {
     });
   }
   
-  return {
+  const config: SMTPConfig = {
     host: account.smtp_host,
     port: account.smtp_port || 587,
     secure: account.smtp_secure ?? true,
     user: account.smtp_user,
     password,
     fromAddress: account.email_address,
-    fromName: account.name,
   };
+  if (account.name) {
+    config.fromName = account.name;
+  }
+  return config;
 }
 
 /**
  * Get IMAP config from account
  */
-export function getIMAPConfig(account: any): IMAPConfig | null {
+export function getIMAPConfig(account: EmailAccountConfig): IMAPConfig | null {
   if (!account.imap_host || !account.imap_user) return null;
   
   let password = "";
@@ -98,7 +130,7 @@ export function getIMAPConfig(account: any): IMAPConfig | null {
 /**
  * Get POP3 config from account
  */
-export function getPOP3Config(account: any): POP3Config | null {
+export function getPOP3Config(account: EmailAccountConfig): POP3Config | null {
   if (!account.pop3_host || !account.pop3_user) return null;
   
   let password = "";
@@ -122,7 +154,7 @@ export function getPOP3Config(account: any): POP3Config | null {
  * Send an email using the appropriate provider
  */
 export async function sendEmailWithProvider(
-  account: any,
+  account: EmailAccountConfig,
   tenantId: string | null,
   tenantSlug: string,
   request: ComposeEmailRequest,
@@ -131,7 +163,7 @@ export async function sendEmailWithProvider(
   const provider = account.provider as EmailProvider;
   
   // Handle managed mode - use Resend with the verified custom domain
-  if (isManagedAccount(account) || provider === "managed") {
+  if (isManagedAccountConfig(account) || provider === "managed") {
     return sendManagedEmail(account, tenantId, tenantSlug, request, managedDomain);
   }
   
@@ -165,7 +197,7 @@ export async function sendEmailWithProvider(
       
       // Determine the from address
       // If email_address contains @, use it directly; otherwise construct from domain
-      let fromAddress = account.email_address;
+      let fromAddress = account.email_address ?? "";
       if (!fromAddress.includes("@")) {
         // email_address is just a domain, construct a proper email
         fromAddress = `noreply@${account.resend_domain}`;
@@ -223,7 +255,7 @@ export async function sendEmailWithProvider(
  * Uses Resend as the underlying provider with the verified custom domain
  */
 async function sendManagedEmail(
-  account: any,
+  account: EmailAccountConfig,
   tenantId: string | null,
   tenantSlug: string,
   request: ComposeEmailRequest,
@@ -285,13 +317,13 @@ async function sendManagedEmail(
  * Fetch emails from inbox
  */
 export async function fetchInboxEmails(
-  account: any,
+  account: EmailAccountConfig,
   options: { limit?: number; since?: Date; sinceUID?: string; mailbox?: string; includeRead?: boolean } = {}
 ): Promise<FetchResult> {
   const provider = account.provider as EmailProvider;
   
   // For managed accounts, inbox is populated via webhooks (not fetch)
-  if (isManagedAccount(account) || provider === "managed") {
+  if (isManagedAccountConfig(account) || provider === "managed") {
     // Return empty - managed accounts receive emails via inbound webhook
     return { 
       success: true, 
@@ -351,14 +383,14 @@ export interface ConnectionTestResult {
  * Test connection for an account
  */
 export async function testAccountConnection(
-  account: any,
+  account: EmailAccountConfig,
   managedDomain?: ManagedEmailDomain | null
 ): Promise<ConnectionTestResult> {
   const provider = account.provider as EmailProvider;
   const result: ConnectionTestResult = { success: true };
   
   // Test managed account - check domain verification status
-  if (isManagedAccount(account) || provider === "managed") {
+  if (isManagedAccountConfig(account) || provider === "managed") {
     if (!managedDomain) {
       result.success = false;
       result.managedOk = false;

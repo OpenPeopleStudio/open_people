@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "50");
     
     // Fetch conversations with project info
-    let query = supabase
+    const query = supabase
       .from("ai_conversations")
       .select("*, project:projects(id, name, color)")
       .eq("owner_id", user.id)

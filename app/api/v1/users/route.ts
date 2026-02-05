@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createSupabaseServer();
 
   let query = supabase
-    .from("709_profiles")
+    .from("profiles")
     .select("id, email, full_name, role, tenant_id, created_at");
 
   if (!isSuperAdmin(auth.user.profile.role)) {

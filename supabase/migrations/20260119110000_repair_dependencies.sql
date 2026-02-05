@@ -1,10 +1,10 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- Repair dependencies after 709_profiles table → view migration
+-- Repair dependencies after profiles table → view migration
 -- Recreates RLS policies and ensures profiles data integrity
 -- ═══════════════════════════════════════════════════════════════════════════
 
--- 1) Ensure 709_profiles view exists (may have been dropped by cascade)
-create or replace view public."709_profiles" as
+-- 1) Ensure profiles view exists (may have been dropped by cascade)
+create or replace view public."profiles" as
 select
   id,
   tenant_id,

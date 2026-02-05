@@ -30,7 +30,7 @@ describe('Tenant Data Isolation', () => {
       
       // Simulate user A trying to query files
       (mockSupabase as any).from = vi.fn((table: string) => {
-        if (table === '709_profiles') {
+        if (table === 'profiles') {
           return {
             select: vi.fn().mockReturnThis(),
             eq: vi.fn().mockReturnThis(),

@@ -339,7 +339,7 @@ POST   /api/ai/audit-logs/ingest          # Batch log ingestion
 
 - **Existing:** Tenant system, User authentication
 - **Related:** Content Moderation (for content flags), PII Detection
-- **External:** 
+- **External:**
   - Object storage for archives (S3/R2)
   - Optional: Dedicated search (Elasticsearch/OpenSearch)
 

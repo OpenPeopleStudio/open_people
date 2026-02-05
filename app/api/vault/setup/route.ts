@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     
     // Get profile to check permissions (super_admin, owner, or admin can create vault)
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("role, tenant_id")
       .eq("id", user.id)
       .single();

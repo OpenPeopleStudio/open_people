@@ -32,7 +32,7 @@ export default function LoginPage() {
       } else if (data.user) {
         // Check user role to redirect appropriately
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .single()

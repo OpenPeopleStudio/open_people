@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Tenant context (optional)
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();

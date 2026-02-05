@@ -42,6 +42,11 @@ export interface GraphData {
   };
 }
 
+type NoteCategory = {
+  name?: string | null;
+  color?: string | null;
+};
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
@@ -126,8 +131,8 @@ export async function GET(request: NextRequest) {
       title: note.title,
       slug: note.slug,
       category_id: note.category_id,
-      category_name: (note.category as any)?.name || null,
-      category_color: (note.category as any)?.color || null,
+      category_name: (note.category as NoteCategory | null | undefined)?.name || null,
+      category_color: (note.category as NoteCategory | null | undefined)?.color || null,
       project_name: note.project_name,
       tags: note.tags || [],
       status: note.status,

@@ -134,7 +134,7 @@ export default function MessagesPage() {
   useEffect(() => {
     const findAdmin = async () => {
       let adminQuery = supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('id, public_key')
         .in('role', ['admin', 'owner'])
         .limit(1)
@@ -225,7 +225,7 @@ export default function MessagesPage() {
       setUserId(user.id)
 
       let profileQuery = supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('message_retention_enabled, message_retention_days')
         .eq('id', user.id)
 

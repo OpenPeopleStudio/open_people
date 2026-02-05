@@ -44,7 +44,7 @@ const handleInviteCollaborator = withAuthAndAuthZ()(async (auth, request: NextRe
 
   // Check if user exists
   const { data: existingUser } = await supabase
-    .from('709_profiles')
+    .from('profiles')
     .select('id, email, full_name')
     .eq('email', email)
     .single();
@@ -191,13 +191,17 @@ const handleGetCollaborators = withAuthAndAuthZ()(async (auth, request: NextRequ
 export const GET = handleGetCollaborators;
 export const POST = handleInviteCollaborator;
 
-async function checkCollaborationAccess(supabase: any, noteId: string, userId: string): Promise<boolean> {
+async function checkCollaborationAccess(
+  supabase: ReturnType<typeof createSupabaseServer> extends Promise<infer T> ? T : never,
+  noteId: string,
+  userId: string
+): Promise<boolean> {
   const { data } = await supabase
     .from('note_collaborators')
     .select('id')
     .eq('note_id', noteId)
     .eq('user_id', userId)
-    .eq('accepted_at', null, false) // Not null
+    .not('accepted_at', 'is', null)
     .single();
 
   return !!data;

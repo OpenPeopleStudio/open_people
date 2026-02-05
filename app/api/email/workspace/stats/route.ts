@@ -100,15 +100,22 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate SLA metrics
-    const slaMetrics = slaPerformance?.map(sla => {
-      const assignments = sla.assignments || [];
-      const completedOnTime = assignments.filter((a: any) =>
+    type SlaAssignment = {
+      status: string;
+      due_at: string | null;
+      created_at: string | null;
+    };
+
+    const slaMetrics = slaPerformance?.map((sla) => {
+      const assignments = (sla.assignments ?? []) as SlaAssignment[];
+      const completedOnTime = assignments.filter((a) =>
         a.status === "completed" &&
         a.due_at &&
+        a.created_at &&
         new Date(a.due_at) > new Date(a.created_at)
       ).length;
-      const totalCompleted = assignments.filter((a: any) => a.status === "completed").length;
-      const overdue = assignments.filter((a: any) =>
+      const totalCompleted = assignments.filter((a) => a.status === "completed").length;
+      const overdue = assignments.filter((a) =>
         a.status === "active" &&
         a.due_at &&
         new Date(a.due_at) < new Date()

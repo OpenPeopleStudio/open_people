@@ -1,5 +1,5 @@
 -- Auto-create profile when user signs up
--- This trigger ensures every new auth.users row gets a corresponding 709_profiles entry
+-- This trigger ensures every new auth.users row gets a corresponding profiles entry
 
 -- First, add 'staff' to the role enum if not present
 DO $$
@@ -17,7 +17,7 @@ END $$;
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public."709_profiles" (id, role, full_name, created_at)
+  INSERT INTO public."profiles" (id, role, full_name, created_at)
   VALUES (
     NEW.id,
     'customer',
@@ -39,15 +39,15 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Backfill: Create profiles for any existing users that don't have one
-INSERT INTO "709_profiles" (id, role, full_name, created_at)
+INSERT INTO "profiles" (id, role, full_name, created_at)
 SELECT 
   u.id,
   'customer',
   u.raw_user_meta_data->>'full_name',
   u.created_at
 FROM auth.users u
-LEFT JOIN "709_profiles" p ON p.id = u.id
+LEFT JOIN "profiles" p ON p.id = u.id
 WHERE p.id IS NULL
 ON CONFLICT (id) DO NOTHING;
 
-COMMENT ON FUNCTION public.handle_new_user() IS 'Automatically creates a 709_profiles entry when a new user signs up';
+COMMENT ON FUNCTION public.handle_new_user() IS 'Automatically creates a profiles entry when a new user signs up';

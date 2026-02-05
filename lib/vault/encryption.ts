@@ -318,17 +318,13 @@ export function createHashStream(): crypto.Hash {
  */
 export function generateRecoveryCodes(count: number = 10): string[] {
   const codes: string[] = [];
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   
   for (let i = 0; i < count; i++) {
     // Format: XXXX-XXXX-XXXX (12 chars, easy to read/type)
-    const bytes = generateRandomBytes(9);
-    const code = bytes
-      .toString('base64')
-      .replace(/[+/=]/g, '')
-      .substring(0, 12)
-      .toUpperCase()
-      .match(/.{4}/g)
-      ?.join('-') || '';
+    const bytes = generateRandomBytes(12);
+    const raw = Array.from(bytes, (byte) => charset[byte % charset.length]).join('');
+    const code = raw.match(/.{4}/g)?.join('-') || '';
     codes.push(code);
   }
   

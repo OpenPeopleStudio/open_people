@@ -11,7 +11,7 @@ Sentry.init({
   debug: process.env.NODE_ENV === "development",
 
   // Before send hook to add context from request
-  beforeSend(event, hint) {
+  beforeSend(event) {
     try {
       const context = getRequestContext();
       if (context) {

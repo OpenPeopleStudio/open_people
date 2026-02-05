@@ -121,9 +121,11 @@ export async function fetchIMAPEmails(
   const client = createIMAPClient(config);
   const messages: ParsedEmailMessage[] = [];
   let lastUID: string | undefined;
+  let connected = false;
   
   try {
     await client.connect();
+    connected = true;
     
     const mailbox = options.mailbox || "INBOX";
     const lock = await client.getMailboxLock(mailbox);
@@ -131,7 +133,7 @@ export async function fetchIMAPEmails(
     try {
       // Build search query
       // By default, only fetch unread emails. Set includeRead: true to fetch all.
-      let searchQuery: any = options.includeRead ? {} : { seen: false };
+      let searchQuery: Record<string, unknown> = options.includeRead ? {} : { seen: false };
       
       if (options.since) {
         searchQuery = { ...searchQuery, since: options.since };
@@ -176,8 +178,6 @@ export async function fetchIMAPEmails(
       lock.release();
     }
     
-    await client.logout();
-    
     return {
       success: true,
       messages,
@@ -190,6 +190,14 @@ export async function fetchIMAPEmails(
       messages: [],
       error: error instanceof Error ? error.message : "Fetch failed",
     };
+  } finally {
+    if (connected) {
+      try {
+        await client.logout();
+      } catch (logoutError) {
+        console.error("IMAP logout error:", logoutError);
+      }
+    }
   }
 }
 
@@ -202,9 +210,11 @@ export async function fetchIMAPEmailByUID(
   mailbox: string = "INBOX"
 ): Promise<ParsedEmailMessage | null> {
   const client = createIMAPClient(config);
+  let connected = false;
   
   try {
     await client.connect();
+    connected = true;
     const lock = await client.getMailboxLock(mailbox);
     
     try {
@@ -222,11 +232,18 @@ export async function fetchIMAPEmailByUID(
       lock.release();
     }
     
-    await client.logout();
     return null;
   } catch (error) {
     console.error("IMAP fetch by UID error:", error);
     return null;
+  } finally {
+    if (connected) {
+      try {
+        await client.logout();
+      } catch (logoutError) {
+        console.error("IMAP logout error:", logoutError);
+      }
+    }
   }
 }
 
@@ -239,9 +256,11 @@ export async function markIMAPMessagesRead(
   mailbox: string = "INBOX"
 ): Promise<boolean> {
   const client = createIMAPClient(config);
+  let connected = false;
   
   try {
     await client.connect();
+    connected = true;
     const lock = await client.getMailboxLock(mailbox);
     
     try {
@@ -252,11 +271,18 @@ export async function markIMAPMessagesRead(
       lock.release();
     }
     
-    await client.logout();
     return true;
   } catch (error) {
     console.error("Mark read error:", error);
     return false;
+  } finally {
+    if (connected) {
+      try {
+        await client.logout();
+      } catch (logoutError) {
+        console.error("IMAP logout error:", logoutError);
+      }
+    }
   }
 }
 
@@ -342,11 +368,18 @@ function parseMailToMessage(
   const bodyPreview = bodyText.slice(0, 200).replace(/\s+/g, " ").trim();
   
   // Parse attachments
-  const attachments: EmailAttachmentMeta[] = (parsed.attachments || []).map((att) => ({
-    filename: att.filename || "attachment",
-    content_type: att.contentType,
-    size: att.size,
-  }));
+  const attachments: EmailAttachmentMeta[] = (parsed.attachments || []).map((att) => {
+    const meta: EmailAttachmentMeta = {
+      filename: att.filename || "attachment",
+    };
+    if (att.contentType) {
+      meta.content_type = att.contentType;
+    }
+    if (att.size !== undefined) {
+      meta.size = att.size;
+    }
+    return meta;
+  });
   
   // Parse references for threading
   let inReplyTo: string | undefined;
@@ -387,35 +420,52 @@ function parseMailToMessage(
 /**
  * Parse a single address
  */
-function parseAddress(addr: any): EmailAddress {
+type AddressValue = { address?: string | undefined; name?: string | undefined };
+type AddressLike =
+  | { value?: AddressValue[]; address?: string | undefined; name?: string | undefined }
+  | AddressValue
+  | string
+  | null
+  | undefined;
+
+function parseAddress(addr: AddressLike): EmailAddress {
   if (!addr) return { email: "unknown@unknown.com" };
   
-  if (addr.value && addr.value[0]) {
-    const name = addr.value[0].name;
+  if (typeof addr === "object" && addr && "value" in addr) {
+    const value = (addr as { value?: AddressValue[] }).value;
+    if (!value || !value[0]) return { email: "unknown@unknown.com" };
+    const name = value[0].name;
     return name
-      ? { email: addr.value[0].address || "", name }
-      : { email: addr.value[0].address || "" };
+      ? { email: value[0].address || "", name }
+      : { email: value[0].address || "" };
   }
   
   if (typeof addr === "string") {
     return { email: addr };
   }
   
-  return addr.name
-    ? { email: addr.address || "", name: addr.name }
-    : { email: addr.address || "" };
+  if (typeof addr === "object" && addr) {
+    const name = (addr as AddressValue).name;
+    return name
+      ? { email: (addr as AddressValue).address || "", name }
+      : { email: (addr as AddressValue).address || "" };
+  }
+
+  return { email: "unknown@unknown.com" };
 }
 
 /**
  * Parse multiple addresses
  */
-function parseAddresses(addrs: any): EmailAddress[] {
+function parseAddresses(addrs: AddressLike | AddressLike[]): EmailAddress[] {
   if (!addrs) return [];
   
-  if (addrs.value) {
-    return addrs.value.map((a: any) =>
-      a.name ? { email: a.address || "", name: a.name } : { email: a.address || "" }
-    );
+  if (typeof addrs === "object" && addrs && "value" in addrs) {
+    const value = (addrs as { value?: AddressValue[] }).value || [];
+    return value.map((a) => {
+      const name = a.name;
+      return name ? { email: a.address || "", name } : { email: a.address || "" };
+    });
   }
   
   if (Array.isArray(addrs)) {

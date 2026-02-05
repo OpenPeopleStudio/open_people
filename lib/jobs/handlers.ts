@@ -8,8 +8,13 @@
 import { Job, JobResult, JobHandler } from './queue';
 import { emailAIProcessor } from './email-ai-processor';
 import { createSupabaseServer } from '@/lib/supabase/server';
-import { logAuth } from '@/lib/observability/logger';
+import { logAuth, LogContext } from '@/lib/observability/logger';
 import { alertSuspiciousActivity } from '@/lib/observability/alerting';
+
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
  * Email Triage Handler
@@ -161,19 +166,34 @@ export const notificationSenderHandler: JobHandler = async (job: Job): Promise<J
  */
 export const webhookDeliveryHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { url, method, headers, body, timeout } = job.data;
+    const payload = job.data as Partial<{
+      url: unknown;
+      method: unknown;
+      headers: unknown;
+      body: unknown;
+      timeout: unknown;
+    }>;
+    const url = typeof payload.url === 'string' ? payload.url : '';
+    const method = typeof payload.method === 'string' ? payload.method : 'POST';
+    const headers = isRecord(payload.headers) ? (payload.headers as Record<string, string>) : {};
+    const body = payload.body;
+    const timeoutMs = typeof payload.timeout === 'number' ? payload.timeout : 30000;
+
+    if (!url) {
+      return { success: false, error: 'Missing webhook url' };
+    }
 
     console.log(`[WebhookDelivery] Delivering to ${url}`);
 
     const response = await fetch(url, {
-      method: method || 'POST',
+      method,
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'OpenPeople-Webhook/1.0',
         ...headers,
       },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(timeout || 30000), // 30 second timeout
+      signal: AbortSignal.timeout(timeoutMs), // 30 second timeout
     });
 
     if (!response.ok) {
@@ -214,32 +234,37 @@ export const webhookDeliveryHandler: JobHandler = async (job: Job): Promise<JobR
  */
 export const securityEventHandler: JobHandler = async (job: Job): Promise<JobResult> => {
   try {
-    const { event, context } = job.data;
+    const payload = job.data as Partial<{ event: unknown; context: unknown }>;
+    const event = payload.event;
+    const context = payload.context;
+    const eventKey = typeof event === 'string' ? event : String(event);
+    const logContext: LogContext = isRecord(context) ? (context as LogContext) : {};
+    const alertContext: UnknownRecord = isRecord(context) ? context : {};
 
-    console.log(`[SecurityEvent] Processing ${event} event`);
+    console.log(`[SecurityEvent] Processing ${eventKey} event`);
 
     // Log security event
-    logAuth(event as any, false, context);
+    logAuth(event as Parameters<typeof logAuth>[0], false, logContext);
 
     // Trigger alerts based on event type
-    switch (event) {
+    switch (eventKey) {
       case 'failed_login':
-        await alertSuspiciousActivity('multiple_failed_logins', context);
+        await alertSuspiciousActivity('multiple_failed_logins', alertContext);
         break;
 
       case 'unusual_access_pattern':
-        await alertSuspiciousActivity('unusual_access_pattern', context);
+        await alertSuspiciousActivity('unusual_access_pattern', alertContext);
         break;
 
       case 'privilege_escalation':
-        await alertSuspiciousActivity('privilege_escalation_attempt', context);
+        await alertSuspiciousActivity('privilege_escalation_attempt', alertContext);
         break;
 
       default:
         // Generic security alert
         await alertSuspiciousActivity('security_event', {
           event,
-          ...context,
+          ...alertContext,
         });
     }
 

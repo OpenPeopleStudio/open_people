@@ -13,7 +13,7 @@ export const OP_OBJECT_META_VALUE = "true";
 /**
  * Attach the op flag to a payload object.
  */
-export function withOpTag<T extends Record<string, any>>(payload: T): T & {
+export function withOpTag<T extends Record<string, unknown>>(payload: T): T & {
   [OP_TAG_KEY]: boolean;
 } {
   return {
@@ -25,7 +25,7 @@ export function withOpTag<T extends Record<string, any>>(payload: T): T & {
 /**
  * Merge op flag into a meta record.
  */
-export function withOpMeta(meta?: Record<string, any>): Record<string, any> {
+export function withOpMeta(meta?: Record<string, unknown>): Record<string, unknown> {
   return {
     ...(meta || {}),
     [OP_TAG_KEY]: OP_TAG_VALUE,
@@ -47,7 +47,7 @@ export function withOpObjectMetadata(
 /**
  * Detect whether a record is already tagged.
  */
-export function isOpTagged(meta?: Record<string, any>): boolean {
+export function isOpTagged(meta?: Record<string, unknown>): boolean {
   if (!meta) return false;
   const value = meta[OP_TAG_KEY];
   return value === true || value === "true";

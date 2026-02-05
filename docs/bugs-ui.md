@@ -12,4 +12,6 @@ Owner: Lisa
 | UI-006 | ErrorBoundary optional types mismatch | Medium | App UI | Lisa | Fixed | Error boundary | `components/ErrorBoundary.tsx` | Typecheck green 2026-01-22 |
 | UI-007 | Drift baseline status unused type | Low | Admin UI | Lisa | Fixed | Drift baseline UI | `components/ai/drift/BaselineStatus.tsx` | Typecheck green 2026-01-22 |
 | UI-008 | Vault context unused computeHash | Low | Admin UI | Lisa | Fixed | Vault context | `context/VaultContext.tsx` | Typecheck green 2026-01-22 |
-| UI-009 | Lint error: email campaigns loader functions used before declaration | High | Super Admin | Lisa | Triage | Email campaigns UI | `components/super-admin/email-campaigns/CampaignsClient.tsx` | `npm run lint` fails 2026-01-22 with `react-hooks/immutability` errors |
+| UI-009 | Lint error: email campaigns loader functions used before declaration | High | Super Admin | Lisa | Fixed | Email campaigns UI | `components/super-admin/email-campaigns/CampaignsClient.tsx` | `npm run lint` passes with 0 errors 2026-01-22 |
+| UI-010 | Lint warnings: missing hook deps in admin pages | Medium | Admin UI | Lisa | Fixed | Admin pages | `app/(platform)/admin/*` | `npx eslint app/(platform)/admin/**/*` 2026-01-22 |
+| UI-011 | Typecheck: unused vars in admin dashboard | Low | Admin UI | Lisa | Fixed | Admin dashboard | `app/(platform)/admin/page.tsx` | `npm run typecheck` green 2026-01-23 |

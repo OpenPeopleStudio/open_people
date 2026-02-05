@@ -222,7 +222,7 @@ export default function AdminMessagesPage() {
 
     // Get encryption status from profiles
     let profilesQuery = supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('id, public_key')
       .in('id', customerIds)
 

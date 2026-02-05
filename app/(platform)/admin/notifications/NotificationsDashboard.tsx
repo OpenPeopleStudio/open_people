@@ -101,7 +101,7 @@ export function NotificationsDashboard({
       } else {
         setSendResult({ success: false, message: data.error || "Failed to send" });
       }
-    } catch (error) {
+    } catch {
       setSendResult({ success: false, message: "An error occurred" });
     } finally {
       setSending(false);
@@ -134,7 +134,7 @@ export function NotificationsDashboard({
       } else {
         alert(data.error || "Failed to create template");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setSavingTemplate(false);
@@ -157,7 +157,7 @@ export function NotificationsDashboard({
         const data = await res.json();
         alert(data.error || "Failed to delete template");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     }
   };

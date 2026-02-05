@@ -1,5 +1,5 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { emailSync } from "@/lib/email/sync";
+import { syncInboxForAccount } from "@/lib/email/inbox-sync";
 import { NextRequest, NextResponse } from "next/server";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     // Verify user has access to the account
     const { data: account } = await supabase
       .from("email_accounts")
-      .select("id, tenant_id, provider")
+      .select("*")
       .eq("id", accountId)
       .single();
 
@@ -51,64 +51,47 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    console.log(`[Email Sync API] Starting sync for account ${accountId}`, {
+    console.log("[Email Sync API] Starting sync", {
       provider: account.provider,
       fullSync,
       maxEmails,
-      user: user.id,
     });
 
-    let result;
+    const result = await syncInboxForAccount(supabase, account, profile.tenant_id, {
+      limit: maxEmails,
+      fullSync,
+    });
 
-    switch (account.provider) {
-      case "imap":
-      case "smtp_imap":
-        result = await emailSync.syncImapAccount(accountId, {
-          fullSync,
-          maxEmails,
-        });
-        break;
-
-      case "gmail":
-        result = await emailSync.syncGmailAccount(accountId);
-        break;
-
-      case "outlook":
-        result = await emailSync.syncOutlookAccount(accountId);
-        break;
-
-      default:
-        return NextResponse.json(
-          { error: `Sync not supported for provider: ${account.provider}` },
-          { status: 400 }
-        );
+    if (!result.success) {
+      const status =
+        result.error === "Sync is disabled for this account"
+          ? 400
+          : result.error === "Account tenant mismatch"
+            ? 403
+            : 500;
+      return NextResponse.json(
+        { error: result.error || "Sync failed" },
+        { status }
+      );
     }
 
-    if (result.success) {
-      // Log the sync operation
-      await supabase.rpc("log_email_event", {
-        p_tenant_id: profile.tenant_id,
-        p_event_type: "sync",
-        p_event_subtype: account.provider,
-        p_user_id: user.id,
-        p_metadata: {
-          account_id: accountId,
-          synced: result.synced,
-          full_sync: fullSync,
-        },
-      });
+    await supabase.rpc("log_email_event", {
+      p_tenant_id: profile.tenant_id,
+      p_event_type: "sync",
+      p_event_subtype: account.provider,
+      p_user_id: user.id,
+      p_metadata: {
+        account_id: accountId,
+        synced: result.new ?? 0,
+        full_sync: fullSync,
+      },
+    });
 
-      return NextResponse.json({
-        success: true,
-        message: `Sync completed. Synced ${result.synced || 0} emails.`,
-        synced: result.synced,
-      });
-    }
-
-    return NextResponse.json(
-      { error: result.error || "Sync failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      success: true,
+      message: `Sync completed. Synced ${result.new || 0} emails.`,
+      synced: result.new || 0,
+    });
   } catch (error) {
     console.error("Email sync error:", error);
     return NextResponse.json(

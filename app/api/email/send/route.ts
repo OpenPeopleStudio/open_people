@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // Get user's profile including role
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

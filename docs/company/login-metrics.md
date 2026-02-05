@@ -42,10 +42,10 @@ This doc defines what login metrics to track, the source of truth, and weekly re
 - Failed login rate:
 - New user activations:
 
-Highlights:
+### Highlights
 - 
 - 
 - 
 
-Risk:
+### Risk
 - 

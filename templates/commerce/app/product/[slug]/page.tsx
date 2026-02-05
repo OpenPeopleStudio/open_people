@@ -139,7 +139,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           
           // Fetch user role for admin tools
           const { data: profile } = await supabase
-            .from('709_profiles')
+            .from('profiles')
             .select('role')
             .eq('id', user.id)
             .single()

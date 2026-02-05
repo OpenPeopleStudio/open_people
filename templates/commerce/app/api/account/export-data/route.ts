@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   try {
     // Fetch user profile
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('*')
       .eq('id', user.id)
       .eq('tenant_id', tenant?.id)

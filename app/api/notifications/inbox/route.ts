@@ -113,7 +113,7 @@ export async function PUT(request: NextRequest) {
 
       // Update usage for read notifications
       const { data: profile } = await supabase
-        .from("709_profiles")
+        .from("profiles")
         .select("tenant_id")
         .eq("id", user.id)
         .single();
@@ -171,7 +171,7 @@ export async function PUT(request: NextRequest) {
 
     // Update usage
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id")
       .eq("id", user.id)
       .single();

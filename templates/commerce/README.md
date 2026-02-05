@@ -44,7 +44,7 @@ A fully-featured, white-label e-commerce platform built with Next.js 16, React 1
    ```bash
    cp .env.example .env.local
    ```
-   
+
    Required variables:
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
@@ -79,7 +79,7 @@ type TenantSettings = {
     colors?: TenantThemeColors   // Color palette
     typography?: TenantTypography // Font settings
   }
-  
+
   // Homepage content
   content?: {
     hero?: {
@@ -95,7 +95,7 @@ type TenantSettings = {
       icon?: string
     }>
   }
-  
+
   // Feature toggles
   features?: {
     drops?: boolean              // Scheduled releases
@@ -108,7 +108,7 @@ type TenantSettings = {
     admin?: boolean              // Admin panel access
     consignments?: boolean       // Consignment tracking
   }
-  
+
   // Contact information
   contact?: {
     email?: string               // Support email
@@ -118,7 +118,7 @@ type TenantSettings = {
     region?: string              // State/Province
     country?: string             // Country
   }
-  
+
   // Social media links
   social?: {
     instagram?: string           // Full URL
@@ -127,14 +127,14 @@ type TenantSettings = {
     facebook?: string
     youtube?: string
   }
-  
+
   // Search configuration
   search?: {
     placeholder?: string         // Search input placeholder
     popular_terms?: string[]     // Quick search suggestions
     featured_keywords?: string[] // Keywords for homepage sorting
   }
-  
+
   // Legal/copyright
   legal?: {
     company_name?: string        // Legal company name
@@ -142,7 +142,7 @@ type TenantSettings = {
     terms_url?: string           // Terms of service URL
     copyright_text?: string      // Custom copyright text
   }
-  
+
   // Payment/integration settings
   integrations?: {
     payments?: {
@@ -156,12 +156,12 @@ type TenantSettings = {
       provider?: 'twilio' | 'disabled'
     }
   }
-  
+
   // Commerce settings
   commerce?: {
     currency?: string            // e.g., 'USD', 'CAD', 'EUR'
   }
-  
+
   // Email configuration
   email?: {
     from_name?: string           // Sender display name
@@ -170,7 +170,7 @@ type TenantSettings = {
     orders_email?: string        // Orders inbox
     reply_to?: string            // Reply-to address
   }
-  
+
   // Regional settings
   regional?: {
     ship_from_city?: string      // Shipping origin city
@@ -181,7 +181,7 @@ type TenantSettings = {
     phone_country_code?: string  // e.g., '+1'
     timezone?: string            // e.g., 'America/New_York'
   }
-  
+
   // Storefront terminology
   storefront?: {
     product_term_singular?: string  // e.g., 'sneaker', 'product'
@@ -189,7 +189,7 @@ type TenantSettings = {
     brand_term?: string             // e.g., 'brand', 'designer'
     category_term?: string          // e.g., 'category', 'collection'
   }
-  
+
   // PWA (Progressive Web App) settings
   pwa?: {
     app_name?: string            // Full app name
@@ -308,7 +308,7 @@ The template uses Supabase with the following key tables:
 
 - `tenants` - Tenant configuration
 - `tenant_domains` - Custom domain mappings
-- `709_profiles` - User profiles (per tenant)
+- `profiles` - User profiles (per tenant)
 - `products` - Product catalog
 - `product_variants` - Size/condition variants
 - `product_images` - Product images

@@ -90,12 +90,14 @@ CREATE INDEX IF NOT EXISTS idx_retention_executions_policy
 ALTER TABLE retention_policies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE retention_executions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "retention_policies_tenant_isolation" ON retention_policies;
 CREATE POLICY "retention_policies_tenant_isolation" ON retention_policies
     FOR ALL USING (
         tenant_id = current_user_tenant_id()
         OR is_super_admin()
     );
 
+DROP POLICY IF EXISTS "retention_executions_tenant_isolation" ON retention_executions;
 CREATE POLICY "retention_executions_tenant_isolation" ON retention_executions
     FOR ALL USING (
         tenant_id = current_user_tenant_id()

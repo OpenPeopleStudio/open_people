@@ -42,7 +42,7 @@ function HeaderContent() {
       
       if (user) {
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('role')
           .eq('id', user.id)
           .eq('tenant_id', tenantId)
@@ -59,7 +59,7 @@ function HeaderContent() {
       
       if (session?.user) {
         const { data: profile } = await supabase
-          .from('709_profiles')
+          .from('profiles')
           .select('role')
           .eq('id', session.user.id)
           .eq('tenant_id', tenantId)

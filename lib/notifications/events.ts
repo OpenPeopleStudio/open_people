@@ -160,7 +160,7 @@ export async function dispatchNotificationEvent(
   } else {
     // Get admin users for the tenant
     const { data: adminProfiles } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("id")
       .eq("tenant_id", event.tenantId)
       .eq("role", "admin");
@@ -271,7 +271,7 @@ export async function dispatchNotificationEvent(
 
         // Get user email
         const { data: profile } = await supabase
-          .from("709_profiles")
+          .from("profiles")
           .select("email")
           .eq("id", userId)
           .single();

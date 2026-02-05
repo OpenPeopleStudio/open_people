@@ -55,7 +55,7 @@ export default function MessageDebugPanel({
       const { data: { user } } = await supabase.auth.getUser()
       
       const { data: profile } = await supabase
-        .from('709_profiles')
+        .from('profiles')
         .select('role, public_key, tenant_id')
         .eq('id', user?.id || '')
         .single()

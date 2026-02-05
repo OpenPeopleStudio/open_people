@@ -307,7 +307,7 @@ export async function POST(request: Request) {
     }
 
     const { data: profile } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .select('role, tenant_id')
       .eq('id', user.id)
       .single()

@@ -85,7 +85,7 @@ export function ExperimentsDashboard({
       } else {
         alert(data.error || "Failed to create experiment");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setSavingExp(false);
@@ -116,7 +116,7 @@ export function ExperimentsDashboard({
       } else {
         alert(data.error || "Failed to create flag");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setSavingFlag(false);

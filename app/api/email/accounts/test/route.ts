@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const adminSupabase = await createSupabaseAdmin();
 
     const { data: profile } = await adminSupabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

@@ -29,7 +29,7 @@ function loadConfig() {
       const fileConfig = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
       config = { ...config, ...fileConfig };
     }
-  } catch (err) {
+  } catch {
     // Ignore config file errors
   }
   
@@ -133,7 +133,7 @@ async function uploadFile(filePath, config, verbose) {
           } else {
             reject(new Error(result.error || 'Upload failed'));
           }
-        } catch (err) {
+        } catch {
           reject(new Error(`Invalid response: ${data}`));
         }
       });

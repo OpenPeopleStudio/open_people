@@ -30,7 +30,7 @@ async function verifySuperAdmin(): Promise<{ userId: string } | null> {
   // Check if user is super admin (no tenant_id or special flag)
   const adminSupabase = await createSupabaseAdmin();
   const { data: profile } = await adminSupabase
-    .from("709_profiles")
+    .from("profiles")
     .select("role, tenant_id")
     .eq("id", user.id)
     .single();

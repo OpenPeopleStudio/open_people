@@ -61,7 +61,6 @@ async function checkEndpoint(url) {
 
 async function main() {
   for (const url of endpoints) {
-    // eslint-disable-next-line no-await-in-loop
     await checkEndpoint(url);
   }
 
@@ -77,7 +76,7 @@ async function main() {
   let projectRef = 'unknown';
   try {
     projectRef = run(`cat ${PROJECT_REF_PATH}`) || 'unknown';
-  } catch (_) {}
+  } catch {}
 
   const tableRaw = run(`supabase migration list --linked`);
   if (tableRaw.error) {

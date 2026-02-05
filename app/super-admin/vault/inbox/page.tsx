@@ -18,6 +18,7 @@ interface InboxItemWithDetails extends VaultInboxItem {
     email_from?: string;
     email_subject?: string;
     email_date?: string;
+    content_hash_error?: string | null;
   };
 }
 
@@ -122,8 +123,8 @@ export default function VaultInboxPage() {
     );
   }
   
-  return (
-    <div className="flex h-[calc(100vh-4rem)]">
+    return (
+      <div className="flex h-[calc(100vh-4rem)]">
       {/* Main Content */}
       <div className="flex-1 p-8 overflow-y-auto">
         {/* Header */}
@@ -219,6 +220,10 @@ interface InboxItemCardProps {
 }
 
 function InboxItemCard({ item, selected, processing, onSelect, onApprove, onReject }: InboxItemCardProps) {
+  const hasHashError =
+    item.source_metadata?.content_hash_error ||
+    item.file?.error_message;
+
   return (
     <div
       className={`p-4 rounded-xl border cursor-pointer transition-all ${
@@ -270,6 +275,11 @@ function InboxItemCard({ item, selected, processing, onSelect, onApprove, onReje
             {item.rule && (
               <span>via {item.rule.name}</span>
             )}
+            {hasHashError && (
+              <span className="px-1.5 py-0.5 rounded bg-[var(--warning)]/10 text-[var(--warning)]">
+                Pending: content hash missing
+              </span>
+            )}
           </div>
         </div>
         
@@ -316,6 +326,9 @@ interface InboxDetailPanelProps {
 
 function InboxDetailPanel({ item, folders, processing, onApprove, onReject, onClose }: InboxDetailPanelProps) {
   const [selectedFolder, setSelectedFolder] = useState(item.suggested_folder_id || "");
+  const hasHashError =
+    item.source_metadata?.content_hash_error ||
+    item.file?.error_message;
   
   return (
     <div className="flex flex-col h-full">
@@ -363,6 +376,17 @@ function InboxDetailPanel({ item, folders, processing, onApprove, onReject, onCl
             </h4>
             <p className="text-sm text-[var(--text-secondary)]">
               {item.file.ai_summary}
+            </p>
+          </div>
+        )}
+
+        {hasHashError && (
+          <div className="p-3 rounded-lg border border-[var(--warning)]/30 bg-[var(--warning)]/10">
+            <p className="text-xs font-medium text-[var(--warning)] uppercase tracking-wider mb-1">
+              Pending Error
+            </p>
+            <p className="text-sm text-[var(--text-primary)]">
+              Missing content hash from email worker payload. File held in pending for review.
             </p>
           </div>
         )}

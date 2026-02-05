@@ -57,7 +57,7 @@ async function getTenants(): Promise<TenantWithBilling[]> {
   const tenantsWithCounts = await Promise.all(
     (tenants || []).map(async (tenant) => {
       const { count } = await supabase
-        .from("709_profiles")
+        .from("profiles")
         .select("*", { count: "exact", head: true })
         .eq("tenant_id", tenant.id);
 

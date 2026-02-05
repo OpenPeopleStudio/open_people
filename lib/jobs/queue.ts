@@ -55,7 +55,7 @@ export enum JobType {
 }
 
 export interface JobData {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface Job {
@@ -79,10 +79,29 @@ export interface Job {
 
 export interface JobResult {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   retryAfter?: number; // seconds
 }
+
+type JobRow = {
+  id: string;
+  type: JobType;
+  priority: JobPriority;
+  data: JobData;
+  status: JobStatus;
+  max_retries: number;
+  retry_count: number;
+  next_run_at: string;
+  created_at: string;
+  updated_at: string;
+  started_at?: string | null;
+  completed_at?: string | null;
+  failed_at?: string | null;
+  error_message?: string | null;
+  created_by?: string | null;
+  correlation_id?: string | null;
+};
 
 export interface JobHandler {
   (job: Job): Promise<JobResult>;
@@ -207,7 +226,7 @@ export class JobQueue {
       console.log(`[JobQueue:${this.queueName}] Processing ${jobs.length} jobs`);
 
       // Process jobs concurrently
-      const processingPromises = jobs.map(job => this.processJob(job));
+      const processingPromises = (jobs as JobRow[]).map(job => this.processJob(job));
       await Promise.allSettled(processingPromises);
 
     } catch (error) {
@@ -218,7 +237,7 @@ export class JobQueue {
   /**
    * Process a single job
    */
-  private async processJob(jobData: any): Promise<void> {
+  private async processJob(jobData: JobRow): Promise<void> {
     const job: Job = {
       id: jobData.id,
       type: jobData.type,
@@ -304,10 +323,10 @@ export class JobQueue {
   /**
    * Update job status
    */
-  private async updateJobStatus(jobId: string, status: JobStatus, additionalFields: any = {}): Promise<void> {
+  private async updateJobStatus(jobId: string, status: JobStatus, additionalFields: Record<string, unknown> = {}): Promise<void> {
     const supabase = await createSupabaseServer();
 
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       status,
       updated_at: new Date().toISOString(),
       ...additionalFields,
@@ -331,7 +350,7 @@ export class JobQueue {
     }
   }
 
-  private async completeJob(jobId: string, result?: any): Promise<void> {
+  private async completeJob(jobId: string, result?: unknown): Promise<void> {
     await this.updateJobStatus(jobId, JobStatus.COMPLETED, { result });
   }
 

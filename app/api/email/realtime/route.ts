@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
 
         // Handle client disconnect
         request.signal.addEventListener("abort", () => {
-          console.log(`[Email Realtime] Client disconnected for user ${user.id}`);
+          console.log("[Email Realtime] Client disconnected");
           supabase.removeChannel(channel);
           controller.close();
         });

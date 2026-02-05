@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
 
     // Get user's tenant
     const { data: profile } = await supabase
-      .from("709_profiles")
+      .from("profiles")
       .select("tenant_id, role")
       .eq("id", user.id)
       .single();

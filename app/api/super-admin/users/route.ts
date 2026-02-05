@@ -24,7 +24,7 @@ const handleGetUsers = withAuthAndAuthZ({
 
   // Build query for users with profile and tenant information
   let query = supabase
-    .from('709_profiles')
+    .from('profiles')
     .select(`
       id,
       email,
@@ -123,7 +123,7 @@ const handleCreateUser = withAuthAndAuthZ({
 
     // Create profile
     const { error: profileError } = await supabase
-      .from('709_profiles')
+      .from('profiles')
       .insert({
         id: authUser.user.id,
         email,

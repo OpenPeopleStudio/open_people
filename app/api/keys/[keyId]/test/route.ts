@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { ApiKeysEncryptionConfigError, decryptApiKey } from "@/lib/api-keys/encryption";
 
@@ -7,9 +7,12 @@ import { ApiKeysEncryptionConfigError, decryptApiKey } from "@/lib/api-keys/encr
    Test if an API key is valid by making a simple API call
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export async function POST(request: Request, context: any) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ keyId: string }> }
+) {
   try {
-    const { keyId } = context.params;
+    const { keyId } = await params;
     const supabase = await createSupabaseServer();
     
     // Get authenticated user

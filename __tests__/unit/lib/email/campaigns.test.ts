@@ -5,7 +5,7 @@ describe("campaign helpers", () => {
   it("maps campaign rows with recipients", () => {
     const row = {
       id: "1",
-      tenant_id: null,
+      tenant_id: "tenant-1",
       name: "Test",
       subject: "Hello",
       body_text: "Body",
@@ -20,7 +20,7 @@ describe("campaign helpers", () => {
       created_at: "2024-01-01",
       updated_at: "2024-01-02",
       recipients: [
-        { id: "r1", campaign_id: "1", to_email: "a@example.com", status: "draft", created_at: "2024-01-01" },
+        { id: "r1", campaign_id: "1", to_email: "a@example.com", status: "draft" as const, created_at: "2024-01-01" },
       ],
     };
 
@@ -32,9 +32,9 @@ describe("campaign helpers", () => {
 
   it("dedupes recipients case-insensitively", () => {
     const recipients = dedupeRecipients([
-      { id: "r1", campaign_id: "1", to_email: "a@example.com", status: "draft", created_at: "2024-01-01" },
-      { id: "r2", campaign_id: "1", to_email: "A@example.com", status: "draft", created_at: "2024-01-01" },
-      { id: "r3", campaign_id: "1", to_email: "b@example.com", status: "draft", created_at: "2024-01-01" },
+      { id: "r1", campaign_id: "1", to_email: "a@example.com", status: "draft" as const, created_at: "2024-01-01" },
+      { id: "r2", campaign_id: "1", to_email: "A@example.com", status: "draft" as const, created_at: "2024-01-01" },
+      { id: "r3", campaign_id: "1", to_email: "b@example.com", status: "draft" as const, created_at: "2024-01-01" },
     ]);
 
     expect(recipients.length).toBe(2);
