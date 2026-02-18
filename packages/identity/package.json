@@ -1,0 +1,12 @@
+{
+  "name": "@open-people/identity",
+  "version": "0.1.0",
+  "description": "DID generation and Ed25519 keypair management for open_people",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "license": "MIT"
+}

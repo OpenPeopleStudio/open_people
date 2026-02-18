@@ -1,0 +1,24 @@
+{
+  "open_people": 1,
+  "package_id": "019505a0-0001-7000-8000-000000000001",
+  "created_at": "2026-02-18T12:00:00Z",
+  "author": {
+    "did": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+    "signature": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+  },
+  "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "content_type": "identity",
+  "content": {
+    "id": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+    "public_key": "3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29",
+    "created_at": "2026-02-18T12:00:00Z",
+    "display_name": "Mars",
+    "color": "#e74c3c",
+    "bio": "Building the bridge between Earth and everywhere else."
+  },
+  "metadata": {
+    "schema_version": "1.0.0",
+    "transmission_class": "local",
+    "compression": "none"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "open_people": 1,
+  "package_id": "019505a0-0003-7000-8000-000000000001",
+  "created_at": "2026-02-18T13:00:00Z",
+  "author": {
+    "did": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+    "signature": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4"
+  },
+  "content_hash": "a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+  "content_type": "bundle",
+  "content": {
+    "name": "Nova Full Export",
+    "description": "Complete agent export with memory and workspace configuration. Includes Nova agent profile, accumulated memory (reflections + key-value store), and workspace layout preferences.",
+    "packages": [
+      {
+        "package_id": "019505a0-0002-7000-8000-000000000001",
+        "content_type": "agent",
+        "content_hash": "f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5",
+        "required": true
+      },
+      {
+        "package_id": "019505a0-0002-7000-8000-000000000002",
+        "content_type": "memory",
+        "content_hash": "d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9",
+        "required": false
+      },
+      {
+        "package_id": "019505a0-0003-7000-8000-000000000002",
+        "content_type": "workspace",
+        "content_hash": "b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
+        "required": false
+      }
+    ]
+  },
+  "metadata": {
+    "schema_version": "1.0.0",
+    "transmission_class": "network",
+    "compression": "none"
+  }
+}
