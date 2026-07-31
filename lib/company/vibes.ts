@@ -1,11 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { get_encoding } from "tiktoken";
 
 const TOKENS_PER_VIBE = 1_000_000;
 const BASE_DELTA_CAP = 5;
 const EXPONENTIAL_THRESHOLD = 10_000;
 const EXPONENTIAL_K = 0.005;
-const ENCODING_NAME = "o200k_base";
 
 export type TokenDirection = "in" | "out";
 
@@ -15,18 +13,17 @@ export type VibeBalanceResult = {
   crashed: boolean;
 };
 
+/**
+ * Token estimate for vibe accounting.
+ * Uses a word-count heuristic (not tiktoken) so Next/Turbopack page
+ * collection does not require tiktoken_bg.wasm at build time.
+ */
 export function estimateTokens(text: string): number {
   if (!text) return 0;
   const trimmed = text.trim();
   if (!trimmed) return 0;
-  try {
-    const encoding = get_encoding(ENCODING_NAME);
-    const tokens = encoding.encode(trimmed);
-    return Math.max(1, tokens.length);
-  } catch {
-    const wordCount = trimmed.split(/\s+/).length;
-    return Math.max(1, Math.round(wordCount * 1.3));
-  }
+  const wordCount = trimmed.split(/\s+/).length;
+  return Math.max(1, Math.round(wordCount * 1.3));
 }
 
 export async function ensureVibeBalance(
