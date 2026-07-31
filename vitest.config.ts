@@ -22,7 +22,6 @@ export default defineConfig({
     testTimeout: 10000,
     // Pool options for parallel execution
     pool: 'threads',
-    singleThread: false,
   },
   resolve: {
     alias: {
