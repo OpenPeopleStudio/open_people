@@ -21,13 +21,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/terms",
     "/login",
     "/signup",
+    "/brief",
   ];
 
   return routes.map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified,
-    changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : 0.7,
+    changeFrequency:
+      path === "/" ? "weekly" : path === "/brief" ? "weekly" : "monthly",
+    priority: path === "/" ? 1 : path === "/brief" ? 0.9 : 0.7,
   }));
 }
 

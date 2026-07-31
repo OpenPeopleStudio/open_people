@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
   // An explicit empty config silences the “webpack config and no turbopack config” error.
   turbopack: {},
 
+  // Public static brief: keep URL /brief while serving public/brief.html
+  async rewrites() {
+    return [
+      { source: "/brief", destination: "/brief.html" },
+      { source: "/brief/", destination: "/brief.html" },
+    ];
+  },
+
   // Handle redirects at the config level
   async redirects() {
     return [

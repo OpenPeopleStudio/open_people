@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#040404" />
+<meta name="color-scheme" content="dark" />
+<title>The Labrador Compute Case — Open People</title>
+<meta name="description" content="Newfoundland and Labrador generates ~43 TWh of green electricity a year and exports most of it. The Churchill Falls renegotiation is the province's chance to reserve a block of that power for AI compute — and keep the value in Labrador." />
+<meta property="og:title" content="The Labrador Compute Case" />
+<meta property="og:description" content="Why Newfoundland and Labrador should reserve a scheduled, compute-eligible power block in Labrador — and what it costs to do nothing." />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<style>
+:root{
+  --void:#000; --bg:#040404; --bg-elev:#0a0a0a;
+  --line:rgba(255,255,255,.075); --line-strong:rgba(255,255,255,.14);
+  --text:#f2f4f6; --dim:rgba(242,244,246,.70); --muted:rgba(242,244,246,.44); --faint:rgba(242,244,246,.24);
+  --plasma:#e8893c; --plasma-bright:#f0a060; --plasma-soft:rgba(232,137,60,.08);
+  --signal:#8a9bb0; --warn:#d4a84b;
+  --sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --maxw:760px;
+  --pad: clamp(16px, 4.5vw, 24px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --tap: 44px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%; scroll-padding-top:64px}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:17px; line-height:1.62; letter-spacing:-.005em;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  overflow-x:hidden; min-height:100dvh;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:radial-gradient(min(900px,140vw) 500px at 50% -10%, rgba(232,137,60,.07), transparent 70%);
+}
+.wrap{position:relative; z-index:1; max-width:var(--maxw); margin:0 auto; padding:0 var(--pad)}
+img,svg,video{max-width:100%; height:auto}
+:focus-visible{outline:2px solid var(--plasma); outline-offset:3px}
+
+/* ── nav ── */
+nav{
+  position:sticky; top:0; z-index:20;
+  backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2);
+  background:rgba(4,4,4,.86); border-bottom:1px solid var(--line);
+  padding-top:var(--safe-t);
+}
+nav .wrap{
+  display:flex; align-items:center; gap:14px;
+  height:52px; max-width:1080px;
+}
+.brand{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text); text-decoration:none;
+  white-space:nowrap; border:0; min-height:var(--tap);
+  display:inline-flex; align-items:center;
+}
+.brand b{color:var(--plasma); font-weight:600}
+nav .links{margin-left:auto; display:flex; gap:4px 18px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; mask-image:linear-gradient(90deg,#000 92%,transparent)}
+nav .links::-webkit-scrollbar{display:none}
+nav a.l{
+  font-size:12.5px; color:var(--muted); text-decoration:none; border:0;
+  white-space:nowrap; transition:color .15s; min-height:var(--tap);
+  display:inline-flex; align-items:center; padding:0 2px;
+}
+nav a.l:hover{color:var(--plasma)}
+nav .nav-cta{
+  display:none; margin-left:auto; flex:0 0 auto;
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--plasma); text-decoration:none;
+  border:1px solid rgba(232,137,60,.55); border-bottom:1px solid rgba(232,137,60,.55);
+  padding:8px 14px; border-radius:2px; white-space:nowrap;
+  min-height:36px; align-items:center; -webkit-tap-highlight-color:transparent;
+}
+nav .nav-cta:hover{background:var(--plasma); color:#000; border-color:var(--plasma)}
+
+/* ── hero ── */
+header.hero{padding:clamp(48px,10vw,88px) 0 clamp(36px,6vw,56px); border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--plasma); margin-bottom:clamp(18px,4vw,26px);
+}
+h1{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(1.85rem, 7.2vw, 3.75rem);
+  line-height:1.08; letter-spacing:-.025em; margin-bottom:clamp(16px,3.5vw,26px);
+  text-wrap:balance;
+}
+h1 em{font-style:normal; color:var(--plasma)}
+.standfirst{
+  font-size:clamp(1.05rem, 2.8vw, 1.22rem); line-height:1.58;
+  color:var(--dim); max-width:38em; text-wrap:pretty;
+}
+.meta{
+  margin-top:clamp(24px,5vw,38px); padding-top:18px; border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:8px 20px;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; color:var(--muted);
+}
+.meta b{color:var(--faint); font-weight:400}
+.meta span{display:inline-flex; flex-wrap:wrap; gap:4px; align-items:baseline}
+
+/* ── stat strip ── */
+.stats{border-bottom:1px solid var(--line); background:var(--void)}
+.statgrid{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  max-width:1080px; margin:0 auto;
+}
+.stat{
+  padding:clamp(20px,3.5vw,30px) clamp(14px,2.5vw,24px);
+  border-right:1px solid var(--line);
+}
+.stat:last-child{border-right:0}
+.stat .n{
+  font-family:var(--mono); font-size:clamp(1.25rem,3.2vw,1.625rem);
+  font-weight:500; letter-spacing:-.02em; color:var(--plasma); line-height:1.15;
+  font-variant-numeric:tabular-nums;
+}
+.stat .k{margin-top:8px; font-size:12.5px; color:var(--muted); line-height:1.45; text-wrap:pretty}
+
+/* ── sections ── */
+section{padding:clamp(40px,8vw,64px) 0; border-bottom:1px solid var(--line)}
+.sec-no{font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:var(--plasma); margin-bottom:12px}
+h2{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(1.45rem, 4.2vw, 2.25rem);
+  line-height:1.18; letter-spacing:-.02em; margin-bottom:18px;
+  text-wrap:balance;
+}
+h3{font-size:1rem; font-weight:600; letter-spacing:.01em; margin:clamp(24px,4vw,34px) 0 10px; color:var(--text); text-wrap:balance}
+p{margin-bottom:1em; color:var(--dim); overflow-wrap:break-word}
+p.lead{font-size:clamp(1.05rem, 2.6vw, 1.19rem); color:var(--text); line-height:1.58}
+strong{color:var(--text); font-weight:600}
+a{color:var(--plasma); text-decoration:none; border-bottom:1px solid rgba(232,137,60,.3); transition:border-color .15s}
+a:hover{border-bottom-color:var(--plasma)}
+ul,ol{margin:0 0 1em 1.15em; color:var(--dim); padding:0}
+li{margin-bottom:.55em; padding-left:.15em}
+li::marker{color:var(--faint)}
+
+/* ── pull ── */
+.pull{
+  margin:clamp(22px,4vw,32px) 0; padding:clamp(16px,3vw,22px) clamp(16px,3.5vw,26px);
+  border-left:2px solid var(--plasma); background:var(--plasma-soft);
+  font-family:var(--serif); font-size:clamp(1.05rem, 2.8vw, 1.25rem);
+  line-height:1.48; color:var(--text); text-wrap:pretty;
+}
+.pull cite{
+  display:block; margin-top:12px; font-family:var(--mono);
+  font-size:11px; font-style:normal; letter-spacing:.05em; color:var(--muted); line-height:1.45;
+}
+
+/* ── tables ── */
+.tw{
+  overflow-x:auto; margin:clamp(18px,4vw,26px) 0;
+  border:1px solid var(--line); border-radius:3px;
+  -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain;
+}
+table{width:100%; border-collapse:collapse; font-size:14.5px}
+th{
+  text-align:left; padding:12px 15px; font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--muted);
+  border-bottom:1px solid var(--line-strong); background:var(--bg-elev); font-weight:500; white-space:nowrap;
+}
+td{padding:12px 15px; border-bottom:1px solid var(--line); color:var(--dim); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td b{color:var(--text)}
+td .src{display:block; font-size:11.5px; color:var(--faint); margin-top:3px; line-height:1.4}
+.num{font-family:var(--mono); font-size:13.5px; white-space:nowrap; font-variant-numeric:tabular-nums}
+td[data-label]::before{display:none}
+
+/* ── ask cards ── */
+.ask{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:clamp(20px,4vw,28px) 0; border-radius:3px; overflow:hidden}
+.ask .item{background:var(--bg); padding:clamp(16px,3.5vw,22px) clamp(16px,3.5vw,24px)}
+.ask .item .h{display:flex; gap:12px; align-items:baseline; margin-bottom:8px; flex-wrap:wrap}
+.ask .item .i{font-family:var(--mono); font-size:11px; color:var(--plasma); letter-spacing:.1em; flex:0 0 auto}
+.ask .item .t{font-size:1rem; font-weight:600; color:var(--text); line-height:1.3}
+.ask .item p{margin:0; font-size:.94rem; line-height:1.55}
+
+/* ── stack diagram ── */
+.stack{margin:clamp(20px,4vw,28px) 0; border:1px solid var(--line); border-radius:3px; overflow:hidden}
+.stack .row{display:grid; grid-template-columns:minmax(120px,150px) 1fr; border-bottom:1px solid var(--line)}
+.stack .row:last-child{border-bottom:0}
+.stack .row.us{background:var(--plasma-soft)}
+.stack .lbl{
+  padding:14px 16px; font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); border-right:1px solid var(--line);
+  display:flex; align-items:center;
+}
+.stack .row.us .lbl{color:var(--plasma)}
+.stack .val{padding:14px 16px; font-size:14.5px; color:var(--dim); line-height:1.5}
+.stack .row.us .val{color:var(--text)}
+
+/* ── caveat ── */
+.caveat{
+  margin:clamp(18px,4vw,26px) 0; padding:clamp(14px,3vw,18px) clamp(14px,3vw,22px);
+  border:1px solid rgba(212,168,75,.22); background:rgba(212,168,75,.045);
+  border-radius:3px; font-size:14.5px; color:var(--dim);
+}
+.caveat .tag{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--warn); display:block; margin-bottom:8px}
+.caveat p:last-child{margin-bottom:0}
+
+/* ── constraints ── */
+.con{border-top:1px solid var(--line); padding:clamp(18px,4vw,24px) 0}
+.con:first-of-type{border-top:0; padding-top:4px}
+.con .t{font-size:1rem; font-weight:600; margin-bottom:8px; line-height:1.35; text-wrap:balance}
+.con p{margin-bottom:0}
+.con .r{font-size:14.5px; color:var(--muted); margin-top:12px; line-height:1.5}
+.con .r b{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--plasma); display:block; margin-bottom:6px; font-weight:500;
+}
+
+/* ── bio ── */
+.bio{display:flex; gap:20px; align-items:flex-start; margin:clamp(18px,4vw,26px) 0}
+.bio .mark{
+  flex:0 0 64px; width:64px; height:64px; border:1px solid var(--line-strong); border-radius:3px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:20px; color:var(--plasma); letter-spacing:.05em;
+}
+.bio .body{flex:1; min-width:0}
+.bio .body .nm{font-size:1.05rem; font-weight:600; margin-bottom:3px}
+.bio .body .rl{font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; color:var(--muted); margin-bottom:12px; line-height:1.4}
+.bio .body p:last-child{margin-bottom:0}
+
+/* ── cta ── */
+.cta{padding:clamp(48px,10vw,72px) 0; text-align:center}
+.cta h2{margin-bottom:14px; max-width:18em; margin-left:auto; margin-right:auto}
+.cta p{max-width:32em; margin:0 auto 28px}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:var(--tap); padding:12px 28px; border:1px solid var(--plasma);
+  color:var(--plasma); font-family:var(--mono); font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; border-radius:2px; transition:background .18s,color .18s,border-color .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{background:var(--plasma); color:#000; border-color:var(--plasma)}
+.btn:active{transform:scale(.98)}
+
+/* ── sticky mobile action (shown via JS after scroll) ── */
+.mbar{
+  display:none; position:fixed; left:0; right:0; bottom:0; z-index:30;
+  padding:10px var(--pad) calc(10px + var(--safe-b));
+  background:linear-gradient(180deg, transparent, rgba(4,4,4,.92) 28%, rgba(4,4,4,.97));
+  pointer-events:none;
+  opacity:0; transform:translateY(12px);
+  transition:opacity .22s ease, transform .22s ease;
+}
+.mbar.is-on{opacity:1; transform:translateY(0); pointer-events:none}
+.mbar.is-on .btn{pointer-events:auto}
+.mbar .btn{
+  width:100%; max-width:var(--maxw); margin:0 auto;
+  background:var(--plasma); color:#000; border-color:var(--plasma); font-weight:600;
+  box-shadow:0 8px 32px rgba(0,0,0,.45);
+}
+.mbar .btn:hover{background:var(--plasma-bright)}
+
+/* ── sources ── */
+.srcs{columns:2; column-gap:34px; font-size:14px; color:var(--muted)}
+.srcs li{break-inside:avoid; margin-bottom:11px; line-height:1.45}
+.note{margin-top:22px; font-size:14.5px; color:var(--muted); line-height:1.5}
+
+footer{
+  padding:36px 0 calc(48px + var(--safe-b));
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.04em;
+  color:var(--faint); line-height:1.75;
+}
+footer a{color:var(--muted); border:0}
+footer a:hover{color:var(--plasma)}
+
+/* ══════════ tablet / small laptop ══════════ */
+@media (max-width:860px){
+  nav .links{gap:4px 14px}
+  nav a.l{font-size:12px}
+}
+
+/* ══════════ phone + phablet ══════════ */
+@media (max-width:720px){
+  body{font-size:16px; line-height:1.58; padding-bottom:calc(72px + var(--safe-b))}
+  html{scroll-padding-top:calc(56px + var(--safe-t))}
+  nav .wrap{height:48px}
+  nav .links{display:none !important}
+  nav .nav-cta{display:inline-flex !important}
+
+  .statgrid{grid-template-columns:1fr 1fr}
+  .stat{
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:18px 16px;
+  }
+  .stat:nth-child(2n){border-right:0}
+  .stat:nth-child(n+3){border-bottom:0}
+  .stat .n{font-size:1.35rem}
+  .stat .k{font-size:12px; margin-top:6px}
+
+  /* tables → stacked cards (no horizontal scroll) */
+  .tw{border:0; overflow:visible; background:transparent}
+  .tw table,
+  .tw thead,
+  .tw tbody,
+  .tw th,
+  .tw td,
+  .tw tr{display:block; width:100%}
+  .tw thead{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+  .tw tr{
+    border:1px solid var(--line); border-radius:3px; margin-bottom:10px;
+    padding:4px 0; background:var(--bg-elev);
+  }
+  .tw tr:last-child{margin-bottom:0}
+  .tw td{
+    border:0; border-bottom:1px solid var(--line); padding:10px 14px;
+    white-space:normal;
+  }
+  .tw td:last-child{border-bottom:0}
+  .tw td.num{white-space:normal}
+  .tw td[data-label]{
+    display:grid; grid-template-columns:minmax(5.5rem,36%) 1fr; gap:8px 12px; align-items:start;
+  }
+  .tw td[data-label]::before{
+    display:block; content:attr(data-label);
+    font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); padding-top:2px; line-height:1.35;
+  }
+  /* primary cell (first) spans full width as card title */
+  .tw td[data-label]:first-child{
+    grid-template-columns:1fr; gap:4px;
+    padding-bottom:12px; margin-bottom:2px;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .tw td[data-label]:first-child::before{margin-bottom:2px}
+  .tw.timeline td[data-label]:first-child .num,
+  .tw td[data-label]:first-child b{font-size:1rem}
+  .tw td.num[data-label]:not(:first-child){font-size:14px; color:var(--text)}
+
+  .stack .row{grid-template-columns:1fr}
+  .stack .lbl{
+    border-right:0; border-bottom:1px solid var(--line);
+    padding:12px 14px 8px; letter-spacing:.1em;
+  }
+  .stack .val{padding:10px 14px 14px}
+
+  .srcs{columns:1}
+  .ask .item .h{gap:10px}
+  .bio{gap:16px}
+  .bio .mark{flex-basis:56px; width:56px; height:56px; font-size:18px}
+  .bio .body{min-width:0}
+  .mbar{display:block}
+  footer{padding-bottom:calc(24px + var(--safe-b))}
+  .meta{flex-direction:column; gap:6px}
+}
+
+/* ══════════ narrow phones ══════════ */
+@media (max-width:380px){
+  body{font-size:15.5px}
+  .stat .n{font-size:1.2rem}
+  .stat .k{font-size:11.5px}
+  .tw td[data-label]{grid-template-columns:1fr; gap:4px}
+  .tw td[data-label]:not(:first-child)::before{margin-bottom:0}
+  .meta{flex-direction:column; gap:8px}
+  .brand{letter-spacing:.1em; font-size:10.5px}
+}
+
+/* ══════════ print ══════════ */
+@media print{
+  body{background:#fff; color:#111; font-size:11pt; padding-bottom:0}
+  body::before,nav,.mbar,.cta .btn{display:none!important}
+  a{color:#111; border:0}
+  .stat .n,.sec-no,.eyebrow,h1 em{color:#a4551a}
+  h2,h1{color:#111}
+  p,td,li,.stack .val{color:#333}
+  section{border-color:#ddd; padding:22pt 0; break-inside:avoid}
+  .tw,table,.tw tr{border-color:#ccc}
+  th{background:#f2f2f2; color:#333}
+  .pull{border-color:#a4551a; background:#faf6f1}
+  .caveat{border-color:#ccc; background:#fafafa}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">OPEN&nbsp;PEOPLE <b>/</b> PHASE&nbsp;2</a>
+    <div class="links">
+      <a class="l" href="#asset">The asset</a>
+      <a class="l" href="#gap">The gap</a>
+      <a class="l" href="#window">The window</a>
+      <a class="l" href="#buyer">The buyer</a>
+      <a class="l" href="#ask">The ask</a>
+      <a class="l" href="#constraints">Constraints</a>
+      <a class="l" href="#who">Who we are</a>
+    </div>
+    <a class="nav-cta" href="mailto:tom@openpeople.ai?subject=The%20Labrador%20Compute%20Case">Email</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Briefing · Newfoundland &amp; Labrador</div>
+    <h1>The province that exports 34 TWh should own the <em>machines that value it</em>.</h1>
+    <p class="standfirst">
+      Newfoundland and Labrador generates about 43 TWh of green electricity a year and sends
+      most of it across the Québec border. The Churchill Falls renegotiation now underway is
+      the first chance in fifty-seven years to reserve a scheduled block of Labrador power for
+      the highest-value electricity load on earth — AI compute. It is currently on track to
+      miss it.
+    </p>
+    <div class="meta">
+      <span><b>Prepared by</b> Open People · St. John's, NL</span>
+      <span><b>Updated</b> July 2026</span>
+      <span><b>Status</b> Public briefing</span>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="statgrid">
+    <div class="stat"><div class="n">43.1 TWh</div><div class="k">NL renewable generation, 2023 — 97.4% of all provincial output</div></div>
+    <div class="stat"><div class="n">34.5 TWh</div><div class="k">Net electricity outflows in 2023, overwhelmingly to Québec</div></div>
+    <div class="stat"><div class="n">3.8¢</div><div class="k">Per kWh NL would receive under the MOU price path to 2041</div></div>
+    <div class="stat"><div class="n">13¢</div><div class="k">Per kWh Hydro-Québec has proposed charging new data centres</div></div>
+  </div>
+</div>
+
+<section id="situation">
+  <div class="wrap">
+    <div class="sec-no">01 — The situation</div>
+    <h2>One paragraph</h2>
+    <p class="lead">
+      Newfoundland and Labrador owns one of the cleanest large power systems in North America.
+      Churchill Falls alone — 5,428 MW, roughly 34 TWh a year — has been sold under contracts
+      that captured a small fraction of what firm, carbon-free power commands today. In May 2026
+      the Independent Churchill River Review Committee found the December 2024 Memorandum of
+      Understanding <strong>not in the long-term public interest as written</strong>, citing among
+      other flaws limited provincial rights to use the power in-province. A definitive agreement
+      is being renegotiated and remains unsigned. The province's stated priority — more power for
+      Labrador's economy — has so far been framed almost entirely around critical minerals.
+      Mining matters. But mining is not the buyer that has repriced electricity across this
+      continent. Data centres are, and no one has yet written them into the plan.
+    </p>
+    <div class="pull">
+      Labrador isn't an infinite battery for the world's AI. It <em>is</em> enough firm green power
+      to host a strategically significant Canadian compute cluster — if the province chooses
+      industry over raw export.
+    </div>
+  </div>
+</section>
+
+<section id="asset">
+  <div class="wrap">
+    <div class="sec-no">02 — The asset</div>
+    <h2>What the province actually holds</h2>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Asset</th><th>Capacity</th><th>Annual energy</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-label="Asset"><b>Churchill Falls</b><span class="src">CFLCo — NL Hydro 65.8% / Hydro-Québec 34.2%</span></td>
+            <td class="num" data-label="Capacity">5,428 MW</td>
+            <td class="num" data-label="Annual energy">~34–35 TWh</td>
+          </tr>
+          <tr>
+            <td data-label="Asset"><b>Muskrat Falls</b><span class="src">Commissioned 2020–21</span></td>
+            <td class="num" data-label="Capacity">824 MW</td>
+            <td class="num" data-label="Annual energy">~4.9 TWh</td>
+          </tr>
+          <tr>
+            <td data-label="Asset"><b>Island hydro</b><span class="src">Bay d'Espoir and others</span></td>
+            <td class="num" data-label="Capacity">~1,000+ MW</td>
+            <td class="num" data-label="Annual energy">~4 TWh</td>
+          </tr>
+          <tr>
+            <td data-label="Asset"><b>Provincial total (2023)</b></td>
+            <td class="num" data-label="Capacity">—</td>
+            <td class="num" data-label="Annual energy"><b>44.3 TWh generated<br>43.1 TWh renewable</b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      That is 97.4% renewable generation, hydro-dominated, dispatchable, and concentrated at a
+      handful of interconnection points. For scale: a 1,000 MW AI campus running continuously
+      consumes about 8.76 TWh a year. Churchill Falls is on the order of four such campuses in
+      energy terms — a genuinely significant resource, and a finite one. This is an argument for
+      allocating it deliberately, not for pretending it is limitless.
+    </p>
+  </div>
+</section>
+
+<section id="gap">
+  <div class="wrap">
+    <div class="sec-no">03 — The value gap</div>
+    <h2>Wholesaling the input at 3.8¢ to a neighbour retailing it at 13¢</h2>
+    <p>
+      Under the 1969-lineage contract structure, Churchill Falls base energy was priced on the
+      order of <strong>0.2¢/kWh</strong> as an export price. Media-reported figures put the
+      cumulative split to 2019 at roughly <strong>$28 billion</strong> in profit to Hydro-Québec
+      against <strong>$2 billion</strong> to Newfoundland and Labrador.
+    </p>
+    <p>
+      The December 2024 MOU headline was an average of 5.9¢/kWh in 2024 dollars. The Independent
+      Review's technical briefing decomposes that average into its real path:
+      <strong>about 3.8¢/kWh from 2024 to 2041, then about 16.7¢/kWh from 2042 to 2075</strong>.
+      The value is back-loaded into decades when the plant will be approaching a century old.
+    </p>
+    <p>
+      Meanwhile, in February 2026, Hydro-Québec proposed a dedicated data-centre tariff of
+      <strong>13¢/kWh</strong> — roughly double its large-industrial rate — and still expects
+      takers. Québec is deliberately rationing and repricing exactly the hydro-seeking compute
+      demand that Labrador could serve. Under the MOU, Newfoundland and Labrador would be
+      selling Québec the underlying power at 3.8¢.
+    </p>
+    <div class="pull">
+      That is the 1969 structure with better nominal prices: the province exports the commodity,
+      someone else captures the value added.
+      <cite>The point is not blame. It is that the input–output spread is a policy choice, and it is about to be made again.</cite>
+    </div>
+    <div class="caveat">
+      <span class="tag">Language discipline</span>
+      <p>
+        The historical 0.2¢ figure is an <em>export</em> price under a specific contract. It is not
+        a rate available to any customer today, and we never present it as one. Commercial power on
+        the island runs roughly 11–13¢/kWh delivered. This brief is a value-retention argument,
+        not a grievance argument.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="window">
+  <div class="wrap">
+    <div class="sec-no">04 — The window</div>
+    <h2>Why this is a 2026 decision, not a 2030 one</h2>
+    <div class="tw timeline">
+      <table>
+        <thead><tr><th>When</th><th>What happened</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num" data-label="When">Dec 2024</td>
+            <td data-label="What happened">Province and Hydro-Québec announce an MOU to replace Churchill Falls terms and enable expansions — framed as a 2025–2075 arrangement.</td>
+          </tr>
+          <tr>
+            <td class="num" data-label="When">May 19, 2026</td>
+            <td data-label="What happened"><b>Independent Churchill River Review Committee reports</b> that the MOU as configured is not in the overall best long-term interest of the province — flagging limits on using the power for in-province economic development, transmission access, pricing, and governance.</td>
+          </tr>
+          <tr>
+            <td class="num" data-label="When">May–Jun 2026</td>
+            <td data-label="What happened">Renegotiation team and oversight committee appointed. The Premier names more power for Labrador's economy as a priority — framed around critical minerals and industry. <b>AI and compute are not named.</b></td>
+          </tr>
+          <tr>
+            <td class="num" data-label="When">Jul 2026</td>
+            <td data-label="What happened"><b>The definitive agreement is still unsigned.</b> The April target was missed. The window to write a compute-eligible block into the architecture is open, and it will not stay open.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      The Review also recommended new transmission from Churchill Falls to Labrador West
+      specifically to enable energy-intensive industry. The institutional appetite for
+      in-province industrial load already exists. What is missing is a named, eligible use class
+      that includes compute.
+    </p>
+  </div>
+</section>
+
+<section id="buyer">
+  <div class="wrap">
+    <div class="sec-no">05 — The buyer</div>
+    <h2>Demand has repriced power everywhere except here</h2>
+    <p>
+      The International Energy Agency projects global data-centre electricity consumption to grow
+      from <strong>415 TWh in 2024 to about 945 TWh by 2030</strong>. Power availability — not
+      latency, not tax incentives — has become the primary site-selection criterion. Interconnection
+      queues in the established hubs now run for years.
+    </p>
+    <h3>Every Canadian hydro province is rationing. Ours has no policy at all.</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Jurisdiction</th><th>2025–26 posture</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-label="Jurisdiction"><b>Québec</b></td>
+            <td data-label="2025–26 posture">Ministerial approval required for large new loads; proposed dedicated data-centre tariff of 13¢/kWh (Feb 2026, before the regulator).</td>
+          </tr>
+          <tr>
+            <td data-label="Jurisdiction"><b>British Columbia</b></td>
+            <td data-label="2025–26 posture">Crypto loads barred; competitive AI power call capped in the range of 300 MW.</td>
+          </tr>
+          <tr>
+            <td data-label="Jurisdiction"><b>Ontario</b></td>
+            <td data-label="2025–26 posture">Economic screening introduced for large load connections.</td>
+          </tr>
+          <tr>
+            <td data-label="Jurisdiction"><b>Alberta</b></td>
+            <td data-label="2025–26 posture">An interim connection cap on the order of 1,200 MW against multi-gigawatt request queues.</td>
+          </tr>
+          <tr>
+            <td data-label="Jurisdiction"><b>Newfoundland &amp; Labrador</b></td>
+            <td data-label="2025–26 posture"><b>No policy. No tariff. No allocation process. No project.</b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>"Nobody builds AI infrastructure somewhere like Labrador"</h3>
+    <p>
+      Remote, cold and hydro-rich is precisely the profile of the current build-out.
+      <strong>Stargate Norway</strong>, announced August 2025, placed a 230 MW campus scaling to
+      520 MW and roughly 100,000 GPUs in Narvik — above the Arctic Circle — as a joint venture
+      between Nscale and Aker, running on hydropower, chosen for surplus clean power and cold
+      climate. Meta has operated a hydro-powered campus in Luleå, Sweden since 2013. Google is
+      expanding in Hamina, Finland.
+    </p>
+    <p>
+      Two technical facts make this work. <strong>AI training is latency-insensitive</strong> —
+      training runs tolerate around 100 ms between regions, because no end user is waiting.
+      Latency-sensitive inference stays near cities; capital-intensive training goes to the power.
+      And <strong>cold helps, but power decides</strong>: free cooling for eight to ten months a
+      year is a real efficiency edge, but liquid cooling is narrowing it. The durable advantage is
+      firm, clean, uncommitted power. On that measure Labrador's position is close to unique in
+      eastern North America.
+    </p>
+    <h3>Ottawa is already paying for this</h3>
+    <p>
+      Canada's Sovereign AI Compute Strategy commits more than <strong>$2 billion</strong>, with
+      further Budget 2025 funding, and explicitly seeks Canadian-owned, Canadian-controlled
+      projects above 100 MW with Indigenous participation. A Labrador consortium — Crown power,
+      Innu equity, an NL developer, Canadian anchor demand — scores on every one of those
+      criteria. The first intake window closed in 2026 <strong>with no Newfoundland and Labrador
+      entrant</strong>, because there was no NL project to enter.
+    </p>
+  </div>
+</section>
+
+<section id="ask">
+  <div class="wrap">
+    <div class="sec-no">06 — The ask</div>
+    <h2>Five things, none of which cost money</h2>
+    <p>
+      The province is not being asked to spend, build, or subsidize. It is being asked to write
+      five instruments into the post-agreement policy architecture.
+    </p>
+    <div class="ask">
+      <div class="item">
+        <div class="h"><span class="i">01</span><span class="t">A named block</span></div>
+        <p>A scheduled allocation of Labrador capacity eligible for AI and compute loads. An initial tranche in the 100–150 MW range as new generation phases in, with a roadmap to 500+ MW as expansion proceeds and consent allows.</p>
+      </div>
+      <div class="item">
+        <div class="h"><span class="i">02</span><span class="t">A transparent tariff</span></div>
+        <p>A published firm industrial compute rate — indicatively in the 4–6¢/kWh range plus full network-addition cost causation. High enough to be unimpeachable after Muskrat Falls; low enough to beat Québec's proposed 13¢.</p>
+      </div>
+      <div class="item">
+        <div class="h"><span class="i">03</span><span class="t">Allocation criteria that keep the value home</span></div>
+        <p>Score for NL majority ownership, Indigenous equity participation, creditworthy offtake, local employment, and balance-sheet substance. These criteria — not a ban — are the durable answer to the Great North Data experience.</p>
+      </div>
+      <div class="item">
+        <div class="h"><span class="i">04</span><span class="t">An infrastructure audit</span></div>
+        <p>Direct NL Hydro to publish Labrador dark-fibre capacity and recall-block headroom, and commission a diverse-route fibre feasibility study — co-fundable with federal connectivity programs.</p>
+      </div>
+      <div class="item">
+        <div class="h"><span class="i">05</span><span class="t">A federal handshake</span></div>
+        <p>A joint NL–Canada expression of interest under the Sovereign AI Compute Strategy, so the next intake window opens with a Labrador consortium already on file.</p>
+      </div>
+    </div>
+    <p>
+      Item 1 belongs in the definitive agreement's architecture or its enabling provincial
+      framework. Items 2 through 5 are ordinary policy instruments the province can move this year.
+    </p>
+    <h3>The cost of doing nothing</h3>
+    <ul>
+      <li><strong>The spread is locked in for a generation.</strong> The province wholesales at 3.8¢ until 2041 while scarce clean capacity is retailed to compute buyers elsewhere at a multiple of that — lawfully, and entirely outside NL.</li>
+      <li><strong>The federal build-out passes the province by.</strong> Every subsidized megawatt lands where a project was ready. The first window already closed without an NL entry.</li>
+      <li><strong>Labrador's industrial block defaults to mining alone.</strong> Mining is vital, but it is cyclical and it employs at the mine, not at the grid.</li>
+      <li><strong>2041 arrives with no domestic alternative.</strong> The province's leverage in any future negotiation is a credible in-province use for the power. A working compute industry <em>is</em> that leverage. Its absence is why 1969 happened.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="builds">
+  <div class="wrap">
+    <div class="sec-no">07 — Who builds it</div>
+    <h2>A consortium, not a champion</h2>
+    <p>
+      The structure that works — demonstrated at Narvik, consistent with the Independent Review's
+      governance critique, and politically viable after Muskrat Falls — puts each risk with the
+      party built to carry it.
+    </p>
+    <div class="stack">
+      <div class="row"><div class="lbl">Power &amp; site</div><div class="val">Crown utility — capacity allocation, brownfield land at the point of generation, transmission.</div></div>
+      <div class="row"><div class="lbl">Indigenous equity</div><div class="val">Innu Nation and its development entities — ownership from day one, not consultation at the end. The structure federal programs explicitly reward.</div></div>
+      <div class="row"><div class="lbl">Development</div><div class="val">An NL-based developer entity that assembles the coalition and carries the project.</div></div>
+      <div class="row us"><div class="lbl">Anchor demand</div><div class="val"><b>Where Open People sits.</b> Canadian sovereign compute demand — Canadian AI companies, public-sector and institutional workloads with residency requirements, federally subsidized SME compute — assembled into bankable, multi-year offtake.</div></div>
+      <div class="row us"><div class="lbl">Software layer</div><div class="val"><b>Where Open People sits.</b> The sovereignty gateway, guardrails, and model hosting that make in-province compute usable by buyers who cannot send data offshore.</div></div>
+      <div class="row"><div class="lbl">Capital</div><div class="val">Infrastructure investors and federal programs — following the power allocation, never preceding it.</div></div>
+    </div>
+    <p>
+      Capital does not create power; power attracts capital. Québec, British Columbia, Ontario and
+      Alberta have each just demonstrated which direction that queue runs.
+    </p>
+  </div>
+</section>
+
+<section id="constraints">
+  <div class="wrap">
+    <div class="sec-no">08 — Honest constraints</div>
+    <h2>What is genuinely hard about this</h2>
+    <p>
+      A case built on cheerleading will fail in this province, and it should. Five constraints are
+      real. None of them is a reason to leave the block unwritten — because a block that is never
+      reserved is a permanent decision in favour of exporting raw electrons.
+    </p>
+
+    <div class="con">
+      <div class="t">Fibre is the weakest link</div>
+      <p>Labrador's terrestrial backbone is essentially a single route of roughly 48 fibres built in 2012. Region-wide outages from single events are on record, and a subsidized Labrador broadband build was abandoned in May 2025 after a large cost overrun. Hyperscale campuses want multiple physically diverse paths; Labrador has approximately one.</p>
+      <div class="r"><b>What it requires</b>An audit of dark-fibre capacity on existing utility routes, a costed diverse-route study, and — the transformative option — anchoring a transatlantic cable landing. Training workloads tolerate thin connectivity in a way no other data-centre segment does. This gates hyperscale, not a first sovereign node.</div>
+    </div>
+
+    <div class="con">
+      <div class="t">The workforce is already spoken for</div>
+      <p>The Churchill expansion program will itself absorb the province's construction trades at camp premiums. Muskrat Falls remains the controlling cost precedent for remote Labrador construction.</p>
+      <div class="r"><b>What it requires</b>Modular, factory-built construction — now standard for precisely this reason — sequencing into the post-peak window, and treating the first facility as deliberately small.</div>
+    </div>
+
+    <div class="con">
+      <div class="t">Nothing large proceeds without Innu consent — nor should it</div>
+      <p>Ratification of the Innu Nation–Hydro-Québec settlement remains unresolved. Geotechnical work at Gull Island was halted by blockade in July 2025. Consultation at Happy Valley-Goose Bay may involve three overlapping claims.</p>
+      <div class="r"><b>What it requires</b>Inverting the standard model. Equity partnership in the compute entity from day one — a structure federal programs reward, that Labrador's impact-benefit culture supports, and that converts the project's largest political risk into its strongest political asset.</div>
+    </div>
+
+    <div class="con">
+      <div class="t">The Great North Data precedent</div>
+      <p>The province's one prior data-centre experience was a Labrador crypto operator that went bankrupt in 2019 owing money to the utility and public agencies. Municipal skepticism toward container mining is earned.</p>
+      <div class="r"><b>What it requires</b>Naming it rather than dodging it. That operation failed on balance sheet, and it was crypto — a commodity workload with no customers, no jobs, and no sovereignty value. An allocation framework that scores creditworthiness, ownership, employment and Indigenous equity is a filter it would have failed on every line.</div>
+    </div>
+
+    <div class="con">
+      <div class="t">AI demand could correct</div>
+      <p>Lease cancellations in 2025 and a credible skeptic corpus warn of overbuild. If capex contracts later this decade, marginal sites die first.</p>
+      <div class="r"><b>What it requires</b>Two design choices. Cost position — firm clean power in the 4–6¢ band survives a correction that strands 13¢ sites. And demand mix — sovereign, defence-adjacent and federally subsidized Canadian compute is less bubble-correlated than merchant hyperscale. A correction is an argument for the low-cost sovereign version of this project, not against it.</div>
+    </div>
+  </div>
+</section>
+
+<section id="who">
+  <div class="wrap">
+    <div class="sec-no">09 — Who we are</div>
+    <h2>Open People</h2>
+    <p>
+      Open People is a Newfoundland and Labrador AI company developing sovereign, self-hosted
+      computing — software built to run without resupply, on infrastructure its users actually
+      control. Our role in this campaign is deliberately narrow and capital-light: we assemble
+      demand, we build the sovereignty software layer, and we make the public case. We are not
+      asking to own the steel.
+    </p>
+    <div class="bio">
+      <div class="mark">TL</div>
+      <div class="body">
+        <div class="nm">Tom Lane</div>
+        <div class="rl">Founder, Open People · St. John's, NL</div>
+        <p>
+          Tom Lane is an entrepreneur based in St. John's. He is the founder of Open People and
+          co-founder and owner of snōw white laundry, a seasonal restaurant on Water Street that
+          opened in 2026. He took that project from lease negotiation through design, permitting
+          and construction — acting as his own project manager with a local general contractor —
+          and built its operating stack himself: supplier price intelligence, demand forecasting,
+          financial automation, and a custom staff platform.
+        </p>
+        <p>
+          It is a small building with a large point behind it. A regulated, multi-permit,
+          multi-trade physical build delivered on a compressed schedule is the same job shape as a
+          first small compute node — site control, power and mechanical, inspectors, trades, and a
+          licence gate at the end. He runs a 70-seat restaurant with the instrumentation of a data
+          centre. This campaign is that continuity, applied to a bigger load.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="honesty">
+  <div class="wrap">
+    <div class="sec-no">10 — Falsifiability</div>
+    <h2>What we have not proven</h2>
+    <p>
+      This document is meant to be argued with. The following are open questions, not settled
+      claims, and we say so in every room:
+    </p>
+    <ul>
+      <li>That the province will allocate firm Labrador power to compute over mining. Critical minerals are named first in current priorities; compute has to earn peer status on the merits.</li>
+      <li>That fibre economics support a training cluster at hyperscale path diversity. A first node likely fits; hyperscale is unproven until the route studies exist.</li>
+      <li>That public-sector demand alone is large enough to bank a facility. It almost certainly needs commercial and federal co-funding alongside.</li>
+      <li>That renegotiated terms will free near-term megawatts on any particular timeline.</li>
+      <li>The current Labrador industrial rate schedule. Published historical figures are a decade old; we are confirming current schedules directly rather than quoting stale ones.</li>
+      <li>The reconciliation between differing published figures for the NL-allocated capacity block under the MOU versus the Independent Review's analysis.</li>
+    </ul>
+    <div class="caveat">
+      <span class="tag">Standing rule</span>
+      <p>
+        Every figure in this brief maps to a public primary or reported source. Where a number is
+        an estimate, a range, or an illustration rather than a forecast, it is labelled as one. If
+        something here is wrong, we want to know — corrections change the document.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="sources">
+  <div class="wrap">
+    <div class="sec-no">11 — Sources</div>
+    <h2>Where the numbers come from</h2>
+    <ul class="srcs">
+      <li>Canada Energy Regulator — Newfoundland and Labrador provincial energy profile and renewable energy data</li>
+      <li>Newfoundland and Labrador Hydro — generation assets, Churchill Falls MOU fact sheets, Labrador system planning, Network Additions Policy</li>
+      <li>Independent Churchill River Review Committee — report and technical briefing, May 2026</li>
+      <li>Government of Newfoundland and Labrador — MOU announcement (Dec 2024); negotiation team and oversight releases (2026)</li>
+      <li>Hydro-Québec — data-centre tariff filing release, February 2026</li>
+      <li>International Energy Agency — <em>Energy and AI</em> (2025)</li>
+      <li>Innovation, Science and Economic Development Canada — Canadian Sovereign AI Compute Strategy programme materials</li>
+      <li>Nscale and Aker — Stargate Norway announcements, August 2025</li>
+      <li>Public Utilities Board of Newfoundland and Labrador — rate proceedings</li>
+      <li>CBC, Canadian Press and provincial media — deal-status reporting through July 2026</li>
+    </ul>
+    <p class="note">
+      Prepared independently. All figures as publicly reported. This document is intended to be
+      falsifiable — a full claim-by-claim evidence table with confidence ratings sits behind it and
+      is available on request.
+    </p>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="wrap">
+    <h2>The power has to be allocatable before anything else can happen.</h2>
+    <p>
+      If you work on energy policy, Labrador development, Indigenous partnership, compute demand,
+      or infrastructure capital in this province — we would like to talk.
+    </p>
+    <a class="btn" href="mailto:tom@openpeople.ai?subject=The%20Labrador%20Compute%20Case">tom@openpeople.ai</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Open People · St. John's, Newfoundland and Labrador<br>
+    Briefing updated July 2026 · <a href="mailto:tom@openpeople.ai">tom@openpeople.ai</a>
+  </div>
+</footer>
+
+<div class="mbar" id="mbar" hidden>
+  <a class="btn" href="mailto:tom@openpeople.ai?subject=The%20Labrador%20Compute%20Case">tom@openpeople.ai</a>
+</div>
+<script>
+(function () {
+  var bar = document.getElementById("mbar");
+  var contact = document.getElementById("contact");
+  if (!bar || !window.matchMedia) return;
+  var mq = window.matchMedia("(max-width:720px)");
+  function tick() {
+    if (!mq.matches) {
+      bar.hidden = true;
+      bar.classList.remove("is-on");
+      return;
+    }
+    bar.hidden = false;
+    var scrolled = window.scrollY > 280;
+    var nearEnd = false;
+    if (contact) {
+      var r = contact.getBoundingClientRect();
+      nearEnd = r.top < window.innerHeight - 80;
+    }
+    bar.classList.toggle("is-on", scrolled && !nearEnd);
+  }
+  window.addEventListener("scroll", tick, { passive: true });
+  window.addEventListener("resize", tick);
+  if (mq.addEventListener) mq.addEventListener("change", tick);
+  else if (mq.addListener) mq.addListener(tick);
+  tick();
+})();
+</script>
+</body>
+</html>
