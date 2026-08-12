@@ -3,7 +3,9 @@ import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
-  title: "Open People — Labrador green electrons → sovereign AI compute",
+  title: {
+    absolute: "Open People — Labrador green electrons → sovereign AI compute",
+  },
   description:
     "Open People catalyzes Labrador-linked AI compute offtake from Newfoundland and Labrador’s renewable power — demand aggregation and sovereignty software, not hyperscale steel.",
 };

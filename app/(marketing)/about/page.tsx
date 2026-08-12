@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
-  title: "About — Open People",
+  title: "About",
   description:
     "Open People is a Newfoundland and Labrador company working the Labrador green-electron → sovereign AI compute campaign. Path C: demand and software, not hyperscale steel.",
 };

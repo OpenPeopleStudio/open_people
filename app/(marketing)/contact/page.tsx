@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
-  title: "Contact — Open People",
+  title: "Contact",
   description:
     "Contact Tom Lane at Open People — tom@openpeople.ai — St. John’s, Newfoundland and Labrador.",
 };

@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
-  title: "Approach — Open People",
+  title: "Approach",
   description:
     "Path C capital model, evidence rules, and operating doctrine for Open People’s Labrador compute campaign.",
 };
