@@ -6,41 +6,44 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Core palette - Deep space with electric accents */
-  --void: #05070a;
-  --surface-1: #0a0d12;
-  --surface-2: #10151c;
-  --surface-3: #171e28;
-  --surface-elevated: #1c2433;
+  /* Core palette — void + plasma (aligned with public briefs) */
+  --void: #040404;
+  --surface-1: #0a0a0a;
+  --surface-2: #0d0d0e;
+  --surface-3: #141416;
+  --surface-elevated: #121214;
 
   /* Text hierarchy */
-  --text-primary: #f0f4f8;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #05070a;
+  --text-primary: #f2f4f6;
+  --text-secondary: rgba(242, 244, 246, 0.72);
+  --text-muted: rgba(242, 244, 246, 0.46);
+  --text-inverse: #040404;
 
-  /* Mars orange accent spectrum */
-  --electric-lime: #ff6b35;
-  --electric-lime-dim: #e55a2b;
-  --electric-cyan: #ff8c42;
-  --electric-violet: #ffa726;
-  --electric-rose: #ff5722;
+  /* Plasma accent (Phase 2 public voice) */
+  --plasma: #e8893c;
+  --plasma-bright: #f0a060;
+  --plasma-soft: rgba(232, 137, 60, 0.09);
+  --electric-lime: #e8893c;
+  --electric-lime-dim: #d47830;
+  --electric-cyan: #f0a060;
+  --electric-violet: #e8893c;
+  --electric-rose: #d47830;
 
   /* Semantic */
-  --success: #4ade80;
-  --warning: #fbbf24;
+  --success: #5fa87c;
+  --warning: #d4a84b;
   --error: #f87171;
 
   /* Borders & effects */
-  --border-subtle: rgba(148, 163, 184, 0.1);
-  --border-medium: rgba(148, 163, 184, 0.2);
-  --glow-lime: rgba(255, 107, 53, 0.4);
-  --glow-cyan: rgba(255, 140, 66, 0.3);
+  --border-subtle: rgba(255, 255, 255, 0.075);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --glow-lime: rgba(232, 137, 60, 0.35);
+  --glow-cyan: rgba(240, 160, 96, 0.25);
 
   /* Typography */
-  --font-display: "Inter", system-ui, -apple-system, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "Geist Mono", "SF Mono", monospace;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

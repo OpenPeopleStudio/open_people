@@ -1,181 +1,76 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import NavBar from "@/components/NavBar";
+import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
-  title: "About — OpenPeople.ai",
+  title: "About — Open People",
   description:
-    "OpenPeople.ai is a human-centric AI platform built to help teams stay aligned and execute—without giving up control of their data.",
+    "Open People is a Newfoundland and Labrador company working the Labrador green-electron → sovereign AI compute campaign. Path C: demand and software, not hyperscale steel.",
 };
-
-const VALUES = [
-  {
-    title: "Human-first",
-    description:
-      "AI should amplify people and teams—not replace them. We design for clarity, consent, and control.",
-  },
-  {
-    title: "Privacy by default",
-    description:
-      "Security, isolation, and access controls are foundational. Your data stays safe, useful, and yours.",
-  },
-  {
-    title: "Operational reality",
-    description:
-      "We build around how work actually happens: decisions, notes, emails, tasks, and follow-through.",
-  },
-  {
-    title: "Trust through transparency",
-    description:
-      "Clear behavior, predictable systems, and explainable workflows—so you can adopt AI with confidence.",
-  },
-];
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[var(--void)] relative overflow-hidden">
-      {/* Background effects */}
-      <div className="fixed inset-0 bg-grid pointer-events-none" />
-      <div className="glow-lime top-[-200px] left-[-200px] opacity-20" />
-      <div className="glow-cyan bottom-[-200px] right-[-200px] opacity-15" />
-
-      <NavBar />
-
-      <main className="relative z-10 pt-24 pb-16 sm:pt-32 sm:pb-20 md:pt-40 md:pb-24 lg:pt-48 lg:pb-32">
-        <div className="container">
-          {/* Header */}
-          <div className="max-w-3xl">
-            <div className="inline-flex animate-fade-in">
-              <span className="badge text-[10px] sm:text-xs">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[var(--electric-lime)] animate-pulse" />
-                About
-              </span>
-            </div>
-
-            <h1 className="mt-6 sm:mt-8 text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl font-display tracking-tight animate-slide-up">
-              Human-centric AI{" "}
-              <span className="text-gradient-lime italic block sm:inline">
-                that respects your business
-              </span>
-            </h1>
-
-            <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed animate-slide-up delay-100">
-              OpenPeople.ai is built to help teams plan, execute, and stay aligned—across
-              notes, workflows, email, and secure storage. We&apos;re based in St.
-              John&apos;s, Newfoundland.
-            </p>
-          </div>
-
-          {/* What we do */}
-          <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              {
-                title: "Turn decisions into action",
-                desc: "Capture decisions and convert them into clear next steps, owners, and follow-ups.",
-              },
-              {
-                title: "Keep knowledge organized",
-                desc: "Notes become searchable, linkable, and usable across your team—not lost in chats.",
-              },
-              {
-                title: "Integrate where work lives",
-                desc: "Email, storage, and tools you already use—so AI fits into your day, not around it.",
-              },
-            ].map((card) => (
-              <div key={card.title} className="glass-card p-5 sm:p-6 md:p-7">
-                <h2 className="text-base sm:text-lg font-semibold text-[var(--text-primary)]">
-                  {card.title}
-                </h2>
-                <p className="mt-2 text-sm sm:text-base text-[var(--text-secondary)]">
-                  {card.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Values */}
-          <div className="mt-12 sm:mt-16">
-            <h2 className="text-xl sm:text-2xl font-display text-[var(--text-primary)]">
-              Our principles
-            </h2>
-            <p className="mt-2 text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl">
-              We care about shipping fast—but never at the cost of safety, privacy, or
-              trust.
-            </p>
-
-            <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              {VALUES.map((v) => (
-                <div key={v.title} className="glass-card p-5 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-[var(--text-primary)]">
-                    {v.title}
-                  </h3>
-                  <p className="mt-2 text-sm sm:text-base text-[var(--text-secondary)]">
-                    {v.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA */}
-          <div className="mt-12 sm:mt-16 glass-card p-6 sm:p-8 md:p-10 text-center">
-            <h2 className="text-xl sm:text-2xl font-display text-[var(--text-primary)]">
-              Ready to see OpenPeople.ai in action?
-            </h2>
-            <p className="mt-2 sm:mt-3 text-sm sm:text-base text-[var(--text-secondary)] max-w-xl mx-auto">
-              Start with a free trial or reach out—we&apos;ll help you map AI to your
-              real workflows.
-            </p>
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
-              <Link href="/signup" className="btn-primary w-full sm:w-auto justify-center">
-                Start free trial
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </Link>
-              <Link
-                href="/contact"
-                className="btn-secondary w-full sm:w-auto justify-center"
-              >
-                Talk to us
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <footer className="relative z-10 border-t border-[var(--border-subtle)] py-8 sm:py-10">
-        <div className="container flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs sm:text-sm text-[var(--text-muted)]">
-            © {new Date().getFullYear()} OpenPeople.ai
+    <SiteShell>
+      <main className="px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36">
+        <article className="mx-auto max-w-[780px]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
+            About
           </p>
-          <div className="flex items-center gap-5 sm:gap-4 text-xs sm:text-sm">
-            <Link
-              href="/privacy"
-              className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors py-1"
-            >
-              Privacy
+          <h1 className="mt-4 font-display text-[2rem] font-normal leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+            A Newfoundland company on the Labrador power story.
+          </h1>
+          <p className="mt-6 text-lg leading-relaxed text-[var(--text-secondary)]">
+            Open People works at the intersection of Newfoundland and Labrador&apos;s renewable
+            hydro surplus and global AI demand for firm, clean, sovereignty-aware compute.
+          </p>
+
+          <div className="mt-12 space-y-5 text-[var(--text-secondary)] leading-relaxed">
+            <p>
+              We are not raising to buy a hyperscale data centre. We assemble{" "}
+              <strong className="text-[var(--text-primary)]">bankable demand</strong>, the{" "}
+              <strong className="text-[var(--text-primary)]">policy narrative</strong> that puts
+              compute on the Labrador industrial list, and the{" "}
+              <strong className="text-[var(--text-primary)]">software layer</strong> that makes
+              residency and operations real — while infrastructure partners carry construction and
+              GPU balance sheets.
+            </p>
+            <p>
+              That stance is deliberate. Capital reality and first-principles analysis killed the
+              “raise to own the steel” path. The durable position is originator and operator of
+              demand and sovereignty services — with an optional small financeable floor — not
+              principal ownership of billion-dollar shells.
+            </p>
+            <p>
+              The company is based in{" "}
+              <strong className="text-[var(--text-primary)]">St. John&apos;s</strong>. Founder Tom
+              Lane also built and operates{" "}
+              <strong className="text-[var(--text-primary)]">Snow White Laundry</strong> on Water
+              Street — a live operator record and, under strict rules, a hospitality setting for
+              coalition partners (not for public officials).
+            </p>
+          </div>
+
+          <div className="mt-12 rounded border border-[var(--border-subtle)] border-l-2 border-l-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
+            <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
+              Public facts only
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+              Energy figures on this site map to Canada Energy Regulator, NL Hydro, and Independent
+              Review Committee materials. We do not invent rates. Claims that are unproven stay
+              labeled as work, not settled fact.
+            </p>
+          </div>
+
+          <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+            <Link href="/brief" className="btn-primary justify-center px-5 py-3 text-sm">
+              Read the public case
             </Link>
-            <Link
-              href="/terms"
-              className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors py-1"
-            >
-              Terms
+            <Link href="/approach" className="btn-secondary justify-center px-5 py-3 text-sm">
+              How we work
             </Link>
           </div>
-        </div>
-      </footer>
-    </div>
+        </article>
+      </main>
+    </SiteShell>
   );
 }
-

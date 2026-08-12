@@ -4,25 +4,26 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://openpeople.ai"),
-  title: "OpenPeople.ai — Human-centric AI for business",
+  title: {
+    default: "Open People — Labrador green electrons → sovereign AI compute",
+    template: "%s · Open People",
+  },
   description:
-    "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage. Your data stays safe, useful, and yours.",
+    "Open People catalyzes Labrador-linked AI compute offtake from Newfoundland and Labrador’s renewable power — demand aggregation and sovereignty software, not hyperscale steel.",
   keywords: [
-    "human-centric AI",
-    "AI team",
-    "AI workers",
-    "workflows",
-    "notes",
-    "email",
-    "secure storage",
-    "multi-tenant",
-    "multi-tenant",
-    "SaaS",
+    "Labrador",
+    "Newfoundland and Labrador",
+    "Churchill Falls",
+    "sovereign AI",
+    "data centre",
+    "green hydro",
+    "Open People",
+    "compute offtake",
   ],
   openGraph: {
-    title: "OpenPeople.ai — Human-centric AI for business",
+    title: "Open People — Labrador green electrons → sovereign AI compute",
     description:
-      "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage.",
+      "Demand aggregation and sovereignty software for Labrador-linked AI compute. Partners own the steel.",
     type: "website",
     locale: "en_US",
     images: [
@@ -30,15 +31,15 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "OpenPeople.ai - Human-centric AI platform",
+        alt: "Open People — Labrador green electrons → sovereign AI compute",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "OpenPeople.ai — Human-centric AI for business",
+    title: "Open People — Labrador green electrons → sovereign AI compute",
     description:
-      "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage.",
+      "Demand aggregation and sovereignty software for Labrador-linked AI compute. Partners own the steel.",
     images: ["/twitter-image.png"],
   },
   icons: {
@@ -81,8 +82,8 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
         {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#00FF88" />
-        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="theme-color" content="#e8893c" />
+        <meta name="msapplication-TileColor" content="#040404" />
       </head>
       <body className="antialiased">
         {/* Noise texture overlay */}

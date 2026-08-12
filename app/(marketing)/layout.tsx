@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OpenPeople.ai — Human-centric AI for business",
+  title: {
+    default: "Open People — Labrador green electrons → sovereign AI compute",
+    template: "%s · Open People",
+  },
   description:
-    "Human-centric AI to help your team plan, execute, and stay aligned—across notes, workflows, email, and secure storage. Your data stays safe, useful, and yours.",
+    "Open People catalyzes Labrador-linked AI compute offtake from Newfoundland and Labrador’s renewable power — demand aggregation and sovereignty software.",
 };
 
 export default function MarketingLayout({

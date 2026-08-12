@@ -1,7 +1,9 @@
 # open_people — Project Context
 
 ## What This Is
-The open_people data standard defines how a human packages their identity, agents, memory, and preferences into a portable, verifiable bundle. It is a spec, not a product. Mars HQ is the first implementation.
+**Public surface:** openpeople.ai — Open People company site (Phase 2: Labrador green electrons → sovereign AI compute).  
+**Parked product shell:** multi-tenant SaaS admin (`/super-admin`, `app.openpeople.ai`) — not the public story.  
+Also hosts the open_people data-standard docs/spec under `docs/`.
 
 ## Stack
 - **Monorepo**: npm workspaces (future reference implementation)
@@ -19,7 +21,10 @@ The open_people data standard defines how a human packages their identity, agent
 - `decisions/` — Architecture Decision Records
 - `public/brief.html` → **https://openpeople.ai/brief** (public Labrador Compute Case)
 - `public/coalition.html` → **https://openpeople.ai/coalition** (partner brief; noindex; not in sitemap)
-- `next.config.ts` — rewrites for `/brief` and `/coalition`
+- `app/(marketing)/` — Phase 2 public pages: `/`, `/about`, `/approach`, `/contact`
+- `components/marketing/` — SiteNav, SiteFooter, SiteShell (plasma brand)
+- `next.config.ts` — rewrites for `/brief` and `/coalition`; 301s for retired SaaS marketing routes
+- Track 2 (planned): `app.openpeople.ai` → Phase 2 project-management desk (not multi-tenant SaaS)
 
 ## Conventions
 - Spec before code. The spec IS the product.

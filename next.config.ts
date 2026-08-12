@@ -20,7 +20,33 @@ const nextConfig: NextConfig = {
 
   // Handle redirects at the config level
   async redirects() {
+    const retiredMarketing = [
+      "/pricing",
+      "/signup",
+      "/documentation",
+      "/api-reference",
+      "/integrations",
+      "/blog",
+      "/changelog",
+      "/careers",
+      "/support",
+      "/security",
+      "/onboarding/pending",
+    ] as const;
+
     return [
+      // Retired SaaS marketing → company home (Phase 2 public face)
+      ...retiredMarketing.map((source) => ({
+        source,
+        destination: "/",
+        permanent: true,
+      })),
+      {
+        source: "/login",
+        destination: "https://app.openpeople.ai",
+        permanent: false,
+      },
+
       // Redirect super admin root to /super-admin
       {
         source: '/',
