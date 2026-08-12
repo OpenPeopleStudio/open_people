@@ -17,6 +17,9 @@ The open_people data standard defines how a human packages their identity, agent
 - `packages/` — Future reference implementation (identity, package, verify, migrate)
 - `examples/` — Example `.opkg` files
 - `decisions/` — Architecture Decision Records
+- `public/brief.html` → **https://openpeople.ai/brief** (public Labrador Compute Case)
+- `public/coalition.html` → **https://openpeople.ai/coalition** (partner brief; noindex; not in sitemap)
+- `next.config.ts` — rewrites for `/brief` and `/coalition`
 
 ## Conventions
 - Spec before code. The spec IS the product.

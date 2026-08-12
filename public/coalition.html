@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#040404" />
+<meta name="color-scheme" content="dark" />
+<title>Phase 2 — Coalition Partner Brief · Open People</title>
+<meta name="description" content="Newfoundland and Labrador generated ~43 TWh of renewable electricity in 2023 and exports most of it. The Churchill Falls renegotiation is the window to reserve a compute-eligible block in Labrador. This is what we're building and where a partner fits." />
+<meta property="og:title" content="Phase 2 — Coalition Partner Brief" />
+<meta property="og:description" content="Labrador green electrons → AI compute. What we're building, who carries what risk, and where you fit." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://openpeople.ai/coalition" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="twitter:card" content="summary" />
+<style>
+:root{
+  --bg:#040404; --bg-elev:#0a0a0a; --bg-card:#0d0d0e;
+  --line:rgba(255,255,255,.075); --line-strong:rgba(255,255,255,.15);
+  --text:#f2f4f6; --dim:rgba(242,244,246,.72); --muted:rgba(242,244,246,.46); --faint:rgba(242,244,246,.26);
+  --plasma:#e8893c; --plasma-bright:#f0a060; --plasma-soft:rgba(232,137,60,.09);
+  --signal:#8a9bb0; --warn:#d4a84b; --ok:#5fa87c;
+  --sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --maxw:780px;
+  --pad:clamp(16px,4.5vw,26px);
+  --safe-t:env(safe-area-inset-top,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:70px}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:17px; line-height:1.62; letter-spacing:-.005em;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  overflow-x:hidden; min-height:100dvh;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:radial-gradient(min(900px,140vw) 520px at 50% -8%, rgba(232,137,60,.075), transparent 70%);
+}
+.wrap{position:relative; z-index:1; max-width:var(--maxw); margin:0 auto; padding:0 var(--pad)}
+:focus-visible{outline:2px solid var(--plasma); outline-offset:3px}
+
+nav{
+  position:sticky; top:0; z-index:20;
+  backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2);
+  background:rgba(4,4,4,.88); border-bottom:1px solid var(--line); padding-top:var(--safe-t);
+}
+nav .wrap{display:flex; align-items:center; gap:14px; height:54px; max-width:1080px}
+.brand{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--text); text-decoration:none; white-space:nowrap}
+.brand b{color:var(--plasma); font-weight:600}
+nav .links{margin-left:auto; display:flex; gap:18px; overflow-x:auto; scrollbar-width:none;
+  mask-image:linear-gradient(90deg,#000 93%,transparent)}
+nav .links::-webkit-scrollbar{display:none}
+nav a.l{font-size:12.5px; color:var(--muted); text-decoration:none; white-space:nowrap; transition:color .15s}
+nav a.l:hover{color:var(--plasma)}
+
+header.hero{padding:clamp(46px,10vw,86px) 0 clamp(34px,6vw,52px); border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--plasma); margin-bottom:clamp(18px,4vw,26px)}
+h1{font-family:var(--serif); font-weight:400; font-size:clamp(1.9rem,7vw,3.5rem);
+  line-height:1.07; letter-spacing:-.022em; margin-bottom:clamp(18px,4vw,26px)}
+h1 em{font-style:italic; color:var(--plasma)}
+.standfirst{font-size:clamp(1.02rem,2.6vw,1.2rem); color:var(--dim); line-height:1.58; max-width:62ch}
+.meta-row{display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:clamp(26px,5vw,36px);
+  font-family:var(--mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint)}
+.meta-row span b{color:var(--muted); font-weight:400}
+
+section{padding:clamp(42px,8vw,74px) 0; border-bottom:1px solid var(--line)}
+.sec-num{font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:var(--plasma);
+  text-transform:uppercase; margin-bottom:14px}
+h2{font-family:var(--serif); font-weight:400; font-size:clamp(1.5rem,4.4vw,2.25rem);
+  line-height:1.16; letter-spacing:-.018em; margin-bottom:clamp(16px,3vw,24px)}
+h3{font-size:1.02rem; font-weight:600; letter-spacing:-.008em; margin:30px 0 12px; color:var(--text)}
+h3:first-child{margin-top:0}
+p{margin-bottom:17px; color:var(--dim)}
+p.lead{color:var(--text); font-size:1.06rem}
+strong{color:var(--text); font-weight:600}
+a{color:var(--plasma); text-decoration:none; border-bottom:1px solid rgba(232,137,60,.3)}
+a:hover{border-bottom-color:var(--plasma)}
+ul{margin:0 0 18px; padding-left:22px}
+li{color:var(--dim); margin-bottom:9px}
+li::marker{color:var(--plasma)}
+
+.tbl{width:100%; overflow-x:auto; margin:22px 0 24px; -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line); border-radius:4px; background:var(--bg-elev)}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:520px}
+th{text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--faint); font-weight:500; padding:12px 14px; border-bottom:1px solid var(--line-strong); white-space:nowrap}
+td{padding:12px 14px; border-bottom:1px solid var(--line); color:var(--dim); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td strong{color:var(--text)}
+td.num{font-family:var(--mono); font-size:13.5px; white-space:nowrap; color:var(--text)}
+.cite{font-family:var(--mono); font-size:10.5px; color:var(--faint); letter-spacing:.04em; white-space:nowrap}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:4px; margin:26px 0 6px; overflow:hidden}
+.stat{background:var(--bg-elev); padding:20px 18px}
+.stat .v{font-family:var(--serif); font-size:clamp(1.5rem,4.6vw,2.05rem); color:var(--plasma); line-height:1.05}
+.stat .k{font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--faint); margin-top:9px; line-height:1.5}
+
+.card{background:var(--bg-card); border:1px solid var(--line); border-radius:4px;
+  padding:clamp(18px,4vw,26px); margin:22px 0}
+.card.accent{border-left:2px solid var(--plasma); background:var(--plasma-soft)}
+.card.warn{border-left:2px solid var(--warn)}
+.card h4{font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--plasma); margin-bottom:12px; font-weight:500}
+.card.warn h4{color:var(--warn)}
+.card p:last-child{margin-bottom:0}
+
+.flow{font-family:var(--mono); font-size:12.5px; line-height:2.05; color:var(--dim);
+  background:var(--bg-elev); border:1px solid var(--line); border-radius:4px;
+  padding:clamp(18px,4vw,24px); margin:22px 0; overflow-x:auto; white-space:pre}
+.flow b{color:var(--plasma); font-weight:500}
+
+.phases{display:grid; gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:4px; overflow:hidden; margin:24px 0}
+.phase{background:var(--bg-elev); padding:18px 20px; display:grid; grid-template-columns:82px 1fr; gap:16px}
+.phase .yr{font-family:var(--mono); font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--plasma); padding-top:3px}
+.phase .bd .t{font-weight:600; margin-bottom:5px; font-size:15px}
+.phase .bd .d{font-size:14px; color:var(--muted); line-height:1.55}
+.phase.now{background:rgba(232,137,60,.06)}
+.phase.now .yr::after{content:" ◄ now"; color:var(--plasma-bright)}
+
+.pill{display:inline-block; font-family:var(--mono); font-size:9.5px; letter-spacing:.1em;
+  text-transform:uppercase; padding:3px 8px; border-radius:2px; border:1px solid var(--line-strong);
+  color:var(--muted); margin-right:6px}
+.pill.p0{color:var(--plasma); border-color:rgba(232,137,60,.45)}
+.pill.ok{color:var(--ok); border-color:rgba(95,168,124,.4)}
+.pill.hold{color:var(--warn); border-color:rgba(212,168,75,.4)}
+
+.asks{display:grid; gap:14px; margin:24px 0}
+.ask{background:var(--bg-elev); border:1px solid var(--line); border-left:2px solid var(--signal);
+  border-radius:4px; padding:18px 20px}
+.ask .who{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--signal); margin-bottom:9px}
+.ask .what{font-size:15px; color:var(--dim); line-height:1.58}
+.ask .what b{color:var(--text)}
+
+footer{padding:clamp(44px,8vw,72px) 0 clamp(56px,10vw,88px); text-align:left}
+.sig{font-family:var(--serif); font-size:clamp(1.25rem,3.4vw,1.7rem); line-height:1.3; margin-bottom:18px}
+.contact{font-family:var(--mono); font-size:13px; color:var(--dim); line-height:2}
+.contact a{border-bottom:1px solid rgba(232,137,60,.3)}
+.fineprint{margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:10.5px; line-height:1.9; color:var(--faint); letter-spacing:.03em}
+
+@media (max-width:640px){
+  body{font-size:16px}
+  .phase{grid-template-columns:1fr; gap:8px}
+  nav .links{gap:14px}
+}
+@media print{
+  body{background:#fff; color:#111}
+  body::before,nav{display:none}
+  section{border-color:#ddd; page-break-inside:avoid}
+  h1,h2,.stat .v,.eyebrow,.sec-num,.card h4{color:#000}
+  p,li,td{color:#222}
+  .card,.flow,.stat,.phase,.ask,.tbl{background:#fafafa; border-color:#ddd}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">OPEN <b>PEOPLE</b> · PHASE 2</a>
+    <div class="links">
+      <a class="l" href="#thesis">Thesis</a>
+      <a class="l" href="#window">Window</a>
+      <a class="l" href="#build">What we build</a>
+      <a class="l" href="#capital">Capital</a>
+      <a class="l" href="#roadmap">Roadmap</a>
+      <a class="l" href="#status">Status</a>
+      <a class="l" href="#you">Where you fit</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Coalition partner brief · August 2026</div>
+    <h1>Newfoundland and Labrador exports its best asset raw. <em>We're building the buyer.</em></h1>
+    <p class="standfirst">The province generated roughly 43 TWh of renewable electricity in 2023 and ships most of it out of province under contracts written for a different century. The Churchill Falls renegotiation reopened the only question that matters for the next decade: do those electrons fund someone else's grid, or Labrador's industrial future? Phase 2 is our campaign to make AI compute a serious answer — and to make sure the value stays here.</p>
+    <div class="meta-row">
+      <span><b>Prepared by</b> Open People</span>
+      <span><b>Phase</b> Y0 — Found</span>
+      <span><b>Tier</b> Partner-confidential</span>
+      <span><b>Version</b> v1 · 2026-08-12</span>
+    </div>
+  </div>
+</header>
+
+<section id="thesis">
+  <div class="wrap">
+    <div class="sec-num">01 — The situation</div>
+    <h2>A world-class clean power system, sold at a fraction of its modern worth.</h2>
+
+    <div class="stats">
+      <div class="stat"><div class="v">44.3 TWh</div><div class="k">NL generation, 2023</div></div>
+      <div class="stat"><div class="v">97.4%</div><div class="k">from renewables</div></div>
+      <div class="stat"><div class="v">~34.5 TWh</div><div class="k">net outflows, mostly to QC</div></div>
+      <div class="stat"><div class="v">5,428 MW</div><div class="k">Churchill Falls, one site</div></div>
+    </div>
+    <p class="cite" style="margin-bottom:26px">Sources: Canada Energy Regulator (2023 data, modified 2026-03-25); NL Hydro generation assets.</p>
+
+    <p class="lead">Churchill Falls is among the largest hydroelectric plants in North America — second in Canada only to Robert-Bourassa. It produces roughly 34–35 TWh a year. Roughly 90% of it has been sold to Hydro-Québec under a 1969-lineage contract running to 2041, at a historical base export price on the order of <strong>0.2¢/kWh</strong>.</p>
+
+    <div class="card warn">
+      <h4>An honest caveat we hold ourselves to</h4>
+      <p>That 0.2¢ figure is the <strong>historical Québec export price</strong>. It is not a rate available to us, to you, or to any industrial customer in the province today. Newfoundland Power general service runs roughly 11–13¢/kWh delivered. We never claim otherwise, in any room, and we ask partners to hold the same line — the credibility of this campaign depends on it.</p>
+    </div>
+
+    <p>The gap is the point. Media-reported cumulative profit from Churchill Falls to 2019 runs on the order of <strong>$28B to Québec against roughly $2B to Newfoundland and Labrador</strong>. At modern wholesale values, energy at Churchill Falls scale would be worth billions annually — a figure we use only to illustrate the size of the value gap, never as a forecast.</p>
+
+    <p>This is not an anti-Québec campaign. It is a value-retained-in-province campaign, and it needs Québec as a functioning counterparty.</p>
+  </div>
+</section>
+
+<section id="window">
+  <div class="wrap">
+    <div class="sec-num">02 — The window</div>
+    <h2>For the first time in fifty years, the terms are open.</h2>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>When</th><th>What happened</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td class="num">Dec 2024</td><td>NL–HQ Memorandum of Understanding announced — new terms 2025–2075, Gull Island in scope</td><td>Proposed ~$1B/yr to NL from 2025; a $3.5B HQ option payment. A proposal, never an executed agreement.</td></tr>
+          <tr><td class="num">May 2026</td><td><strong>Independent Review Committee</strong> finds the MOU <strong>not in the long-term public interest as written</strong></td><td>Flagged limits on using Churchill Falls power <em>in-province</em> for economic development, plus transmission access, pricing, and HQ governance conflicts.</td></tr>
+          <tr><td class="num">May 2026</td><td>Premier Wakeham sets renegotiation priorities: more power for the Labrador economy, more value from PPAs, more transmission optionality</td><td>The plank exists. <strong>AI and compute are not yet named in it.</strong> That is precisely the job.</td></tr>
+          <tr><td class="num">Jul 2026</td><td>Definitive agreement still unsigned; April target missed</td><td>The window is open — and it closes the day the agreement signs.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card accent">
+      <h4>The pricing detail most people get wrong</h4>
+      <p>The MOU's headline "5.9¢/kWh average" is not a flat rate. Per the IRC technical briefing it decomposes into roughly <strong>3.8¢ from 2024–2041</strong>, then roughly <strong>16.7¢ from 2042–2075</strong>. Any near-term model using a flat 5.9¢ is wrong. We flag this because partners who model it correctly reach different conclusions than partners who don't.</p>
+    </div>
+
+    <p>The IRC also recommended new transmission from Churchill Falls to Labrador West specifically to enable energy-intensive industry. The corridor logic is already in the official record. Compute simply has to earn peer status alongside critical minerals — which are, today, first in line.</p>
+  </div>
+</section>
+
+<section id="buyer">
+  <div class="wrap">
+    <div class="sec-num">03 — The buyer</div>
+    <h2>AI infrastructure has become a firm-power buyer of last resort.</h2>
+
+    <p>Global data-centre electricity demand is projected to roughly double — the IEA puts it at <strong>415 TWh in 2024 rising to 945 TWh by 2030</strong>. AI training campuses want firm, high-load-factor, carbon-free power at tens to hundreds of megawatts per site, and they increasingly cannot get it.</p>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Signal</th><th>Detail</th><th>Read</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Neighbours are rationing</strong></td><td>Québec proposed a ~13¢/kWh data-centre tariff (Régie pending); BC capped an AI call near 300 MW; Alberta set an interim ~1,200 MW against multi-GW requests</td><td>Demand is being actively displaced. It has to land somewhere.</td></tr>
+          <tr><td><strong>Remote hydro works</strong></td><td>Stargate Norway (Narvik): 230→520 MW, 100k GPUs, 100% hydro, Nscale/Aker JV</td><td>The structural precedent — and the partnership shape we're copying.</td></tr>
+          <tr><td><strong>Canadian money is on the table</strong></td><td>~$2B federal Sovereign AI Compute Strategy; large-scale stream targets &gt;100 MW, Canadian-owned/controlled, with Indigenous participation</td><td>First intake windows closed in 2026 <strong>with no NL entrant.</strong> The next window is our entry vehicle.</td></tr>
+          <tr><td><strong>Latency is not the blocker</strong></td><td>Training workloads tolerate ~100 ms</td><td>Labrador is a training and batch play, not edge inference. Design accordingly.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Cold climate helps, but it is a tiebreaker, not the moat — liquid cooling has eroded much of the PUE advantage. <strong>Firm clean power at scale is the moat.</strong> That is what Labrador has and almost nowhere else in eastern North America does.</p>
+
+    <p>Scale discipline: 1 GW of continuous load consumes roughly 8.76 TWh a year. So the province's entire renewable output is on the order of a handful of large AI campuses. This resource is enormous for Newfoundland and Labrador and finite against global AI ambition. We plan against the finite number.</p>
+  </div>
+</section>
+
+<section id="build">
+  <div class="wrap">
+    <div class="sec-num">04 — What we're building</div>
+    <h2>Five layers. We hold three of them — and deliberately not the expensive one.</h2>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Layer</th><th>What it is</th><th>Who carries the risk</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Narrative &amp; policy</strong></td><td>"Electrons as industry, not raw export" — compute as a named industrial offtake class</td><td class="num">Open People + allies</td></tr>
+          <tr><td><strong>Demand</strong></td><td>Aggregated, multi-year, residency-bound offtake — government, institutions, regulated private</td><td class="num">Open People contracts</td></tr>
+          <tr><td><strong>Facility</strong></td><td>Labrador-sited or Labrador-powered AI campus</td><td class="num" style="color:var(--plasma)">Partner</td></tr>
+          <tr><td><strong>Software</strong></td><td>Sovereignty gateway, guardrails, model hosting, vertical AI</td><td class="num">Open People product</td></tr>
+          <tr><td><strong>Social equity</strong></td><td>Founder network and hospitality base in St. John's — the rooms this needs</td><td class="num">Founder</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>The sequence</h3>
+    <div class="flow">social equity  <b>→</b>  credibility + doors
+    <b>→</b>  government relations + offtake assembly + coalition
+        <b>→</b>  bankable demand package  (+ optional 1–10 MW micro-node)
+            <b>→</b>  Crown / Innu / infra partners build Labrador capacity
+                <b>→</b>  Open People = anchor tenant + sovereignty services (recurring)
+                <b>→</b>  LabradorCo = developer promote / carried stake</div>
+
+    <h3>Two vehicles, on purpose</h3>
+    <p><strong>Open People</strong> is the operating company: anchor tenant, demand aggregator, software layer. <strong>LabradorCo</strong> — a separate development vehicle, incorporation pending — is the convener: it assembles the coalition, site options and federal packages, and earns developer promote. It plays the Aker role from the Stargate Norway structure.</p>
+    <p>The split exists so that Crown, Innu and infrastructure partners have a clean legal surface to take equity in, without entangling the operating company. It also means our incentives on the facility are promote and carry, not construction margin.</p>
+
+    <div class="card">
+      <h4>The micro-node floor</h4>
+      <p>A <strong>1–10 MW facility inside the existing recall block</strong> is the financeable floor — small enough to build without hyperscale capital, large enough to be real. It does two jobs: it proves the product, and it kills the ghost of Great North Data, the crypto operation that went bankrupt in 2019 owing NL Hydro and ACOA, and which still shapes how "data centre" is heard in this province. A working, permitted, non-crypto facility answers that better than any deck.</p>
+    </div>
+  </div>
+</section>
+
+<section id="capital">
+  <div class="wrap">
+    <div class="sec-num">05 — Capital structure</div>
+    <h2>Roughly $4B of steel. Our slice is about $2.3M.</h2>
+
+    <p>This is the discipline that defines the whole project. We have mapped the capital cost of a partner-scale facility in detail — a modelled base of ~$3.94B against a $3.00B target, in a $2.07B–$7.94B range — so that every conversation starts from real numbers rather than enthusiasm.</p>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Scenario</th><th>IT load</th><th>Base (modelled)</th><th>Range</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Partner mid</strong></td><td class="num">~55 MW</td><td class="num">~$3.94B <span style="color:var(--faint)">(target $3.00B)</span></td><td class="num">$2.07B – $7.94B</td></tr>
+          <tr><td><strong>Micro-node floor</strong></td><td class="num">~5 MW</td><td class="num">financeable without hyperscale capital</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Who bears what</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Bearer</th><th>Base</th><th>Lines</th><th>Nature</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Partner</strong></td><td class="num" style="color:var(--plasma)">$3.91B</td><td class="num">26</td><td>GPUs, shell, MEP, remote-Labrador premiums, contingency, financing</td></tr>
+          <tr><td><strong>Shared</strong></td><td class="num">$26.0M</td><td class="num">3</td><td>Legal/SPV, Indigenous engagement, fibre IRU</td></tr>
+          <tr><td><strong>Open People</strong></td><td class="num">$1.5M</td><td class="num">2</td><td>Software layer + GR/offtake assembly, Y0–Y2</td></tr>
+          <tr><td><strong>LabradorCo</strong></td><td class="num">$750K</td><td class="num">1</td><td>Developer promote / origination</td></tr>
+          <tr><td><strong>Unassigned</strong></td><td class="num">—</td><td class="num">2</td><td>Upstream transmission and submarine capacity share — bearer undetermined pending diligence</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cite" style="margin-bottom:22px">The remaining four lines are non-additive planning cross-checks.</p>
+
+    <p>Cost basis: facility-only capex runs roughly <strong>$10–30M/MW</strong>; all-in with GPUs is commonly <strong>$50–60M/MW</strong> at 2025–26 pricing. In the mid scenario the GPU block alone is ~$1.93B — which is exactly why we do not want to own it. The higher all-in numbers go, the stronger the case for our position rather than weaker.</p>
+
+    <div class="card warn">
+      <h4>16 open gaps we will not paper over</h4>
+      <p>Of 38 cost lines, 16 are flagged as research gaps — the honest ones for remote Labrador. FIFO and labour premium versus metro. Workforce camp. Heavy logistics, port and winter-road risk. Insurance adders. Site prep and cold-climate envelope. On-site substation. Upstream transmission, if assigned. Submarine capacity share. Indigenous agreements budget. Year-one power OpEx, pending the current tariff.</p>
+      <p style="margin-top:12px">A partner with operating history in any of these closes a gap the moment they join. That is a real and immediate form of contribution.</p>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-num">06 — Five-year plan</div>
+    <h2>Gates are exit criteria. We do not advance on vibes.</h2>
+
+    <div class="phases">
+      <div class="phase now">
+        <div class="yr">Y0 · 2026</div>
+        <div class="bd"><div class="t">Found</div><div class="d">Become the most prepared non-utility voice in the province on electrons-to-AI-industry, without overclaiming. Evidence pack frozen; stakeholder map; provincial one-pager; first strategic conversations logged; connectivity and power-pathway research opened.</div></div>
+      </div>
+      <div class="phase">
+        <div class="yr">Y1 · 2027</div>
+        <div class="bd"><div class="t">Prove</div><div class="d">Replace theory with signed paper and live product. ≥3 non-binding offtake MOUs; recurring revenue above zero; vertical AI in production; sovereignty gateway v0; partner shortlist engaged; federal path filed or consciously deferred.</div></div>
+      </div>
+      <div class="phase">
+        <div class="yr">Y2 · 2028</div>
+        <div class="bd"><div class="t">Package</div><div class="d">Make the project financeable on paper. Aggregated conditional offtake covering a starter block (working target: a 10–50 MW demand story). Partner term sheet. Site shortlist ≤3 with power, fibre, land and Indigenous engagement status. Independent connectivity opinion.</div></div>
+      </div>
+      <div class="phase">
+        <div class="yr">Y3 · 2029</div>
+        <div class="bd"><div class="t">Catalyze</div><div class="d">Paper to irreversible commitment. Partner go-decision or early FID gates. Binding demand-ops agreement. Federal co-funding outcome known — win, partial, or walk.</div></div>
+      </div>
+      <div class="phase">
+        <div class="yr">Y4–Y5</div>
+        <div class="bd"><div class="t">Compound</div><div class="d">Operate the layer. Second offtake wave or capacity tranche. Policy feedback loop: AI recognized as a standing industrial offtake class in provincial energy planning.</div></div>
+      </div>
+    </div>
+
+    <h3>What success looks like in 2031</h3>
+    <p>At least three of these are true: provincial policy explicitly treats Labrador compute load as a priority offtake class with a path to allocation; creditworthy multi-year demand covering a ≥10 MW starting block sits under contracts we originated; a named facility partner has a term sheet or FID path citing that offtake; Open People has recurring revenue from sovereignty and AI services; carried or co-invest equity exists in at least one facility SPV; and Open People is cited as a serious provincial voice on value-added green electrons.</p>
+  </div>
+</section>
+
+<section id="status">
+  <div class="wrap">
+    <div class="sec-num">07 — Where it stands today</div>
+    <h2>Y0. Foundations built, first letters out, window still open.</h2>
+
+    <h3>Done</h3>
+    <ul>
+      <li>Evidence pack audited and frozen for public use — every energy, market and policy claim in this brief maps to it</li>
+      <li>Strategic stance, entity structure and compliance rules written as formal decisions</li>
+      <li>Named stakeholder map across power, Indigenous, political, infrastructure and local-licence tiers</li>
+      <li>Capital cost map to 38 line items with confidence flags and gap register</li>
+      <li>Legal foundations package drafted — including a research opinion on in-province energy use with data export, which counsel has not yet validated and which we do not rely on publicly</li>
+    </ul>
+
+    <h3>In flight</h3>
+    <ul>
+      <li><span class="pill p0">P0</span> Inquiry letters to NL Hydro, ISED and Bulk Infrastructure — information-only, no asks</li>
+      <li><span class="pill p0">P0</span> Public brief polished to send-ready</li>
+      <li><span class="pill">W1</span> Power pathway memo — large-load allocation and PUB precedents</li>
+      <li><span class="pill">W3</span> Connectivity memo — fibre routes and latency for Happy Valley-Goose Bay, Labrador West, the Churchill corridor</li>
+      <li><span class="pill hold">Ready</span> Lobbying case package, to ship the same week the definitive agreement signs</li>
+    </ul>
+
+    <h3>Watch items</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th></th><th>Item</th><th>Why it moves us</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill p0">P0</span></td><td>NL–HQ definitive agreement signing</td><td>Closes the renegotiation window; triggers our lobbying package. Watch for use restrictions on in-province allocation.</td></tr>
+          <tr><td><span class="pill p0">P0</span></td><td>Replies to letters 1–3</td><td>Recall headroom, dark fibre, current rate schedule, federal intake timing, cable landing</td></tr>
+          <tr><td><span class="pill">P1</span></td><td>Innu ratification and leadership</td><td>Nothing large proceeds in Labrador without Innu Nation. We engage on their timeline, not ours.</td></tr>
+          <tr><td><span class="pill">P1</span></td><td>Québec election Oct 2026; HQ ~13¢ Régie decision</td><td>Both change the displacement dynamics we're counting on</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="you">
+  <div class="wrap">
+    <div class="sec-num">08 — Where you fit</div>
+    <h2>What a coalition partner actually contributes.</h2>
+
+    <p class="lead">We are not raising from you in this conversation. The coalition is assembled before the capital is, deliberately — a partner list is what makes the federal package and the provincial ask credible in the first place.</p>
+
+    <div class="asks">
+      <div class="ask">
+        <div class="who">Indigenous partner</div>
+        <div class="what"><b>Equity from day one, not consultation at the end.</b> Federal sovereign-compute programs require Indigenous participation; the IRC requires it; the project genuinely requires it. We want this conversation with the commercial arm first, structured as partnership, and we take direction on sequencing from you rather than assuming it.</div>
+      </div>
+      <div class="ask">
+        <div class="who">Utility / telco / infrastructure developer</div>
+        <div class="what"><b>You build and own the steel. We bring the demand and the political path.</b> What we need from you now: an honest read on whether a Labrador node is buildable on your terms, and what would have to be true for a term sheet in Y2. What you get: an anchor tenant, a federal co-funding path, and a provincial narrative already in motion.</div>
+      </div>
+      <div class="ask">
+        <div class="who">Connectivity / subsea</div>
+        <div class="what"><b>The single hardest open question.</b> The Labrador backbone is thin — roughly a 48-fibre route from 2012 — and Bell scrapped the Labrador North broadband build in 2025 after a 340% overrun. A Goose Bay landing, dark fibre access, or a credible route-diversity answer changes the project's risk profile more than any other input.</div>
+      </div>
+      <div class="ask">
+        <div class="who">Engineering / remote-industrial operators</div>
+        <div class="what"><b>Close our cost gaps.</b> Sixteen of thirty-eight capital lines are flagged as unresearched — camp, FIFO premium, winter logistics, insurance, cold-climate envelope, substation. Real operating numbers from anyone who has built in Labrador are worth more to us right now than capital.</div>
+      </div>
+      <div class="ask">
+        <div class="who">Institutional and public-sector demand</div>
+        <div class="what"><b>Tell us what residency-bound compute you would actually buy.</b> Bankable anchor offtake is what unlocks project finance. A non-binding letter describing volume, term and data-residency requirements is the most valuable single document in this whole campaign.</div>
+      </div>
+      <div class="ask">
+        <div class="who">Advisors and connectors</div>
+        <div class="what"><b>Warm introductions, in the right order.</b> Our sequencing principle: information before advocacy, partners before politicians, never an ask before the brief has been read. An introduction that respects that order is worth ten that don't.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rules">
+  <div class="wrap">
+    <div class="sec-num">09 — How we work</div>
+    <h2>The rules we'll hold ourselves to, and ask you to hold too.</h2>
+
+    <ul>
+      <li><strong>Evidence before narrative.</strong> Every public claim maps to an audited validity pack. If it isn't in there, we don't say it.</li>
+      <li><strong>No crypto.</strong> Explicit, permanent, and in every public material. The Great North Data precedent is why "data centre" is a loaded phrase in this province, and we are not repeating it.</li>
+      <li><strong>Never lead with "cheap power."</strong> We lead with bankable demand, jobs, sovereignty and federal co-investment. The arbitrage framing loses this argument and deserves to.</li>
+      <li><strong>Compute alongside minerals, not against them.</strong> Critical minerals are first in line and we are not trying to displace them. Shared transmission, shared community benefits.</li>
+      <li><strong>Indigenous engagement is first-class.</strong> Not a consultation footnote appended to a finished plan.</li>
+      <li><strong>Hospitality for the coalition, not for officials.</strong> Partners, engineers, capital and advisors are welcome at our table. Ministers and public officials get a briefing in their office. This is a compliance line under the provincial Conflict of Interest Act and the federal Lobbyists' Code, and we don't blur it.</li>
+      <li><strong>Inversion before expansion.</strong> Every major bet is stress-tested against written failure stories with kill-switch metrics before it gets resources.</li>
+    </ul>
+
+    <div class="card warn">
+      <h4>What is not proven — our standing honesty list</h4>
+      <p>We would rather you hear this from us. It is not proven that the province will allocate firm Labrador power to AI over mining. It is not proven that fibre economics support training-cluster connectivity at scale. It is not proven that public-sector offtake alone is large enough to bank a facility. It is not proven that Open People survives disintermediation once large partners arrive — that depends on owning contracts and software. It is not proven that renegotiated Churchill Falls terms free near-term megawatts on our timeline. It is not proven that an Indigenous partnership path exists for any specific site — that is site-specific work, not a generic assumption, and it is one of the reasons we are having this conversation before we have a site. Our legal position that in-province energy use with data export faces no energy-law ban is a research opinion that counsel has not yet validated. And we do not yet have the current Labrador industrial rate schedule in hand.</p>
+      <p style="margin-top:12px">Anyone who tells you these are settled is selling something. We're telling you they're the work.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="sig">If the value of Labrador's electrons is going to be decided in the next eighteen months, we'd rather be in the room with a coalition than write about it afterward.</div>
+    <div class="contact">
+      Tom Lane · Founder, Open People<br>
+      <a href="mailto:tom@openpeople.ai">tom@openpeople.ai</a><br>
+      St. John's, Newfoundland and Labrador
+    </div>
+    <div class="fineprint">
+      PARTNER-CONFIDENTIAL — NOT FOR ONWARD DISTRIBUTION.<br>
+      Capital figures, roadmap gates and structural detail in sections 04–07 are internal working numbers shared in confidence.<br>
+      Energy and market figures are sourced from the Canada Energy Regulator, NL Hydro, the Independent Review Committee, the IEA and ISED, and map to Open People's internal validity pack (audited 2026-07-24).<br>
+      Cost ranges are planning estimates with 16 of 38 lines flagged as open research gaps. Nothing here is an offer, a commitment, or investment advice.<br>
+      Open People · Phase 2 · v1 · 2026-08-12
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

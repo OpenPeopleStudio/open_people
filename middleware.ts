@@ -184,6 +184,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder files (*.svg, *.png, etc.)
      */
-    "/((?!_next/static|_next/image|favicon.ico|brief\\.html|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|brief\\.html|coalition\\.html|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html)$).*)",
   ],
 };

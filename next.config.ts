@@ -8,11 +8,13 @@ const nextConfig: NextConfig = {
   // An explicit empty config silences the “webpack config and no turbopack config” error.
   turbopack: {},
 
-  // Public static brief: keep URL /brief while serving public/brief.html
+  // Static briefs: clean URLs → public/*.html (no app router auth surface)
   async rewrites() {
     return [
       { source: "/brief", destination: "/brief.html" },
       { source: "/brief/", destination: "/brief.html" },
+      { source: "/coalition", destination: "/coalition.html" },
+      { source: "/coalition/", destination: "/coalition.html" },
     ];
   },
 
@@ -59,6 +61,15 @@ const nextConfig: NextConfig = {
   // Handle domain-based routing through headers
   async headers() {
     return [
+      // Partner brief: shareable URL, not for search indexes
+      {
+        source: "/coalition",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/coalition.html",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
       // Marketing domain headers
       {
         source: '/:path*',
