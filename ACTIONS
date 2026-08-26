@@ -1,0 +1,6 @@
+# ACTIONS — sim-run effort per VERSION stamp (newest first)
+# Required field: tools=<n>  (agent tool-call count for the slice)
+# Optional: commits=<n> files=<n> note=...
+
+0.2.0 tools=95 commits=1 files=7 note=Aug 17 Churchill Falls agreement on public site
+0.1.0 tools=5 note=bootstrap VERSION+CHANGELOG+ACTIONS (go-forward)

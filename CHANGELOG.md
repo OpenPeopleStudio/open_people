@@ -1,5 +1,25 @@
 # Changelog
 
+Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
+
+## 0.2.0 — 2026-08-25 — Churchill Falls Aug 17 agreement
+
+Public site now matches the announced (not yet binding) Churchill Falls / Gull Island agreement.
+
+- Homepage, `/brief`, and `/coalition`: the window is **binding agreements by March 31, 2027**, not an unsigned 2024 MOU.
+- Facts bound to the Aug 17 Gov NL release (2,350 MW retained, +400 MW wind, $49B NPV / $273B nominal, 985 MW transmission, Labrador West funded) and NL Hydro price path as reported (1.8¢ in 2027 → 11.5¢ by 2041).
+- Thesis held: compute is still not a named industrial use. No cheerleading.
+
+## 0.1.0 — 2026-08-12 — Versioning workflow
+
+**Adopt Mars-style release metadata** for `open-people-site`:
+
+- Root `VERSION` + `CHANGELOG.md` + `ACTIONS` (move together on every green demo slice)
+- Gate: `scripts/check-versioning.sh` (or `REPO_ROOT=… ~/scripts/check-versioning.sh`)
+- Go-forward only — no history backfill before this stamp
+
+
+
 All notable changes to OpenPeople.ai will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

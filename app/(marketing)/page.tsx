@@ -17,7 +17,7 @@ const LAYERS = [
   },
   {
     title: "Narrative & policy",
-    body: "Make AI compute a named industrial use of Labrador power alongside critical minerals — during the Churchill Falls renegotiation window.",
+    body: "Make AI compute a named industrial use of Labrador power alongside critical minerals — in the Churchill Falls definitive agreements, due by March 31, 2027.",
   },
   {
     title: "Sovereignty software",
@@ -56,8 +56,9 @@ export default function HomePage() {
             </h1>
             <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
               Newfoundland and Labrador generates about 43&nbsp;TWh of renewable electricity a year
-              and exports most of it. The Churchill Falls renegotiation is the window to reserve a
-              compute-eligible block in Labrador — and keep the value in the province.
+              and exports most of it. The August 2026 Churchill Falls agreement — not yet binding —
+              is the window to write a compute-eligible block into the architecture before
+              definitive agreements, due March 31, 2027.
             </p>
             <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)]">
               Open People is the capital-light catalyst: we originate{" "}
@@ -142,7 +143,7 @@ export default function HomePage() {
               The province that exports 34&nbsp;TWh should own the machines that value it.
             </h2>
             <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
-              Our public briefing maps the asset, the renegotiation window, the AI demand shock,
+              Our public briefing maps the asset, the August 17 agreement, the AI demand shock,
               and the provincial asks — bound to audited sources, not vibes.
             </p>
             <Link
@@ -187,9 +188,8 @@ export default function HomePage() {
         <section className="px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-display text-2xl leading-snug sm:text-3xl">
-              If Labrador&apos;s electrons will be priced for the next generation in the next
-              eighteen months, we&apos;d rather be in the room with a coalition than write about it
-              afterward.
+              If Labrador&apos;s electrons will be priced for the next generation before March 2027,
+              we&apos;d rather be in the room with a coalition than write about it afterward.
             </p>
             <div className="mt-8 font-mono text-sm leading-relaxed text-[var(--text-secondary)]">
               <div>Tom Lane · Founder, Open People</div>

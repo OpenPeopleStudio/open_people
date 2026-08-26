@@ -41,7 +41,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - This project is independent but referenced from mars-hq's VISION.md and TODO.md
 
 ## Current State
-Phase 0: Bootstrap. Spec documents written. Reference implementation not yet started.
+Public Phase 2 site is live. Labrador Compute Case (`/brief`) and coalition brief (`/coalition`) updated **2026-08-25** for the Aug 17 Churchill Falls agreement (not yet binding; compute still unnamed). Parked SaaS shell remains unpublished as the public story.
 
 ---
 
