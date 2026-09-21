@@ -21,6 +21,9 @@ export default function SiteFooter() {
           <Link href="/brief" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
             The case
           </Link>
+          <Link href="/letter" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
+            Letter
+          </Link>
           <Link href="/approach" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
             Approach
           </Link>

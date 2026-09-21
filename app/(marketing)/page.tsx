@@ -77,6 +77,14 @@ export default function HomePage() {
                 tom@openpeople.ai
               </a>
             </div>
+            <p className="mt-5">
+              <Link
+                href="/letter"
+                className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]"
+              >
+                Letter to the Premier · 15 Sep 2026 →
+              </Link>
+            </p>
           </div>
         </header>
 
