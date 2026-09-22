@@ -5,7 +5,7 @@ import SiteShell from "@/components/marketing/SiteShell";
 export const metadata: Metadata = {
   title: "Approach",
   description:
-    "Path C capital model, evidence rules, and operating doctrine for Open People’s Labrador compute campaign.",
+    "Path C capital model, evidence rules, and operating doctrine for Open People’s in-province power campaign. Mining first; compute as a named use.",
 };
 
 const SECTIONS = [
@@ -14,8 +14,8 @@ const SECTIONS = [
     title: "Path C capital model",
     body: [
       "Partners own hyperscale construction, interconnect, and GPU fleets.",
-      "Open People owns offtake origination, government relations, narrative, and the sovereignty/AI software layer — plus optional promote or a small financeable micro-node floor.",
-      "We do not lead with balance-sheet steel. We lead with bankable demand and a credible provincial path.",
+      "Open People is a constituent / catalyst voice: narrative, government relations, and — if partners build capacity — a sovereignty/AI software layer plus optional promote or a small financeable micro-node floor. We are not a DCIA party, offtake seat, or demand seat.",
+      "We do not lead with balance-sheet steel. We lead with in-province use of firm power, then bankable demand if the architecture allows it.",
     ],
   },
   {
@@ -32,8 +32,8 @@ const SECTIONS = [
     title: "What we will not do",
     body: [
       "No crypto mining as the product story — permanent. Newfoundland’s last data-centre memory is a cautionary tale; we do not revive it.",
-      "Never lead with “cheap power.” We lead with jobs, offtake, sovereignty, and federal co-investment. Arbitrage framing loses this argument.",
-      "Compute alongside critical minerals, not against them. Shared transmission and shared community benefits.",
+      "Never lead with “cheap power.” We lead with firm in-province power for industry, jobs, and federal co-investment. Arbitrage framing loses this argument.",
+      "Mining and resources first. Compute alongside critical minerals, not against them. Shared transmission and shared community benefits.",
       "Indigenous engagement is first-class — equity conversation from day one, not a consultation footnote at the end.",
     ],
   },
@@ -68,7 +68,9 @@ export default function ApproachPage() {
             How we work — and how we ask others to work with us.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-[var(--text-secondary)]">
-            Open People runs a multi-year campaign, not a one-deck fundraise. These rules are
+            Open People runs a multi-year campaign, not a one-deck fundraise. The public face of
+            that campaign is keeping firm Churchill Falls / Gull Island power in Newfoundland and
+            Labrador for industry. Compute is a use of that power, not the opener. These rules are
             public so partners and officials can hold us to them.
           </p>
 
@@ -96,11 +98,11 @@ export default function ApproachPage() {
           </div>
 
           <div className="mt-14 flex flex-col gap-3 sm:flex-row">
-            <Link href="/brief" className="btn-primary justify-center px-5 py-3 text-sm">
-              Public case
+            <Link href="/engage" className="btn-primary justify-center px-5 py-3 text-sm">
+              Get involved — keep firm power here
             </Link>
-            <Link href="/contact" className="btn-secondary justify-center px-5 py-3 text-sm">
-              Contact
+            <Link href="/brief" className="btn-secondary justify-center px-5 py-3 text-sm">
+              Public case
             </Link>
           </div>
         </article>

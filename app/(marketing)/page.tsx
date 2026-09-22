@@ -4,24 +4,35 @@ import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Open People — Labrador green electrons → sovereign AI compute",
+    absolute: "Open People — Keep firm power in Newfoundland and Labrador",
   },
   description:
-    "Open People catalyzes Labrador-linked AI compute offtake from Newfoundland and Labrador’s renewable power — demand aggregation and sovereignty software, not hyperscale steel.",
+    "Constituent voice for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador for industry. Mining first. Compute is a named use of that power, not a reserved block.",
 };
 
-const LAYERS = [
+const GATES = [
+  { v: "21–18", k: "House endorsed the DCIA framework, 17 Sep 2026 — not binding PPAs" },
+  { v: "5 Oct", k: "Québec election — next public political gate" },
+  { v: "YE 2026", k: "Binding definitive agreements targeted ~31 Dec" },
+  { v: "31 Mar", k: "DCIA instrument can run to 31 Mar 2027 unless replaced" },
+];
+
+const OPEN = [
   {
-    title: "Demand",
-    body: "Assemble multi-year, residency-bound offtake — government, institutions, regulated buyers — so a Labrador node is bankable before steel is poured.",
+    title: "In-province use",
+    body: "Public framing is about 2,350 MW retained from Churchill Falls and Gull Island, plus wind if built. That is announcement language — not a signed industrial allocation, not a compute tranche, and not a published queue.",
   },
   {
-    title: "Narrative & policy",
-    body: "Make AI compute a named industrial use of Labrador power alongside critical minerals — in the Churchill Falls definitive agreements, due by March 31, 2027.",
+    title: "Recall",
+    body: "A Power Advisory consultant told the House of a three-year notice recall so NL can keep more power at home. Still open in contract text. Do not treat testimony as a signed clause.",
   },
   {
-    title: "Sovereignty software",
-    body: "The recurring layer: guardrails, residency, and AI services that sit on top of partner-built capacity.",
+    title: "Innu Nation",
+    body: "Partnership, royalty, and Gull Island tariff path unresolved. Innu Nation urged MHAs not to vote. The Premier said he will meet.",
+  },
+  {
+    title: "Federal assessment",
+    body: "IAAC has not received proponent confirmation that 2026 Gull Island matches the 2012 Lower Churchill scope. The 2026 plant as described is larger than the roughly 2,000 MW reviewed then.",
   },
 ];
 
@@ -33,49 +44,44 @@ const RULES = [
   "Partners own the steel",
 ];
 
-const STATS = [
-  { v: "43.1 TWh", k: "NL renewable generation, 2023" },
-  { v: "34.5 TWh", k: "Net outflows — mostly to Québec" },
-  { v: "5,428 MW", k: "Churchill Falls installed capacity" },
-  { v: "Path C", k: "Demand + software, not principal steel" },
-];
-
 export default function HomePage() {
   return (
     <SiteShell>
       <main>
-        {/* Hero */}
         <header className="border-b border-[var(--border-subtle)] px-4 pb-14 pt-28 sm:px-6 sm:pb-20 sm:pt-36">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
               Open People · Newfoundland &amp; Labrador
             </p>
             <h1 className="mt-6 font-display text-[2rem] font-normal leading-[1.08] tracking-[-0.022em] sm:text-5xl md:text-[3.4rem]">
-              Electrons as industry,{" "}
-              <em className="not-italic text-[var(--plasma)]">not raw export</em>.
+              Keep the power here.{" "}
+              <em className="not-italic text-[var(--plasma)]">Use it here.</em>
             </h1>
             <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
               Newfoundland and Labrador generates about 43&nbsp;TWh of renewable electricity a year
-              and exports most of it. The August 2026 Churchill Falls agreement — not yet binding —
-              is the window to write a compute-eligible block into the architecture before
-              definitive agreements, due March 31, 2027.
+              and exports most of it. The Churchill Falls / Gull Island DCIA, signed 17 August 2026,
+              is a framework — not binding power-purchase agreements. The House endorsed that
+              framework 21–18 on 17 September. The contracts that actually bind the power are still
+              ahead.
             </p>
             <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)]">
-              Open People is the capital-light catalyst: we originate{" "}
-              <strong className="font-semibold text-[var(--text-primary)]">demand</strong> and{" "}
-              <strong className="font-semibold text-[var(--text-primary)]">sovereignty software</strong>.
-              Partners build and own the steel.
+              Firm in-province power should serve Labrador and island industry — mining and
+              resources first. Compute and AI are a{" "}
+              <strong className="font-semibold text-[var(--text-primary)]">use of that power</strong>
+              , if the province writes them as eligible. They are not a reserved block, and they are
+              not the opener.
+            </p>
+            <p className="mt-4 max-w-[62ch] text-[15px] leading-relaxed text-[var(--text-muted)]">
+              Open People is a constituent and catalyst voice from St. John&apos;s. We are not a
+              DCIA party, an offtake seat, or a demand seat. Partners would own any steel.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link href="/brief" className="btn-primary justify-center px-6 py-3 text-sm">
+              <Link href="/engage" className="btn-primary justify-center px-6 py-3 text-sm">
+                Get involved — keep firm power here
+              </Link>
+              <Link href="/brief" className="btn-secondary justify-center px-6 py-3 text-sm">
                 Read the Labrador Compute Case
               </Link>
-              <a
-                href="mailto:tom@openpeople.ai"
-                className="btn-secondary justify-center px-6 py-3 text-sm"
-              >
-                tom@openpeople.ai
-              </a>
             </div>
             <p className="mt-5">
               <Link
@@ -88,10 +94,9 @@ export default function HomePage() {
           </div>
         </header>
 
-        {/* Stats */}
         <section className="border-b border-[var(--border-subtle)]">
           <div className="mx-auto grid max-w-[1080px] grid-cols-2 border-x border-[var(--border-subtle)] md:grid-cols-4">
-            {STATS.map((s, i) => (
+            {GATES.map((s, i) => (
               <div
                 key={s.v}
                 className={`bg-[var(--surface-1)] p-5 sm:p-6 ${
@@ -109,50 +114,56 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* What we do */}
         <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              01 — What we hold
+              01 — Still open
             </p>
             <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
-              Three layers. Deliberately not the expensive one.
+              Endorsement is not a contract.
             </h2>
             <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
-              Path C: hyperscale power, construction, and GPU balance-sheet risk sit with partners.
-              Open People owns relationships, offtake, software, and narrative — with optional
-              promote on a small financeable floor.
+              Next public political gate: Québec, 5 October 2026. Binding targets around year-end.
+              This is the stretch where public voice can still insist on transparency and
+              in-province use — without pretending the deal is finished, and without a sermon
+              against it.
             </p>
             <div className="mt-10 grid gap-4">
-              {LAYERS.map((layer, i) => (
+              {OPEN.map((item, i) => (
                 <div
-                  key={layer.title}
+                  key={item.title}
                   className="rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 sm:p-6"
                 >
                   <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
-                    {String(i + 1).padStart(2, "0")} · {layer.title}
+                    {String(i + 1).padStart(2, "0")} · {item.title}
                   </div>
                   <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
-                    {layer.body}
+                    {item.body}
                   </p>
                 </div>
               ))}
             </div>
+            <Link
+              href="/engage"
+              className="mt-8 inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
+            >
+              Get involved — keep firm power here →
+            </Link>
           </div>
         </section>
 
-        {/* Case teaser */}
         <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
               02 — The public case
             </p>
             <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
-              The province that exports 34&nbsp;TWh should own the machines that value it.
+              The province that exports 34&nbsp;TWh should decide what it keeps.
             </h2>
             <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
-              Our public briefing maps the asset, the August 17 agreement, the AI demand shock,
-              and the provincial asks — bound to audited sources, not vibes.
+              The public briefing maps the asset, the August 17 DCIA framework, what the House did
+              in September, and what is still unsigned — bound to public sources, not vibes. Mining
+              is first. Compute is optionality.
             </p>
             <Link
               href="/brief"
@@ -163,7 +174,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Rules */}
         <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
@@ -192,22 +202,28 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Contact */}
         <section className="px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-display text-2xl leading-snug sm:text-3xl">
-              If Labrador&apos;s electrons will be priced for the next generation before March 2027,
-              we&apos;d rather be in the room with a coalition than write about it afterward.
+              If the next generation&apos;s firm power is going to be priced while this paper is
+              still paper, we&apos;d rather people were in it — not writing about it afterward.
             </p>
-            <div className="mt-8 font-mono text-sm leading-relaxed text-[var(--text-secondary)]">
-              <div>Tom Lane · Founder, Open People</div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/engage" className="btn-primary justify-center px-6 py-3 text-sm">
+                Get involved — keep firm power here
+              </Link>
               <a
                 href="mailto:tom@openpeople.ai"
-                className="text-[var(--plasma)] no-underline hover:underline"
+                className="btn-secondary justify-center px-6 py-3 text-sm"
               >
                 tom@openpeople.ai
               </a>
-              <div className="mt-1 text-[var(--text-muted)]">St. John&apos;s, Newfoundland and Labrador</div>
+            </div>
+            <div className="mt-8 font-mono text-sm leading-relaxed text-[var(--text-secondary)]">
+              <div>Tom Lane · Founder, Open People</div>
+              <div className="mt-1 text-[var(--text-muted)]">
+                St. John&apos;s, Newfoundland and Labrador
+              </div>
             </div>
           </div>
         </section>

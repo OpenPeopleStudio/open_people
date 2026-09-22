@@ -95,8 +95,32 @@ export default function LetterPage() {
             </h1>
             <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
               A constituent letter from Tom Lane to The Honourable Tony Wakeham, Premier of
-              Newfoundland and Labrador.
+              Newfoundland and Labrador. The text below is the 15 September letter, unchanged.
             </p>
+            <aside className="mt-8 rounded border border-[rgba(212,168,75,0.22)] bg-[rgba(212,168,75,0.045)] p-5 sm:p-6">
+              <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--warning)]">
+                After this letter · 17–22 September 2026
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+                Two days later the House endorsed the Churchill Falls / Gull Island DCIA framework{" "}
+                <strong className="font-semibold text-[var(--text-primary)]">21–18</strong>, with no
+                referendum. That vote does not create binding contracts. Next public political gate:
+                Québec election <strong className="font-semibold text-[var(--text-primary)]">5 October</strong>.
+                Binding definitive agreements are targeted around{" "}
+                <strong className="font-semibold text-[var(--text-primary)]">31 December 2026</strong>. The
+                DCIA instrument can run to{" "}
+                <strong className="font-semibold text-[var(--text-primary)]">31 March 2027</strong>. Innu
+                Nation partnership and the federal assessment scope remain unresolved.
+              </p>
+              <p className="mt-3">
+                <Link
+                  href="/engage"
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
+                >
+                  Get involved — keep firm power here →
+                </Link>
+              </p>
+            </aside>
             <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-t border-[var(--border-subtle)] pt-5 font-mono text-[11.5px] tracking-[0.04em] text-[var(--text-muted)]">
               <span>
                 <span className="text-[rgba(242,244,246,0.24)]">From</span> Tom Lane · St. John’s, NL
@@ -372,11 +396,11 @@ export default function LetterPage() {
             </aside>
 
             <div className="mt-14 flex flex-col gap-3 print:hidden sm:flex-row">
-              <Link href="/brief" className="btn-primary justify-center px-5 py-3 text-sm">
-                Labrador Compute Case
+              <Link href="/engage" className="btn-primary justify-center px-5 py-3 text-sm">
+                Get involved — keep firm power here
               </Link>
-              <Link href="/contact" className="btn-secondary justify-center px-5 py-3 text-sm">
-                Contact
+              <Link href="/brief" className="btn-secondary justify-center px-5 py-3 text-sm">
+                Labrador Compute Case
               </Link>
             </div>
           </div>
