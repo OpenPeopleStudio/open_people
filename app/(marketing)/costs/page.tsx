@@ -55,7 +55,7 @@ export default function CostsPage() {
             />
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {[CONTESTED_EXPORT.campaign, CONTESTED_EXPORT.annexPath].map((path) => (
+              {[CONTESTED_EXPORT.annexPath, CONTESTED_EXPORT.campaign].map((path) => (
                 <section
                   key={path.id}
                   id={path.id}
@@ -63,9 +63,11 @@ export default function CostsPage() {
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <StatusPill status={path.status} />
-                    <span className="font-mono text-[13px] text-[var(--plasma)]">
+                    <span className="font-mono text-[22px] leading-none text-[var(--plasma)] sm:text-[26px]">
                       {path.value}
-                      {path.unit ? ` ${path.unit}` : ""}
+                      {path.unit ? (
+                        <span className="ml-1 text-[12px] text-[var(--text-muted)]">{path.unit}</span>
+                      ) : null}
                     </span>
                   </div>
                   <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">{path.label}</h3>
