@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.2 — 2026-09-22 — Put og:image back in the HTML
+
+Partial `openGraph` objects were wiping Next’s file-based `opengraph-image.tsx` injection. Root metadata and `deskMetadata()` now set `openGraph.images` / `twitter.images` to `/og-image.png` (resolved via `metadataBase` to www). Art unchanged.
+
 ## 0.5.1 — 2026-09-22 — Desk v2 Open Graph / Twitter previews
 
 Share cards match the live Churchill River desk instead of empty PNGs and leftover “horizon desk” OG copy.

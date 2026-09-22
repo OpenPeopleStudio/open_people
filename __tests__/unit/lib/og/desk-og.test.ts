@@ -44,7 +44,17 @@ describe("desk Open Graph", () => {
     expect(
       tracker.twitter && "card" in tracker.twitter ? tracker.twitter.card : undefined,
     ).toBe("summary_large_image");
-    expect(tracker.openGraph).not.toHaveProperty("images");
+    expect(tracker.openGraph?.images).toEqual([
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: DESK_OG.home.alt,
+      },
+    ]);
+    expect(
+      tracker.twitter && "images" in tracker.twitter ? tracker.twitter.images : undefined,
+    ).toEqual(["/og-image.png"]);
 
     const home = deskMetadata({
       title: { absolute: HOME_TITLE },
@@ -53,6 +63,7 @@ describe("desk Open Graph", () => {
     });
     expect(home.openGraph?.title).toBe(HOME_TITLE);
     expect(home.twitter?.title).toBe(HOME_TITLE);
+    expect(home.openGraph?.images).toBeDefined();
   });
 
   it("does not invent deal numbers on the share card", () => {

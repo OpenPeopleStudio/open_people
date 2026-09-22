@@ -86,3 +86,14 @@ export const DESK_OG = {
 } as const satisfies Record<string, DeskOgCard>;
 
 export type DeskOgRoute = keyof typeof DESK_OG;
+
+/** Static share card. metadataBase turns this into https://www.openpeople.ai/og-image.png */
+export const DESK_OG_IMAGE_PATH = "/og-image.png";
+
+export const DESK_OG_IMAGE = {
+  url: DESK_OG_IMAGE_PATH,
+  width: 1200,
+  height: 630,
+  alt: DESK_OG.home.alt,
+} as const;
+
