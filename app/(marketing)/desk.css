@@ -1513,13 +1513,14 @@
 
 /* ─── Reveal on scroll (one-time, constrained) ───────────────────────────── */
 
-[data-rise] {
+/* Only hide when the observer is live (JS, not printing, not reduced motion). */
+.desk-root[data-rise-live] [data-rise] {
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 320ms ease-out, transform 320ms ease-out;
 }
 
-[data-rise][data-in="true"] {
+.desk-root[data-rise-live] [data-rise][data-in="true"] {
   opacity: 1;
   transform: none;
 }

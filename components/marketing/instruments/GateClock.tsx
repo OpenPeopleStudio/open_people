@@ -28,21 +28,25 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
       <div className="gate-clock-compact inst" aria-label="Gate clock">
-        <svg viewBox={`0 0 ${W} 60`} role="img" aria-labelledby="gc-c-title">
+        <svg viewBox={`0 0 ${W} 84`} role="img" aria-labelledby="gc-c-title">
           <title id="gc-c-title">Gates on the Churchill Falls framework, with today marked</title>
-          <line x1={PAD} x2={PAD + ON_SCALE_W} y1={30} y2={30} className="hair" />
-          {onScale.map((g) => (
-            <g key={g.id} transform={`translate(${x(g)} 30)`}>
-              <circle r={3.5} className={g.status === "open" ? "amber" : "plasma"} />
-              <text y={-12} textAnchor="middle" className="lbl">
-                {g.short}
-              </text>
-              <text y={24} textAnchor="middle" className="lbl" style={{ fontSize: 9.5 }}>
-                {g.label}
-              </text>
-            </g>
-          ))}
-          <TodayMarker pad={PAD} width={ON_SCALE_W} y1={16} y2={44} compact />
+          <line x1={PAD} x2={PAD + ON_SCALE_W} y1={42} y2={42} className="hair" />
+          {onScale.map((g, i) => {
+            const above = i % 2 === 0;
+            return (
+              <g key={g.id} transform={`translate(${x(g)} 42)`}>
+                <line y1={above ? -14 : 0} y2={above ? 0 : 14} className="hair" />
+                <circle r={3.5} className={g.status === "open" ? "amber" : "plasma"} />
+                <text y={above ? -20 : 26} textAnchor="middle" className="num" style={{ fontSize: 11 }}>
+                  {g.short}
+                </text>
+                <text y={above ? -32 : 38} textAnchor="middle" className="lbl" style={{ fontSize: 9 }}>
+                  {g.label}
+                </text>
+              </g>
+            );
+          })}
+          <TodayMarker pad={PAD} width={ON_SCALE_W} y1={26} y2={58} compact />
         </svg>
       </div>
     );

@@ -2,6 +2,17 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.0 — 2026-09-22 — Desk v2: instrument, guided depth, verified data
+
+Public site rebuilt as a precision instrument. Same doctrine, same facts, one design system, three reading depths, seven SVG instruments, every number bound to a sourced object.
+
+- **Data (verified 22 Sep):** every figure re-checked against the DCIA and IRC PDFs, NL Hydro July 2026 schedule, P.U. 17(2026), HQ, AESO, BC and CER. Fixes: IRC MOU path is 3.8¢ over **2025–2041**; 31 Mar 2027 sits in DCIA **§6.3(a)**, with HQ Gull Island exclusivity during the Term; Labrador West FEED target Dec 2026; wind $400k/MW HQ payment condition; SaltWire guess replaced with a loadable mirror; CER URL fixed. New tracker rows: *return to the House without a promised vote*, *Québec Innu consent*. Innu, Québec and House rows carry 15–21 Sep reporting.
+- **Design system v2** (`app/(marketing)/desk.css`): void + plasma (plain layer) + steel (technical layer), Newsreader / Inter / JetBrains Mono self-hosted, hairline shell with a left rail and mobile strip, dashed chips for UNKNOWN, print stylesheet. Google Fonts link and noise overlay removed from the public surface.
+- **Guided depth:** Plain · Guided · Technical (`?v=plain|guided|tech`). `Unfold` keeps the plain sentence on screen and unfolds the technical block under it, highlighting the figure it backs. `Term` explains 33 pieces of jargon inline. `Figure` shows provenance on tap; UNKNOWN renders as a dashed *not published* slot. Polite one-per-card nudges (switchable). *Walk me through it* on home, tracker and costs.
+- **Instruments:** Gate Clock with live day counters; Unknown Board; Price Ladder (seven families, labelled, not merged); Flow Bars; Corridor Schematic; Annex B Ramp; Default Path. Pure SVG, no chart library.
+- **Pages:** home, tracker, costs, industries, engage (seven checks with live status, print for your MHA), compute (quiet, no clock), letter, about, approach, contact on one shell. `/brief` and `/coalition` ported from static HTML to the app router with figures bound to `lib/desk`.
+- Internal jargon removed from public copy.
+
 ## 0.4.2 — 2026-09-22 — Visual slice 1 + digestability (on landed 1.8 vs 7.4)
 
 Plain layer leads; technical layer stays in Receipts. Same facts as 0.4.1, easier to scan.
