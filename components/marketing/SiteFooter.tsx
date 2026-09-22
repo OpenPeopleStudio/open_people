@@ -9,8 +9,8 @@ export default function SiteFooter() {
             Open People<span className="text-[var(--plasma)]"> · Phase 2</span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
-            Labrador green electrons → sovereign AI compute. Capital-light demand
-            and software — partners carry the steel.
+            Firm in-province power for Newfoundland and Labrador industry.
+            Compute is a use of that power. Partners carry the steel.
           </p>
           <p className="mt-3 font-mono text-[11px] text-[var(--text-muted)]">
             Based in St. John&apos;s, Newfoundland and Labrador
@@ -19,7 +19,10 @@ export default function SiteFooter() {
 
         <div className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-[12px]">
           <Link href="/brief" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
-            The case
+            The brief
+          </Link>
+          <Link href="/engage" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
+            Get involved
           </Link>
           <Link href="/letter" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
             Letter

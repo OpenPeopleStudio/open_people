@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const LINKS = [
-  { href: "/brief", label: "The case" },
+  { href: "/brief", label: "The brief" },
   { href: "/approach", label: "Approach" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
@@ -56,12 +56,12 @@ export default function SiteNav() {
                 {l.label}
               </Link>
             ))}
-            <a
-              href="mailto:tom@openpeople.ai"
+            <Link
+              href="/engage"
               className="rounded border border-[var(--border-medium)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--text-primary)] no-underline transition-colors hover:border-[var(--plasma)] hover:text-[var(--plasma)]"
             >
-              Email
-            </a>
+              Keep power here
+            </Link>
           </div>
 
           <button
@@ -92,13 +92,13 @@ export default function SiteNav() {
             ))}
           </ul>
           <div className="mt-8 border-t border-[var(--border-subtle)] px-6 pt-6">
-            <a
-              href="mailto:tom@openpeople.ai"
+            <Link
+              href="/engage"
               className="btn-primary w-full justify-center py-4 text-base"
               onClick={() => setOpen(false)}
             >
-              tom@openpeople.ai
-            </a>
+              Get involved — keep firm power here
+            </Link>
           </div>
         </div>
       )}

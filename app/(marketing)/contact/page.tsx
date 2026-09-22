@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 
 export const metadata: Metadata = {
@@ -19,8 +20,12 @@ export default function ContactPage() {
             Start with a conversation, not a funnel.
           </h1>
           <p className="mt-6 max-w-[55ch] text-lg leading-relaxed text-[var(--text-secondary)]">
-            Government relations, offtake interest, infrastructure partnership, or a careful
-            introduction — write directly.
+            Government relations, in-province power, infrastructure partnership, or a careful
+            introduction — write directly. If you want firm power kept in NL, start at{" "}
+            <Link href="/engage" className="text-[var(--plasma)] no-underline hover:underline">
+              /engage
+            </Link>
+            .
           </p>
 
           <div className="mt-12 rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-6 sm:p-8">
@@ -45,7 +50,7 @@ export default function ContactPage() {
                 Public briefing
               </div>
               <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                Read the Labrador Compute Case before a first meeting when you can.
+                Read the Labrador power &amp; industry case before a first meeting when you can.
               </p>
               <a
                 href="/brief"

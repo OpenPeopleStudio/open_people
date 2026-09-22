@@ -5,11 +5,11 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://openpeople.ai"),
   title: {
-    default: "Open People — Labrador green electrons → sovereign AI compute",
+    default: "Open People — Keep firm power in Newfoundland and Labrador",
     template: "%s · Open People",
   },
   description:
-    "Open People catalyzes Labrador-linked AI compute offtake from Newfoundland and Labrador’s renewable power — demand aggregation and sovereignty software, not hyperscale steel.",
+    "Constituent voice for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador for industry. Compute is a named use of that power — partners own the steel.",
   keywords: [
     "Labrador",
     "Newfoundland and Labrador",
@@ -18,12 +18,13 @@ export const metadata: Metadata = {
     "data centre",
     "green hydro",
     "Open People",
-    "compute offtake",
+    "in-province power",
+    "firm power",
   ],
   openGraph: {
-    title: "Open People — Labrador green electrons → sovereign AI compute",
+    title: "Open People — Keep firm power in Newfoundland and Labrador",
     description:
-      "Demand aggregation and sovereignty software for Labrador-linked AI compute. Partners own the steel.",
+      "Firm in-province power for NL industry. Compute is a named use of that power. Partners own the steel.",
     type: "website",
     locale: "en_US",
     images: [
@@ -31,15 +32,15 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Open People — Labrador green electrons → sovereign AI compute",
+        alt: "Open People — Keep firm power in Newfoundland and Labrador",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Open People — Labrador green electrons → sovereign AI compute",
+    title: "Open People — Keep firm power in Newfoundland and Labrador",
     description:
-      "Demand aggregation and sovereignty software for Labrador-linked AI compute. Partners own the steel.",
+      "Firm in-province power for NL industry. Compute is a named use of that power. Partners own the steel.",
     images: ["/twitter-image.png"],
   },
   icons: {

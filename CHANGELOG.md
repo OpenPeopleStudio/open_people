@@ -2,6 +2,22 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.3.1 — 2026-09-22 — Voice lock + /engage tools
+
+Tighten mining-first / constituent voice across the public surface. Deepen `/engage`. Coalition no longer reads as an offtake/build plan.
+
+- `/coalition`: lead with keeping firm power in NL (mines, towns, Indigenous, infra). Strip present offtake / FID / reserved-DC claims. `/engage` primary CTA; partner mailto secondary. Honesty list includes unnamed Wind SPE.
+- `/engage`: contract-ask checklist; seventh open item (Wind SPE unnamed); copy-message is the reliable form path; fourth MHA template on Innu Nation; native share / copy link.
+- Home secondary CTA and `/brief` title stay “public evidence brief” / “Labrador power & industry case” — compute is not the opener. Letter post-vote note: 21–18 = endorsement, not PPAs.
+
+## 0.3.0 — 2026-09-22 — Post–House-vote DCIA + public engage path
+
+Public site matches the 17 September 2026 House endorsement of the Churchill Falls / Gull Island DCIA **framework** (21–18; not binding PPAs).
+
+- Home, `/brief`, `/coalition`, letter, approach, about: next gates are Québec **5 Oct**, binding targets **~31 Dec 2026**, DCIA term to **31 Mar 2027**. House sitting is no longer “set for Sep 14”.
+- Lead with **firm in-province power** for NL industry (mining first). Compute is a named use / optionality, not a reserved block and not a DCIA seat.
+- New public page **`/engage`**: what is still open, confirmed September–November doors, mailto form to tom@openpeople.ai, copy-paste MHA starters. Sitemap + nav/footer CTAs.
+
 ## 0.2.0 — 2026-08-25 — Churchill Falls Aug 17 agreement
 
 Public site now matches the announced (not yet binding) Churchill Falls / Gull Island agreement.
