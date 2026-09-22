@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     template: "%s · Open People",
   },
   description:
-    "Constituent voice for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador for industry. Compute is a named use of that power, not the only story.",
+    "Horizon desk for Churchill Falls / Gull Island firm power in Newfoundland and Labrador. Mining first. Compute is a separate page — not the opener.",
 };
 
 export default function MarketingLayout({

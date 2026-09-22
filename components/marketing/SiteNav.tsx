@@ -5,10 +5,11 @@ import Link from "next/link";
 import { VoiceToggle } from "./voice";
 
 const LINKS = [
-  { href: "/brief", label: "The brief" },
-  { href: "/approach", label: "Approach" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/brief", label: "Brief" },
+  { href: "/tracker", label: "Tracker" },
+  { href: "/industries", label: "Industries" },
+  { href: "/costs", label: "Costs" },
+  { href: "/letter", label: "Letter" },
 ];
 
 export default function SiteNav() {
@@ -47,7 +48,7 @@ export default function SiteNav() {
             Open People<span className="text-[var(--plasma)]"> · NL</span>
           </Link>
 
-          <div className="ml-auto hidden items-center gap-3 lg:gap-5 md:flex">
+          <div className="ml-auto hidden items-center gap-3 lg:flex lg:gap-4">
             {LINKS.map((l) => (
               <Link
                 key={l.href}
@@ -68,7 +69,7 @@ export default function SiteNav() {
 
           <button
             type="button"
-            className="ml-auto flex h-10 w-10 items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-primary)] md:hidden"
+            className="ml-auto flex h-10 w-10 items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-primary)] lg:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -78,14 +79,14 @@ export default function SiteNav() {
         </div>
 
         {!open ? (
-          <div className="border-t border-[var(--border-subtle)] px-4 py-2 md:hidden">
+          <div className="border-t border-[var(--border-subtle)] px-4 py-2 lg:hidden">
             <VoiceToggle className="flex w-full" />
           </div>
         ) : null}
       </nav>
 
       {open && (
-        <div className="fixed inset-0 z-40 bg-[rgba(4,4,4,0.97)] pt-20 md:hidden">
+        <div className="fixed inset-0 z-40 bg-[rgba(4,4,4,0.97)] pt-20 lg:hidden">
           <div className="px-6 pb-2">
             <VoiceToggle className="flex w-full" />
           </div>
@@ -101,6 +102,15 @@ export default function SiteNav() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/engage"
+                className="block py-4 font-display text-2xl text-[var(--text-primary)] no-underline hover:text-[var(--plasma)]"
+                onClick={() => setOpen(false)}
+              >
+                Engage
+              </Link>
+            </li>
           </ul>
           <div className="mt-8 border-t border-[var(--border-subtle)] px-6 pt-6">
             <Link

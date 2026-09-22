@@ -46,6 +46,21 @@ const nextConfig: NextConfig = {
         destination: "https://app.openpeople.ai",
         permanent: false,
       },
+      {
+        source: "/data-centre",
+        destination: "/compute",
+        permanent: false,
+      },
+      {
+        source: "/data-centre/",
+        destination: "/compute",
+        permanent: false,
+      },
+      {
+        source: "/datacentre",
+        destination: "/compute",
+        permanent: false,
+      },
 
       // Redirect super admin root to /super-admin
       {

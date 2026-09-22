@@ -5,17 +5,17 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://openpeople.ai"),
   title: {
-    default: "Open People — Keep firm power in Newfoundland and Labrador",
+    default: "Open People — Churchill River / Labrador power desk",
     template: "%s · Open People",
   },
   description:
-    "Constituent voice for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador for industry. Compute is a named use of that power — partners own the steel.",
+    "Horizon desk for Churchill Falls / Gull Island firm power in Newfoundland and Labrador. Mining first. Compute is a named use on a separate page — partners own the steel.",
   keywords: [
     "Labrador",
     "Newfoundland and Labrador",
     "Churchill Falls",
-    "sovereign AI",
-    "data centre",
+    "Labrador mining",
+    "DCIA",
     "green hydro",
     "Open People",
     "in-province power",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Open People — Keep firm power in Newfoundland and Labrador",
     description:
-      "Firm in-province power for NL industry. Compute is a named use of that power. Partners own the steel.",
+      "Horizon desk: keep firm Churchill Falls / Gull Island power in NL. Mining first. Compute is a separate page.",
     type: "website",
     locale: "en_US",
     images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Open People — Keep firm power in Newfoundland and Labrador",
     description:
-      "Firm in-province power for NL industry. Compute is a named use of that power. Partners own the steel.",
+      "Horizon desk: keep firm Churchill Falls / Gull Island power in NL. Mining first. Compute is a separate page.",
     images: ["/twitter-image.png"],
   },
   icons: {

@@ -45,6 +45,34 @@ export const SCALE_ANCHORS = {
       "Ottawa has not yet confirmed this plant matches the older review — and the 2026 description is larger than what was studied then.",
     source: "IAAC public posture · 2012 Lower Churchill review",
   },
+  heritagePrice: {
+    technical:
+      "The 1969 Churchill Falls contract’s automatic 25-year renewal (2016–2041) prices Hydro-Québec purchases at two mills per kWh — 0.2¢/kWh. That is an export price under a specific contract, not a rate available to industrial customers in Newfoundland and Labrador today.",
+    plain:
+      "The old Hydro-Québec renewal price is two mills — two tenths of a cent. It is lore about what left the border, not a rate anyone here can buy power at today.",
+    source: "Heritage NL · Feehan & Baker, Dalhousie Law Journal",
+  },
+  gulIslandRange: {
+    technical:
+      "DCIA Material Terms (17 Aug 2026) describe Gull Island expected installed capacity of approximately 2,250 MW or 2,700 MW depending on final configuration, subject to studies. Annex B is a preliminary schedule, not a locked COD.",
+    plain:
+      "Public paper describes the new Churchill River plant as a range, not one locked size — and says the studies are still ahead.",
+    source: "DCIA Schedule B / Annex B, 17 Aug 2026",
+  },
+  miningLoad: {
+    technical:
+      "CBC reporting of NL Hydro officials: of about 525 MW allocated to NL Hydro from Churchill Falls for Labrador, roughly 312 MW is sold to IOC (Labrador City) and Tacora (Wabush). Treat as reputable press, not a current PUB order.",
+    plain:
+      "The mines already on this grid use most of the Labrador allocation Hydro has today. They are first in line — not a campus illustration.",
+    source: "CBC report of NL Hydro officials · Labrador West study",
+  },
+  computeOptional: {
+    technical:
+      "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Compute is leftover-firm-power optionality if the province writes it eligible. Open People holds none of those megawatts.",
+    plain:
+      "Compute is a named use of leftover firm power only if the paper writes it. It is not a reserved block, and it is not the front door of this site.",
+    source: "DCIA Material Terms (no named compute class) · Open People Path C",
+  },
 } as const;
 
 export const HOME_GATES = [
