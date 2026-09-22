@@ -50,7 +50,7 @@ export const CONTESTED_EXPORT = {
       technical:
         "Canadian Press via CP24, 17 Aug 2026 (corrected): graph provided to media — Hydro-Québec pays 1.8¢/kWh beginning in 2027. That 1.8¢ is the starting reported path, not the 7.4¢ life average. Financial Post (18 Aug 2026) separately described a rise to 11.5¢/kWh by 2041; that is a reported path, not the 50-year average. Annex D is not this ¢: it posts target $ payments. Not a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
-    sources: ["cpChurchillGraph", "financialPostPath"] as DeskSourceId[],
+    sources: ["cpChurchillGraph", "rciPricePath", "financialPostPath"] as DeskSourceId[],
   },
   average: {
     id: "average-74",
@@ -109,7 +109,7 @@ export const COST_MARKERS: CostMarker[] = [
       technical:
         "The 1969 Churchill Falls contract’s automatic 25-year renewal (2016–2041) prices HQ purchases at two mills per kWh. A mill is one-tenth of a cent, so two mills is 0.2¢/kWh ($2/MWh). Heritage NL and Feehan & Baker. This is an export price under a specific contract. It is not Rate 1.1L, not LAB-IND-1, not Island Industrial, and not a 2027 DCIA PPA rate.",
     },
-    sources: ["heritage1969", "feehanBaker"],
+    sources: ["heritage1969", "feehanBaker", "policyOptions2010"],
   },
   {
     id: "mou-irc-path",
@@ -122,7 +122,7 @@ export const COST_MARKERS: CostMarker[] = [
       plain:
         "The old memorandum’s “average” hid a cheap front and a steep back. The independent review took that paper apart. That path is history — not the August framework.",
       technical:
-        "IRC technical briefing (19 May 2026): MOU CF PPA decomposed to an average of 3.8¢/kWh (2024–2041) then 16.7¢/kWh (2042–2075) in 2024 dollars, targeting $33.8B PV via a block-pricing formula (Schedules F/G of the MOU). The IRC found the MOU not in the overall best long-term interest as written. The 2024 MOU expired 30 Apr 2026. Do not model the DCIA as this ¢ path.",
+        "IRC report and technical briefing (19 May 2026): MOU CF PPA decomposed to a levelized 3.8¢/kWh over 2025–2041 then 16.7¢/kWh over 2042–2075 in 2024 dollars, targeting $33.8B PV via a block-pricing formula (Schedules F/G of the MOU). The IRC found the MOU not in the overall best long-term interest as written. The 2024 MOU expired 30 Apr 2026. Do not model the DCIA as this ¢ path.",
     },
     sources: ["ircBriefing", "ircReport"],
   },
@@ -154,7 +154,7 @@ export const COST_MARKERS: CostMarker[] = [
       technical:
         "Public reporting after 17 Aug 2026 has described Hydro-Québec paying 1.8¢/kWh beginning in 2027, escalating about 14% a year to 11.5¢/kWh by 2041. That is a reported export-path description. It is not the CP24 7.4¢ 50-year average. It is not in the cents columns of Annex D (which is target $B + CPI). It is not LAB-IND-1. Binding PPA ¢/kWh: UNKNOWN until Definitive Agreements are public. See contested communications on this page.",
     },
-    sources: ["govNlDcia", "dciaHq", "cpChurchillGraph", "financialPostPath"],
+    sources: ["rciPricePath", "govNlDcia", "dciaHq", "cpChurchillGraph", "financialPostPath", "powerAdvisory"],
   },
   {
     id: "synthetic-export",
@@ -214,7 +214,7 @@ export const COST_MARKERS: CostMarker[] = [
       technical:
         "Jul 2026 Schedule, Industrial – Firm (IND-1): Availability is the Interconnected Island bulk transmission grid at ≥66 kV — not the Labrador Interconnected grid, not LAB-IND-1, not Rate 1.1L. Demand $10.73/kW-month. Firm energy base 4.428¢/kWh plus Project Cost Recovery Rider 1.987¢/kWh and CDM Cost Recovery Adjustment 0.007¢/kWh (also P.U. 17(2026) effective 1 Jul 2026). Base rate is subject to RSP adjustments. Specifically assigned annual charges are listed by Island customer. Not a Labrador industrial ¢. Not a DCIA export price.",
     },
-    sources: ["nlhRates2026", "pubIsland2026"],
+    sources: ["nlhRates2026", "pubIsland2026", "pubUtility2026"],
   },
   {
     id: "dcia-industrial-alloc",

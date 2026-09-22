@@ -8,7 +8,7 @@ export const SCALE_ANCHORS = {
       "Newfoundland and Labrador generates about 43 TWh of renewable electricity a year and exports most of it. The Churchill Falls / Gull Island DCIA, signed 17 August 2026, is a framework — not binding power-purchase agreements. The House endorsed that framework 21–18 on 17 September. The contracts that actually bind the power are still ahead.",
     plain:
       "We make a huge amount of clean electricity — about 43 TWh a year — and ship most of it out. The fight is what we keep for industry here. August’s paper and the September House vote (21–18) are a framework and a political yes. The contracts that lock the power are still ahead.",
-    source: "NL generation / export framing on this site",
+    source: "CER — Canada’s Renewable Power (43.1 TWh renewable, 2023) · CER NL profile (34.5 TWh net outflows, 2023)",
   },
   retainedMw: {
     technical:
