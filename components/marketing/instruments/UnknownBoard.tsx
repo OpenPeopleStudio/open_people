@@ -5,14 +5,24 @@ import { TRACKER_ITEMS } from "@/lib/desk";
  * I2 — the Unknown Board. One giant numeral: how many things the public
  * text still does not say. Each one is a dashed slot linking to its row.
  */
-export function UnknownBoard({ includeOpen = false }: { includeOpen?: boolean }) {
+export function UnknownBoard({
+  includeOpen = false,
+}: {
+  includeOpen?: boolean;
+}) {
   const unknown = TRACKER_ITEMS.filter((i) => i.status === "unknown");
-  const open = includeOpen ? TRACKER_ITEMS.filter((i) => i.status === "open") : [];
+  const open = includeOpen
+    ? TRACKER_ITEMS.filter((i) => i.status === "open")
+    : [];
 
   return (
     <div className="unknown-board">
       <div>
-        <p className="desk-num-xl" style={{ color: "var(--alert)" }} aria-hidden>
+        <p
+          className="desk-num-xl"
+          style={{ color: "var(--alert)" }}
+          aria-hidden
+        >
           {unknown.length}
         </p>
         <p className="desk-num-unit">

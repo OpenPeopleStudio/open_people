@@ -13,6 +13,10 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Allow a pre-installed Chromium (e.g. PW_CHROMIUM=/opt/pw-browsers/.../chrome)
+    ...(process.env.PW_CHROMIUM
+      ? { launchOptions: { executablePath: process.env.PW_CHROMIUM, args: ['--no-sandbox'] } }
+      : {}),
   },
   projects: [
     {
@@ -26,6 +30,10 @@ export default defineConfig({
     {
       name: 'mobile',
       use: { ...devices['iPhone 13'] },
+    },
+    {
+      name: 'mobile-chromium',
+      use: { ...devices['Pixel 7'] },
     },
   ],
   webServer: {

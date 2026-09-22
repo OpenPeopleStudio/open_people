@@ -21,11 +21,23 @@ function bw(mw: number): number {
 function fillAttrs(fill: FlowFill) {
   switch (fill) {
     case "solid":
-      return { fill: "var(--ink-3)", stroke: "none", strokeDasharray: undefined };
+      return {
+        fill: "var(--ink-3)",
+        stroke: "none",
+        strokeDasharray: undefined,
+      };
     case "outline":
-      return { fill: "rgba(232,137,60,0.08)", stroke: "var(--plasma)", strokeDasharray: undefined };
+      return {
+        fill: "rgba(232,137,60,0.08)",
+        stroke: "var(--plasma)",
+        strokeDasharray: undefined,
+      };
     case "hatch":
-      return { fill: "url(#fb-hatch)", stroke: "var(--steel)", strokeDasharray: undefined };
+      return {
+        fill: "url(#fb-hatch)",
+        stroke: "var(--steel)",
+        strokeDasharray: undefined,
+      };
     case "dashed":
       return { fill: "none", stroke: "var(--alert)", strokeDasharray: "4 4" };
   }
@@ -35,52 +47,102 @@ export function FlowBars() {
   const H = TOP + FLOW_BARS.length * ROW_H + 8;
   return (
     <div className="inst flow-bars">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="fb-title fb-desc">
-        <title id="fb-title">Megawatts: published, announced, preliminary, not published</title>
-        <desc id="fb-desc">
-          Proportional bars for Churchill Falls capacity, NL Hydro&apos;s current Labrador allocation,
-          mining load, the public retain framing, Gull Island, upgrades, the wind study, and the
-          unpublished industrial queue.
-        </desc>
-        <defs>
-          <pattern id="fb-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="6" stroke="var(--steel)" strokeWidth="1" />
-          </pattern>
-        </defs>
-        {FLOW_BARS.map((b, i) => {
-          const y = TOP + i * ROW_H;
-          const attrs = fillAttrs(b.fill);
-          const width = b.mw === null ? bw(2350) : bw(b.mw);
-          const lowWidth = b.mwLow ? bw(b.mwLow) : null;
-          return (
-            <g key={b.id} transform={`translate(0 ${y})`}>
-              <text x={LEFT - 14} y={20} textAnchor="end" className="lbl lbl-strong">
-                {b.label}
-              </text>
-              {b.fill === "hatch" && lowWidth !== null ? (
-                <>
-                  <rect x={LEFT} y={8} width={lowWidth} height={22} fill="url(#fb-hatch)" stroke="var(--steel)" strokeWidth={1} />
+      <div className="inst-scroll">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          role="img"
+          aria-labelledby="fb-title fb-desc"
+        >
+          <title id="fb-title">
+            Megawatts: published, announced, preliminary, not published
+          </title>
+          <desc id="fb-desc">
+            Proportional bars for Churchill Falls capacity, NL Hydro&apos;s
+            current Labrador allocation, mining load, the public retain framing,
+            Gull Island, upgrades, the wind study, and the unpublished
+            industrial queue.
+          </desc>
+          <defs>
+            <pattern
+              id="fb-hatch"
+              width="6"
+              height="6"
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(45)"
+            >
+              <line
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="6"
+                stroke="var(--steel)"
+                strokeWidth="1"
+              />
+            </pattern>
+          </defs>
+          {FLOW_BARS.map((b, i) => {
+            const y = TOP + i * ROW_H;
+            const attrs = fillAttrs(b.fill);
+            const width = b.mw === null ? bw(2350) : bw(b.mw);
+            const lowWidth = b.mwLow ? bw(b.mwLow) : null;
+            return (
+              <g key={b.id} transform={`translate(0 ${y})`}>
+                <text
+                  x={LEFT - 14}
+                  y={20}
+                  textAnchor="end"
+                  className="lbl lbl-strong"
+                >
+                  {b.label}
+                </text>
+                {b.fill === "hatch" && lowWidth !== null ? (
+                  <>
+                    <rect
+                      x={LEFT}
+                      y={8}
+                      width={lowWidth}
+                      height={22}
+                      fill="url(#fb-hatch)"
+                      stroke="var(--steel)"
+                      strokeWidth={1}
+                    />
+                    <rect
+                      x={LEFT + lowWidth}
+                      y={8}
+                      width={width - lowWidth}
+                      height={22}
+                      fill="none"
+                      stroke="var(--steel)"
+                      strokeWidth={1}
+                      strokeDasharray="3 3"
+                    />
+                  </>
+                ) : (
                   <rect
-                    x={LEFT + lowWidth}
+                    x={LEFT}
                     y={8}
-                    width={width - lowWidth}
+                    width={width}
                     height={22}
-                    fill="none"
-                    stroke="var(--steel)"
+                    {...attrs}
                     strokeWidth={1}
-                    strokeDasharray="3 3"
                   />
-                </>
-              ) : (
-                <rect x={LEFT} y={8} width={width} height={22} {...attrs} strokeWidth={1} />
-              )}
-              <text x={LEFT + width + 10} y={23} className="num" style={{ fontSize: 12.5 }}>
-                {b.value}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+                )}
+                <text
+                  x={LEFT + width + 10}
+                  y={23}
+                  className="num"
+                  style={{ fontSize: 12.5 }}
+                >
+                  {b.value}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+        <span className="inst-scroll-hint" aria-hidden>
+          scroll sideways →
+        </span>
+      </div>
 
       <ul className="inst-legend" aria-label="Fill key">
         <li className="inst-legend-item">

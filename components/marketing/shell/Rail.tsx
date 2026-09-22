@@ -83,8 +83,8 @@ export function MobileStrip() {
   return (
     <div className="desk-strip">
       <DepthControl />
-      <div className="ml-auto">
-        <WalkLaunch label="Walk me through" />
+      <div className="ml-auto min-w-0">
+        <WalkLaunch label="Walkthrough" />
       </div>
     </div>
   );
