@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
 import { StatusPill } from "@/components/marketing/desk";
 import { DefaultPath, GateClock } from "@/components/marketing/instruments";
+import { deskMetadata } from "@/lib/og/metadata";
 import {
   COMPUTE_HONESTY,
   COMPUTE_NEIGHBOURS,
@@ -25,25 +25,16 @@ import {
 } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
-export const metadata: Metadata = {
+export const metadata = deskMetadata({
   title: "Coalition brief — keep firm power in NL",
   description:
     "Partner-confidential coalition for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador: mines, towns, Indigenous partners, infrastructure. Compute is a separate page. Open People is a catalyst, not an offtake seat.",
-  alternates: { canonical: "/coalition" },
+  path: "/coalition",
+  type: "article",
   robots: { index: false, follow: false },
-  openGraph: {
-    title: "Coalition brief — keep firm power in NL",
-    description:
-      "A coalition to keep firm Churchill Falls / Gull Island power in-province. Mining first. Compute if the paper writes it. Open People is a catalyst, not a DCIA party.",
-    url: "/coalition",
-    type: "article",
-    locale: "en_CA",
-  },
-  twitter: {
-    card: "summary",
-    title: "Coalition brief — keep firm power in NL",
-  },
-};
+  ogDescription:
+    "A coalition to keep firm Churchill Falls / Gull Island power in-province. Mining first. Compute if the paper writes it. Open People is a catalyst, not a DCIA party.",
+});
 
 /* ── lib/desk lookups. A missing id is a build error, not a silent blank. ── */
 

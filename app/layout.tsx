@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/og/copy";
+import { siteOrigin } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://openpeople.ai"),
+  metadataBase: new URL(siteOrigin()),
   title: {
-    default: "Open People — Churchill River / Labrador power desk",
+    default: HOME_TITLE,
     template: "%s · Open People",
   },
-  description:
-    "Horizon desk for Churchill Falls / Gull Island firm power in Newfoundland and Labrador. Mining first. Compute is a named use on a separate page — partners own the steel.",
+  description: HOME_DESCRIPTION,
   keywords: [
     "Labrador",
     "Newfoundland and Labrador",
@@ -20,28 +21,19 @@ export const metadata: Metadata = {
     "Open People",
     "in-province power",
     "firm power",
+    "Churchill River desk",
   ],
   openGraph: {
-    title: "Open People — Keep firm power in Newfoundland and Labrador",
-    description:
-      "Horizon desk: keep firm Churchill Falls / Gull Island power in NL. Mining first. Compute is a separate page.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     type: "website",
-    locale: "en_US",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Open People — Keep firm power in Newfoundland and Labrador",
-      },
-    ],
+    locale: "en_CA",
+    siteName: "Open People",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Open People — Keep firm power in Newfoundland and Labrador",
-    description:
-      "Horizon desk: keep firm Churchill Falls / Gull Island power in NL. Mining first. Compute is a separate page.",
-    images: ["/twitter-image.png"],
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
   },
   icons: {
     icon: [
