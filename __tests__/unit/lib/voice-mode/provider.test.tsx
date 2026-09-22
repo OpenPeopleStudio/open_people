@@ -41,16 +41,30 @@ describe("voice mode chrome", () => {
       </>
     );
 
-    const buttons = Array.from(document.querySelectorAll('[aria-label="Voice mode"] button'));
-    expect(buttons.map((button) => button.textContent)).toEqual(["Plain language", "Technical"]);
+    const buttons = Array.from(document.querySelectorAll('[aria-label="Reading depth"] button'));
+    expect(buttons.map((button) => button.textContent)).toEqual(["Plain", "Guided", "Technical"]);
 
-    fireEvent.click(buttons[1]!);
+    fireEvent.click(buttons[2]!);
 
     expect(window.localStorage.getItem(VOICE_STORAGE_KEY)).toBe("technical");
     expect(new URL(window.location.href).searchParams.get("v")).toBe("tech");
     expect(document.querySelector('[data-voice="plain"]')?.hasAttribute("hidden")).toBe(true);
     expect(document.querySelector('[data-voice="technical"]')?.hasAttribute("hidden")).toBe(false);
-    expect(buttons[1]?.getAttribute("aria-pressed")).toBe("true");
+    expect(buttons[2]?.getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("keeps plain visible in guided depth", () => {
+    mount(
+      <>
+        <VoiceToggle />
+        <Dual plain={<span>plain-side</span>} technical={<span>tech-side</span>} />
+      </>
+    );
+    const buttons = Array.from(document.querySelectorAll('[aria-label="Reading depth"] button'));
+    fireEvent.click(buttons[1]!);
+    expect(window.localStorage.getItem(VOICE_STORAGE_KEY)).toBe("guided");
+    expect(new URL(window.location.href).searchParams.get("v")).toBe("guided");
+    expect(document.querySelector('[data-voice="plain"]')?.hasAttribute("hidden")).toBe(false);
   });
 
   it("honours ?v=tech once and writes storage", async () => {

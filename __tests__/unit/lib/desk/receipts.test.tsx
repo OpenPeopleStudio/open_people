@@ -39,8 +39,8 @@ describe("desk receipts", () => {
         </Receipts>
       </>,
     );
-    const buttons = Array.from(document.querySelectorAll('[aria-label="Voice mode"] button'));
-    fireEvent.click(buttons[1]!);
+    const buttons = Array.from(document.querySelectorAll('[aria-label="Reading depth"] button'));
+    fireEvent.click(buttons[2]!);
     expect(document.querySelector("details.desk-receipts")?.hasAttribute("open")).toBe(true);
     expect(document.querySelector("details.desk-receipts")?.textContent).toContain("CPI deadband");
   });

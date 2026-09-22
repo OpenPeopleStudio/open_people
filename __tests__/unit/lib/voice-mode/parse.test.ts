@@ -17,11 +17,13 @@ describe("voice mode parse", () => {
     expect(VOICE_STORAGE_KEY).toBe("op.voiceMode");
     expect(voiceModeLabel("plain")).toBe("Plain language");
     expect(voiceModeLabel("technical")).toBe("Technical");
+    expect(voiceModeLabel("guided")).toBe("Guided");
   });
 
   it("maps shareable ?v= values and ignores unknown params", () => {
     expect(parseVoiceQueryParam("plain")).toBe("plain");
     expect(parseVoiceQueryParam("tech")).toBe("technical");
+    expect(parseVoiceQueryParam("guided")).toBe("guided");
     expect(parseVoiceQueryParam("technical")).toBeNull();
     expect(parseVoiceQueryParam("everyday")).toBeNull();
     expect(parseVoiceQueryParam("")).toBeNull();
@@ -31,12 +33,14 @@ describe("voice mode parse", () => {
   it("reads stored plain | technical only", () => {
     expect(parseStoredVoiceMode("plain")).toBe("plain");
     expect(parseStoredVoiceMode("technical")).toBe("technical");
+    expect(parseStoredVoiceMode("guided")).toBe("guided");
     expect(parseStoredVoiceMode("tech")).toBeNull();
   });
 
   it("writes ?v=plain and ?v=tech", () => {
     expect(voiceModeToQueryValue("plain")).toBe("plain");
     expect(voiceModeToQueryValue("technical")).toBe("tech");
+    expect(voiceModeToQueryValue("guided")).toBe("guided");
   });
 });
 

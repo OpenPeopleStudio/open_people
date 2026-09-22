@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { VoiceToggle } from "./voice";
+import { usePathname } from "next/navigation";
 
 const LINKS = [
-  { href: "/brief", label: "Brief" },
   { href: "/tracker", label: "Tracker" },
   { href: "/industries", label: "Industries" },
   { href: "/costs", label: "Costs" },
+  { href: "/brief", label: "Brief" },
   { href: "/letter", label: "Letter" },
 ];
 
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -22,93 +23,69 @@ export default function SiteNav() {
     };
   }, [open]);
 
+  // Close the sheet on navigation (links also close it on click).
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (prevPath !== pathname) {
+    setPrevPath(pathname);
+    setOpen(false);
+  }
+
   return (
     <>
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--void)]">
-        <div className="mx-auto flex h-14 max-w-[1080px] items-center gap-3 px-4 sm:px-6 lg:gap-4">
-          <Link
-            href="/"
-            className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-primary)] no-underline"
-            onClick={() => setOpen(false)}
-          >
-            Open People<span className="text-[var(--plasma)]"> · NL</span>
+      <nav className="desk-nav" aria-label="Primary">
+        <div className="desk-nav-inner">
+          <Link href="/" className="desk-brand">
+            Open People <b>· Churchill River desk</b>
           </Link>
 
-          <div className="ml-auto hidden items-center gap-3 lg:flex lg:gap-4">
+          <div className="desk-nav-links">
             {LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-[13px] text-[var(--text-muted)] no-underline transition-colors duration-150 hover:text-[var(--plasma)]"
+                className="desk-nav-link"
+                aria-current={pathname === l.href ? "page" : undefined}
               >
                 {l.label}
               </Link>
             ))}
-            <VoiceToggle />
-            <Link
-              href="/engage"
-              className="rounded-[2px] border border-[var(--border-medium)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--text-primary)] no-underline transition-colors duration-150 hover:border-[var(--plasma)] hover:text-[var(--plasma)]"
-            >
+            <Link href="/engage" className="desk-nav-cta">
               Keep power here
             </Link>
           </div>
 
           <button
             type="button"
-            className="ml-auto flex h-10 w-10 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] text-[var(--text-primary)] lg:hidden"
+            className="desk-nav-burger"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            <span className="font-mono text-lg leading-none">{open ? "×" : "≡"}</span>
+            {open ? "×" : "≡"}
           </button>
         </div>
-
-        {!open ? (
-          <div className="border-t border-[var(--border-subtle)] px-4 py-2 lg:hidden">
-            <VoiceToggle className="flex w-full" />
-          </div>
-        ) : null}
       </nav>
 
-      {open && (
-        <div className="fixed inset-0 z-40 bg-[var(--void)] pt-20 lg:hidden">
-          <div className="px-6 pb-2">
-            <VoiceToggle className="flex w-full" />
-          </div>
-          <ul className="space-y-1 px-6">
-            {LINKS.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="block py-4 font-display text-2xl text-[var(--text-primary)] no-underline hover:text-[var(--plasma)]"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link
-                href="/engage"
-                className="block py-4 font-display text-2xl text-[var(--text-primary)] no-underline hover:text-[var(--plasma)]"
-                onClick={() => setOpen(false)}
-              >
-                Engage
-              </Link>
-            </li>
-          </ul>
-          <div className="mt-8 border-t border-[var(--border-subtle)] px-6 pt-6">
-            <Link
-              href="/engage"
-              className="btn-primary w-full justify-center py-4 text-base"
-              onClick={() => setOpen(false)}
-            >
+      {open ? (
+        <div className="desk-nav-sheet">
+          {LINKS.map((l) => (
+            <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>
+              {l.label}
+            </Link>
+          ))}
+          <Link href="/engage" onClick={() => setOpen(false)}>
+            Engage
+          </Link>
+          <Link href="/compute" onClick={() => setOpen(false)} className="text-[var(--ink-3)]">
+            Compute plan
+          </Link>
+          <div className="mt-8">
+            <Link href="/engage" className="btn-primary w-full" onClick={() => setOpen(false)}>
               Get involved — keep firm power here
             </Link>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

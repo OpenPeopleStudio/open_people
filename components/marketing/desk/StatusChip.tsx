@@ -29,24 +29,24 @@ const LABEL: Record<DeskChromeStatus, string> = {
 
 /** Semantic colour only — no fills, no gradients. */
 const TONE: Record<DeskChromeStatus, string> = {
-  signed: "var(--success)",
-  endorsed: "var(--success)",
-  "published-rate": "var(--success)",
+  signed: "var(--ok)",
+  endorsed: "var(--plasma)",
+  "published-rate": "var(--steel-bright)",
   framework: "var(--plasma)",
   structure: "var(--plasma)",
   first: "var(--plasma)",
-  open: "var(--warning)",
-  reported: "var(--warning)",
-  unknown: "var(--error)",
-  heritage: "var(--text-muted)",
-  cited: "var(--text-muted)",
-  secondary: "var(--text-muted)",
+  open: "var(--amber)",
+  reported: "var(--amber)",
+  unknown: "var(--alert)",
+  heritage: "var(--steel)",
+  cited: "var(--steel)",
+  secondary: "var(--steel)",
 };
 
 export function StatusPill({ status }: { status: DeskChromeStatus }) {
   const color = TONE[status];
   return (
-    <span className="desk-chip" style={{ color, borderColor: color }}>
+    <span className="desk-chip" data-status={status} style={{ color, borderColor: color }}>
       {LABEL[status]}
     </span>
   );
