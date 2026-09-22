@@ -2,7 +2,14 @@ import { readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { DESK_OG, HOME_DESCRIPTION, HOME_TITLE } from "@/lib/og/copy";
+import {
+  DESK_OG,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  deskOgFooterUrl,
+  deskOgKicker,
+} from "@/lib/og/copy";
+import { OG_COLOR, OG_LAYOUT, OG_RAIL, OG_SIZE, ogAccent, wrapHeadline } from "@/lib/og/layout";
 import { deskMetadata } from "@/lib/og/metadata";
 import { deskOgSvg } from "@/lib/og/svg";
 import { CANONICAL_ORIGIN, siteOrigin } from "@/lib/site";
@@ -83,9 +90,43 @@ describe("desk Open Graph", () => {
     expect(DESK_OG.home.alt).toBe(
       "Open People — Churchill River desk. Keep the power here. Watch the gates.",
     );
+    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · CHURCHILL RIVER DESK");
+    expect(deskOgFooterUrl(DESK_OG.home)).toBe("OPENPEOPLE.AI");
     expect(DESK_OG.compute.headline).toBe("A compute plan,");
     expect(DESK_OG.compute.accent).toBe("not a campus landing.");
     expect(DESK_OG.compute.quiet).toBe(true);
+  });
+
+  it("uses an 8px plasma chassis and steel on quiet compute", () => {
+    expect(OG_SIZE).toEqual({ width: 1200, height: 630 });
+    expect(OG_RAIL).toBe(8);
+    expect(OG_COLOR.void).toBe("#040404");
+    expect(OG_COLOR.plasma).toBe("#e8893c");
+    expect(ogAccent(false)).toBe(OG_COLOR.plasma);
+    expect(ogAccent(true)).toBe(OG_COLOR.steel);
+
+    const home = deskOgSvg(DESK_OG.home);
+    expect(home).toContain(`width="${OG_RAIL}" height="${OG_SIZE.height}"`);
+    expect(home).toContain(`width="${OG_SIZE.width}" height="${OG_RAIL}"`);
+    expect(home).toContain("OPEN PEOPLE");
+    expect(home).toContain("CHURCHILL RIVER DESK");
+    expect(home).toContain("OPENPEOPLE.AI");
+    expect(home).toContain(">NL<");
+
+    const compute = deskOgSvg(DESK_OG.compute);
+    expect(compute).toContain(OG_COLOR.steel);
+    expect(compute).toContain("A compute plan,");
+    expect(compute).toContain("not a campus landing.");
+    expect(compute).not.toMatch(/¢/);
+  });
+
+  it("wraps long headlines on the sentence, not a stray last word", () => {
+    expect(
+      wrapHeadline(DESK_OG.home.headline, OG_LAYOUT.headlineSize, OG_LAYOUT.columnW),
+    ).toEqual(["Keep the power here."]);
+    expect(
+      wrapHeadline(DESK_OG.tracker.headline, OG_LAYOUT.headlineSize, OG_LAYOUT.columnW),
+    ).toEqual(["What’s signed.", "What’s open."]);
   });
 
   it("commits a real 1200×630 PNG (not a 0-byte placeholder)", async () => {
@@ -110,6 +151,8 @@ describe("desk Open Graph", () => {
     expect(svg).toContain("#e8893c");
     expect(svg).toContain("Keep the power here.");
     expect(svg).toContain("Watch the gates.");
+    expect(svg).toContain("OPEN PEOPLE");
+    expect(svg).toContain("CHURCHILL RIVER DESK");
     expect(svg).not.toMatch(/¢/);
   });
 });

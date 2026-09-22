@@ -1,6 +1,13 @@
 /**
  * Desk v2 Open Graph / Twitter card copy.
  * No deal numbers on the image (no ¢/kWh, no MW). Mining first. Compute quiet.
+ *
+ * Locked home card (do not soften):
+ *   Kicker:    OPEN PEOPLE · CHURCHILL RIVER DESK
+ *   Dominant:  Keep the power here.
+ *   Secondary: Watch the gates.
+ *   Footer:    OPEN PEOPLE · NL / OPENPEOPLE.AI
+ * Compute stays quiet (steel): A compute plan, / not a campus landing.
  */
 
 export type DeskOgCard = {
@@ -13,17 +20,25 @@ export type DeskOgCard = {
   quiet?: boolean;
 };
 
+export function deskOgKicker(card: DeskOgCard): string {
+  return `${card.kicker} · ${card.kickerAccent}`.toUpperCase();
+}
+
+export function deskOgFooterUrl(card: DeskOgCard): string {
+  return card.footer.toUpperCase();
+}
+
 export const HOME_TITLE = "Open People — Churchill River desk · Keep the power here";
 export const HOME_DESCRIPTION =
   "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.";
 
 export const DESK_OG = {
   home: {
-    kicker: "Open People",
-    kickerAccent: "Churchill River desk",
+    kicker: "OPEN PEOPLE",
+    kickerAccent: "CHURCHILL RIVER DESK",
     headline: "Keep the power here.",
     accent: "Watch the gates.",
-    footer: "openpeople.ai",
+    footer: "OPENPEOPLE.AI",
     alt: "Open People — Churchill River desk. Keep the power here. Watch the gates.",
   },
   tracker: {

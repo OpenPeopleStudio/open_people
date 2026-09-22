@@ -2,6 +2,14 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.4 — 2026-09-22 — Share cards: instrument, not poster
+
+Tom rejected the soft brochure OG (2px hairline, equal-weight serif, empty void). Home card is a denser instrument: 8px plasma chassis, grotesque dominant line, mono plasma secondary, abstract gate ticks, locked copy. Copy-pass 1 living-desk `og:description` and Dual plain stay as on main.
+
+- Locked: `OPEN PEOPLE · CHURCHILL RIVER DESK` / `Keep the power here.` / `Watch the gates.` / `OPEN PEOPLE · NL` / `OPENPEOPLE.AI`
+- Compute stays quiet steel: `A compute plan,` / `not a campus landing.`
+- `lib/og/image.tsx` and `lib/og/svg.ts` share `lib/og/layout.ts`. Regenerated `public/og-image.png` + `public/twitter-image.png` (1200×630).
+
 ## 0.5.3 — 2026-09-22 — Copy pass 1: meta + Dual plain
 
 Home share copy and Dual lede. Hogan: “What matters is what we keep” — never “The fight is.” OG card art slots already locked (kicker / Keep the power here. / Watch the gates.). Compute stays quiet steel.
