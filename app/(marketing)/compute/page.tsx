@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { deskMeta } from "@/lib/og";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Term, Unfold } from "@/components/marketing/depth";
@@ -11,13 +12,12 @@ import {
   DESK_SOURCES,
 } from "@/lib/desk";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = deskMeta({
   title: "Compute plan",
   description:
     "Open People’s energy-use plan for compute only: mining first, named optionality, no reserved megawatts. Not a data-centre pitch. Not a seat at the deal table.",
-  alternates: { canonical: "/compute" },
-  robots: { index: true, follow: true },
-};
+  path: "/compute",
+});
 
 export default function ComputePage() {
   return (

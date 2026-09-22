@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { deskMeta } from "@/lib/og";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
@@ -25,25 +26,14 @@ import {
 } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = deskMeta({
   title: "Coalition brief — keep firm power in NL",
   description:
     "Partner-confidential coalition for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador: mines, towns, Indigenous partners, infrastructure. Compute is a separate page. Open People is a catalyst, not an offtake seat.",
-  alternates: { canonical: "/coalition" },
-  robots: { index: false, follow: false },
-  openGraph: {
-    title: "Coalition brief — keep firm power in NL",
-    description:
-      "A coalition to keep firm Churchill Falls / Gull Island power in-province. Mining first. Compute if the paper writes it. Open People is a catalyst, not a DCIA party.",
-    url: "/coalition",
-    type: "article",
-    locale: "en_CA",
-  },
-  twitter: {
-    card: "summary",
-    title: "Coalition brief — keep firm power in NL",
-  },
-};
+  path: "/coalition",
+  type: "article",
+  noindex: true,
+});
 
 /* ── lib/desk lookups. A missing id is a build error, not a silent blank. ── */
 

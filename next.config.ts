@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   // An explicit empty config silences the “webpack config and no turbopack config” error.
   turbopack: {},
 
+  // Share-card fonts are read from disk at render time (lib/og/card.tsx).
+  outputFileTracingIncludes: {
+    "/**": ["./lib/og/fonts/**"],
+  },
+
   // Handle redirects at the config level
   async redirects() {
     const retiredMarketing = [

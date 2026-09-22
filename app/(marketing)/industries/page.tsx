@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { deskMeta } from "@/lib/og";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold } from "@/components/marketing/depth";
@@ -7,12 +8,12 @@ import { CorridorSchematic, FlowBars } from "@/components/marketing/instruments"
 import { COMPUTE_SECONDARY_LINE, DESK_SOURCES, INDUSTRY_CARDS } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = deskMeta({
   title: "Industries",
   description:
     "Mining and Labrador industry first. Megawatts drawn by how hard the number is; the corridor the mines need; sourced cards for Labrador West load. Compute is a short secondary line.",
-  alternates: { canonical: "/industries" },
-};
+  path: "/industries",
+});
 
 export default function IndustriesPage() {
   return (

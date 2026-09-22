@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { deskMeta } from "@/lib/og";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Term, Unfold } from "@/components/marketing/depth";
@@ -15,26 +16,12 @@ import MhaTemplates from "./MhaTemplates";
 import ShareEngage from "./ShareEngage";
 import PrintButton from "./PrintButton";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = deskMeta({
   title: "Keep firm power in NL",
   description:
     "The Churchill Falls / Gull Island DCIA is a framework, not binding contracts. Seven checks an MHA can put to the long-form before it hardens. Mining first. Compute is a named use, not a reserved block.",
-  alternates: { canonical: "/engage" },
-  openGraph: {
-    title: "Keep firm power in NL",
-    description:
-      "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
-    url: "/engage",
-    type: "website",
-    locale: "en_CA",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Keep firm power in NL",
-    description:
-      "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
-  },
-};
+  path: "/engage",
+});
 
 const OPEN = [
   {

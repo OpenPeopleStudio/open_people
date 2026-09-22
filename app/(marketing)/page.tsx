@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { deskMeta, HOME_OG_TITLE } from "@/lib/og";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
@@ -6,13 +7,13 @@ import { DefaultPath, GateClock, UnknownBoard } from "@/components/marketing/ins
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
-export const metadata: Metadata = {
-  title: {
-    absolute: "Open People — Churchill River desk · Keep the power here",
-  },
+export const metadata: Metadata = deskMeta({
+  title: "Churchill River desk",
+  absoluteTitle: HOME_OG_TITLE,
   description:
     "The clock on the Churchill Falls / Gull Island framework, the things the public text still does not say, and what the paper already decides if nobody writes anything else. Mining first. Compute is a separate page.",
-};
+  path: "/",
+});
 
 const OPEN = [
   {

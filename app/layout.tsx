@@ -22,26 +22,13 @@ export const metadata: Metadata = {
     "firm power",
   ],
   openGraph: {
-    title: "Open People — Keep firm power in Newfoundland and Labrador",
-    description:
-      "Horizon desk: keep firm Churchill Falls / Gull Island power in NL. Mining first. Compute is a separate page.",
+    siteName: "Open People",
     type: "website",
-    locale: "en_US",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Open People — Keep firm power in Newfoundland and Labrador",
-      },
-    ],
+    locale: "en_CA",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Open People — Churchill River desk" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Open People — Keep firm power in Newfoundland and Labrador",
-    description:
-      "Horizon desk: keep firm Churchill Falls / Gull Island power in NL. Mining first. Compute is a separate page.",
-    images: ["/twitter-image.png"],
   },
   icons: {
     icon: [
