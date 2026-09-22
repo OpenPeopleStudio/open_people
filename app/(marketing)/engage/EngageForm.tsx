@@ -5,8 +5,8 @@ import {
   ENGAGE_INTERESTS,
   ENGAGE_TO,
   type EngageInterestId,
+  buildEngageClipboard,
   buildEngageMailto,
-  buildEngageMessage,
 } from "@/lib/marketing/engage";
 
 const EMPTY_INTERESTS: EngageInterestId[] = [];
@@ -25,7 +25,12 @@ export default function EngageForm() {
     [name, email, org, note, interests]
   );
 
+  function clearCopied() {
+    if (copied) setCopied(false);
+  }
+
   function toggleInterest(id: EngageInterestId) {
+    clearCopied();
     setInterests((current) =>
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
     );
@@ -55,18 +60,15 @@ export default function EngageForm() {
     }
     setError(null);
     try {
-      await navigator.clipboard.writeText(
-        `To: ${ENGAGE_TO}\nSubject: Keep firm power in NL — ${name.trim()}\n\n${buildEngageMessage(values)}`
-      );
+      await navigator.clipboard.writeText(buildEngageClipboard(values));
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2500);
     } catch {
-      setError("Could not copy. Use the email button, or write tom@openpeople.ai directly.");
+      setError("Could not copy. Select the text below, or write tom@openpeople.ai directly.");
     }
   }
 
   const inputClass =
-    "mt-2 w-full rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--plasma)] focus:outline-none";
+    "mt-2 w-full rounded border border-[var(--border-subtle)] bg-[var(--void)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--plasma)] focus:outline-none";
 
   return (
     <form className="space-y-5" onSubmit={(event) => event.preventDefault()}>
@@ -77,7 +79,10 @@ export default function EngageForm() {
           </span>
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              clearCopied();
+              setName(e.target.value);
+            }}
             className={inputClass}
             autoComplete="name"
             placeholder="Your name"
@@ -89,7 +94,10 @@ export default function EngageForm() {
           </span>
           <input
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              clearCopied();
+              setEmail(e.target.value);
+            }}
             className={inputClass}
             autoComplete="email"
             inputMode="email"
@@ -104,7 +112,10 @@ export default function EngageForm() {
         </span>
         <input
           value={org}
-          onChange={(e) => setOrg(e.target.value)}
+          onChange={(e) => {
+            clearCopied();
+            setOrg(e.target.value);
+          }}
           className={inputClass}
           autoComplete="organization"
           placeholder="Company, union, town, or leave blank"
@@ -146,7 +157,10 @@ export default function EngageForm() {
         </span>
         <textarea
           value={note}
-          onChange={(e) => setNote(e.target.value)}
+          onChange={(e) => {
+            clearCopied();
+            setNote(e.target.value);
+          }}
           rows={5}
           className={`${inputClass} resize-y`}
           placeholder="Where you live, what you want kept in-province, or a door you can walk through."
@@ -159,27 +173,36 @@ export default function EngageForm() {
         </p>
       ) : null}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <a
-          href={buildEngageMailto(values)}
-          onClick={onMailto}
-          className="btn-primary justify-center px-6 py-3 text-sm"
+      {copied ? (
+        <p
+          className="rounded border border-[rgba(95,168,124,0.35)] bg-[rgba(95,168,124,0.08)] px-4 py-3 text-sm leading-relaxed text-[var(--text-primary)]"
+          role="status"
         >
-          Email Tom
-        </a>
+          Copied. Paste into an email to {ENGAGE_TO}. Open People does not store this form, and Tom
+          sends nothing automatically.
+        </p>
+      ) : null}
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button
           type="button"
           onClick={onCopy}
+          className="btn-primary justify-center px-6 py-3 text-sm"
+        >
+          {copied ? "Copied — paste to Tom" : "Copy message"}
+        </button>
+        <a
+          href={buildEngageMailto(values)}
+          onClick={onMailto}
           className="btn-secondary justify-center px-6 py-3 text-sm"
         >
-          {copied ? "Copied" : "Copy message"}
-        </button>
+          Open mail app
+        </a>
       </div>
 
       <p className="text-sm leading-relaxed text-[var(--text-muted)]">
-        This opens your own mail app to {ENGAGE_TO}, or copies the same text. Open People does not
-        store the form, and Tom sends nothing automatically. If mail does not open, write him
-        directly.
+        Copy is the reliable path — long mailto links often fail on phones. Mail app is a shortcut
+        if yours can handle it. Either way the text goes to {ENGAGE_TO} from your own inbox.
       </p>
     </form>
   );

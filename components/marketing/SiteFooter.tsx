@@ -19,7 +19,7 @@ export default function SiteFooter() {
 
         <div className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-[12px]">
           <Link href="/brief" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
-            The case
+            The brief
           </Link>
           <Link href="/engage" className="text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]">
             Get involved

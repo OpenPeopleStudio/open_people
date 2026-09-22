@@ -3,12 +3,27 @@ import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 import EngageForm from "./EngageForm";
 import MhaTemplates from "./MhaTemplates";
+import ShareEngage from "./ShareEngage";
 
 export const metadata: Metadata = {
   title: "Keep firm power in NL",
   description:
-    "The Churchill Falls / Gull Island DCIA is a framework, not binding contracts. A public path to keep firm power in Newfoundland and Labrador for industry — mining first, compute as a named use.",
+    "The Churchill Falls / Gull Island DCIA is a framework, not binding contracts. Keep firm power in Newfoundland and Labrador for industry — mining first. Compute is a named use, not a reserved block.",
   alternates: { canonical: "/engage" },
+  openGraph: {
+    title: "Keep firm power in NL",
+    description:
+      "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
+    url: "/engage",
+    type: "website",
+    locale: "en_CA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Keep firm power in NL",
+    description:
+      "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
+  },
 };
 
 const OPEN = [
@@ -36,6 +51,20 @@ const OPEN = [
     title: "Federal environmental assessment is a live gap",
     body: "IAAC has said no new federal impact assessment is needed if 2026 Gull Island matches the 2006–2012 Lower Churchill review. The agency has not received proponent confirmation that the scopes match. The 2026 plant as described is larger than the roughly 2,000 MW reviewed then.",
   },
+  {
+    title: "Wind SPE is unnamed",
+    body: "DCIA §13 leaves a Wind special-purpose entity unnamed, at NL Hydro’s sole discretion. Federal Canada — not CPP — may take up to 40% SPE equity in the public framing. A ~$8B / 100% CPP-held “A” company remains unknown. Do not invent the name.",
+  },
+];
+
+const ASKS = [
+  "How in-province power will be metered and scheduled, year by year — not just a headline retain figure.",
+  "The contract definition of domestic / in-province load, in words a voter can check.",
+  "What happens to unused retain: default buyer, notice, and price — so leftover megawatts do not slide west by indecision.",
+  "Whether a recall right is in the signed text, not only in House testimony (including the three-year notice described to MHAs).",
+  "Whether industrial uses beyond mining — towns, other Labrador industry, and compute if the province writes it — are eligible at all.",
+  "Whether an Innu Nation partnership / royalty / Gull Island tariff path is settled before large Labrador builds lock.",
+  "Whether the proponent has confirmed that 2026 Gull Island matches the 2012 Lower Churchill federal review scope — or that a new assessment is coming.",
 ];
 
 const DOORS = [
@@ -171,7 +200,7 @@ export default function EngagePage() {
             <p className="mt-8 text-sm text-[var(--text-muted)]">
               Read the evidence first:{" "}
               <Link href="/brief" className="text-[var(--plasma)] no-underline hover:underline">
-                Labrador Compute Case
+                Labrador power &amp; industry case
               </Link>
               {" · "}
               <Link href="/letter" className="text-[var(--plasma)] no-underline hover:underline">
@@ -182,13 +211,41 @@ export default function EngagePage() {
           </div>
         </section>
 
+        <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
+          <div className="mx-auto max-w-[780px]">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
+              02 — What to ask for in the contracts
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
+              Seven checks before the paper hardens.
+            </h2>
+            <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
+              No invented megawatts or prices. These are questions the long-form should answer in
+              public — or admit it does not.
+            </p>
+            <ol className="mt-8 space-y-3">
+              {ASKS.map((item, i) => (
+                <li
+                  key={item}
+                  className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] px-4 py-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                >
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="mt-1 block">{item}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
         <section
           id="doors"
           className="scroll-mt-24 border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24"
         >
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              02 — This month
+              03 — This month
             </p>
             <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
               Concrete doors while the paper is still paper.
@@ -252,7 +309,7 @@ export default function EngagePage() {
         >
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              03 — Write in
+              04 — Write in
             </p>
             <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
               Tell Tom you want the power kept here.
@@ -270,7 +327,7 @@ export default function EngagePage() {
         <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              04 — Write your MHA
+              05 — Write your MHA
             </p>
             <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
               Starter questions. You send them. We don&apos;t.
@@ -278,18 +335,22 @@ export default function EngagePage() {
             <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
               Find your member on the{" "}
               <a
-                href="https://www.assembly.nl.ca/Members/"
+                href="https://www.assembly.nl.ca/Members/members.aspx"
                 className="text-[var(--plasma)] no-underline hover:underline"
                 rel="noopener noreferrer"
               >
-                House of Assembly members list
+                House of Assembly members page
               </a>
-              . Copy a starter, put it in your own words, and send it yourself. Open People will not
-              mail MHAs on your behalf.
+              {" "}
+              (contacts live there — we do not scrape emails onto this site). Mail also reaches MHAs
+              at Confederation Building, P.O. Box 8700, St. John&apos;s, NL A1B 4J6. Copy a starter,
+              put it in your own words, and send it yourself. Open People will not mail MHAs on your
+              behalf.
             </p>
             <div className="mt-10">
               <MhaTemplates />
             </div>
+            <ShareEngage />
           </div>
         </section>
 

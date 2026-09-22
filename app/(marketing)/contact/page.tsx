@@ -50,7 +50,7 @@ export default function ContactPage() {
                 Public briefing
               </div>
               <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                Read the Labrador Compute Case before a first meeting when you can.
+                Read the Labrador power &amp; industry case before a first meeting when you can.
               </p>
               <a
                 href="/brief"

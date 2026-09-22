@@ -80,7 +80,7 @@ export default function HomePage() {
                 Get involved — keep firm power here
               </Link>
               <Link href="/brief" className="btn-secondary justify-center px-6 py-3 text-sm">
-                Read the Labrador Compute Case
+                Public evidence brief
               </Link>
             </div>
             <p className="mt-5">
@@ -161,15 +161,15 @@ export default function HomePage() {
               The province that exports 34&nbsp;TWh should decide what it keeps.
             </h2>
             <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
-              The public briefing maps the asset, the August 17 DCIA framework, what the House did
-              in September, and what is still unsigned — bound to public sources, not vibes. Mining
-              is first. Compute is optionality.
+              The public evidence brief maps the asset, the August 17 DCIA framework, what the House
+              did in September, and what is still unsigned — bound to public sources, not vibes.
+              Mining is first. Compute is optionality.
             </p>
             <Link
               href="/brief"
               className="mt-8 inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
             >
-              openpeople.ai/brief →
+              Labrador power &amp; industry case →
             </Link>
           </div>
         </section>

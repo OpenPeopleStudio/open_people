@@ -19,7 +19,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - `packages/` — Future reference implementation (identity, package, verify, migrate)
 - `examples/` — Example `.opkg` files
 - `decisions/` — Architecture Decision Records
-- `public/brief.html` → **https://openpeople.ai/brief** (public Labrador Compute Case)
+- `public/brief.html` → **https://openpeople.ai/brief** (public Labrador power & industry case)
 - `public/coalition.html` → **https://openpeople.ai/coalition** (partner brief; noindex; not in sitemap)
 - `app/(marketing)/` — Phase 2 public pages: `/`, `/about`, `/approach`, `/contact`, `/letter`, `/engage`
 - `components/marketing/` — SiteNav, SiteFooter, SiteShell (plasma brand)
@@ -41,7 +41,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - This project is independent but referenced from mars-hq's VISION.md and TODO.md
 
 ## Current State
-Public Phase 2 site is live. Labrador Compute Case (`/brief`), coalition brief (`/coalition`), home, letter, and `/engage` updated **2026-09-22** for the 17 Sep House endorsement of the Churchill Falls / Gull Island DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Public campaign leads with in-province firm power. Parked SaaS shell remains unpublished as the public story.
+Public Phase 2 site is live. Labrador power & industry case (`/brief`), coalition brief (`/coalition`), home, letter, and `/engage` updated **2026-09-22** for the 17 Sep House endorsement of the Churchill Falls / Gull Island DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Public campaign leads with in-province firm power (mining first; compute as named use). Parked SaaS shell remains unpublished as the public story.
 
 ---
 

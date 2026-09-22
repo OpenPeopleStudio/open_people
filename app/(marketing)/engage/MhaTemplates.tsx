@@ -49,6 +49,23 @@ Please ask, before definitive agreements lock:
 
 Keep the power here. Use it here. Export what we choose to export, not what we forget to keep.`,
   },
+  {
+    id: "innu",
+    title: "Innu Nation before large Labrador builds",
+    body: `I am writing as a constituent about Churchill Falls / Gull Island.
+
+I am not speaking for Innu Nation. I am asking you, as my MHA, whether the partnership, royalty, and Gull Island tariff path with Innu Nation is settled before this province locks long-form terms for a new plant on Innu land.
+
+By 17–18 September 2026, Innu Nation had urged MHAs not to vote. The Premier said he will meet. That is not a signed partnership.
+
+Please say, in public, before definitive agreements lock:
+
+1. Whether Innu Nation is a party to the long-form Gull Island paper, or still outside it.
+2. Whether royalty and tariff terms are better, worse, or merely different from the 2024 memorandum — in words a voter can check.
+3. Whether large Labrador construction can honestly proceed while that path is unresolved.
+
+Respect the Nation’s timeline. Do not treat a House endorsement of a framework as consent.`,
+  },
 ] as const;
 
 export default function MhaTemplates() {

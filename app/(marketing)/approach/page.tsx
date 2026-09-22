@@ -102,7 +102,7 @@ export default function ApproachPage() {
               Get involved — keep firm power here
             </Link>
             <Link href="/brief" className="btn-secondary justify-center px-5 py-3 text-sm">
-              Public case
+              Public evidence brief
             </Link>
           </div>
         </article>
