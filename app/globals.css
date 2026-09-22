@@ -605,6 +605,7 @@ a, button, [role="button"], input, select, textarea {
   line-height: 1.05;
   letter-spacing: -0.04em;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .desk-rate-unit {

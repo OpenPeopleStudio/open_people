@@ -25,25 +25,30 @@ export function ContestedRateStrip() {
           return (
             <article key={slot.id} id={marker.id} className="p-6 sm:p-8">
               <LeadTakeaway>{slot.kicker}.</LeadTakeaway>
-              <p className="desk-rate mt-5">
-                ~{marker.value}
-                {marker.unit ? <span className="desk-rate-unit">{marker.unit}</span> : null}
-              </p>
+              <p className="desk-rate mt-5">~{marker.value}</p>
+              <p className="mt-2 desk-fact text-[var(--text-muted)]">{marker.unit}</p>
               <div className="mt-5 flex flex-wrap items-center gap-2">
                 <StatusPill status={marker.status} />
                 <span className="desk-fact text-[var(--text-muted)]">
                   Last verified {marker.lastVerified}
                 </span>
               </div>
-              <p className="mt-3 text-[14px] leading-relaxed text-[var(--text-secondary)]">
-                {marker.note.plain}
-              </p>
-              {primary ? <PrimarySource source={primary} /> : null}
+              {primary ? (
+                <PrimarySource
+                  source={{
+                    ...primary,
+                    label: primary.label.includes("—")
+                      ? primary.label.split("—")[0].trim()
+                      : primary.label,
+                  }}
+                />
+              ) : null}
               <Receipts
                 summary="Receipts — cites, Annex D, CPI"
                 sources={rest}
               >
-                <p>{marker.note.technical}</p>
+                <p>{marker.note.plain}</p>
+                <p className="mt-3">{marker.note.technical}</p>
               </Receipts>
             </article>
           );
