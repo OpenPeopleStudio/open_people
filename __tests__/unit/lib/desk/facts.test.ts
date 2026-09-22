@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COST_MARKERS, INDUSTRY_CARDS, TRACKER_ITEMS } from "@/lib/desk";
+import { COST_ERA_NOTE, COST_MARKERS, INDUSTRY_CARDS, TRACKER_ITEMS } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
 describe("horizon desk facts", () => {
@@ -43,6 +43,43 @@ describe("horizon desk facts", () => {
     expect(mou?.note.technical).toMatch(/Do not model the DCIA as this/);
     const reported = COST_MARKERS.find((row) => row.id === "reported-export-path");
     expect(reported?.status).toBe("reported");
+  });
+
+  it("cites Labrador Interconnected domestic 3.154¢ from NL Hydro, not as industrial", () => {
+    const domestic = COST_MARKERS.find((row) => row.id === "lab-domestic");
+    expect(domestic?.value).toBe("3.154");
+    expect(domestic?.status).toBe("published-rate");
+    expect(domestic?.note.technical).toMatch(/Rate No\. 1\.1L/);
+    expect(domestic?.note.technical).toMatch(/electicity/);
+    expect(domestic?.note.plain).toMatch(/domestic|household/i);
+    expect(domestic?.sources).toEqual(expect.arrayContaining(["nlhCurrentRates", "nlhRates2026"]));
+  });
+
+  it("does not collapse LAB-IND-1 into a single ¢/kWh", () => {
+    expect(COST_MARKERS.some((row) => row.id === "lab-ind-dev" || row.id === "lab-ind-mkt")).toBe(
+      false
+    );
+    const lab = COST_MARKERS.find((row) => row.id === "lab-ind-1");
+    expect(lab).toBeDefined();
+    expect(lab?.value).not.toMatch(/^\d+(\.\d+)?$/);
+    expect(lab?.unit).toMatch(/formula/i);
+    expect(lab?.note.technical).toMatch(/RFIRM/);
+    expect(lab?.note.technical).toMatch(/not a single ¢\/kWh/);
+    expect(lab?.note.plain).toMatch(/Do not flatten/i);
+    expect(lab?.sources).toContain("nlhRates2026");
+  });
+
+  it("labels Island Industrial as Island grid, not Labrador", () => {
+    const island = COST_MARKERS.find((row) => row.id === "island-industrial");
+    expect(island?.label).toMatch(/Island grid — not Labrador/);
+    expect(island?.note.technical).toMatch(/Interconnected Island/);
+    expect(island?.note.technical).toMatch(/not LAB-IND-1/);
+  });
+
+  it("keeps older Labrador Industrial PDF figures as schedule-era, not current", () => {
+    expect(COST_ERA_NOTE.body.technical).toMatch(/2015/);
+    expect(COST_ERA_NOTE.body.technical).toMatch(/Do not quote 2015 figures as current/);
+    expect(COST_ERA_NOTE.sources).toContain("labIndHist");
   });
 
   it("pairs new desk metaphors with sourced technical twins", () => {

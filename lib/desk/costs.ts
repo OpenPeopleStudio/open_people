@@ -17,9 +17,21 @@ export const COST_INTRO = {
   lastVerified: DESK_VERIFIED,
   body: {
     plain:
-      "Three different price stories get mashed together in this file. One is the old export lore. One is the structure of the new paper — blocks, inflation, leftover-power options — not a locked industrial tariff. One is what NL Hydro actually charges industrial customers today. We keep them apart.",
+      "Four different price stories get mashed together in this file. One is the old export lore. One is the structure of the new paper — blocks, inflation, leftover-power options — not a locked industrial tariff. One is what NL Hydro posts for Labrador households today. One is the Labrador industrial tariff, which is a formula with demand charges, not a single cent. We keep them apart.",
     technical:
-      "Do not present illustrative MOU ¢/kWh schedules, Annex D target payments, or reported HQ export paths as locked PPAs. Heritage 0.2¢/kWh is the 1969-lineage renewal export price. DCIA Material Terms describe availability / take-or-pay architecture, CPI adjustment, and HQ purchase options. LAB-IND-1 and Island Industrial are current published utility rates — not Churchill Falls offtake.",
+      "Do not present illustrative MOU ¢/kWh schedules, Annex D target payments, or reported HQ export paths as locked PPAs. Heritage 0.2¢/kWh is the 1969-lineage renewal export price. DCIA Material Terms describe availability / take-or-pay architecture, CPI adjustment, and HQ purchase options. Labrador Interconnected domestic energy is Rate No. 1.1L at 3.154¢/kWh (Jul 2026 schedule; Hydro current-rates page). LAB-IND-1 is demand plus a monthly RFIRM blend of Development and Market energy blocks — not one ¢/kWh. Island Industrial Firm is a different class on the Island grid. None of these is Churchill Falls offtake.",
+  } satisfies DeskVoice,
+};
+
+/** Older Labrador Industrial PDF — schedule-era figures only, not current. */
+export const COST_ERA_NOTE = {
+  lastVerified: DESK_VERIFIED,
+  sources: ["labIndHist", "nlhRates2026"] as DeskSourceId[],
+  body: {
+    plain:
+      "An older Labrador Industrial schedule is still on Hydro’s site. Its 2015 energy-block numbers are history. Use them only as a then-versus-now of the same formula, not as today’s mine rate.",
+    technical:
+      "Schedule-era (older PDF hosted at /wp-content/uploads/2014/04/Labrador-Industrial-Rate-Schedule.pdf; figures stated effective 1 Jan 2015–31 Dec 2015): transmission demand $1.25/kW of billing demand; generation demand $0.43/kW-month; Development Block Energy Rate RD $22.43/MWh; Market Block Energy Rate RM $45.52/MWh; RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL. Jul 2026 LAB-IND-1 keeps that formula with different posted components (closed transmission demand $1.08/kW-month existing customers only; generation demand $0.41/kW-month; RD $29.22/MWh and RM $78.61/MWh for calendar 2026). Do not quote 2015 figures as current.",
   } satisfies DeskVoice,
 };
 
@@ -35,7 +47,7 @@ export const COST_MARKERS: CostMarker[] = [
       plain:
         "Two mills — two tenths of a cent — is the old Hydro-Québec renewal price, not a rate anyone in this province can buy power at today.",
       technical:
-        "The 1969 Churchill Falls contract’s automatic 25-year renewal (2016–2041) prices HQ purchases at two mills per kWh. A mill is one-tenth of a cent, so two mills is 0.2¢/kWh ($2/MWh). Heritage NL and Feehan & Baker. This is an export price under a specific contract. It is not LAB-IND-1, not Island Industrial, and not a 2027 DCIA PPA rate.",
+        "The 1969 Churchill Falls contract’s automatic 25-year renewal (2016–2041) prices HQ purchases at two mills per kWh. A mill is one-tenth of a cent, so two mills is 0.2¢/kWh ($2/MWh). Heritage NL and Feehan & Baker. This is an export price under a specific contract. It is not Rate 1.1L, not LAB-IND-1, not Island Industrial, and not a 2027 DCIA PPA rate.",
     },
     sources: ["heritage1969", "feehanBaker"],
   },
@@ -100,49 +112,49 @@ export const COST_MARKERS: CostMarker[] = [
     sources: ["dciaHq", "dciaNl"],
   },
   {
-    id: "lab-ind-dev",
-    label: "Labrador Industrial — Development Block (2026)",
-    value: "2.922",
-    unit: "¢/kWh ($29.22/MWh)",
-    status: "published-rate",
-    lastVerified: DESK_VERIFIED,
-    note: {
-      plain:
-        "This is a published 2026 Labrador industrial energy block — mines on the Labrador grid — not the Churchill Falls export lore, and not a locked DCIA PPA.",
-      technical:
-        "NL Hydro Schedule of Rates, Jul 2026, LAB-IND-1 Firm Energy: Development Block Energy Rate effective 1 Jan 2026–31 Dec 2026 is $29.22/MWh (2.922¢/kWh), adjusted annually by CPI All-items Canada. Availability: Labrador Interconnected bulk transmission at ≥66 kV under an Industrial Service Agreement. Closed transmission demand $1.08/kW-month (existing customers only) plus generation demand $0.41/kW-month. This is not a Churchill offtake price.",
-    },
-    sources: ["nlhRates2026"],
-  },
-  {
-    id: "lab-ind-mkt",
-    label: "Labrador Industrial — Market Block (2026)",
-    value: "7.861",
-    unit: "¢/kWh ($78.61/MWh)",
-    status: "published-rate",
-    lastVerified: DESK_VERIFIED,
-    note: {
-      plain:
-        "When Labrador industrial load sits above the development block, the extra energy is priced off a New York market print — again, a published 2026 rate, not the deal’s locked PPA.",
-      technical:
-        "LAB-IND-1 Market Block Energy Rate, 1 Jan 2026–31 Dec 2026: $78.61/MWh (7.861¢/kWh), set annually from NYISO Zone A peak/off-peak settlement after 19 November of the prior year, FX-converted, losses and market fees adjusted. Imbalance energy (above customer forecast) is a monthly NYISO blend. Firm Energy Rate RFIRM = ((ED × RD) + (EM × RM)) / ETOTAL.",
-    },
-    sources: ["nlhRates2026"],
-  },
-  {
-    id: "island-industrial",
-    label: "Island Industrial — firm energy base (2026)",
-    value: "4.428 + riders",
+    id: "lab-domestic",
+    label: "Labrador Interconnected domestic (Rate 1.1L)",
+    value: "3.154",
     unit: "¢/kWh",
     status: "published-rate",
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "Island industrial customers are on a different tariff than Labrador mines. Base energy plus Muskrat-related riders. Do not quote this as a Labrador rate.",
+        "Household power on the Labrador interconnected grid is posted at a bit over three cents a kilowatt-hour, plus a small monthly customer charge. That is a domestic tariff — not a mine rate, and not the Churchill Falls export lore.",
       technical:
-        "Island Industrial Firm Energy base 4.428¢/kWh plus demand $10.73/kW-month. P.U. 17(2026): Project Cost Recovery Rider 1.987¢/kWh and CDM 0.007¢/kWh effective 1 Jul 2026. Availability: Island interconnected ≥66 kV. Not LAB-IND-1. Not a DCIA export price.",
+        "NL Hydro current-rates page (path spelled “electicity-rates/current-rates”): “For customers on the Labrador Interconnected System, the current rate is 3.154 cents per kWh.” Jul 2026 Schedule, Rate No. 1.1L Domestic (LAB-1), effective 1 Jul 2026: energy 3.154¢/kWh plus basic customer charge $6.87/month (1.5% prompt-pay discount). Availability: Labrador Interconnected service area, Domestic Unit / household premises. Same Hydro page quotes 15.587¢/kWh as the current first-block rate for Island Interconnected, L’Anse au Loup, and Isolated Diesel — that is not Labrador and not industrial. This 3.154¢ figure is not LAB-IND-1.",
     },
-    sources: ["pubIsland2026", "nlhRates2026"],
+    sources: ["nlhCurrentRates", "nlhRates2026"],
+  },
+  {
+    id: "lab-ind-1",
+    label: "Labrador Industrial (LAB-IND-1)",
+    value: "demand + RFIRM",
+    unit: "formula, not one ¢",
+    status: "structure",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "Mines on the Labrador bulk grid do not pay one posted household-style cent. They pay demand charges plus a monthly mix of a development energy block and a market energy block. Open the July 2026 PDF. Do not flatten that into a single ¢/kWh on this desk.",
+      technical:
+        "Jul 2026 Schedule, LAB-IND-1 (pp. LAB-IND-1–4). Availability: Labrador Interconnected bulk transmission ≥66 kV under an Industrial Service Agreement — not Rate 1.1L. Structure: (1) Transmission Demand Charge, closed — $1.08/kW-month of billing demand, existing customers only; specifically assigned transmission charges may apply with Board approval. (2) Generation Demand Charge $0.41/kW-month. Billing demand = greater of Power on Order, actual monthly demand, or calendar-year maximum less interruptible. (3) Firm energy is not a single ¢/kWh. RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL, applied to forecast energy (customer forecast by the 19th of the prior month). RD = Development Block Energy Rate, $29.22/MWh for 1 Jan–31 Dec 2026, then CPI All-items Canada annually. RM = Market Block Energy Rate, $78.61/MWh for 1 Jan–31 Dec 2026, set from NYISO Zone A peak/off-peak settlement after 19 November of the prior year, FX-converted, losses and market fees adjusted. Imbalance energy (above forecast) is a monthly NYISO Zone A blend. Schedule A posts monthly Development Energy Block MWh. RD and RM are formula inputs for 2026 — not a collapsed industrial ¢, not a DCIA PPA, not Rate 1.1L. Full schedule: NL Hydro Jul 2026 PDF.",
+    },
+    sources: ["nlhRates2026"],
+  },
+  {
+    id: "island-industrial",
+    label: "Island Industrial Firm (Island grid — not Labrador)",
+    value: "demand + 4.428 + riders",
+    unit: "¢ energy base",
+    status: "published-rate",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "Island mills and mines sit on a different grid and a different tariff than Labrador. Do not quote this as a Labrador rate.",
+      technical:
+        "Jul 2026 Schedule, Industrial – Firm (IND-1): Availability is the Interconnected Island bulk transmission grid at ≥66 kV — not the Labrador Interconnected grid, not LAB-IND-1, not Rate 1.1L. Demand $10.73/kW-month. Firm energy base 4.428¢/kWh plus Project Cost Recovery Rider 1.987¢/kWh and CDM Cost Recovery Adjustment 0.007¢/kWh (also P.U. 17(2026) effective 1 Jul 2026). Base rate is subject to RSP adjustments. Specifically assigned annual charges are listed by Island customer. Not a Labrador industrial ¢. Not a DCIA export price.",
+    },
+    sources: ["nlhRates2026", "pubIsland2026"],
   },
   {
     id: "dcia-industrial-alloc",
@@ -155,7 +167,7 @@ export const COST_MARKERS: CostMarker[] = [
       plain:
         "There is no public, locked cent rate that says what a new Labrador mine — or any other new load — pays for retained Churchill / Gull Island megawatts under the still-unsigned PPAs.",
       technical:
-        "UNKNOWN: a published firm industrial tariff for DCIA retain megawatts; a compute tariff; a locked ¢/kWh HQ PPA. Open People does not invent one. Illustrative 4–6¢ “asks” on older campaign material are Open People asks, not government figures, and are not repeated here as rates.",
+        "UNKNOWN: a published firm industrial tariff for DCIA retain megawatts; a compute tariff; a locked ¢/kWh HQ PPA. Open People does not invent one. Rate 1.1L 3.154¢ and LAB-IND-1’s 2026 RD/RM inputs are current Hydro schedules, not DCIA offtake. Illustrative 4–6¢ “asks” on older campaign material are Open People asks, not government figures, and are not repeated here as rates.",
     },
     sources: ["dciaHq"],
   },

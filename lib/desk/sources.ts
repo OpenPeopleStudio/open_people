@@ -75,9 +75,23 @@ export const DESK_SOURCES = {
   },
   nlhRates2026: {
     id: "nlh-rates-2026",
-    label: "NL Hydro Schedule of Rates, Rules and Regulations, Jul 2026",
+    label: "NL Hydro Schedule of Rates, Rules and Regulations, Jul 2026 (LAB-IND-1 PDF)",
     href: "https://nlhydro.com/wp-content/uploads/2026/07/Schedule-of-Rates-Rules-and-Regulations_Jul_2026.pdf",
     date: "2026-07-01",
+    kind: "utility",
+  },
+  nlhCurrentRates: {
+    id: "nlh-current-rates",
+    label: "NL Hydro current rates page (URL path spelled “electicity”)",
+    href: "https://nlhydro.com/electicity-rates/current-rates/",
+    date: "2026-09-22",
+    kind: "utility",
+  },
+  labIndHist: {
+    id: "lab-ind-hist",
+    label: "Older Labrador Industrial Rate Schedule PDF (schedule-era; 2015 figures)",
+    href: "https://nlhydro.com/wp-content/uploads/2014/04/Labrador-Industrial-Rate-Schedule.pdf",
+    date: "2015-01-01",
     kind: "utility",
   },
   pubIsland2026: {

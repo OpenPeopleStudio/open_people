@@ -9,7 +9,7 @@ Public site reads as a Churchill River / Labrador power **information desk**, no
 - Nav: Brief · Tracker · Industries · Costs · Engage · Letter. Voice toggle stays. Compute plan is footer-only (never primary CTA). `/data-centre` redirects to `/compute`.
 - New `/tracker` living board (DCIA, House 21–18, binding window, QC gate, Gull Island MW range, CF upgrades, Labrador West, unnamed Wind SPE, Innu gap, transparency gaps). Last-verified dates + primary PDFs.
 - New `/industries` mining-first cards (Labrador West load/corridor sourced). Compute is a short secondary line.
-- New `/costs`: heritage 0.2¢/kWh lore → DCIA Material Terms structure (CPI, synthetic export options) → published LAB-IND-1 / Island Industrial markers. MOU ¢ schedules not presented as locked PPAs. UNKNOWN labelled.
+- New `/costs`: heritage 0.2¢/kWh lore → DCIA Material Terms structure (CPI, synthetic export options) → published Labrador markers. Rate 1.1L domestic **3.154¢/kWh** (NLH current-rates page + Jul 2026 schedule). LAB-IND-1 shown as demand + RFIRM formula, not a collapsed ¢. Island Industrial labeled Island-vs-Labrador. Schedule-era 2015 industrial PDF labeled historical. MOU ¢ schedules not presented as locked PPAs. UNKNOWN labelled.
 - New `/compute` quarantine. Home / brief / coalition heroes scrubbed of campus openers.
 - Open People remains constituent/catalyst only — not a DCIA party.
 

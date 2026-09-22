@@ -184,7 +184,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
       plain:
         "Export payments on the new paper move with a Canadian inflation band. Labrador industrial energy already splits a development block from a market block. Those are different machines. Do not mash them into one “cheap power” number.",
       technical:
-        "DCIA Annex F: HQ target payments for existing CF adjust from a 2027 CPI base (Statistics Canada All-items, Canada) with a deadband centred on 2.06% ± 0.40%. LAB-IND-1 (Jul 2026): Firm Energy blends a Development Block ($29.22/MWh for 2026, CPI-adjusted annually) and a Market Block ($78.61/MWh for 2026, NYISO Zone A). Binding PPA ¢/kWh path for HQ: not a locked industrial tariff. See /costs.",
+        "DCIA Annex F: HQ target payments for existing CF adjust from a 2027 CPI base (Statistics Canada All-items, Canada) with a deadband centred on 2.06% ± 0.40%. LAB-IND-1 (Jul 2026): firm energy is RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL — Development and Market block rates are 2026 formula inputs, not a single industrial ¢/kWh. See /costs. Binding PPA ¢/kWh path for HQ: not a locked industrial tariff."
     },
     sources: ["dciaHq", "nlhRates2026"],
   },
