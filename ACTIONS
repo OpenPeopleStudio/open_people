@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.4.2 tools=40 commits=1 files=20 note=Digestability lock: plain-leads takeaway, two-column 1.8 vs 7.4, tracker receipts
 0.4.1 tools=55 commits=1 files=22 note=Visual slice 1: precision desk type/spacing, contested cost chrome, tracker board
 0.3.1 tools=40 commits=1 files=18 note=Coalition voice lock + /engage copy-first, Innu template, share
 0.3.0 tools=90 commits=1 files=20 note=Post-17 Sep DCIA House vote + /engage keep-power-here path

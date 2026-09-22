@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
-import { Dual, ScaleAnchor } from "@/components/marketing/voice";
+import { Dual } from "@/components/marketing/voice";
+import { LeadTakeaway, Receipts } from "@/components/marketing/desk";
 import { HOME_GATES, SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata: Metadata = {
@@ -20,6 +21,8 @@ const OPEN = [
   {
     title: "Recall",
     body: {
+      plain:
+        "The paper describes a three-year notice to take power back. House testimony is not a signed contract.",
       technical:
         "Material Terms describe three-year notice for several HQ sale and recapture paths. House testimony is not a substitute for signed PPAs. Still a framework.",
     },
@@ -27,6 +30,8 @@ const OPEN = [
   {
     title: "Innu Nation",
     body: {
+      plain:
+        "Innu Nation asked MHAs not to vote. Partnership, royalty, and Gull Island tariff path are still open.",
       technical:
         "Partnership, royalty, and Gull Island tariff path unresolved. Innu Nation urged MHAs not to vote. The Premier said he will meet.",
     },
@@ -115,10 +120,10 @@ export default function HomePage() {
                   i > 0 ? "md:border-l md:border-[var(--border-subtle)]" : ""
                 }`}
               >
-                <div className="desk-rate text-[var(--plasma)]">{s.v}</div>
-                <div className="desk-fact mt-3 uppercase tracking-[0.11em] text-[var(--text-muted)]">
+                <p className="text-[14px] leading-snug text-[var(--text-secondary)]">
                   <Dual plain={s.plain} technical={s.technical} />
-                </div>
+                </p>
+                <div className="desk-rate mt-3 text-[var(--plasma)]">{s.v}</div>
               </div>
             ))}
           </div>
@@ -163,18 +168,13 @@ export default function HomePage() {
                   <div className="desk-fact uppercase tracking-[0.12em] text-[var(--plasma)]">
                     {String(i + 1).padStart(2, "0")} · {item.title}
                   </div>
-                  {"plain" in item.body ? (
-                    <ScaleAnchor
-                      className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                      technical={item.body.technical}
-                      plain={item.body.plain}
-                      source={item.body.source}
-                    />
-                  ) : (
-                    <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]">
-                      {item.body.technical}
-                    </p>
-                  )}
+                  <LeadTakeaway className="mt-4">{item.body.plain}</LeadTakeaway>
+                  <Receipts summary="Receipts">
+                    <p>{item.body.technical}</p>
+                    {"source" in item.body && item.body.source ? (
+                      <p className="mt-3 desk-fact text-[var(--text-muted)]">{item.body.source}</p>
+                    ) : null}
+                  </Receipts>
                 </div>
               ))}
             </div>

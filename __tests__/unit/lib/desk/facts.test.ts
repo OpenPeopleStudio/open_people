@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COST_ERA_NOTE, COST_MARKERS, INDUSTRY_CARDS, TRACKER_ITEMS } from "@/lib/desk";
+import { CONTESTED_EXPORT, COST_ERA_NOTE, COST_MARKERS, INDUSTRY_CARDS, TRACKER_ITEMS } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
 describe("horizon desk facts", () => {
@@ -87,5 +87,68 @@ describe("horizon desk facts", () => {
     expect(SCALE_ANCHORS.gulIslandRange.technical).toMatch(/2,250 MW or 2,700 MW/);
     expect(SCALE_ANCHORS.miningLoad.technical).toMatch(/312 MW/);
     expect(SCALE_ANCHORS.computeOptional.plain).toMatch(/not the front door/i);
+  });
+
+  it("keeps 1.8 start and 7.4 50-year average labeled, not merged, with an unpublished Annex D bridge", () => {
+    expect(CONTESTED_EXPORT.annexPath.value).toBe("1.8");
+    expect(CONTESTED_EXPORT.annexPath.label).toMatch(/Starting reported price/i);
+    expect(CONTESTED_EXPORT.annexPath.unit).toMatch(/2027/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/1\.8¢\/kWh beginning in 2027/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/\$0\.531B/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/29\.207 TWh/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/11\.5¢\/kWh by 2041/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(
+      /Do not treat 11\.5 as the raw 2041 Annex D division/,
+    );
+    expect(CONTESTED_EXPORT.annexPath.sources).toEqual(
+      expect.arrayContaining(["dciaHq", "cpChurchillGraph", "financialPostPath"]),
+    );
+
+    expect(CONTESTED_EXPORT.campaign.value).toBe("7.4");
+    expect(CONTESTED_EXPORT.campaign.label).toMatch(/Average effective price/i);
+    expect(CONTESTED_EXPORT.campaign.unit).toMatch(/50 years/);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(
+      /7\.4 cents per kilowatt hour over the next 50 years/i,
+    );
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/2027 dollars/);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/premium rate/);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/not a locked industrial PPA/);
+    expect(CONTESTED_EXPORT.campaign.sources).toEqual(
+      expect.arrayContaining(["abetterDealFaq", "cpChurchillGraph"]),
+    );
+
+    expect(CONTESTED_EXPORT.title).toMatch(/1\.8/);
+    expect(CONTESTED_EXPORT.title).toMatch(/7\.4/);
+    expect(CONTESTED_EXPORT.intro.plain).toMatch(/different measurements/i);
+    expect(CONTESTED_EXPORT.intro.plain).toMatch(/mash into one number/i);
+    expect(CONTESTED_EXPORT.campaign.value).not.toBe(CONTESTED_EXPORT.annexPath.value);
+
+    expect(CONTESTED_EXPORT.bridge.value).toBe("UNKNOWN");
+    expect(CONTESTED_EXPORT.bridge.status).toBe("unknown");
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/UNKNOWN/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a bridge formula/i);
+    expect(CONTESTED_EXPORT.bridge.note.technical).not.toMatch(
+      /therefore 7\.4 =|bridge formula is|equals 7\.4 because/i,
+    );
+  });
+
+  it("does not present contested export ¢ as a locked industrial PPA for mines or compute", () => {
+    const blob = [
+      CONTESTED_EXPORT.campaign.note.technical,
+      CONTESTED_EXPORT.annexPath.note.technical,
+      CONTESTED_EXPORT.bridge.note.technical,
+      CONTESTED_EXPORT.intro.technical,
+    ].join("\n");
+    expect(blob).toMatch(/Labrador mines or compute/);
+    expect(blob).not.toMatch(/Pattern Energy|Invenergy/i);
+    expect(blob).not.toMatch(/\b\d{2,4}\s*MW reserved\b/i);
+  });
+
+  it("gives tracker rows a plain-English title that is not a Transparency prefix", () => {
+    for (const item of TRACKER_ITEMS) {
+      expect(item.title.trim().length).toBeGreaterThan(8);
+      expect(item.title).not.toMatch(/^Transparency —/);
+      expect(item.body.plain.trim().length).toBeGreaterThan(40);
+    }
   });
 });

@@ -2,6 +2,32 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import type { DeskSource } from "@/lib/desk";
 
+/** Always-visible one-breath human takeaway. Numbers belong after this, not instead of it. */
+export function LeadTakeaway({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <p className={className ? `desk-takeaway ${className}` : "desk-takeaway"}>{children}</p>;
+}
+
+export function PrimarySource({ source }: { source: DeskSource }) {
+  return (
+    <p className="mt-3">
+      <a
+        href={source.href}
+        className="desk-fact text-[var(--plasma)] no-underline hover:underline"
+        target="_blank"
+        rel="noreferrer"
+      >
+        {source.label} →
+      </a>
+    </p>
+  );
+}
+
 export function DeskKicker({
   children,
   quiet = false,

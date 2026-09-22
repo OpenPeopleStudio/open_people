@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
-import { Dual, ScaleAnchor } from "@/components/marketing/voice";
-import { DeskKicker, DeskVerified, TrackerBoard } from "@/components/marketing/desk";
+import { DeskKicker, DeskVerified, LeadTakeaway, Receipts, TrackerBoard } from "@/components/marketing/desk";
 import { DESK_SOURCES, DESK_VERIFIED, TRACKER_ITEMS } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
@@ -23,25 +22,19 @@ export default function TrackerPage() {
           <h1 className="desk-h1 mt-5 max-w-[22ch]">
             What’s signed. What’s open. What we still mark UNKNOWN.
           </h1>
+          <LeadTakeaway className="mt-8 text-lg leading-relaxed">
+            August’s cooperation agreement is a framework. The September House vote is a political
+            yes. The contracts that lock the power are still ahead.
+          </LeadTakeaway>
           <div className="max-w-[780px]">
-            <Dual
-              plain={
-                <p className="mt-8 text-lg leading-relaxed text-[var(--text-secondary)]">
-                  This is a living board for the Churchill River paper — not a campaign sermon, and
-                  not a data-centre pitch. August’s cooperation agreement is a framework. The
-                  September House vote is a political yes. The contracts that lock the power are
-                  still ahead.
-                </p>
-              }
-              technical={
-                <p className="mt-8 text-lg leading-relaxed text-[var(--text-secondary)]">
-                  Living board for the 17 August 2026 DCIA and the 17 September House endorsement.
-                  Material Terms are the drafting basis for Definitive Agreements targeted around 31
-                  December 2026; the instrument can run to 31 March 2027. Open People is not a DCIA
-                  party.
-                </p>
-              }
-            />
+            <Receipts summary="Receipts — DCIA, House, binding window">
+              <p>
+                Living board for the 17 August 2026 DCIA and the 17 September House endorsement.
+                Material Terms are the drafting basis for Definitive Agreements targeted around 31
+                December 2026; the instrument can run to 31 March 2027. Open People is not a DCIA
+                party.
+              </p>
+            </Receipts>
             <p className="mt-6 text-sm text-[var(--text-muted)]">
               Primary PDFs:{" "}
               <a
@@ -79,12 +72,12 @@ export default function TrackerPage() {
               items={TRACKER_ITEMS}
               extras={{
                 "gull-island": (
-                  <ScaleAnchor
-                    className="mt-3 text-[14px] leading-relaxed text-[var(--text-secondary)]"
-                    technical={SCALE_ANCHORS.gulIslandRange.technical}
-                    plain={SCALE_ANCHORS.gulIslandRange.plain}
-                    source={SCALE_ANCHORS.gulIslandRange.source}
-                  />
+                  <>
+                    <p className="mt-3">{SCALE_ANCHORS.gulIslandRange.technical}</p>
+                    <p className="mt-2 desk-fact text-[var(--text-muted)]">
+                      {SCALE_ANCHORS.gulIslandRange.source}
+                    </p>
+                  </>
                 ),
               }}
             />

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
-import { Dual, ScaleAnchor } from "@/components/marketing/voice";
+import { Dual } from "@/components/marketing/voice";
 import {
   ContestedRateStrip,
   DeskKicker,
   DeskVerified,
-  SourceLinks,
+  LeadTakeaway,
+  Receipts,
   StatusPill,
 } from "@/components/marketing/desk";
 import {
@@ -21,7 +22,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata: Metadata = {
   title: "Costs",
   description:
-    "Heritage 0.2¢/kWh export lore, DCIA pricing structure, Labrador Interconnected domestic 3.154¢ (Rate 1.1L), and LAB-IND-1 as demand + energy formula — not a single industrial ¢. Not locked PPAs.",
+    "Heritage 0.2¢/kWh export lore, contested 1.8¢ start vs 7.4¢ life-average (different measurements), Labrador Interconnected domestic 3.154¢ (Rate 1.1L), and LAB-IND-1 as demand + energy formula — not a single industrial ¢. Not locked PPAs.",
   alternates: { canonical: "/costs" },
 };
 
@@ -35,12 +36,17 @@ export default function CostsPage() {
           <h1 className="desk-h1 mt-5">
             Heritage lore, deal structure, then published markers.
           </h1>
-          <ScaleAnchor
-            className="mt-8 text-lg leading-relaxed text-[var(--text-secondary)]"
-            technical={COST_INTRO.body.technical}
-            plain={COST_INTRO.body.plain}
-            source={`Last verified ${COST_INTRO.lastVerified}`}
-          />
+          <LeadTakeaway className="mt-8 text-lg leading-relaxed">
+            {COST_INTRO.body.plain}
+          </LeadTakeaway>
+          <Receipts
+            summary="Receipts — how the price stories are kept apart"
+          >
+            <p>{COST_INTRO.body.technical}</p>
+            <p className="mt-3 desk-fact text-[var(--text-muted)]">
+              Last verified {COST_INTRO.lastVerified}
+            </p>
+          </Receipts>
         </article>
 
         <div className="mx-auto mt-14 max-w-[1080px] px-4 sm:px-6">
@@ -52,12 +58,13 @@ export default function CostsPage() {
             <h2 className="desk-h2">
               01 — Heritage
             </h2>
-            <ScaleAnchor
-              className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-              technical={SCALE_ANCHORS.heritagePrice.technical}
-              plain={SCALE_ANCHORS.heritagePrice.plain}
-              source={SCALE_ANCHORS.heritagePrice.source}
-            />
+            <LeadTakeaway className="mt-4">{SCALE_ANCHORS.heritagePrice.plain}</LeadTakeaway>
+            <Receipts summary="Receipts — 1969 renewal, two mills">
+              <p>{SCALE_ANCHORS.heritagePrice.technical}</p>
+              <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                {SCALE_ANCHORS.heritagePrice.source}
+              </p>
+            </Receipts>
           </section>
 
           <section className="mt-16">
@@ -138,13 +145,16 @@ export default function CostsPage() {
                   </span>
                 </div>
                 <h3 className="desk-h3 mt-4">{row.label}</h3>
-                <ScaleAnchor
-                  className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                  technical={row.note.technical}
-                  plain={row.note.plain}
-                  source={`Last verified ${row.lastVerified}`}
-                />
-                <SourceLinks sources={row.sources.map((id) => DESK_SOURCES[id])} />
+                <LeadTakeaway className="mt-3">{row.note.plain}</LeadTakeaway>
+                <Receipts
+                  summary="Receipts — cites and schedule names"
+                  sources={row.sources.map((id) => DESK_SOURCES[id])}
+                >
+                  <p>{row.note.technical}</p>
+                  <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                    Last verified {row.lastVerified}
+                  </p>
+                </Receipts>
               </section>
             ))}
           </div>
@@ -159,13 +169,16 @@ export default function CostsPage() {
             <h3 className="desk-h3 mt-4">
               Older Labrador Industrial PDF (2015 figures)
             </h3>
-            <ScaleAnchor
-              className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-              technical={COST_ERA_NOTE.body.technical}
-              plain={COST_ERA_NOTE.body.plain}
-              source={`Last verified ${COST_ERA_NOTE.lastVerified}`}
-            />
-            <SourceLinks sources={COST_ERA_NOTE.sources.map((id) => DESK_SOURCES[id])} />
+            <LeadTakeaway className="mt-3">{COST_ERA_NOTE.body.plain}</LeadTakeaway>
+            <Receipts
+              summary="Receipts — 2015 figures, not current"
+              sources={COST_ERA_NOTE.sources.map((id) => DESK_SOURCES[id])}
+            >
+              <p>{COST_ERA_NOTE.body.technical}</p>
+              <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                Last verified {COST_ERA_NOTE.lastVerified}
+              </p>
+            </Receipts>
           </section>
 
           <Dual

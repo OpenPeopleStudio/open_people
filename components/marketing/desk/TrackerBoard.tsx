@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { ScaleAnchor } from "@/components/marketing/voice";
 import { DESK_SOURCES, type DeskItem, type DeskStatus } from "@/lib/desk";
-import { SourceLinks } from "./DeskChrome";
+import { LeadTakeaway, PrimarySource } from "./DeskChrome";
+import { Receipts } from "./Receipts";
 import { StatusPill } from "./StatusChip";
 
 const COLUMNS: { id: string; title: string; statuses: DeskStatus[] }[] = [
@@ -30,40 +30,49 @@ export function TrackerBoard({
               <span className="desk-fact text-[var(--text-muted)]">{rows.length}</span>
             </header>
             <div className="desk-board-stack">
-              {rows.map((item) => (
-                <article
-                  key={item.id}
-                  id={item.id}
-                  role="listitem"
-                  className="desk-surface p-5 sm:p-6"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <StatusPill status={item.status} />
-                    <span className="desk-fact text-[var(--text-muted)]">{item.when}</span>
-                  </div>
-                  <h3 className="desk-h3 mt-4">{item.title}</h3>
-                  <ScaleAnchor
-                    className="mt-3 text-[14px] leading-relaxed text-[var(--text-secondary)]"
-                    technical={item.body.technical}
-                    plain={item.body.plain}
-                    source={`Last verified ${item.lastVerified}`}
-                  />
-                  {extras?.[item.id] ?? null}
-                  <SourceLinks sources={item.sources.map((id) => DESK_SOURCES[id])} />
-                  {item.href ? (
-                    <p className="mt-3">
-                      <a
-                        href={item.href}
-                        className="desk-fact uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {item.hrefLabel ?? "Primary document"} →
-                      </a>
-                    </p>
-                  ) : null}
-                </article>
-              ))}
+              {rows.map((item) => {
+                const primary =
+                  item.href != null
+                    ? {
+                        id: `${item.id}-primary`,
+                        label: item.hrefLabel ?? DESK_SOURCES[item.sources[0]].label,
+                        href: item.href,
+                        date: DESK_SOURCES[item.sources[0]].date,
+                        kind: DESK_SOURCES[item.sources[0]].kind,
+                      }
+                    : DESK_SOURCES[item.sources[0]];
+                const rest = item.sources
+                  .map((id) => DESK_SOURCES[id])
+                  .filter((source) => source.href !== primary.href);
+                return (
+                  <article
+                    key={item.id}
+                    id={item.id}
+                    role="listitem"
+                    className="desk-surface p-5 sm:p-6"
+                  >
+                    <h3 className="desk-h3">{item.title}</h3>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <StatusPill status={item.status} />
+                      <span className="desk-fact text-[var(--text-muted)]">
+                        Last verified {item.lastVerified}
+                      </span>
+                    </div>
+                    <LeadTakeaway className="mt-4">{item.body.plain}</LeadTakeaway>
+                    <PrimarySource source={primary} />
+                    <Receipts
+                      summary="Receipts — Material Terms / House / PDFs"
+                      sources={rest}
+                    >
+                      <p>{item.body.technical}</p>
+                      <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                        Event / paper date: {item.when}
+                      </p>
+                      {extras?.[item.id] ?? null}
+                    </Receipts>
+                  </article>
+                );
+              })}
             </div>
           </section>
         );

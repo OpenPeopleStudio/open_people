@@ -1,64 +1,66 @@
-import { resolveContestedSlots } from "./contested";
+import { CONTESTED_EXPORT, DESK_SOURCES } from "@/lib/desk";
+import { LeadTakeaway, PrimarySource } from "./DeskChrome";
+import { Receipts } from "./Receipts";
 import { StatusPill } from "./StatusChip";
+import { resolveContestedSlots } from "./contested";
 
 /**
- * Equal-weight visual treatment for the contested export stories.
- * Figures come only from COST_MARKERS. Empty shells stay empty.
- * Full notes remain on the existing marker cards below — this is chrome.
+ * Two equal columns: start ~1.8¢ vs life-average ~7.4¢.
+ * Sentence first, number second. Technical cites live in Receipts.
  */
 export function ContestedRateStrip() {
   const cells = resolveContestedSlots();
+  const { intro, kicker, lastVerified, bridge } = CONTESTED_EXPORT;
 
   return (
-    <section aria-label="Contested export rates" className="desk-contested">
-      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="desk-h2">Three stories. Same weight.</h2>
-        <p className="desk-fact text-[var(--text-muted)]">Not locked PPAs</p>
+    <section id="contested" aria-label="Contested export rates" className="desk-contested">
+      <div className="mb-5">
+        <p className="desk-kicker">{kicker}</p>
+        <h2 className="desk-h2 mt-3 max-w-[28ch]">Two public prices. Different measurements.</h2>
       </div>
       <div className="desk-contested-grid">
-        {cells.map(({ slot, marker }) => (
-          <article key={slot.id} id={`contested-${slot.id}`} className="p-6 sm:p-8">
-            <p className="desk-kicker">{slot.kicker}</p>
-            {marker ? (
-              <>
-                <p className="desk-rate mt-6">
-                  {marker.value}
-                  {marker.unit ? <span className="desk-rate-unit">{marker.unit}</span> : null}
-                </p>
-                <div className="mt-5">
-                  <StatusPill status={marker.status} />
-                </div>
-                <h3 className="mt-4 text-[15px] font-medium leading-snug tracking-[-0.01em] text-[var(--text-primary)]">
-                  {marker.label}
-                </h3>
-                <p className="mt-3 desk-fact text-[var(--text-muted)]">
+        {cells.map(({ slot, marker }) => {
+          const primary = DESK_SOURCES[marker.sources[0]];
+          const rest = marker.sources.slice(1).map((id) => DESK_SOURCES[id]);
+          return (
+            <article key={slot.id} id={marker.id} className="p-6 sm:p-8">
+              <LeadTakeaway>{slot.kicker}.</LeadTakeaway>
+              <p className="desk-rate mt-5">
+                ~{marker.value}
+                {marker.unit ? <span className="desk-rate-unit">{marker.unit}</span> : null}
+              </p>
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <StatusPill status={marker.status} />
+                <span className="desk-fact text-[var(--text-muted)]">
                   Last verified {marker.lastVerified}
-                </p>
-                <a
-                  href={`#${marker.id}`}
-                  className="mt-4 inline-block desk-fact text-[var(--plasma)] no-underline hover:underline"
-                >
-                  Full marker →
-                </a>
-              </>
-            ) : (
-              <>
-                {/* TODO(contested-copy): wire when COST_MARKERS gains a life-average
-                    marker (intended ~7.4¢). Parallel PR may land the copy.
-                    Do not invent a ¢ figure in this shell. */}
-                <p className="desk-rate mt-6" aria-label={`${slot.kicker} figure not sourced yet`}>
-                  —
-                </p>
-                <p className="mt-2 desk-fact text-[var(--text-muted)]">¢/kWh · not sourced</p>
-                <p className="mt-5 text-[13px] leading-relaxed text-[var(--text-muted)]">
-                  Sourced {slot.kicker.toLowerCase()} figure is not on this desk yet. This card is
-                  chrome only — the dash is not a rate.
-                </p>
-              </>
-            )}
-          </article>
-        ))}
+                </span>
+              </div>
+              <p className="mt-3 text-[14px] leading-relaxed text-[var(--text-secondary)]">
+                {marker.note.plain}
+              </p>
+              {primary ? <PrimarySource source={primary} /> : null}
+              <Receipts
+                summary="Receipts — cites, Annex D, CPI"
+                sources={rest}
+              >
+                <p>{marker.note.technical}</p>
+              </Receipts>
+            </article>
+          );
+        })}
       </div>
+      <p className="desk-measure mt-5">
+        {intro.plain}
+      </p>
+      <Receipts
+        summary="Receipts — why you cannot divide this into a locked industrial tariff"
+        sources={bridge.sources.map((id) => DESK_SOURCES[id])}
+      >
+        <p>{intro.technical}</p>
+        <p className="mt-3">
+          Last verified {lastVerified}. {bridge.note.technical}
+        </p>
+      </Receipts>
     </section>
   );
 }

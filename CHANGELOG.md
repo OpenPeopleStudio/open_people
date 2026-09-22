@@ -2,6 +2,14 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.4.2 — 2026-09-22 — Digestability on visual slice 1
+
+Plain layer leads; technical layer stays in Receipts. Same facts, easier to scan.
+
+- `/costs` contested card is two equal columns: “starts ~1.8¢ in 2027” vs “averages ~7.4¢ over the life”, then the number. One line that they are different measurements. Annex D $ / CPI / unpublished bridge live in Receipts. Heritage 0.2¢ stays in section 01.
+- `/tracker` board: plain-English row title, status chip, last verified, one source link. Material Terms / House / PDFs in Receipts.
+- Dense blocks on `/` and `/costs` open with a one-breath takeaway; numbers after the sentence. ScaleAnchors stay paired. No invented industrial tariff.
+
 ## 0.4.1 — 2026-09-22 — Visual slice 1 (modern precision desk)
 
 Public desk chrome: type + spacing + hairline surfaces. Not sci-fi.

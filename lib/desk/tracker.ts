@@ -4,7 +4,7 @@ import type { DeskItem } from "./types";
 export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "dcia",
-    title: "DCIA signed",
+    title: "Cooperation paper signed",
     when: "17 Aug 2026",
     status: "framework",
     lastVerified: DESK_VERIFIED,
@@ -20,7 +20,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "house",
-    title: "House endorsement 21–18",
+    title: "House said yes 21–18",
     when: "17 Sep 2026",
     status: "endorsed",
     lastVerified: DESK_VERIFIED,
@@ -36,7 +36,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "binding-window",
-    title: "Binding window",
+    title: "Binding contracts still unsigned",
     when: "~31 Dec 2026 / term to ~31 Mar 2027",
     status: "open",
     lastVerified: DESK_VERIFIED,
@@ -52,7 +52,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "qc-gate",
-    title: "Québec political gate",
+    title: "Québec votes 5 October",
     when: "5 Oct 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
@@ -66,7 +66,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "gull-island",
-    title: "Gull Island (sourced MW range)",
+    title: "Gull Island size is still a range",
     when: "Material Terms as of 17 Aug 2026",
     status: "framework",
     lastVerified: DESK_VERIFIED,
@@ -82,7 +82,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "cf-upgrades",
-    title: "Churchill Falls upgrades",
+    title: "Upgrades to the existing plant",
     when: "Annex B as of 17 Aug 2026",
     status: "framework",
     lastVerified: DESK_VERIFIED,
@@ -98,7 +98,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "labrador-west",
-    title: "Labrador West transmission",
+    title: "New line to the mining corridor",
     when: "Aug 2026 announcement + Hydro study",
     status: "framework",
     lastVerified: DESK_VERIFIED,
@@ -114,7 +114,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "wind-spe",
-    title: "Wind package — SPE unnamed",
+    title: "Wind company not named",
     when: "DCIA §13 / Material Terms §13",
     status: "unknown",
     lastVerified: DESK_VERIFIED,
@@ -130,7 +130,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "innu",
-    title: "Innu Nation gap",
+    title: "Innu Nation issues still open",
     when: "17–18 Sep 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
@@ -146,7 +146,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "metering",
-    title: "Transparency — metering / scheduling",
+    title: "No public year-by-year meter",
     when: "Still open in public text",
     status: "unknown",
     lastVerified: DESK_VERIFIED,
@@ -160,7 +160,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "domestic-load",
-    title: "Transparency — “domestic load”",
+    title: "What “used here” means is still thin",
     when: "Still open in public text",
     status: "unknown",
     lastVerified: DESK_VERIFIED,
@@ -174,7 +174,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "cpi-vs-market",
-    title: "Transparency — CPI vs market",
+    title: "Inflation path is not a market path",
     when: "Material Terms Annex F · LAB-IND-1",
     status: "open",
     lastVerified: DESK_VERIFIED,
@@ -190,7 +190,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "unused-retain",
-    title: "Transparency — unused retain",
+    title: "Unused retain already has a buyer",
     when: "Material Terms §4",
     status: "open",
     lastVerified: DESK_VERIFIED,

@@ -1,52 +1,34 @@
-import { COST_MARKERS, type CostMarker } from "@/lib/desk";
+import { CONTESTED_EXPORT } from "@/lib/desk";
 
-export type ContestedSlotId = "life-average" | "start" | "heritage";
+export type ContestedSlotId = "start" | "life-average";
 
 export type ContestedSlot = {
   id: ContestedSlotId;
+  /** One-breath scan line a non-expert can read in five seconds. */
   kicker: string;
-  /** Marker ids to try, first hit wins. Parallel copy PRs may add new ids. */
-  markerIds: readonly string[];
+  path: "annexPath" | "campaign";
 };
 
 /**
- * Equal-weight contested export stories on /costs.
- *
- * TODO(contested-copy): a parallel PR may land a sourced life-average marker
- * (~7.4¢). Do not invent 7.4 / 1.8 / 0.2 here. Wire through COST_MARKERS only.
+ * Two equal-weight columns on /costs. Heritage 0.2¢ stays in section 01 —
+ * it is a different era, not a third measurement of the new paper.
  */
 export const CONTESTED_RATE_SLOTS: readonly ContestedSlot[] = [
   {
-    id: "life-average",
-    kicker: "Life-average",
-    markerIds: ["life-average", "cf-life-average", "hq-life-average", "life-avg"],
-  },
-  {
     id: "start",
-    kicker: "Start",
-    markerIds: ["reported-export-path", "start-year", "hq-start"],
+    kicker: "Starts ~1.8¢ in 2027",
+    path: "annexPath",
   },
   {
-    id: "heritage",
-    kicker: "Heritage",
-    markerIds: ["heritage-mills", "heritage"],
+    id: "life-average",
+    kicker: "Averages ~7.4¢ over the life",
+    path: "campaign",
   },
 ];
 
-export function findContestedMarker(
-  slot: ContestedSlot,
-  markers: readonly CostMarker[] = COST_MARKERS,
-): CostMarker | null {
-  for (const id of slot.markerIds) {
-    const hit = markers.find((row) => row.id === id);
-    if (hit) return hit;
-  }
-  return null;
-}
-
-export function resolveContestedSlots(markers: readonly CostMarker[] = COST_MARKERS) {
+export function resolveContestedSlots(data = CONTESTED_EXPORT) {
   return CONTESTED_RATE_SLOTS.map((slot) => ({
     slot,
-    marker: findContestedMarker(slot, markers),
+    marker: data[slot.path],
   }));
 }
