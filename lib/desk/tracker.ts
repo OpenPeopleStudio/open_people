@@ -131,18 +131,18 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "innu",
     title: "Innu Nation gap",
-    when: "17–18 Sep 2026",
+    when: "17–21 Sep 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://vocm.com/2026/09/18/310730/",
     hrefLabel: "VOCM — Innu letter",
     body: {
       plain:
-        "Innu Nation asked MHAs not to vote. The Premier said he will sit down. Partnership, royalty, and Gull Island tariff path are not settled. Nothing large on that land proceeds without that work.",
+        "Innu Nation urged MHAs not to vote. The Premier said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open. As of 21 September the Grand Chief said he had not yet contacted them — it is always the Innu reaching out. Royalty and Gull Island tariff path are not settled. Nothing large on that land proceeds without that work.",
       technical:
-        "On 17 September 2026 Innu Nation wrote MHAs urging a no vote. Reporting cited concerns on Gull Island payments and unresolved history. Premier Wakeham said outstanding issues need to be resolved and that he looks forward to sitting down. DCIA fundamental principles commit the parties to consulting Indigenous communities; that is not a ratified Innu Nation partnership, royalty, or GI tariff path. Status: unresolved.",
+        "On 17 September 2026 Innu Nation wrote MHAs urging a no vote (SaltWire / PNI; VOCM 18 Sep). Reporting cited concerns on Gull Island payments and unresolved history. Premier Wakeham said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open — not a ratified Innu Nation partnership, royalty, or GI tariff path. VOCM (21 Sep 2026): Grand Chief Jodie Ashini said Premier Wakeham has yet to contact the Innu Nation after the House vote; “He’s constantly saying he is going to sit down and talk with us but it’s always us reaching out to him.” DCIA fundamental principles commit the parties to consulting Indigenous communities. Contact gap and partnership path: unresolved.",
     },
-    sources: ["vocmInnu", "saltwireInnu", "dciaHq"],
+    sources: ["vocmInnu", "vocmInnuContact", "saltwireInnu", "dciaHq"],
   },
   {
     id: "metering",
@@ -184,7 +184,7 @@ export const TRACKER_ITEMS: DeskItem[] = [
       plain:
         "Export payments on the new paper move with a Canadian inflation band. Labrador industrial energy already splits a development block from a market block. Those are different machines. Do not mash them into one “cheap power” number.",
       technical:
-        "DCIA Annex F: HQ target payments for existing CF adjust from a 2027 CPI base (Statistics Canada All-items, Canada) with a deadband centred on 2.06% ± 0.40%. LAB-IND-1 (Jul 2026): firm energy is RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL — Development and Market block rates are 2026 formula inputs, not a single industrial ¢/kWh. See /costs. Binding PPA ¢/kWh path for HQ: not a locked industrial tariff."
+        "DCIA Annex F: HQ target payments for existing CF adjust from a 2027 CPI base (Statistics Canada All-items, Canada) with a deadband centred on 2.06% ± 0.40%. LAB-IND-1 (Jul 2026): firm energy is RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL — Development and Market block rates are 2026 formula inputs, not a single industrial ¢/kWh. See /costs#contested for campaign 7.4 vs Annex D / 1.8 paths (labeled, not merged). Binding PPA ¢/kWh path for HQ: not a locked industrial tariff."
     },
     sources: ["dciaHq", "nlhRates2026"],
   },

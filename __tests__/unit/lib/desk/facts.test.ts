@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { COST_ERA_NOTE, COST_MARKERS, INDUSTRY_CARDS, TRACKER_ITEMS } from "@/lib/desk";
+import {
+  CONTESTED_EXPORT,
+  COST_ERA_NOTE,
+  COST_MARKERS,
+  INDUSTRY_CARDS,
+  TRACKER_ITEMS,
+} from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
 describe("horizon desk facts", () => {
@@ -29,6 +35,19 @@ describe("horizon desk facts", () => {
     expect(signed?.status).toBe("unknown");
   });
 
+  it("records the Innu Nation urged-no-vote and open partnership, including the Premier-contact gap", () => {
+    const innu = TRACKER_ITEMS.find((item) => item.id === "innu");
+    expect(innu?.status).toBe("open");
+    expect(innu?.body.technical).toMatch(/urging a no vote/i);
+    expect(innu?.body.plain).toMatch(/urged MHAs not to vote/i);
+    expect(innu?.body.plain).toMatch(/Partnership remains open/i);
+    expect(innu?.body.technical).toMatch(/Partnership remains open/i);
+    expect(innu?.body.technical).toMatch(/yet to contact/i);
+    expect(innu?.sources).toEqual(
+      expect.arrayContaining(["vocmInnu", "vocmInnuContact", "saltwireInnu"])
+    );
+  });
+
   it("leads industries with mining and keeps compute off the card list", () => {
     expect(INDUSTRY_CARDS[0]?.rank).toBe("first");
     expect(INDUSTRY_CARDS.every((card) => card.rank !== "secondary")).toBe(true);
@@ -43,6 +62,55 @@ describe("horizon desk facts", () => {
     expect(mou?.note.technical).toMatch(/Do not model the DCIA as this/);
     const reported = COST_MARKERS.find((row) => row.id === "reported-export-path");
     expect(reported?.status).toBe("reported");
+  });
+
+  it("keeps campaign 7.4 and Annex D / 1.8 paths labeled, not merged, with an unpublished bridge", () => {
+    expect(CONTESTED_EXPORT.campaign.value).toBe("7.4");
+    expect(CONTESTED_EXPORT.campaign.label).toMatch(/campaign public claim/i);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/7\.4 cents\/kwh/i);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/2027 dollars/);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/premium rate/);
+    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/not a locked industrial PPA/);
+    expect(CONTESTED_EXPORT.campaign.sources).toEqual(
+      expect.arrayContaining(["abetterDealFaq", "cpChurchillGraph"])
+    );
+
+    expect(CONTESTED_EXPORT.annexPath.value).not.toMatch(/7\.4/);
+    expect(CONTESTED_EXPORT.annexPath.value).toMatch(/1\.8/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/\$0\.531B/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/29\.207 TWh/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/1\.8 ¢\/kWh/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/11\.5¢\/kWh by 2041/);
+    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(
+      /Do not treat 11\.5 as the raw 2041 Annex D division/
+    );
+    expect(CONTESTED_EXPORT.annexPath.sources).toEqual(
+      expect.arrayContaining(["dciaHq", "cpChurchillGraph", "financialPostPath"])
+    );
+
+    expect(CONTESTED_EXPORT.bridge.value).toBe("UNKNOWN");
+    expect(CONTESTED_EXPORT.bridge.status).toBe("unknown");
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/unpublished|UNKNOWN/i);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a bridge formula/i);
+    expect(CONTESTED_EXPORT.bridge.note.technical).not.toMatch(
+      /therefore 7\.4 =|bridge formula is|equals 7\.4 because/i
+    );
+
+    expect(CONTESTED_EXPORT.campaign.value).not.toBe(CONTESTED_EXPORT.annexPath.value);
+    const merged = `${CONTESTED_EXPORT.campaign.value} ${CONTESTED_EXPORT.annexPath.value}`;
+    expect(merged).not.toMatch(/7\.4\s*[=≈].*1\.8|1\.8\s*[=≈].*7\.4/);
+  });
+
+  it("does not present contested export ¢ as a locked industrial PPA for mines or compute", () => {
+    const blob = [
+      CONTESTED_EXPORT.campaign.note.technical,
+      CONTESTED_EXPORT.annexPath.note.technical,
+      CONTESTED_EXPORT.bridge.note.technical,
+      CONTESTED_EXPORT.intro.technical,
+    ].join("\n");
+    expect(blob).toMatch(/Labrador mines or compute/);
+    expect(blob).not.toMatch(/Pattern Energy|Invenergy/i);
+    expect(blob).not.toMatch(/\b\d{2,4}\s*MW reserved\b/i);
   });
 
   it("cites Labrador Interconnected domestic 3.154¢ from NL Hydro, not as industrial", () => {
@@ -67,6 +135,14 @@ describe("horizon desk facts", () => {
     expect(lab?.note.technical).toMatch(/not a single ¢\/kWh/);
     expect(lab?.note.plain).toMatch(/Do not flatten/i);
     expect(lab?.sources).toContain("nlhRates2026");
+  });
+
+  it("labels heritage 0.2¢ as heritage lore, not a current industrial ¢", () => {
+    const heritage = COST_MARKERS.find((row) => row.id === "heritage-mills");
+    expect(heritage?.value).toBe("0.2");
+    expect(heritage?.status).toBe("heritage");
+    expect(heritage?.note.technical).toMatch(/two mills/);
+    expect(heritage?.note.plain).toMatch(/not a rate anyone in this province can buy/i);
   });
 
   it("labels Island Industrial as Island grid, not Labrador", () => {
