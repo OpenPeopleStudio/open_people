@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
+import { Dual, ScaleAnchor } from "@/components/marketing/voice";
+import { HOME_GATES, SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata: Metadata = {
   title: {
@@ -10,31 +12,30 @@ export const metadata: Metadata = {
     "Constituent voice for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador for industry. Mining first. Compute is a named use of that power, not a reserved block.",
 };
 
-const GATES = [
-  { v: "21–18", k: "House endorsed the DCIA framework, 17 Sep 2026 — not binding PPAs" },
-  { v: "5 Oct", k: "Québec election — next public political gate" },
-  { v: "YE 2026", k: "Binding definitive agreements targeted ~31 Dec" },
-  { v: "31 Mar", k: "DCIA instrument can run to 31 Mar 2027 unless replaced" },
-];
-
 const OPEN = [
   {
     title: "In-province use",
-    body: "Public framing is about 2,350 MW retained from Churchill Falls and Gull Island, plus wind if built. That is announcement language — not a signed industrial allocation, not a compute tranche, and not a published queue.",
+    body: SCALE_ANCHORS.retainedMw,
   },
   {
     title: "Recall",
-    body: "A Power Advisory consultant told the House of a three-year notice recall so NL can keep more power at home. Still open in contract text. Do not treat testimony as a signed clause.",
+    body: {
+      technical:
+        "A Power Advisory consultant told the House of a three-year notice recall so NL can keep more power at home. Still open in contract text. Do not treat testimony as a signed clause.",
+    },
   },
   {
     title: "Innu Nation",
-    body: "Partnership, royalty, and Gull Island tariff path unresolved. Innu Nation urged MHAs not to vote. The Premier said he will meet.",
+    body: {
+      technical:
+        "Partnership, royalty, and Gull Island tariff path unresolved. Innu Nation urged MHAs not to vote. The Premier said he will meet.",
+    },
   },
   {
     title: "Federal assessment",
-    body: "IAAC has not received proponent confirmation that 2026 Gull Island matches the 2012 Lower Churchill scope. The 2026 plant as described is larger than the roughly 2,000 MW reviewed then.",
+    body: SCALE_ANCHORS.federalAssessment,
   },
-];
+] as const;
 
 const RULES = [
   "Evidence before narrative",
@@ -57,13 +58,18 @@ export default function HomePage() {
               Keep the power here.{" "}
               <em className="not-italic text-[var(--plasma)]">Use it here.</em>
             </h1>
-            <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-              Newfoundland and Labrador generates about 43&nbsp;TWh of renewable electricity a year
-              and exports most of it. The Churchill Falls / Gull Island DCIA, signed 17 August 2026,
-              is a framework — not binding power-purchase agreements. The House endorsed that
-              framework 21–18 on 17 September. The contracts that actually bind the power are still
-              ahead.
-            </p>
+            <Dual
+              plain={
+                <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+                  {SCALE_ANCHORS.exportScale.plain}
+                </p>
+              }
+              technical={
+                <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+                  {SCALE_ANCHORS.exportScale.technical}
+                </p>
+              }
+            />
             <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)]">
               Firm in-province power should serve Labrador and island industry — mining and
               resources first. Compute and AI are a{" "}
@@ -96,7 +102,7 @@ export default function HomePage() {
 
         <section className="border-b border-[var(--border-subtle)]">
           <div className="mx-auto grid max-w-[1080px] grid-cols-2 border-x border-[var(--border-subtle)] md:grid-cols-4">
-            {GATES.map((s, i) => (
+            {HOME_GATES.map((s, i) => (
               <div
                 key={s.v}
                 className={`bg-[var(--surface-1)] p-5 sm:p-6 ${
@@ -107,7 +113,7 @@ export default function HomePage() {
               >
                 <div className="font-display text-2xl text-[var(--plasma)] sm:text-3xl">{s.v}</div>
                 <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.11em] text-[var(--text-muted)]">
-                  {s.k}
+                  <Dual plain={s.plain} technical={s.technical} />
                 </div>
               </div>
             ))}
@@ -137,9 +143,18 @@ export default function HomePage() {
                   <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
                     {String(i + 1).padStart(2, "0")} · {item.title}
                   </div>
-                  <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
-                    {item.body}
-                  </p>
+                  {"plain" in item.body ? (
+                    <ScaleAnchor
+                      className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                      technical={item.body.technical}
+                      plain={item.body.plain}
+                      source={item.body.source}
+                    />
+                  ) : (
+                    <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+                      {item.body.technical}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

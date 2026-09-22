@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
+import { Dual, ScaleAnchor, VoiceToggle } from "@/components/marketing/voice";
+import {
+  ENGAGE_BINDING_PAPER,
+  ENGAGE_CHECKS,
+  ENGAGE_HERO_LEDE,
+  ENGAGE_QUEBEC_GATE,
+  SCALE_ANCHORS,
+} from "@/lib/voice-mode";
 import EngageForm from "./EngageForm";
 import MhaTemplates from "./MhaTemplates";
 import ShareEngage from "./ShareEngage";
@@ -27,44 +35,35 @@ export const metadata: Metadata = {
 };
 
 const OPEN = [
-  {
-    title: "Binding paper is still unsigned",
-    body: "The House endorsed the DCIA framework 21–18 on 17 September 2026. That vote does not create power-purchase agreements. Definitive agreements are targeted around 31 December 2026. The DCIA instrument can run to 31 March 2027.",
-  },
-  {
-    title: "Québec votes 5 October",
-    body: "The next public political gate is the Québec election. It is not an NL door you can walk through. It still matters for the counterparty government.",
-  },
+  ENGAGE_BINDING_PAPER,
+  ENGAGE_QUEBEC_GATE,
   {
     title: "In-province use is still optional",
-    body: "Public framing is about 2,350 MW retained from Churchill Falls and Gull Island, plus wind if built. That is announcement language, not a signed compute tranche, not a published industrial queue, and not a confirmed preference versus Hydro-Québec or mining.",
+    technical: SCALE_ANCHORS.retainedMwEngage.technical,
+    plain: SCALE_ANCHORS.retainedMwEngage.plain,
+    source: SCALE_ANCHORS.retainedMwEngage.source,
   },
   {
     title: "Recall language is still open",
-    body: "Jason Chee-Aloy of Power Advisory told the House a three-year notice recall could let NL keep more power at home. That is testimony. It is not confirmed in signed contract text.",
+    technical:
+      "Jason Chee-Aloy of Power Advisory told the House a three-year notice recall could let NL keep more power at home. That is testimony. It is not confirmed in signed contract text.",
   },
   {
     title: "Innu Nation partnership is unresolved",
-    body: "Innu Nation urged MHAs not to vote. The Premier said he will meet. Royalty and Gull Island tariff path remain unsettled. Nothing large in Labrador proceeds without that work.",
+    technical:
+      "Innu Nation urged MHAs not to vote. The Premier said he will meet. Royalty and Gull Island tariff path remain unsettled. Nothing large in Labrador proceeds without that work.",
   },
   {
     title: "Federal environmental assessment is a live gap",
-    body: "IAAC has said no new federal impact assessment is needed if 2026 Gull Island matches the 2006–2012 Lower Churchill review. The agency has not received proponent confirmation that the scopes match. The 2026 plant as described is larger than the roughly 2,000 MW reviewed then.",
+    technical: SCALE_ANCHORS.federalAssessmentEngage.technical,
+    plain: SCALE_ANCHORS.federalAssessmentEngage.plain,
+    source: SCALE_ANCHORS.federalAssessmentEngage.source,
   },
   {
     title: "Wind SPE is unnamed",
-    body: "DCIA §13 leaves a Wind special-purpose entity unnamed, at NL Hydro’s sole discretion. Federal Canada — not CPP — may take up to 40% SPE equity in the public framing. A ~$8B / 100% CPP-held “A” company remains unknown. Do not invent the name.",
+    technical:
+      "DCIA §13 leaves a Wind special-purpose entity unnamed, at NL Hydro’s sole discretion. Federal Canada — not CPP — may take up to 40% SPE equity in the public framing. A ~$8B / 100% CPP-held “A” company remains unknown. Do not invent the name.",
   },
-];
-
-const ASKS = [
-  "How in-province power will be metered and scheduled, year by year — not just a headline retain figure.",
-  "The contract definition of domestic / in-province load, in words a voter can check.",
-  "What happens to unused retain: default buyer, notice, and price — so leftover megawatts do not slide west by indecision.",
-  "Whether a recall right is in the signed text, not only in House testimony (including the three-year notice described to MHAs).",
-  "Whether industrial uses beyond mining — towns, other Labrador industry, and compute if the province writes it — are eligible at all.",
-  "Whether an Innu Nation partnership / royalty / Gull Island tariff path is settled before large Labrador builds lock.",
-  "Whether the proponent has confirmed that 2026 Gull Island matches the 2012 Lower Churchill federal review scope — or that a new assessment is coming.",
 ];
 
 const DOORS = [
@@ -147,12 +146,19 @@ export default function EngagePage() {
               Keep firm power{" "}
               <em className="not-italic text-[var(--plasma)]">in Newfoundland and Labrador</em>.
             </h1>
-            <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-              The Churchill Falls / Gull Island DCIA is a framework. The House endorsed it. Binding
-              contracts are not signed. There is still time to insist that firm power this province
-              keeps is used here — mines and Labrador industry first. Compute is one named use of
-              that power, not the opener, and not a reserved block.
-            </p>
+            <VoiceToggle variant="echo" className="mt-4" />
+            <Dual
+              plain={
+                <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+                  {ENGAGE_HERO_LEDE.plain}
+                </p>
+              }
+              technical={
+                <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+                  {ENGAGE_HERO_LEDE.technical}
+                </p>
+              }
+            />
             <p className="mt-4 max-w-[62ch] text-[15px] leading-relaxed text-[var(--text-muted)]">
               Open People is a constituent and catalyst voice from St. John&apos;s. Tom Lane is not
               a DCIA party, an offtake seat, or a demand seat. Partners would own any steel. This
@@ -191,9 +197,26 @@ export default function EngagePage() {
                   <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
                     {String(i + 1).padStart(2, "0")} · {item.title}
                   </div>
-                  <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
-                    {item.body}
-                  </p>
+                  {"plain" in item ? (
+                    "source" in item ? (
+                      <ScaleAnchor
+                        className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                        technical={item.technical}
+                        plain={item.plain}
+                        source={item.source}
+                      />
+                    ) : (
+                      <ScaleAnchor
+                        className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                        technical={item.technical}
+                        plain={item.plain}
+                      />
+                    )
+                  ) : (
+                    <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+                      {item.technical}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -224,15 +247,17 @@ export default function EngagePage() {
               public — or admit it does not.
             </p>
             <ol className="mt-8 space-y-3">
-              {ASKS.map((item, i) => (
+              {ENGAGE_CHECKS.map((item, i) => (
                 <li
-                  key={item}
+                  key={item.technical}
                   className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] px-4 py-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
                 >
                   <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="mt-1 block">{item}</span>
+                  <span className="mt-1 block">
+                    <Dual plain={item.plain} technical={item.technical} />
+                  </span>
                 </li>
               ))}
             </ol>

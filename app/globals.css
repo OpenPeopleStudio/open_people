@@ -537,3 +537,13 @@ a, button, [role="button"], input, select, textarea {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+@media print {
+  [data-voice][hidden] {
+    display: none !important;
+  }
+
+  .voice-print-note {
+    display: block !important;
+  }
+}
