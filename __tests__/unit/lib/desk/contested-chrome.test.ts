@@ -11,9 +11,11 @@ describe("contested rate chrome", () => {
   it("leads each column with a one-breath human kicker, then a sourced ¢", () => {
     const cells = resolveContestedSlots();
     expect(cells[0]?.slot.kicker).toBe("Starts ~1.8¢ in 2027");
+    expect(cells[0]?.marker.id).toBe("start-18");
     expect(cells[0]?.marker.value).toBe("1.8");
     expect(cells[0]?.marker.unit).toMatch(/2027/);
     expect(cells[1]?.slot.kicker).toBe("Averages ~7.4¢ over the life");
+    expect(cells[1]?.marker.id).toBe("average-74");
     expect(cells[1]?.marker.value).toBe("7.4");
     expect(cells[1]?.marker.unit).toMatch(/50 years/);
     expect(cells[0]?.marker.value).not.toBe(cells[1]?.marker.value);
@@ -26,11 +28,11 @@ describe("contested rate chrome", () => {
   });
 
   it("keeps Annex D $ structure, CPI, and the unpublished bridge in the technical layer", () => {
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/\$0\.531B/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/29\.207 TWh/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/Annex F CPI/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/\$0\.531B/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/29\.207 TWh/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/Annex F/);
     expect(CONTESTED_EXPORT.bridge.value).toBe("UNKNOWN");
-    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a bridge formula/i);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a payment÷TWh industrial ¢/);
     expect(CONTESTED_EXPORT.bridge.note.technical).not.toMatch(
       /therefore 7\.4 =|bridge formula is|equals 7\.4 because/i,
     );

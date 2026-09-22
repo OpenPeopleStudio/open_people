@@ -6,23 +6,24 @@ export type ContestedSlot = {
   id: ContestedSlotId;
   /** One-breath scan line a non-expert can read in five seconds. */
   kicker: string;
-  path: "annexPath" | "campaign";
+  path: "start" | "average";
 };
 
 /**
  * Two equal-weight columns on /costs. Heritage 0.2¢ stays in section 01 —
  * it is a different era, not a third measurement of the new paper.
+ * Facts come from CONTESTED_EXPORT.start / .average (landed on main).
  */
 export const CONTESTED_RATE_SLOTS: readonly ContestedSlot[] = [
   {
     id: "start",
     kicker: "Starts ~1.8¢ in 2027",
-    path: "annexPath",
+    path: "start",
   },
   {
     id: "life-average",
     kicker: "Averages ~7.4¢ over the life",
-    path: "campaign",
+    path: "average",
   },
 ];
 

@@ -2,22 +2,20 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
-## 0.4.2 — 2026-09-22 — Digestability on visual slice 1
+## 0.4.2 — 2026-09-22 — Visual slice 1 + digestability (on landed 1.8 vs 7.4)
 
-Plain layer leads; technical layer stays in Receipts. Same facts, easier to scan.
+Plain layer leads; technical layer stays in Receipts. Same facts as 0.4.1, easier to scan.
 
 - `/costs` contested card is two equal columns: “starts ~1.8¢ in 2027” vs “averages ~7.4¢ over the life”, then the number. One line that they are different measurements. Annex D $ / CPI / unpublished bridge live in Receipts. Heritage 0.2¢ stays in section 01.
 - `/tracker` board: plain-English row title, status chip, last verified, one source link. Material Terms / House / PDFs in Receipts.
-- Dense blocks on `/` and `/costs` open with a one-breath takeaway; numbers after the sentence. ScaleAnchors stay paired. No invented industrial tariff.
+- Dense blocks on `/` and `/costs` open with a one-breath takeaway; numbers after the sentence. ScaleAnchors stay paired.
 
-## 0.4.1 — 2026-09-22 — Visual slice 1 (modern precision desk)
+## 0.4.1 — 2026-09-22 — Contested 7.4 vs Annex D 1.8 on /costs
 
-Public desk chrome: type + spacing + hairline surfaces. Not sci-fi.
+Hogan-calm polish: two public HQ-export ¢ stories stay labeled, not merged. Innu tracker matches the contact gap.
 
-- Sharper H1 hierarchy and mono facts (dates / ¢ / MW / status) on `/`, `/tracker`, `/costs`.
-- `/costs` contested-rate strip: equal-weight Life-average / Start / Heritage cards. Start + heritage wire to existing desk facts (reported 1.8→11.5 path; heritage 0.2¢). Life-average is an empty sourced shell until a parallel copy PR lands a marker — no invented 7.4¢.
-- `/tracker` living board: three columns (on paper / open / UNKNOWN), semantic status chips, sticky last-verified strip.
-- Motion: hero fade 180ms only; nav is a solid hairline (no backdrop blur); SiteShell radial glow removed. `/compute` stays quarantined and quieter.
+- `/costs`: contested-communications card — two equal claims: **starts about 1.8¢/kWh in 2027** vs **averages about 7.4¢/kWh over ~50 years** (CP24 corrected graph, 17 Aug 2026; prior MOU ~5.9¢). One plain sentence: different measurements, not a contradiction to mash. Technical: citations, dates, document names — Annex D is target **$ + CPI**; Annex D → voter industrial ¢: **UNKNOWN**. Heritage 0.2¢ labeled heritage; LAB-IND-1 stays a formula.
+- `/tracker`: Innu Nation urged a no vote; partnership remains open; Premier-contact gap (VOCM 21 Sep: Grand Chief says he has yet to contact them).
 
 ## 0.4.0 — 2026-09-22 — Horizon desk IA (first slice)
 

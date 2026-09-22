@@ -22,7 +22,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata: Metadata = {
   title: "Costs",
   description:
-    "Heritage 0.2¢/kWh export lore, contested 1.8¢ start vs 7.4¢ life-average (different measurements), Labrador Interconnected domestic 3.154¢ (Rate 1.1L), and LAB-IND-1 as demand + energy formula — not a single industrial ¢. Not locked PPAs.",
+    "Starts about 1.8¢/kWh in 2027 vs averages about 7.4¢/kWh over ~50 years — different measurements, not one industrial ¢. Heritage 0.2¢ labeled heritage. LAB-IND-1 stays a formula. Annex D $ → voter ¢: UNKNOWN.",
   alternates: { canonical: "/costs" },
 };
 

@@ -94,6 +94,13 @@ export const DESK_SOURCES = {
     date: "2026-09-18",
     kind: "press",
   },
+  vocmInnuContact: {
+    id: "vocm-innu-contact",
+    label: "VOCM — Grand Chief: Premier has yet to contact Innu, 21 Sep 2026",
+    href: "https://vocm.com/2026/09/21/premier-has-yet-to-contact-innu-about-hydro-deal-says-grand-chief/",
+    date: "2026-09-21",
+    kind: "press",
+  },
   saltwireInnu: {
     id: "saltwire-innu",
     label: "SaltWire / PNI — Innu Nation asked MHAs to vote no",

@@ -62,6 +62,7 @@ export function ContestedRateStrip() {
         sources={bridge.sources.map((id) => DESK_SOURCES[id])}
       >
         <p>{intro.technical}</p>
+        <p className="mt-3">{bridge.note.plain}</p>
         <p className="mt-3">
           Last verified {lastVerified}. {bridge.note.technical}
         </p>

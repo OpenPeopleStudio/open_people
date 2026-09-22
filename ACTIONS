@@ -2,8 +2,9 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
-0.4.2 tools=40 commits=1 files=20 note=Digestability lock: plain-leads takeaway, two-column 1.8 vs 7.4, tracker receipts
-0.4.1 tools=55 commits=1 files=22 note=Visual slice 1: precision desk type/spacing, contested cost chrome, tracker board
+0.4.2 tools=45 commits=3 files=24 note=Visual slice 1 digestability on top of landed 1.8 vs 7.4
+0.4.1 tools=70 commits=4 files=12 note=Contested 1.8 start vs 7.4 average card; Tom digestibility lock
+0.4.0 tools=90 commits=1 files=28 note=Horizon desk IA: /tracker /industries /costs /compute + nav/home scrub
 0.3.1 tools=40 commits=1 files=18 note=Coalition voice lock + /engage copy-first, Innu template, share
 0.3.0 tools=90 commits=1 files=20 note=Post-17 Sep DCIA House vote + /engage keep-power-here path
 0.2.0 tools=95 commits=1 files=7 note=Aug 17 Churchill Falls agreement on public site
