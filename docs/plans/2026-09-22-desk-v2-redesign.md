@@ -190,9 +190,89 @@ Every page: `DeskPage` shell → verified strip → compact Gate Clock → conte
 
 ## 5. Data accuracy — audit and corrections (2026-09-22)
 
-_Filled from the two verification passes run today. See §5.1 for the verdict table, §5.2 for corrections to apply before any visual work ships, §5.3 for the standing verification process._
+Two verification passes were run today against primary documents (the DCIA execution PDF, the IRC report and technical briefing, NL Hydro's July 2026 rate schedule, PUB Order P.U. 17(2026), CER profiles) and reputable press (VOCM, NTV, CBC via syndication, CP24, Radio-Canada). Verdicts below are for the figures as they appear in `lib/desk/*`, `lib/voice-mode/anchors.ts` and `public/brief.html`.
 
-<!-- AUDIT-PLACEHOLDER -->
+**Headline: no figure on the site is wrong.** Every megawatt, cent, dollar, date and vote count checked out against its source. What needs work is precision in three places, source hygiene in four, and a week of developments since the vote that the tracker does not yet carry.
+
+### 5.1 Deal, timeline and structure (verified against the DCIA and IRC PDFs)
+
+| Claim on site | Verdict | Note |
+|---|---|---|
+| DCIA signed 17 Aug 2026 by NLH, HQ, CF(L)Co; framework, PPAs unsigned; Definitive Agreements targeted 31 Dec 2026; term to 31 Mar 2027 unless extended | Confirmed, one precision fix | Art. 2.1 carries the 31 Dec goal. The 31 Mar 2027 date is in the **Term clause §6.3(a)**, not Art. 2.1 (`tracker.ts` `binding-window` technical text). §6.3(b) also grants HQ **Gull Island exclusivity during the Term**, which the site does not mention and should. |
+| House endorsed 21–18 on 17 Sep; PCs + Joyce for; Liberals, NDP, Russell against | Confirmed | Russell left the PC caucus on 14 Sep. |
+| Québec election 5 Oct 2026 | Confirmed | Writs dropped 27 Aug. |
+| Gull Island ~2,250 or 2,700 MW; NLH share interpolates 266–432 MW; energy mid-2030s | Confirmed, can be sharper | Annex B (2,700 MW case): first Gull volumes **2036 (1,350 MW)**, full 2,700 MW from **2037**. Canada.ca says "online target of 2036–2037". "Mid-2030s" is safe; the Annex Ramp instrument (I6) can draw 2036/2037 with a `PRELIMINARY` badge. |
+| CF Upgrades ~1,275 MW by early 2040s | Confirmed, can be sharper | Annex B ramp: 464 MW (2035) → 1,159 (2041) → **1,275 from 2042**; total plant ~6,703 MW. |
+| Labrador West: 230 kV at limits; 735 kV ~1,500 MW; funded with federal support | Confirmed, one nuance | NLH page adds: geotech summer/fall 2026, **FEED target Dec 2026**. The **$1B (2026 NPV)** line item is in the Gov NL release; the federal release itemises only ~$2.3M FEED + ~$20M first/last-mile feasibility. Say "as described by Gov NL". |
+| Wind 2,000 MW study after Definitive Agreements; SPE unnamed; +400 MW if built | Confirmed, one addition | Sched. B §7: HQ pays GNL **$400,000/MW (~$640M on 1,600 MW)** on completion of FEL 1–3, permits and PPA. Sourced and worth a tracker line; the SPE name stays UNKNOWN. |
+| Innu Nation letter 17 Sep urging no; VOCM 21 Sep Premier-contact gap | Confirmed | Also an earlier **15 Sep** letter (Innu Nation + Sheshatshiu + Natuashish) asserting Churchill River waterway rights (VOCM 15 Sep). |
+| "Up to 2,350 MW" + 400 MW wind; $49B NPV / $273B nominal; 985 MW transmission | Confirmed | Gov NL 17 Aug; DCIA §2(a) matches. |
+| Reported 1.8¢ (2027) → 11.5¢ (2041); CP corrected 1.8 start / 7.4 avg / 5.9 MOU; HQ "6¢/kWh" | Figures confirmed; one attribution soft | The 1.8¢ / +14%/yr / 11.5¢ sentence is in **CBC/Radio-Canada 17 Aug** (attributed to NL Hydro) and Power Advisory. The Financial Post 18 Aug page could not be loaded from here. Add the RCI/CBC 17 Aug source; keep FP as secondary. |
+| Annex D 2027 $0.531B on 29.207 TWh; Annex F deadband 2.06% ± 0.40% | Confirmed | Range 1.66–2.46%, cumulative, reviewed annually from 2028. |
+| Sched. B §4 options: 280 / 240 / 200 MW; 95% discounted price; 1.5× premium; three-year notice | Confirmed | 1.5× premium applies to CF entitlements only (site already says so). |
+| IRC: 30 Apr 2026 report, released 19 May; 3.8¢ then 16.7¢; $33.8B PV; MOU expired 30 Apr | Confirmed, **one date fix** | IRC text: 3.8¢/kWh over **2025 to 2041**, not 2024–2041 (`costs.ts` `mou-irc-path`, and `brief.html` §03). Verified in the IRC report at the sentence "cost of electricity of 3.8 ¢/kWh during the 2025 to 2041 period". |
+| IAAC: no new assessment if scope matches; no proponent confirmation; ~2,000 MW reviewed | Confirmed | CBC 10 Sep 2026. |
+| ~525 MW NLH allocation, ~312 MW to IOC/Tacora; >200 kW needs PUB exemption | Confirmed, date the source | CBC piece is **15 Jan 2025** (about the 2024 MOU). `DESK_SOURCES.cbcMining.date` is `2025-01-01`; set it to `2025-01-15` and label it as MOU-era. 200 kW threshold is PUB Order P.U. 34(2019). |
+| ~43 TWh renewable, most exported | Confirmed | CER 2023: 44.3 TWh total, 43.1 renewable (97.4%), net outflows 34.5 TWh (~78%). |
+
+### 5.2 Published rates and tariffs (verified against the July 2026 schedule, P.U. 17(2026), the 2015 PDF, HQ, AESO, BC regulation)
+
+| Claim on site | Verdict | Note |
+|---|---|---|
+| NL Hydro current-rates page: 3.154¢ Labrador Interconnected; 15.587¢ first block Island / L'Anse au Loup / diesel; path spelled "electicity" | Confirmed | The misspelled path is canonical; the correctly spelled URL 301s to it. Page also quotes ~16.7¢ island domestic average with customer charge. |
+| Rate 1.1L (LAB-1): 3.154¢/kWh, $6.87/month, 1.5% prompt-pay | Confirmed | Effective 1 Jul 2026; minimum monthly charge also $6.87. |
+| LAB-IND-1: $1.08/kW-month transmission (closed, existing customers), $0.41/kW-month generation; RFIRM formula; RD $29.22/MWh; RM $78.61/MWh from NYISO Zone A | Confirmed, one wording nuance | The 2026 schedule says "settlement price for NYISO Zone A" (the 2015 text said "NYMEX settlement"). Site wording "set from NYISO Zone A" is accurate. |
+| Island Industrial Firm (IND-1): $10.73/kW-month; 4.428¢ base; PCRR 1.987¢; CDM 0.007¢; P.U. 17(2026) effective 1 Jul 2026 | Confirmed, one addition | P.U. 17(2026) is dated 11 Jun 2026 and approves the riders. The July 2026 wholesale/Utility increase is **P.U. 15(2026)**; add it to the registry so the Island row cites both. |
+| 2015 Labrador Industrial PDF: $1.25/kW; $0.43/kW-month; RD $22.43; RM $45.52 | Confirmed | 2015 version has no "closed rate" language; that is new in 2026 (site already says so). |
+| 1969 renewal at 2 mills = 0.2¢/kWh; Heritage NL; Feehan & Baker DLJ vol 30 iss 1 | Confirmed, one source note | Heritage NL page returned 503 on every attempt today (excerpt corroborates 2 mills). Feehan & Baker loads (2007, p. 207); Policy Options 2010 corroborates "$2 per MWh for 25 years". Add the Policy Options piece as a mirror for the heritage figure. |
+| HQ data-centre tariff 13¢/kWh (Feb 2026, Régie pending); BC and Alberta capped or screened | Confirmed, can be dated | HQ release 19 Feb 2026: "CD" rate ≥5 MW at 13¢ (blockchain 19.5¢); HQ asked for effect 1 Nov 2026; Régie hearing fall 2026, decision expected year-end or early 2027. BC: regulation effective 1 Feb 2026 caps allocations at 100 MW conventional + 300 MW AI for two years; crypto moratorium permanent. Alberta: AESO 1,200 MW interim limit through 2028, "now fully taken"; Data Centre Regulation in effect June 2026. All still current. |
+| Newfoundland Power general service "11–13¢ delivered" ballpark (brief and `/costs` footnote) | Confirmed as a ballpark, needs qualifying | Latest loadable rate book is 1 Jul 2025: tail-block energy 10.9–11.8¢, first-block 12.7–15.1¢, plus demand charges; July 2026 increase 2.3–2.8%. "11–13¢" matches tail-block energy charges only. Reword to "roughly 11–15¢ energy charge before demand charges and HST" or keep 11–13¢ explicitly labelled tail-block. |
+| CER NL profile: ~43 TWh renewable, most exported | Confirmed, URL moved | Old URL 301s to `cer-rec.gc.ca/en/data-analysis/energy-markets/province-territory-energy-profiles/newfoundland-labrador.html` (modified 2026-03-26). Profile page: 41.9 TWh (2021), 97% hydro, 8,682 MW capacity, net outflows 34.5 TWh (2023), ~90% of Churchill Falls output to Québec. The 43.1 TWh / 97.4% (2023) figures come from CER's separate renewables page; cite both. |
+| Labrador West page: 230 kV at limits; 735 kV ~1,500 MW | Confirmed | Page title is "…Expansion **Study**"; FEED and permits under way, geotech summer/fall 2026, FEED completion target Dec 2026. No in-service date, no cost on the page. $1B (2026 NPV) is Gov NL's figure. |
+
+### 5.2a Corrections to apply in Phase 0 (complete list)
+
+1. `lib/desk/costs.ts` `mou-irc-path` and `public/brief.html` §03: **3.8¢ over 2025–2041**, not 2024–2041.
+2. `lib/desk/tracker.ts` `binding-window`: attribute 31 Mar 2027 to **DCIA §6.3(a) (Term)**, keep 31 Dec 2026 on Art. 2.1; add HQ's **Gull Island exclusivity during the Term** (§6.3(b)).
+3. `lib/desk/tracker.ts` `labrador-west`: add "FEED completion targeted Dec 2026; geotech summer/fall 2026; in-service date not published"; phrase the $1B as "as described by Gov NL (17 Aug 2026)".
+4. `lib/desk/tracker.ts` `wind-spe`: add the sourced **$400,000/MW HQ payment to GNL (~$640M on 1,600 MW)** condition from Sched. B §7; SPE name stays UNKNOWN.
+5. `lib/desk/tracker.ts` `gull-island` / `cf-upgrades`: optionally sharpen to Annex B years (Gull first volumes 2036, full 2037; CF upgrades 1,275 MW from 2042) with the existing PRELIMINARY caveat.
+6. `lib/desk/sources.ts`: replace `saltwireInnu` URL; add `rciPricePath` (Radio-Canada 17 Aug), `pub15_2026`, `policyOptions2010` (heritage mirror), `cerRenewables`; fix `cerNl.href` to the new URL; set `cbcMining.date` to `2025-01-15`; set `nlhLabWest.date` to 2026.
+7. `lib/desk/compute.ts` `COMPUTE_NEIGHBOURS`: date the HQ tariff (19 Feb 2026; Régie decision expected year-end 2026 or early 2027) and the BC/Alberta facts (Feb 2026 regulation; AESO cap "fully taken").
+8. `app/(marketing)/costs/page.tsx` and `brief.html`: qualify the "11–13¢" island retail ballpark as tail-block energy charge, or widen to 11–15¢ before demand and HST.
+9. New tracker rows per §5.4: *Return to the House, no promised vote* (`open`), *Québec Innu consent* (`open`); extend `innu`, `qc-gate`, `house`.
+10. Bump `DESK_VERIFIED` to the date the corrections land; extend `facts.test.ts` for items 1, 2 and 9.
+
+### 5.3 Source hygiene
+
+| Source id | Issue | Action |
+|---|---|---|
+| `saltwireInnu` | URL `saltwire.com/newfoundland-labrador/innu-nation-churchill-falls-vote` could not be loaded from here and looks synthetic. | Replace with the CBC 17 Sep story (syndicated copy loads: `ca.news.yahoo.com/innu-nation-stands-against-progression-083000186.html`) or the VOCM 18 Sep piece already in the registry. Do not ship a source URL nobody has opened. |
+| `dciaNl` | `abetterdealnl.ca` PDF loads (200, 608 kB, metadata dated 2026-08-17) and is the same instrument as the HQ copy. | Keep as mirror; HQ copy stays primary. |
+| `financialPostPath` | Page not loadable from this environment; figures corroborated elsewhere. | Add `rciPricePath` (Radio-Canada/CBC 17 Aug) and make it the primary cite for 1.8→11.5. |
+| CBC links generally | cbc.ca returns 403 to automated fetchers; links are live for humans. | Keep; note in the registry comment that automated link checks need the Yahoo mirror. |
+| `cbcMining` | Date and framing (see 5.1). | `date: "2025-01-15"`, label "CBC, 15 Jan 2025 (2024 MOU era)". |
+| `nlhLabWest` | Page now carries dated milestones. | `date` → 2026 and add the FEED target to the tracker row. |
+
+### 5.4 New since 17 September that the tracker should carry
+
+Each becomes a tracker row or an addition to an existing row, with the plain/technical twin and a source. None changes a number already on the site.
+
+- **Return to the House, but no promised vote.** 18 Sep: Premier Wakeham said the deal "will return to the House of Assembly prior to definitive agreements" but would not commit to a vote. Oversight Committee (Levert, Mullaley, Jardine) stays on. Hogan called the lack of a further approval mechanism "discouraging"; Dinn noted movement on PUB involvement. (NTV, VOCM 18 Sep.) → new row, status `open`. This is the single most important addition for the politician audience: the next decision point may not have a vote attached.
+- **NDP's three unmet conditions** (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. → fold into the row above.
+- **Innu benefit cut "by more than half"** vs the 2024 MOU, per Innu Nation (Radio-Canada 18 Sep; no figures released). Ashini 21 Sep: "ready and willing to meet", no meeting scheduled, "never invited to the table". → extend `innu` row; keep the number UNKNOWN.
+- **Russell (Ind., Lake Melville)** 18 Sep: "chaos and crisis in Lake Melville", cites disrespect to Innu. → cite in `innu` row technical text.
+- **Québec election context.** Léger 21 Sep: PQ 29, PLQ 23, CAQ 20, PCQ 17, QS 10. The CAQ, which signed, is running third. Fréchette has said a final deal needs CAQ re-election; PSPP says he has "no intention of tearing up" the agreement if good for Québec; PQ platform still seeks 1927-boundary compensation. → extend `qc-gate` row; polls are context, not a gate.
+- **Québec Innu** (Uashat mak Mani-utenam, Matimekush-Lac John): consent "mandatory"; reparations case remains before Québec courts. → new row, status `open`.
+- **Referendum cancelled** in an "emotional" caucus meeting (Perry, VOCM 20 Sep). → one line in the `house` row.
+- **Nothing located** (not "confirmed absent"): no signed definitive agreements, no court challenge to the DCIA, no PUB filing (pub.nl.ca returned 503 today), no Hydro-Québec statement after 17 Sep, no new federal move.
+
+### 5.5 Standing verification process (so this never goes stale again)
+
+- `DESK_VERIFIED` is bumped only by a pass that re-opens every URL in `DESK_SOURCES`. Add `scripts/check-desk-sources.mjs` that HEADs every registry URL, tolerates 403 from known bot-blockers (cbc.ca) by trying the mirror field, and fails CI on 404/5xx.
+- Every `DeskSource` gains an optional `mirror` URL and a `retrieved` date.
+- A weekly calendar reminder (owner: Tom) to run the pass; the sticky verified strip shows the date so readers can judge staleness.
+- Any figure that appears in `brief.html` and `lib/desk` must be the same object after Phase 5. Until then, Phase 0 patches both by hand.
 
 ---
 
