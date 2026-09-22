@@ -101,9 +101,10 @@ export default function HomePage() {
           label="43 TWh"
           plain={
             <p>
-              We make a huge amount of clean electricity, about <Fig id="a">43 TWh</Fig> a year,
-              and ship most of it out. The fight is what we keep for industry here. August&apos;s
-              paper and the September House vote (<Fig id="b">21–18</Fig>) are a{" "}
+              We make a huge amount of clean electricity — about <Fig id="a">43 TWh</Fig> a year —
+              and ship most of it out. What matters is what we keep for industry here: mining and
+              resources first, so Labrador and the island can build on firm power that stays.
+              August&apos;s paper and the September House vote (<Fig id="b">21–18</Fig>) are a{" "}
               <Term k="framework">framework</Term> and a political yes. The contracts that lock the
               power are still ahead.
             </p>

@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.3 — 2026-09-22 — Copy pass 1: meta + Dual plain
+
+Home share copy and Dual lede. Hogan: “What matters is what we keep” — never “The fight is.” OG card art slots already locked (kicker / Keep the power here. / Watch the gates.). Compute stays quiet steel.
+
 ## 0.5.2 — 2026-09-22 — Put og:image back in the HTML
 
 Partial `openGraph` objects were wiping Next’s file-based `opengraph-image.tsx` injection. Root metadata and `deskMetadata()` now set `openGraph.images` / `twitter.images` to `/og-image.png` (resolved via `metadataBase` to www). Art unchanged.
