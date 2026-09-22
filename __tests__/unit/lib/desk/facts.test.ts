@@ -64,42 +64,42 @@ describe("horizon desk facts", () => {
     expect(reported?.status).toBe("reported");
   });
 
-  it("keeps 1.8 start and 7.4 50-year average labeled, not merged, with an unpublished Annex D bridge", () => {
-    expect(CONTESTED_EXPORT.annexPath.value).toBe("1.8");
-    expect(CONTESTED_EXPORT.annexPath.label).toMatch(/Starting reported price/i);
-    expect(CONTESTED_EXPORT.annexPath.unit).toMatch(/2027/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/1\.8¢\/kWh beginning in 2027/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/\$0\.531B/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/29\.207 TWh/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(/11\.5¢\/kWh by 2041/);
-    expect(CONTESTED_EXPORT.annexPath.note.technical).toMatch(
-      /Do not treat 11\.5 as the raw 2041 Annex D division/
-    );
-    expect(CONTESTED_EXPORT.annexPath.sources).toEqual(
-      expect.arrayContaining(["dciaHq", "cpChurchillGraph", "financialPostPath"])
+  it("keeps 1.8 start and 7.4 50-year average labeled, not merged, with Annex D ¢ UNKNOWN", () => {
+    expect(CONTESTED_EXPORT.start.value).toBe("1.8");
+    expect(CONTESTED_EXPORT.start.label).toMatch(/Starting reported price/i);
+    expect(CONTESTED_EXPORT.start.unit).toMatch(/2027/);
+    expect(CONTESTED_EXPORT.start.note.technical).toMatch(/1\.8¢\/kWh beginning in 2027/);
+    expect(CONTESTED_EXPORT.start.note.technical).toMatch(/starting reported path/);
+    expect(CONTESTED_EXPORT.start.note.technical).toMatch(/not the 7\.4¢ life average/);
+    expect(CONTESTED_EXPORT.start.note.technical).not.toMatch(/payment÷TWh|\$0\.531B \/ 29\.207/);
+    expect(CONTESTED_EXPORT.start.sources).toEqual(
+      expect.arrayContaining(["cpChurchillGraph"])
     );
 
-    expect(CONTESTED_EXPORT.campaign.value).toBe("7.4");
-    expect(CONTESTED_EXPORT.campaign.label).toMatch(/Average effective price/i);
-    expect(CONTESTED_EXPORT.campaign.unit).toMatch(/50 years/);
-    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/7\.4 cents per kilowatt hour over the next 50 years/i);
-    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/2027 dollars/);
-    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/premium rate/);
-    expect(CONTESTED_EXPORT.campaign.note.technical).toMatch(/not a locked industrial PPA/);
-    expect(CONTESTED_EXPORT.campaign.sources).toEqual(
-      expect.arrayContaining(["abetterDealFaq", "cpChurchillGraph"])
+    expect(CONTESTED_EXPORT.average.value).toBe("7.4");
+    expect(CONTESTED_EXPORT.average.label).toMatch(/Average effective price/i);
+    expect(CONTESTED_EXPORT.average.unit).toMatch(/50 years/);
+    expect(CONTESTED_EXPORT.average.note.technical).toMatch(
+      /7\.4 cents per kilowatt hour over the next 50 years/i
     );
+    expect(CONTESTED_EXPORT.average.note.technical).toMatch(/5\.9/);
+    expect(CONTESTED_EXPORT.average.note.technical).toMatch(/prefers CP24/);
+    expect(CONTESTED_EXPORT.average.note.technical).not.toMatch(/premium rate|2027 dollars/);
+    expect(CONTESTED_EXPORT.average.sources).toEqual(["cpChurchillGraph"]);
 
     expect(CONTESTED_EXPORT.title).toMatch(/1\.8/);
     expect(CONTESTED_EXPORT.title).toMatch(/7\.4/);
     expect(CONTESTED_EXPORT.intro.plain).toMatch(/different measurements/i);
-    expect(CONTESTED_EXPORT.intro.plain).toMatch(/mash into one number/i);
-    expect(CONTESTED_EXPORT.campaign.value).not.toBe(CONTESTED_EXPORT.annexPath.value);
+    expect(CONTESTED_EXPORT.intro.technical).toMatch(/Do not reconcile them into one number/);
+    expect(CONTESTED_EXPORT.average.value).not.toBe(CONTESTED_EXPORT.start.value);
 
     expect(CONTESTED_EXPORT.bridge.value).toBe("UNKNOWN");
     expect(CONTESTED_EXPORT.bridge.status).toBe("unknown");
     expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/UNKNOWN/);
-    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a bridge formula/i);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/target payments/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/Annex F/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a payment÷TWh industrial ¢/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/Heritage 0\.2¢/);
     expect(CONTESTED_EXPORT.bridge.note.technical).not.toMatch(
       /therefore 7\.4 =|bridge formula is|equals 7\.4 because/i
     );
@@ -107,8 +107,8 @@ describe("horizon desk facts", () => {
 
   it("does not present contested export ¢ as a locked industrial PPA for mines or compute", () => {
     const blob = [
-      CONTESTED_EXPORT.campaign.note.technical,
-      CONTESTED_EXPORT.annexPath.note.technical,
+      CONTESTED_EXPORT.average.note.technical,
+      CONTESTED_EXPORT.start.note.technical,
       CONTESTED_EXPORT.bridge.note.technical,
       CONTESTED_EXPORT.intro.technical,
     ].join("\n");

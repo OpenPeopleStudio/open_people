@@ -55,7 +55,7 @@ export default function CostsPage() {
             />
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {[CONTESTED_EXPORT.annexPath, CONTESTED_EXPORT.campaign].map((path) => (
+              {[CONTESTED_EXPORT.start, CONTESTED_EXPORT.average].map((path) => (
                 <section
                   key={path.id}
                   id={path.id}

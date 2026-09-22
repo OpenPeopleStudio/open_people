@@ -25,8 +25,8 @@ export const COST_INTRO = {
 
 /**
  * Two public ¢ stories about HQ’s Churchill Falls offtake. Labeled, not merged.
- * Plain pair: 1.8¢ start (2027) vs 7.4¢ average (~50 years). Different measurements.
- * Do not invent a formula that turns 7.4 into Annex D $B.
+ * Source lock: CP24 17 Aug 2026 (corrected) — 1.8¢ start in 2027 vs 7.4¢ average
+ * over ~50 years (2027–2077). Annex D is target $ + CPI, not a voter industrial ¢.
  */
 export const CONTESTED_EXPORT = {
   lastVerified: DESK_VERIFIED,
@@ -36,10 +36,10 @@ export const CONTESTED_EXPORT = {
     plain:
       "Those are two different measurements of Hydro-Québec’s Churchill Falls export price — a starting price and a life average — not a contradiction to mash into one number, and not a posted rate for Labrador mines or compute.",
     technical:
-      "Canadian Press (17 Aug 2026, corrected): a graph provided to media showed HQ paying 1.8¢/kWh beginning in 2027, averaging 7.4¢/kWh over the next 50 years (term to 2077). Those are different measurements, not one industrial ¢. Annex D is target $B + CPI, not a voter industrial tariff. Methodology turning Annex D into a locked ¢/kWh: UNKNOWN. Open People is not a DCIA party.",
+      "Canadian Press via CP24 (17 Aug 2026, corrected): a graph provided to media showed HQ paying 1.8¢/kWh beginning in 2027, rising through 2077, averaging 7.4¢/kWh over the next 50 years. Prior MOU average cited ~5.9¢. 1.8 is the starting reported path; 7.4 is the life average. Do not reconcile them into one number. Annex D is target $ payments + CPI (Annex F), not a ¢ column. Converting Annex D alone into a voter ¢/kWh industrial tariff without published methodology: UNKNOWN. Heritage 0.2¢/kWh is the 1969-lineage comparator. Open People is not a DCIA party.",
   } satisfies DeskVoice,
-  annexPath: {
-    id: "annex-d-18",
+  start: {
+    id: "start-18",
     label: "Starting reported price (2027)",
     value: "1.8",
     unit: "¢/kWh in 2027",
@@ -47,14 +47,14 @@ export const CONTESTED_EXPORT = {
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "The briefing graph starts at about 1.8 cents a kilowatt-hour in 2027. The cooperation paper itself pays a table of target dollars, not that cent. Divide the first-year dollars by terawatt-hours and you land near 1.8 cents. That is still not a locked industrial tariff.",
+        "The press graph starts at about 1.8 cents a kilowatt-hour in 2027. That is the starting price — not the fifty-year average, and not a mine rate.",
       technical:
-        "Canadian Press (17 Aug 2026, corrected): graph to media — Hydro-Québec pays 1.8¢/kWh beginning in 2027. Financial Post: that path rises to 11.5¢/kWh by 2041 (~14%/year). Do not treat 11.5 as the raw 2041 Annex D division. DCIA Annex D (17 Aug 2026): 2027 “Payments by HQ for existing CF volumes” $0.531B on 29.207 TWh (4,765 MW). Payment÷TWh on those cells is often summarized as ~1.8 ¢/kWh ($0.531B / 29.207 TWh ≈ 1.82 ¢/kWh). Annex D is yearly target $B as of 31 Dec, not a ¢ column; Annex F CPI can later adjust the $ path. Not Rate 1.1L, not LAB-IND-1, not a locked industrial PPA ¢ for Labrador mines or compute. Binding PPA ¢/kWh: UNKNOWN until Definitive Agreements are public.",
+        "Canadian Press via CP24 (17 Aug 2026, corrected): graph provided to media — Hydro-Québec pays 1.8¢/kWh beginning in 2027. That 1.8¢ is the starting reported path, not the 7.4¢ life average. Financial Post separately described a rise to 11.5¢/kWh by 2041; that is a reported path, not the 50-year average, and not the raw 2041 Annex D division. Annex D is not this ¢: it posts target $ payments (CPI-adjustable). Not Rate 1.1L, not LAB-IND-1, not a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
-    sources: ["cpChurchillGraph", "financialPostPath", "dciaHq", "dciaNl"] as DeskSourceId[],
+    sources: ["cpChurchillGraph", "financialPostPath"] as DeskSourceId[],
   },
-  campaign: {
-    id: "campaign-74",
+  average: {
+    id: "average-74",
     label: "Average effective price (~50 years)",
     value: "7.4",
     unit: "¢/kWh over ~50 years",
@@ -62,26 +62,26 @@ export const CONTESTED_EXPORT = {
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "The same public graph averages about 7.4 cents a kilowatt-hour from 2027 through 2077. The campaign site calls 7.4 an estimate in 2027 dollars that assumes premium-rate sales. The official provincial news release does not print 7.4. It is not the starting price, and it is not a mine rate.",
+        "The same graph averages about 7.4 cents a kilowatt-hour from 2027 through 2077. The old memorandum’s public average was about 5.9 cents. 7.4 is not the starting price, and it is not a mine rate.",
       technical:
-        "Canadian Press (17 Aug 2026, corrected): “averaging out to an effective price of 7.4 cents per kilowatt hour over the next 50 years” (price increases until 2077). Prior MOU average cited ~5.9¢. A Better Deal NL FAQ (campaign site; last checked 22 Sep 2026): “Our estimate of 7.4 cents/kwh for Churchill Falls power is accurate. It is based on 2027 dollars and assumes sales at the premium rate.” Government of NL news release (17 Aug 2026) does not quote 7.4¢. Hydro-Québec same-day release quotes a “competitive rate of 6¢/kWh” — a different public figure, labeled, not merged. 7.4 is a 50-year average / campaign estimate of Churchill Falls electricity sold to HQ. It is not the 2027 starting 1.8¢, not Rate 1.1L, not LAB-IND-1, and not a locked industrial PPA ¢ for Labrador mines or compute.",
+        "Canadian Press via CP24 (17 Aug 2026, corrected): “averaging out to an effective price of 7.4 cents per kilowatt hour over the next 50 years” (price increases until 2077). The previous 2024 MOU draft’s average effective price was cited at about 5.9¢/kWh. 7.4 is that 50-year average effective price — not the 1.8¢ 2027 start. Financial Post also used “higher effective ~7.4¢” wording; this desk prefers CP24’s start-plus-average framing. Not Rate 1.1L, not LAB-IND-1, and not a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
-    sources: ["cpChurchillGraph", "abetterDealFaq", "hqDciaSix", "govNlDcia"] as DeskSourceId[],
+    sources: ["cpChurchillGraph"] as DeskSourceId[],
   },
   bridge: {
     id: "cents-bridge",
-    label: "Turning Annex D dollars into a voter industrial ¢",
+    label: "Annex D $ → voter industrial ¢",
     value: "UNKNOWN",
     unit: "",
     status: "unknown" as const,
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "1.8 cents at the start and 7.4 cents as a fifty-year average are different measurements, not a puzzle we get to force into one rate. Nobody has published how to turn the payment table into a locked industrial cent. We do not invent it.",
+        "The cooperation paper pays a table of target dollars, then an inflation band. Nobody has published how to turn that table into a locked industrial cent a voter can use for mines or compute. We do not invent it. 1.8 at the start and 7.4 as a fifty-year average stay two measurements.",
       technical:
-        "UNKNOWN: a published methodology that turns Annex D target payments into a locked industrial ¢/kWh tariff, or that reconciles the 7.4 ¢/kWh 50-year average with Annex D $B. Open People does not invent a bridge formula. Material Terms describe a Premium PPA Price at 1.5× the New CF PPA price; that clause is not used here to manufacture 7.4 from 1.8. Hydro-Québec’s 6¢/kWh public figure is likewise not a published bridge. None of 7.4, 1.8, 11.5, or 6 is a locked industrial PPA ¢ for Labrador mines or compute. Heritage 0.2¢/kWh remains the 1969-lineage comparator (labeled heritage, not current).",
+        "UNKNOWN: a published methodology that converts Annex D target payments into a locked ¢/kWh industrial tariff. DCIA Annex D (17 Aug 2026) posts yearly “Payments by HQ for existing CF volumes” in $B (2027: $0.531B) beside energy TWh (2027: 29.207 TWh) and MW; amounts as of 31 Dec of the year. Annex F then CPI-adjusts those target payments (Statistics Canada All-items, Canada; 2027 base; deadband 2.06% ± 0.40%). Annex D is not a ¢ column. Open People does not invent a payment÷TWh industrial ¢, and does not reconcile 7.4 with Annex D $B. Heritage 0.2¢/kWh remains the 1969-lineage comparator (labeled heritage, not current). None of 7.4, 1.8, or 11.5 is a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
-    sources: ["dciaHq", "cpChurchillGraph", "abetterDealFaq", "hqDciaSix"] as DeskSourceId[],
+    sources: ["dciaHq", "dciaNl", "cpChurchillGraph"] as DeskSourceId[],
   },
 };
 
@@ -139,7 +139,7 @@ export const COST_MARKERS: CostMarker[] = [
       plain:
         "The new paper pays Hydro-Québec’s Churchill Falls offtake as a schedule of target dollars, then nudges it with a Canadian inflation band. That is not a posted industrial cent rate.",
       technical:
-        "Material Terms: HQ’s New CF PPA is an availability contract with fixed target payments (Annex D), monthly invoicing, term 1 Jan 2027–31 Dec 2077, CPI adjustment (Annex F) from a 2027 base with a deadband centred on 2.06% ± 0.40% (Statistics Canada All-items, Canada). NLH’s New CF PPA is take-or-pay, same blended price and CPI mechanism, first-out-of-plant. Annex D’s 2027 cell is $0.531B on 29.207 TWh — often summarized as ~1.8 ¢/kWh; that arithmetic is labeled on the contested-communications card, not converted into a locked ¢ tariff here. These Definitive Agreements are not signed. Do not convert Annex D into a locked ¢/kWh industrial tariff.",
+        "Material Terms: HQ’s New CF PPA is an availability contract with fixed target payments (Annex D), monthly invoicing, term 1 Jan 2027–31 Dec 2077, CPI adjustment (Annex F) from a 2027 base with a deadband centred on 2.06% ± 0.40% (Statistics Canada All-items, Canada). NLH’s New CF PPA is take-or-pay, same blended price and CPI mechanism, first-out-of-plant. Annex D’s 2027 cell is $0.531B on 29.207 TWh — a $ table, not a ¢ column. Converting Annex D alone into a voter ¢/kWh industrial tariff: UNKNOWN (see contested communications). These Definitive Agreements are not signed.",
     },
     sources: ["dciaHq", "dciaNl"],
   },
@@ -154,7 +154,7 @@ export const COST_MARKERS: CostMarker[] = [
       plain:
         "NL Hydro has described a rising export price toward 2041. Treat that as a public description of direction — not a signed industrial rate, and not a data-centre tariff.",
       technical:
-        "Public campaign materials and NL Hydro reporting after 17 Aug 2026 have described Hydro-Québec paying 1.8¢/kWh beginning in 2027, escalating about 14% a year to 11.5¢/kWh by 2041. That is a reported export-path description. It is not in the cents columns of Annex D (which is target $B). It is not the campaign’s 7.4 ¢/kWh estimate. It is not LAB-IND-1. Binding PPA ¢/kWh: UNKNOWN until Definitive Agreements are public. See contested communications on this page.",
+        "Public reporting after 17 Aug 2026 has described Hydro-Québec paying 1.8¢/kWh beginning in 2027, escalating about 14% a year to 11.5¢/kWh by 2041. That is a reported export-path description. It is not the CP24 7.4¢ 50-year average. It is not in the cents columns of Annex D (which is target $B + CPI). It is not LAB-IND-1. Binding PPA ¢/kWh: UNKNOWN until Definitive Agreements are public. See contested communications on this page.",
     },
     sources: ["govNlDcia", "dciaHq", "cpChurchillGraph", "financialPostPath"],
   },
