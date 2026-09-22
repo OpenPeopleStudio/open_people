@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
-import { Dual, ScaleAnchor } from "@/components/marketing/voice";
+import { Dual } from "@/components/marketing/voice";
+import { LeadTakeaway, Receipts } from "@/components/marketing/desk";
 import { HOME_GATES, SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata: Metadata = {
@@ -20,6 +21,8 @@ const OPEN = [
   {
     title: "Recall",
     body: {
+      plain:
+        "The paper describes a three-year notice to take power back. House testimony is not a signed contract.",
       technical:
         "Material Terms describe three-year notice for several HQ sale and recapture paths. House testimony is not a substitute for signed PPAs. Still a framework.",
     },
@@ -27,6 +30,8 @@ const OPEN = [
   {
     title: "Innu Nation",
     body: {
+      plain:
+        "Innu Nation asked MHAs not to vote. Partnership, royalty, and Gull Island tariff path are still open.",
       technical:
         "Partnership, royalty, and Gull Island tariff path unresolved. Innu Nation urged MHAs not to vote. The Premier said he will meet.",
     },
@@ -55,38 +60,36 @@ const RULES = [
 export default function HomePage() {
   return (
     <SiteShell>
-      <main>
-        <header className="border-b border-[var(--border-subtle)] px-4 pb-14 pt-28 sm:px-6 sm:pb-20 sm:pt-36">
+      <main className="desk-page">
+        <header className="desk-hero-fade border-b border-[var(--border-subtle)] px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16">
           <div className="mx-auto max-w-[780px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              Horizon desk · Churchill River / Labrador power
-            </p>
-            <h1 className="mt-6 font-display text-[2rem] font-normal leading-[1.08] tracking-[-0.022em] sm:text-5xl md:text-[3.4rem]">
+            <p className="desk-kicker">Horizon desk · Churchill River / Labrador power</p>
+            <h1 className="desk-h1 mt-7">
               Keep the power here.{" "}
               <em className="not-italic text-[var(--plasma)]">Watch the gates.</em>
             </h1>
             <Dual
               plain={
-                <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+                <p className="mt-8 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
                   {SCALE_ANCHORS.exportScale.plain} This site is an information desk: what is signed,
                   what is still open, which industries are already on the grid, and how cost stories
                   get mixed up.
                 </p>
               }
               technical={
-                <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+                <p className="mt-8 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
                   {SCALE_ANCHORS.exportScale.technical} Horizon desk: DCIA framework (17 Aug 2026),
                   House 21–18 (17 Sep), binding window ~31 Dec 2026 / term to ~31 Mar 2027.
                 </p>
               }
             />
-            <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)]">
+            <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)]">
               Firm in-province power should serve Labrador and island industry —{" "}
               <strong className="font-semibold text-[var(--text-primary)]">mining and resources first</strong>
               . Open People is a constituent and catalyst voice from St. John&apos;s. We are not a
               DCIA party, an offtake seat, or a demand seat.
             </p>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link href="/engage" className="btn-primary justify-center px-6 py-3 text-sm">
                 Get involved — keep firm power here
               </Link>
@@ -94,7 +97,7 @@ export default function HomePage() {
                 Living tracker
               </Link>
             </div>
-            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+            <p className="desk-fact mt-6 text-[var(--text-muted)]">
               <Link href="/letter" className="no-underline hover:text-[var(--plasma)]">
                 Letter to the Premier · 15 Sep 2026
               </Link>
@@ -111,112 +114,94 @@ export default function HomePage() {
             {HOME_GATES.map((s, i) => (
               <div
                 key={s.v}
-                className={`bg-[var(--surface-1)] p-5 sm:p-6 ${
+                className={`bg-[var(--surface-1)] p-6 sm:p-8 ${
                   i % 2 === 1 ? "border-l border-[var(--border-subtle)]" : ""
                 } ${i >= 2 ? "border-t border-[var(--border-subtle)] md:border-t-0" : ""} ${
                   i > 0 ? "md:border-l md:border-[var(--border-subtle)]" : ""
                 }`}
               >
-                <div className="font-display text-2xl text-[var(--plasma)] sm:text-3xl">{s.v}</div>
-                <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.11em] text-[var(--text-muted)]">
+                <p className="text-[14px] leading-snug text-[var(--text-secondary)]">
                   <Dual plain={s.plain} technical={s.technical} />
-                </div>
+                </p>
+                <div className="desk-rate mt-3 text-[var(--plasma)]">{s.v}</div>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
+        <section className="border-b border-[var(--border-subtle)] px-4 py-20 sm:px-6 sm:py-28">
           <div className="mx-auto max-w-[780px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              01 — The desk
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
-              Four doors. None of them is a campus.
-            </h2>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            <p className="desk-kicker">01 — The desk</p>
+            <h2 className="desk-h2 mt-4">Four doors. None of them is a campus.</h2>
+            <div className="mt-12 grid gap-px bg-[var(--border-subtle)] sm:grid-cols-2">
               {DESK.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 no-underline hover:border-[var(--plasma)]"
+                  className="desk-surface bg-[var(--surface-1)] p-6 no-underline hover:bg-[var(--surface-2)]"
                 >
-                  <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
+                  <div className="desk-fact uppercase tracking-[0.12em] text-[var(--plasma)]">
                     {item.label}
                   </div>
-                  <p className="mt-2 text-[15px] text-[var(--text-secondary)]">{item.k}</p>
+                  <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+                    {item.k}
+                  </p>
                 </Link>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
+        <section className="border-b border-[var(--border-subtle)] px-4 py-20 sm:px-6 sm:py-28">
           <div className="mx-auto max-w-[780px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              02 — Still open
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
-              Endorsement is not a contract.
-            </h2>
-            <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
+            <p className="desk-kicker">02 — Still open</p>
+            <h2 className="desk-h2 mt-4">Endorsement is not a contract.</h2>
+            <p className="mt-6 max-w-[60ch] leading-relaxed text-[var(--text-secondary)]">
               Next public political gate: Québec, 5 October 2026. Binding targets around year-end.
               This is the stretch where public voice can still insist on transparency and
               in-province use — without pretending the deal is finished, and without a sermon
               against it.
             </p>
-            <div className="mt-10 grid gap-4">
+            <div className="mt-12 grid gap-3">
               {OPEN.map((item, i) => (
-                <div
-                  key={item.title}
-                  className="rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 sm:p-6"
-                >
-                  <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
+                <div key={item.title} className="desk-surface p-6 sm:p-7">
+                  <div className="desk-fact uppercase tracking-[0.12em] text-[var(--plasma)]">
                     {String(i + 1).padStart(2, "0")} · {item.title}
                   </div>
-                  {"plain" in item.body ? (
-                    <ScaleAnchor
-                      className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                      technical={item.body.technical}
-                      plain={item.body.plain}
-                      source={item.body.source}
-                    />
-                  ) : (
-                    <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">
-                      {item.body.technical}
-                    </p>
-                  )}
+                  <LeadTakeaway className="mt-4">{item.body.plain}</LeadTakeaway>
+                  <Receipts summary="Receipts">
+                    <p>{item.body.technical}</p>
+                    {"source" in item.body && item.body.source ? (
+                      <p className="mt-3 desk-fact text-[var(--text-muted)]">{item.body.source}</p>
+                    ) : null}
+                  </Receipts>
                 </div>
               ))}
             </div>
             <Link
               href="/tracker"
-              className="mt-8 inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
+              className="mt-10 inline-flex items-center gap-2 desk-fact uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
             >
               Full living board →
             </Link>
           </div>
         </section>
 
-        <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
+        <section className="border-b border-[var(--border-subtle)] px-4 py-20 sm:px-6 sm:py-28">
           <div className="mx-auto max-w-[780px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              03 — How we work
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
-              Rules we publish so you can hold us to them.
-            </h2>
-            <ul className="mt-8 space-y-3">
+            <p className="desk-kicker">03 — How we work</p>
+            <h2 className="desk-h2 mt-4">Rules we publish so you can hold us to them.</h2>
+            <ul className="mt-10 space-y-2">
               {RULES.map((r) => (
                 <li
                   key={r}
-                  className="flex gap-3 border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] px-4 py-3 text-[15px] text-[var(--text-secondary)]"
+                  className="flex gap-3 border-l border-[var(--plasma)] bg-[var(--plasma-soft)] px-5 py-4 text-[15px] text-[var(--text-secondary)]"
                 >
                   {r}
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm text-[var(--text-muted)]">
+            <p className="mt-8 text-sm text-[var(--text-muted)]">
               Full operating doctrine:{" "}
               <Link href="/approach" className="text-[var(--plasma)] no-underline hover:underline">
                 Approach
@@ -230,13 +215,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <section className="px-4 py-20 sm:px-6 sm:py-28">
           <div className="mx-auto max-w-[780px]">
-            <p className="font-display text-2xl leading-snug sm:text-3xl">
+            <p className="desk-h2">
               If the next generation&apos;s firm power is going to be priced while this paper is
               still paper, we&apos;d rather people were in it — not writing about it afterward.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link href="/engage" className="btn-primary justify-center px-6 py-3 text-sm">
                 Get involved — keep firm power here
               </Link>
@@ -247,7 +232,7 @@ export default function HomePage() {
                 tom@openpeople.ai
               </a>
             </div>
-            <div className="mt-8 font-mono text-sm leading-relaxed text-[var(--text-secondary)]">
+            <div className="desk-fact mt-10 leading-relaxed text-[var(--text-secondary)]">
               <div>Tom Lane · Founder, Open People</div>
               <div className="mt-1 text-[var(--text-muted)]">
                 St. John&apos;s, Newfoundland and Labrador

@@ -176,4 +176,12 @@ describe("horizon desk facts", () => {
     expect(SCALE_ANCHORS.miningLoad.technical).toMatch(/312 MW/);
     expect(SCALE_ANCHORS.computeOptional.plain).toMatch(/not the front door/i);
   });
+
+  it("gives tracker rows a plain-English title that is not a Transparency prefix", () => {
+    for (const item of TRACKER_ITEMS) {
+      expect(item.title.trim().length).toBeGreaterThan(8);
+      expect(item.title).not.toMatch(/^Transparency —/);
+      expect(item.body.plain.trim().length).toBeGreaterThan(40);
+    }
+  });
 });

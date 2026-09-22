@@ -44,6 +44,17 @@
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Precision desk chrome (visual slice 1) */
+  --desk-nav-offset: 6.25rem;
+  --desk-hairline: var(--border-subtle);
+  --desk-radius: 2px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --desk-nav-offset: 3.5rem;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -391,7 +402,7 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.6s ease-out forwards;
+  animation: fade-in 0.2s ease-out forwards;
 }
 
 .animate-twinkle {
@@ -538,6 +549,239 @@ a, button, [role="button"], input, select, textarea {
   display: none;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   Precision desk — type, hairline surfaces, constrained motion
+   Modern information desk. Not sci-fi: no scanlines, grids, particles, loops.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.desk-h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.35rem, 5.2vw, 3.85rem);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}
+
+.desk-h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.55rem, 2.6vw, 2.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+}
+
+.desk-h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+}
+
+.desk-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--plasma);
+}
+
+.desk-kicker-quiet {
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+.desk-fact {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.desk-rate {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.desk-rate-unit {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.desk-surface {
+  background: var(--surface-1);
+  border: 1px solid var(--desk-hairline);
+  border-radius: var(--desk-radius);
+}
+
+.desk-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: var(--desk-radius);
+  padding: 0.18rem 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+}
+
+.desk-verified-strip {
+  position: sticky;
+  top: var(--desk-nav-offset);
+  z-index: 30;
+  border-bottom: 1px solid var(--desk-hairline);
+  background: var(--void);
+}
+
+.desk-page {
+  padding-top: var(--desk-nav-offset);
+}
+
+.desk-hero-fade {
+  animation: desk-fade 180ms ease-out both;
+}
+
+@keyframes desk-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.desk-board {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 960px) {
+  .desk-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--desk-hairline);
+    border: 1px solid var(--desk-hairline);
+    border-radius: var(--desk-radius);
+  }
+
+  .desk-board-col {
+    background: var(--void);
+    min-width: 0;
+    padding: 1.25rem 1rem 1.5rem;
+  }
+}
+
+.desk-board-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--desk-hairline);
+}
+
+.desk-board-stack {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.desk-contested-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--desk-hairline);
+  border: 1px solid var(--desk-hairline);
+  border-radius: var(--desk-radius);
+}
+
+@media (min-width: 720px) {
+  .desk-contested-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.desk-contested-grid > * {
+  background: var(--surface-1);
+}
+
+.desk-takeaway {
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  max-width: 62ch;
+}
+
+.desk-measure {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+.desk-receipts {
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--desk-hairline);
+  padding-top: 0.7rem;
+}
+
+.desk-receipts > summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.desk-receipts > summary::-webkit-details-marker {
+  display: none;
+}
+
+.desk-receipts > summary::after {
+  content: " +";
+  color: var(--plasma);
+}
+
+.desk-receipts[open] > summary::after {
+  content: " −";
+}
+
+.desk-receipts-body {
+  margin-top: 0.7rem;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* Quarantined compute: quieter type, narrower column, no board chrome. */
+.desk-quiet .desk-h1 {
+  font-size: clamp(1.7rem, 3.4vw, 2.55rem);
+  letter-spacing: -0.02em;
+}
+
+.desk-quiet .desk-kicker {
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desk-hero-fade,
+  .animate-fade-in,
+  .animate-slide-up,
+  .animate-slide-in-left,
+  .animate-slide-in-right {
+    animation: none;
+  }
+}
+
 @media print {
   [data-voice][hidden] {
     display: none !important;
@@ -545,5 +789,9 @@ a, button, [role="button"], input, select, textarea {
 
   .voice-print-note {
     display: block !important;
+  }
+
+  .desk-verified-strip {
+    position: static;
   }
 }

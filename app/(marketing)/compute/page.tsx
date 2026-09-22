@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 export default function ComputePage() {
   return (
     <SiteShell>
-      <main className="px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36">
-        <article className="mx-auto max-w-[780px]">
-          <DeskKicker>Quarantine · compute as a named use</DeskKicker>
-          <h1 className="mt-4 font-display text-[2rem] font-normal leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+      <main className="desk-page px-4 pb-20 sm:px-6 sm:pb-28">
+        <article className="desk-quiet mx-auto max-w-[680px] pt-10 sm:pt-14">
+          <DeskKicker quiet>Quarantine · compute as a named use</DeskKicker>
+          <h1 className="desk-h1 mt-5">
             A compute plan, not a campus landing.
           </h1>
           <ScaleAnchor

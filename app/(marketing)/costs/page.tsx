@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
-import { Dual, ScaleAnchor } from "@/components/marketing/voice";
-import { DeskKicker, DeskVerified, SourceLinks, StatusPill } from "@/components/marketing/desk";
+import { Dual } from "@/components/marketing/voice";
 import {
-  CONTESTED_EXPORT,
+  ContestedRateStrip,
+  DeskKicker,
+  DeskVerified,
+  LeadTakeaway,
+  Receipts,
+  StatusPill,
+} from "@/components/marketing/desk";
+import {
   COST_ERA_NOTE,
   COST_INTRO,
   COST_MARKERS,
@@ -23,104 +29,46 @@ export const metadata: Metadata = {
 export default function CostsPage() {
   return (
     <SiteShell>
-      <main className="px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36">
-        <article className="mx-auto max-w-[780px]">
+      <main className="desk-page pb-24 sm:pb-32">
+        <DeskVerified date={DESK_VERIFIED} sticky />
+        <article className="mx-auto max-w-[780px] px-4 pt-10 sm:px-6 sm:pt-14">
           <DeskKicker>Horizon desk · Costs</DeskKicker>
-          <h1 className="mt-4 font-display text-[2rem] font-normal leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+          <h1 className="desk-h1 mt-5">
             Heritage lore, deal structure, then published markers.
           </h1>
-          <ScaleAnchor
-            className="mt-6 text-lg leading-relaxed text-[var(--text-secondary)]"
-            technical={COST_INTRO.body.technical}
-            plain={COST_INTRO.body.plain}
-            source={`Last verified ${COST_INTRO.lastVerified}`}
-          />
-          <DeskVerified date={DESK_VERIFIED} />
-
-          <section
-            id="contested"
-            className="mt-12 rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 sm:p-6"
+          <LeadTakeaway className="mt-8 text-lg leading-relaxed">
+            {COST_INTRO.body.plain}
+          </LeadTakeaway>
+          <Receipts
+            summary="Receipts — how the price stories are kept apart"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--warning)]">
-              {CONTESTED_EXPORT.kicker}
+            <p>{COST_INTRO.body.technical}</p>
+            <p className="mt-3 desk-fact text-[var(--text-muted)]">
+              Last verified {COST_INTRO.lastVerified}
             </p>
-            <h2 className="mt-3 font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
-              {CONTESTED_EXPORT.title}
-            </h2>
-            <ScaleAnchor
-              className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-              technical={CONTESTED_EXPORT.intro.technical}
-              plain={CONTESTED_EXPORT.intro.plain}
-              source={`Last verified ${CONTESTED_EXPORT.lastVerified}`}
-            />
+          </Receipts>
+        </article>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {[CONTESTED_EXPORT.start, CONTESTED_EXPORT.average].map((path) => (
-                <section
-                  key={path.id}
-                  id={path.id}
-                  className="rounded border border-[var(--border-subtle)] p-4 sm:p-5"
-                >
-                  <h3 className="text-lg font-semibold leading-snug tracking-[-0.01em]">
-                    {path.label}
-                  </h3>
-                  <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
-                    <StatusPill status={path.status} />
-                    <span className="font-mono text-[22px] leading-none text-[var(--plasma)] sm:text-[26px]">
-                      {path.value}
-                      {path.unit ? (
-                        <span className="ml-1 text-[12px] text-[var(--text-muted)]">{path.unit}</span>
-                      ) : null}
-                    </span>
-                  </div>
-                  <ScaleAnchor
-                    className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                    technical={path.note.technical}
-                    plain={path.note.plain}
-                    source={`Last verified ${path.lastVerified}`}
-                  />
-                  <SourceLinks sources={path.sources.map((id) => DESK_SOURCES[id])} />
-                </section>
-              ))}
-            </div>
+        <div className="mx-auto mt-14 max-w-[1080px] px-4 sm:px-6">
+          <ContestedRateStrip />
+        </div>
 
-            <section
-              id={CONTESTED_EXPORT.bridge.id}
-              className="mt-4 rounded border border-[var(--border-subtle)] p-4 sm:p-5"
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <StatusPill status={CONTESTED_EXPORT.bridge.status} />
-                <span className="font-mono text-[13px] text-[var(--warning)]">
-                  {CONTESTED_EXPORT.bridge.value}
-                </span>
-              </div>
-              <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">
-                {CONTESTED_EXPORT.bridge.label}
-              </h3>
-              <ScaleAnchor
-                className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                technical={CONTESTED_EXPORT.bridge.note.technical}
-                plain={CONTESTED_EXPORT.bridge.note.plain}
-                source={`Last verified ${CONTESTED_EXPORT.bridge.lastVerified}`}
-              />
-              <SourceLinks sources={CONTESTED_EXPORT.bridge.sources.map((id) => DESK_SOURCES[id])} />
-            </section>
-          </section>
-
-          <section className="mt-12">
-            <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+        <article className="mx-auto max-w-[780px] px-4 sm:px-6">
+          <section className="mt-16">
+            <h2 className="desk-h2">
               01 — Heritage
             </h2>
-            <ScaleAnchor
-              className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-              technical={SCALE_ANCHORS.heritagePrice.technical}
-              plain={SCALE_ANCHORS.heritagePrice.plain}
-              source={SCALE_ANCHORS.heritagePrice.source}
-            />
+            <LeadTakeaway className="mt-4">{SCALE_ANCHORS.heritagePrice.plain}</LeadTakeaway>
+            <Receipts summary="Receipts — 1969 renewal, two mills">
+              <p>{SCALE_ANCHORS.heritagePrice.technical}</p>
+              <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                {SCALE_ANCHORS.heritagePrice.source}
+              </p>
+            </Receipts>
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+          <section className="mt-16">
+            <h2 className="desk-h2">
               02 — Structure (not a locked ¢ schedule)
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]">
@@ -131,8 +79,8 @@ export default function CostsPage() {
             </p>
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+          <section className="mt-16">
+            <h2 className="desk-h2">
               03 — Published Labrador rates
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]">
@@ -156,10 +104,10 @@ export default function CostsPage() {
             </p>
           </section>
 
-          <div className="mt-8 overflow-x-auto rounded border border-[var(--border-subtle)]">
+          <div className="mt-10 overflow-x-auto border border-[var(--border-subtle)]">
             <table className="w-full min-w-[32rem] text-left text-[14px]">
               <thead>
-                <tr className="border-b border-[var(--border-subtle)] bg-[var(--surface-1)] font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                <tr className="border-b border-[var(--border-subtle)] bg-[var(--surface-1)] desk-fact uppercase tracking-[0.12em] text-[var(--text-muted)]">
                   <th className="px-4 py-3 font-medium">Marker</th>
                   <th className="px-4 py-3 font-medium">Figure</th>
                   <th className="px-4 py-3 font-medium">Status</th>
@@ -169,7 +117,7 @@ export default function CostsPage() {
                 {COST_MARKERS.map((row) => (
                   <tr key={row.id} className="border-b border-[var(--border-subtle)] last:border-b-0">
                     <td className="px-4 py-3 text-[var(--text-primary)]">{row.label}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-[var(--plasma)]">
+                    <td className="desk-fact px-4 py-3 text-[13px] text-[var(--text-primary)]">
                       {row.value}
                       {row.unit ? <span className="ml-1 text-[var(--text-muted)]">{row.unit}</span> : null}
                     </td>
@@ -182,49 +130,55 @@ export default function CostsPage() {
             </table>
           </div>
 
-          <div className="mt-8 grid gap-4">
+          <div className="mt-10 grid gap-3">
             {COST_MARKERS.map((row) => (
               <section
                 key={row.id}
                 id={row.id}
-                className="rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 sm:p-6"
+                className="desk-surface p-6 sm:p-7"
               >
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <StatusPill status={row.status} />
-                  <span className="font-mono text-[13px] text-[var(--plasma)]">
+                  <span className="desk-fact text-[13px] text-[var(--text-primary)]">
                     {row.value}
                     {row.unit ? ` ${row.unit}` : ""}
                   </span>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">{row.label}</h3>
-                <ScaleAnchor
-                  className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-                  technical={row.note.technical}
-                  plain={row.note.plain}
-                  source={`Last verified ${row.lastVerified}`}
-                />
-                <SourceLinks sources={row.sources.map((id) => DESK_SOURCES[id])} />
+                <h3 className="desk-h3 mt-4">{row.label}</h3>
+                <LeadTakeaway className="mt-3">{row.note.plain}</LeadTakeaway>
+                <Receipts
+                  summary="Receipts — cites and schedule names"
+                  sources={row.sources.map((id) => DESK_SOURCES[id])}
+                >
+                  <p>{row.note.technical}</p>
+                  <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                    Last verified {row.lastVerified}
+                  </p>
+                </Receipts>
               </section>
             ))}
           </div>
 
           <section
             id="schedule-era"
-            className="mt-8 rounded border border-[var(--border-subtle)] p-5 sm:p-6"
+            className="desk-surface mt-10 p-6 sm:p-7"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+            <p className="desk-fact uppercase tracking-[0.12em] text-[var(--text-muted)]">
               Schedule-era — not current
             </p>
-            <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">
+            <h3 className="desk-h3 mt-4">
               Older Labrador Industrial PDF (2015 figures)
             </h3>
-            <ScaleAnchor
-              className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
-              technical={COST_ERA_NOTE.body.technical}
-              plain={COST_ERA_NOTE.body.plain}
-              source={`Last verified ${COST_ERA_NOTE.lastVerified}`}
-            />
-            <SourceLinks sources={COST_ERA_NOTE.sources.map((id) => DESK_SOURCES[id])} />
+            <LeadTakeaway className="mt-3">{COST_ERA_NOTE.body.plain}</LeadTakeaway>
+            <Receipts
+              summary="Receipts — 2015 figures, not current"
+              sources={COST_ERA_NOTE.sources.map((id) => DESK_SOURCES[id])}
+            >
+              <p>{COST_ERA_NOTE.body.technical}</p>
+              <p className="mt-3 desk-fact text-[var(--text-muted)]">
+                Last verified {COST_ERA_NOTE.lastVerified}
+              </p>
+            </Receipts>
           </section>
 
           <Dual

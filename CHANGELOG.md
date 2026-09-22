@@ -2,6 +2,14 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.4.2 — 2026-09-22 — Visual slice 1 + digestability (on landed 1.8 vs 7.4)
+
+Plain layer leads; technical layer stays in Receipts. Same facts as 0.4.1, easier to scan.
+
+- `/costs` contested card is two equal columns: “starts ~1.8¢ in 2027” vs “averages ~7.4¢ over the life”, then the number. One line that they are different measurements. Annex D $ / CPI / unpublished bridge live in Receipts. Heritage 0.2¢ stays in section 01.
+- `/tracker` board: plain-English row title, status chip, last verified, one source link. Material Terms / House / PDFs in Receipts.
+- Dense blocks on `/` and `/costs` open with a one-breath takeaway; numbers after the sentence. ScaleAnchors stay paired.
+
 ## 0.4.1 — 2026-09-22 — Contested 7.4 vs Annex D 1.8 on /costs
 
 Hogan-calm polish: two public HQ-export ¢ stories stay labeled, not merged. Innu tracker matches the contact gap.
