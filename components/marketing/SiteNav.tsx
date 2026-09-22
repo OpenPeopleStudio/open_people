@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { VoiceToggle } from "./voice";
 
 const LINKS = [
   { href: "/brief", label: "The brief" },
@@ -37,7 +38,7 @@ export default function SiteNav() {
             : "bg-transparent border-transparent"
         }`}
       >
-        <div className="mx-auto flex h-14 max-w-[1080px] items-center gap-4 px-4 sm:px-6">
+        <div className="mx-auto flex h-14 max-w-[1080px] items-center gap-3 px-4 sm:px-6 lg:gap-4">
           <Link
             href="/"
             className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-primary)] no-underline"
@@ -46,7 +47,7 @@ export default function SiteNav() {
             Open People<span className="text-[var(--plasma)]"> · NL</span>
           </Link>
 
-          <div className="ml-auto hidden items-center gap-6 md:flex">
+          <div className="ml-auto hidden items-center gap-3 lg:gap-5 md:flex">
             {LINKS.map((l) => (
               <Link
                 key={l.href}
@@ -56,6 +57,7 @@ export default function SiteNav() {
                 {l.label}
               </Link>
             ))}
+            <VoiceToggle />
             <Link
               href="/engage"
               className="rounded border border-[var(--border-medium)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--text-primary)] no-underline transition-colors hover:border-[var(--plasma)] hover:text-[var(--plasma)]"
@@ -74,10 +76,19 @@ export default function SiteNav() {
             <span className="font-mono text-lg leading-none">{open ? "×" : "≡"}</span>
           </button>
         </div>
+
+        {!open ? (
+          <div className="border-t border-[var(--border-subtle)] px-4 py-2 md:hidden">
+            <VoiceToggle className="flex w-full" />
+          </div>
+        ) : null}
       </nav>
 
       {open && (
         <div className="fixed inset-0 z-40 bg-[rgba(4,4,4,0.97)] pt-20 md:hidden">
+          <div className="px-6 pb-2">
+            <VoiceToggle className="flex w-full" />
+          </div>
           <ul className="space-y-1 px-6">
             {LINKS.map((l) => (
               <li key={l.href}>
