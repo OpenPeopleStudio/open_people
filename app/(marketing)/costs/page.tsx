@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 import { Dual, ScaleAnchor } from "@/components/marketing/voice";
-import { DeskKicker, DeskVerified, SourceLinks, StatusPill } from "@/components/marketing/desk";
+import {
+  ContestedRateStrip,
+  DeskKicker,
+  DeskVerified,
+  SourceLinks,
+  StatusPill,
+} from "@/components/marketing/desk";
 import {
   COST_ERA_NOTE,
   COST_INTRO,
@@ -22,22 +28,28 @@ export const metadata: Metadata = {
 export default function CostsPage() {
   return (
     <SiteShell>
-      <main className="px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36">
-        <article className="mx-auto max-w-[780px]">
+      <main className="desk-page pb-24 sm:pb-32">
+        <DeskVerified date={DESK_VERIFIED} sticky />
+        <article className="mx-auto max-w-[780px] px-4 pt-10 sm:px-6 sm:pt-14">
           <DeskKicker>Horizon desk · Costs</DeskKicker>
-          <h1 className="mt-4 font-display text-[2rem] font-normal leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+          <h1 className="desk-h1 mt-5">
             Heritage lore, deal structure, then published markers.
           </h1>
           <ScaleAnchor
-            className="mt-6 text-lg leading-relaxed text-[var(--text-secondary)]"
+            className="mt-8 text-lg leading-relaxed text-[var(--text-secondary)]"
             technical={COST_INTRO.body.technical}
             plain={COST_INTRO.body.plain}
             source={`Last verified ${COST_INTRO.lastVerified}`}
           />
-          <DeskVerified date={DESK_VERIFIED} />
+        </article>
 
-          <section className="mt-12">
-            <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+        <div className="mx-auto mt-14 max-w-[1080px] px-4 sm:px-6">
+          <ContestedRateStrip />
+        </div>
+
+        <article className="mx-auto max-w-[780px] px-4 sm:px-6">
+          <section className="mt-16">
+            <h2 className="desk-h2">
               01 — Heritage
             </h2>
             <ScaleAnchor
@@ -48,8 +60,8 @@ export default function CostsPage() {
             />
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+          <section className="mt-16">
+            <h2 className="desk-h2">
               02 — Structure (not a locked ¢ schedule)
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]">
@@ -60,8 +72,8 @@ export default function CostsPage() {
             </p>
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+          <section className="mt-16">
+            <h2 className="desk-h2">
               03 — Published Labrador rates
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]">
@@ -85,10 +97,10 @@ export default function CostsPage() {
             </p>
           </section>
 
-          <div className="mt-8 overflow-x-auto rounded border border-[var(--border-subtle)]">
+          <div className="mt-10 overflow-x-auto border border-[var(--border-subtle)]">
             <table className="w-full min-w-[32rem] text-left text-[14px]">
               <thead>
-                <tr className="border-b border-[var(--border-subtle)] bg-[var(--surface-1)] font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                <tr className="border-b border-[var(--border-subtle)] bg-[var(--surface-1)] desk-fact uppercase tracking-[0.12em] text-[var(--text-muted)]">
                   <th className="px-4 py-3 font-medium">Marker</th>
                   <th className="px-4 py-3 font-medium">Figure</th>
                   <th className="px-4 py-3 font-medium">Status</th>
@@ -98,7 +110,7 @@ export default function CostsPage() {
                 {COST_MARKERS.map((row) => (
                   <tr key={row.id} className="border-b border-[var(--border-subtle)] last:border-b-0">
                     <td className="px-4 py-3 text-[var(--text-primary)]">{row.label}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-[var(--plasma)]">
+                    <td className="desk-fact px-4 py-3 text-[13px] text-[var(--text-primary)]">
                       {row.value}
                       {row.unit ? <span className="ml-1 text-[var(--text-muted)]">{row.unit}</span> : null}
                     </td>
@@ -111,21 +123,21 @@ export default function CostsPage() {
             </table>
           </div>
 
-          <div className="mt-8 grid gap-4">
+          <div className="mt-10 grid gap-3">
             {COST_MARKERS.map((row) => (
               <section
                 key={row.id}
                 id={row.id}
-                className="rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 sm:p-6"
+                className="desk-surface p-6 sm:p-7"
               >
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <StatusPill status={row.status} />
-                  <span className="font-mono text-[13px] text-[var(--plasma)]">
+                  <span className="desk-fact text-[13px] text-[var(--text-primary)]">
                     {row.value}
                     {row.unit ? ` ${row.unit}` : ""}
                   </span>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">{row.label}</h3>
+                <h3 className="desk-h3 mt-4">{row.label}</h3>
                 <ScaleAnchor
                   className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
                   technical={row.note.technical}
@@ -139,12 +151,12 @@ export default function CostsPage() {
 
           <section
             id="schedule-era"
-            className="mt-8 rounded border border-[var(--border-subtle)] p-5 sm:p-6"
+            className="desk-surface mt-10 p-6 sm:p-7"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+            <p className="desk-fact uppercase tracking-[0.12em] text-[var(--text-muted)]">
               Schedule-era — not current
             </p>
-            <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">
+            <h3 className="desk-h3 mt-4">
               Older Labrador Industrial PDF (2015 figures)
             </h3>
             <ScaleAnchor

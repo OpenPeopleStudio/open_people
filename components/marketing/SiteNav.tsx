@@ -13,15 +13,7 @@ const LINKS = [
 ];
 
 export default function SiteNav() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -32,13 +24,7 @@ export default function SiteNav() {
 
   return (
     <>
-      <nav
-        className={`fixed top-0 inset-x-0 z-50 border-b transition-colors ${
-          scrolled || open
-            ? "bg-[rgba(4,4,4,0.92)] backdrop-blur-md border-[var(--border-subtle)]"
-            : "bg-transparent border-transparent"
-        }`}
-      >
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--void)]">
         <div className="mx-auto flex h-14 max-w-[1080px] items-center gap-3 px-4 sm:px-6 lg:gap-4">
           <Link
             href="/"
@@ -53,7 +39,7 @@ export default function SiteNav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-[13px] text-[var(--text-muted)] no-underline transition-colors hover:text-[var(--plasma)]"
+                className="text-[13px] text-[var(--text-muted)] no-underline transition-colors duration-150 hover:text-[var(--plasma)]"
               >
                 {l.label}
               </Link>
@@ -61,7 +47,7 @@ export default function SiteNav() {
             <VoiceToggle />
             <Link
               href="/engage"
-              className="rounded border border-[var(--border-medium)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--text-primary)] no-underline transition-colors hover:border-[var(--plasma)] hover:text-[var(--plasma)]"
+              className="rounded-[2px] border border-[var(--border-medium)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--text-primary)] no-underline transition-colors duration-150 hover:border-[var(--plasma)] hover:text-[var(--plasma)]"
             >
               Keep power here
             </Link>
@@ -69,7 +55,7 @@ export default function SiteNav() {
 
           <button
             type="button"
-            className="ml-auto flex h-10 w-10 items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-primary)] lg:hidden"
+            className="ml-auto flex h-10 w-10 items-center justify-center rounded-[2px] border border-[var(--border-subtle)] text-[var(--text-primary)] lg:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -86,7 +72,7 @@ export default function SiteNav() {
       </nav>
 
       {open && (
-        <div className="fixed inset-0 z-40 bg-[rgba(4,4,4,0.97)] pt-20 lg:hidden">
+        <div className="fixed inset-0 z-40 bg-[var(--void)] pt-20 lg:hidden">
           <div className="px-6 pb-2">
             <VoiceToggle className="flex w-full" />
           </div>

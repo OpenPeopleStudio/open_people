@@ -19,7 +19,7 @@ const SECONDARY = [
 export default function SiteFooter() {
   return (
     <footer className="border-t border-[var(--border-subtle)]">
-      <div className="mx-auto flex max-w-[1080px] flex-col gap-8 px-4 py-12 sm:px-6 sm:py-16 md:flex-row md:items-start md:justify-between">
+      <div className="mx-auto flex max-w-[1080px] flex-col gap-8 px-4 py-14 sm:px-6 sm:py-20 md:flex-row md:items-start md:justify-between">
         <div className="max-w-md">
           <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-primary)]">
             Open People<span className="text-[var(--plasma)]"> · horizon desk</span>

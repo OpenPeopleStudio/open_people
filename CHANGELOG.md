@@ -2,6 +2,15 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.4.1 — 2026-09-22 — Visual slice 1 (modern precision desk)
+
+Public desk chrome: type + spacing + hairline surfaces. Not sci-fi.
+
+- Sharper H1 hierarchy and mono facts (dates / ¢ / MW / status) on `/`, `/tracker`, `/costs`.
+- `/costs` contested-rate strip: equal-weight Life-average / Start / Heritage cards. Start + heritage wire to existing desk facts (reported 1.8→11.5 path; heritage 0.2¢). Life-average is an empty sourced shell until a parallel copy PR lands a marker — no invented 7.4¢.
+- `/tracker` living board: three columns (on paper / open / UNKNOWN), semantic status chips, sticky last-verified strip.
+- Motion: hero fade 180ms only; nav is a solid hairline (no backdrop blur); SiteShell radial glow removed. `/compute` stays quarantined and quieter.
+
 ## 0.4.0 — 2026-09-22 — Horizon desk IA (first slice)
 
 Public site reads as a Churchill River / Labrador power **information desk**, not a data-centre pitch.
