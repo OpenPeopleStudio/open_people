@@ -70,5 +70,7 @@ describe("scale anchors", () => {
     expect(SCALE_ANCHORS.retainedMw.technical).toContain("2,350 MW");
     expect(SCALE_ANCHORS.retainedMw.plain).toContain("illustration, not a project");
     expect(SCALE_ANCHORS.federalAssessment.technical).toContain("2,000 MW");
+    expect(SCALE_ANCHORS.heritagePrice.plain).not.toMatch(/¢/);
+    expect(SCALE_ANCHORS.gulIslandRange.technical).toContain("2,250 MW");
   });
 });

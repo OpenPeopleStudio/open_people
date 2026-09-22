@@ -2,6 +2,17 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.4.0 — 2026-09-22 — Horizon desk IA (first slice)
+
+Public site reads as a Churchill River / Labrador power **information desk**, not a data-centre pitch.
+
+- Nav: Brief · Tracker · Industries · Costs · Engage · Letter. Voice toggle stays. Compute plan is footer-only (never primary CTA). `/data-centre` redirects to `/compute`.
+- New `/tracker` living board (DCIA, House 21–18, binding window, QC gate, Gull Island MW range, CF upgrades, Labrador West, unnamed Wind SPE, Innu gap, transparency gaps). Last-verified dates + primary PDFs.
+- New `/industries` mining-first cards (Labrador West load/corridor sourced). Compute is a short secondary line.
+- New `/costs`: heritage 0.2¢/kWh lore → DCIA Material Terms structure (CPI, synthetic export options) → published LAB-IND-1 / Island Industrial markers. MOU ¢ schedules not presented as locked PPAs. UNKNOWN labelled.
+- New `/compute` quarantine. Home / brief / coalition heroes scrubbed of campus openers.
+- Open People remains constituent/catalyst only — not a DCIA party.
+
 ## 0.3.1 — 2026-09-22 — Voice lock + /engage tools
 
 Tighten mining-first / constituent voice across the public surface. Deepen `/engage`. Coalition no longer reads as an offtake/build plan.

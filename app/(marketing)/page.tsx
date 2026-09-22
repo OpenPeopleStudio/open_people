@@ -6,10 +6,10 @@ import { HOME_GATES, SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Open People — Keep firm power in Newfoundland and Labrador",
+    absolute: "Open People — Churchill River / Labrador power desk",
   },
   description:
-    "Constituent voice for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador for industry. Mining first. Compute is a named use of that power, not a reserved block.",
+    "Information desk for the Churchill Falls / Gull Island DCIA: what’s signed, what’s open, mining-first industry, cost structure. Compute is a separate page. Constituent voice only.",
 };
 
 const OPEN = [
@@ -21,7 +21,7 @@ const OPEN = [
     title: "Recall",
     body: {
       technical:
-        "A Power Advisory consultant told the House of a three-year notice recall so NL can keep more power at home. Still open in contract text. Do not treat testimony as a signed clause.",
+        "Material Terms describe three-year notice for several HQ sale and recapture paths. House testimony is not a substitute for signed PPAs. Still a framework.",
     },
   },
   {
@@ -35,6 +35,13 @@ const OPEN = [
     title: "Federal assessment",
     body: SCALE_ANCHORS.federalAssessment,
   },
+] as const;
+
+const DESK = [
+  { href: "/tracker", label: "Tracker", k: "What’s signed and still open" },
+  { href: "/industries", label: "Industries", k: "Mining and Labrador industry first" },
+  { href: "/costs", label: "Costs", k: "Heritage lore vs deal structure" },
+  { href: "/brief", label: "Brief", k: "Public evidence case" },
 ] as const;
 
 const RULES = [
@@ -52,49 +59,48 @@ export default function HomePage() {
         <header className="border-b border-[var(--border-subtle)] px-4 pb-14 pt-28 sm:px-6 sm:pb-20 sm:pt-36">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              Open People · Newfoundland &amp; Labrador
+              Horizon desk · Churchill River / Labrador power
             </p>
             <h1 className="mt-6 font-display text-[2rem] font-normal leading-[1.08] tracking-[-0.022em] sm:text-5xl md:text-[3.4rem]">
               Keep the power here.{" "}
-              <em className="not-italic text-[var(--plasma)]">Use it here.</em>
+              <em className="not-italic text-[var(--plasma)]">Watch the gates.</em>
             </h1>
             <Dual
               plain={
                 <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-                  {SCALE_ANCHORS.exportScale.plain}
+                  {SCALE_ANCHORS.exportScale.plain} This site is an information desk: what is signed,
+                  what is still open, which industries are already on the grid, and how cost stories
+                  get mixed up.
                 </p>
               }
               technical={
                 <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-                  {SCALE_ANCHORS.exportScale.technical}
+                  {SCALE_ANCHORS.exportScale.technical} Horizon desk: DCIA framework (17 Aug 2026),
+                  House 21–18 (17 Sep), binding window ~31 Dec 2026 / term to ~31 Mar 2027.
                 </p>
               }
             />
             <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)]">
-              Firm in-province power should serve Labrador and island industry — mining and
-              resources first. Compute and AI are a{" "}
-              <strong className="font-semibold text-[var(--text-primary)]">use of that power</strong>
-              , if the province writes them as eligible. They are not a reserved block, and they are
-              not the opener.
-            </p>
-            <p className="mt-4 max-w-[62ch] text-[15px] leading-relaxed text-[var(--text-muted)]">
-              Open People is a constituent and catalyst voice from St. John&apos;s. We are not a
-              DCIA party, an offtake seat, or a demand seat. Partners would own any steel.
+              Firm in-province power should serve Labrador and island industry —{" "}
+              <strong className="font-semibold text-[var(--text-primary)]">mining and resources first</strong>
+              . Open People is a constituent and catalyst voice from St. John&apos;s. We are not a
+              DCIA party, an offtake seat, or a demand seat.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link href="/engage" className="btn-primary justify-center px-6 py-3 text-sm">
                 Get involved — keep firm power here
               </Link>
-              <Link href="/brief" className="btn-secondary justify-center px-6 py-3 text-sm">
-                Public evidence brief
+              <Link href="/tracker" className="btn-secondary justify-center px-6 py-3 text-sm">
+                Living tracker
               </Link>
             </div>
-            <p className="mt-5">
-              <Link
-                href="/letter"
-                className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]"
-              >
-                Letter to the Premier · 15 Sep 2026 →
+            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+              <Link href="/letter" className="no-underline hover:text-[var(--plasma)]">
+                Letter to the Premier · 15 Sep 2026
+              </Link>
+              <span aria-hidden> · </span>
+              <Link href="/compute" className="no-underline hover:text-[var(--plasma)]">
+                Compute plan
               </Link>
             </p>
           </div>
@@ -123,7 +129,32 @@ export default function HomePage() {
         <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-[780px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              01 — Still open
+              01 — The desk
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
+              Four doors. None of them is a campus.
+            </h2>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {DESK.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 no-underline hover:border-[var(--plasma)]"
+                >
+                  <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--plasma)]">
+                    {item.label}
+                  </div>
+                  <p className="mt-2 text-[15px] text-[var(--text-secondary)]">{item.k}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
+          <div className="mx-auto max-w-[780px]">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
+              02 — Still open
             </p>
             <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
               Endorsement is not a contract.
@@ -159,32 +190,10 @@ export default function HomePage() {
               ))}
             </div>
             <Link
-              href="/engage"
+              href="/tracker"
               className="mt-8 inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
             >
-              Get involved — keep firm power here →
-            </Link>
-          </div>
-        </section>
-
-        <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 sm:py-24">
-          <div className="mx-auto max-w-[780px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              02 — The public case
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-normal tracking-[-0.018em] sm:text-4xl">
-              The province that exports 34&nbsp;TWh should decide what it keeps.
-            </h2>
-            <p className="mt-5 max-w-[60ch] text-[var(--text-secondary)]">
-              The public evidence brief maps the asset, the August 17 DCIA framework, what the House
-              did in September, and what is still unsigned — bound to public sources, not vibes.
-              Mining is first. Compute is optionality.
-            </p>
-            <Link
-              href="/brief"
-              className="mt-8 inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--plasma)] no-underline hover:underline"
-            >
-              Labrador power &amp; industry case →
+              Full living board →
             </Link>
           </div>
         </section>
@@ -211,6 +220,10 @@ export default function HomePage() {
               Full operating doctrine:{" "}
               <Link href="/approach" className="text-[var(--plasma)] no-underline hover:underline">
                 Approach
+              </Link>
+              . Compute optionality is quarantined:{" "}
+              <Link href="/compute" className="text-[var(--plasma)] no-underline hover:underline">
+                /compute
               </Link>
               .
             </p>

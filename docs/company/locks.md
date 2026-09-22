@@ -16,7 +16,8 @@ Source of truth for active edit locks. See `docs/company/lock-policy.md` for rul
 
 | Owner | Date | Scope | Type | Expires | Status | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Cursor | 2026-09-22 | lib/voice-mode/*, components/marketing/SiteShell.tsx, components/marketing/SiteNav.tsx, components/marketing/voice/*, app/(marketing)/page.tsx, app/(marketing)/engage/page.tsx, app/globals.css | exclusive | 2026-09-23 | active | Voice mode first slice |
+| Cursor | 2026-09-22 | lib/voice-mode/*, components/marketing/SiteShell.tsx, components/marketing/SiteNav.tsx, components/marketing/voice/*, app/(marketing)/page.tsx, app/(marketing)/engage/page.tsx, app/globals.css | exclusive | 2026-09-23 | released | Voice mode first slice — merged as PR #5 |
+| Cursor | 2026-09-22 | components/marketing/SiteNav.tsx, components/marketing/SiteFooter.tsx, app/(marketing)/page.tsx, app/(marketing)/tracker/*, app/(marketing)/industries/*, app/(marketing)/costs/*, app/(marketing)/compute/*, lib/desk/*, lib/voice-mode/anchors.ts, public/brief.html, public/coalition.html, app/sitemap.ts, next.config.ts | exclusive | 2026-09-23 | active | Horizon desk IA first slice |
 | Codex | 2026-01-23 | docs/TODO.md, docs/company/locks.md | shared | 2026-01-24 | active | Distribute Atelier tasks |
 | Codex | 2026-01-23 | docs/company/coordination.md, docs/company/locks.md | shared | 2026-01-24 | active | Coder handoff note |
 | Codex | 2026-01-23 | README.md, docs/deployment/overview.md, docs/deployment/email-worker-setup.md, docs/architecture/overview.md, docs/support/troubleshooting.md, docs/development/setup.md | exclusive | 2026-01-24 | released | Align production env var docs |
