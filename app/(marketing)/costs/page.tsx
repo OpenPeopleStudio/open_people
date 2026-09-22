@@ -16,7 +16,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata: Metadata = {
   title: "Costs",
   description:
-    "Heritage 0.2¢/kWh export lore, contested 7.4 vs Annex D / 1.8 ¢ paths (not merged), Labrador Interconnected domestic 3.154¢ (Rate 1.1L), and LAB-IND-1 as demand + energy formula — not a single industrial ¢. Not locked PPAs.",
+    "Starts about 1.8¢/kWh in 2027 vs averages about 7.4¢/kWh over ~50 years — different measurements, not one industrial ¢. Heritage 0.2¢ labeled heritage. LAB-IND-1 stays a formula. Annex D $ → voter ¢: UNKNOWN.",
   alternates: { canonical: "/costs" },
 };
 
@@ -61,7 +61,10 @@ export default function CostsPage() {
                   id={path.id}
                   className="rounded border border-[var(--border-subtle)] p-4 sm:p-5"
                 >
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="text-lg font-semibold leading-snug tracking-[-0.01em]">
+                    {path.label}
+                  </h3>
+                  <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
                     <StatusPill status={path.status} />
                     <span className="font-mono text-[22px] leading-none text-[var(--plasma)] sm:text-[26px]">
                       {path.value}
@@ -70,7 +73,6 @@ export default function CostsPage() {
                       ) : null}
                     </span>
                   </div>
-                  <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">{path.label}</h3>
                   <ScaleAnchor
                     className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
                     technical={path.note.technical}

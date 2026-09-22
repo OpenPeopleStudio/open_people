@@ -66,18 +66,21 @@ describe("horizon desk facts", () => {
 
   it("keeps 1.8 start and 7.4 50-year average labeled, not merged, with Annex D ¢ UNKNOWN", () => {
     expect(CONTESTED_EXPORT.start.value).toBe("1.8");
-    expect(CONTESTED_EXPORT.start.label).toMatch(/Starting reported price/i);
+    expect(CONTESTED_EXPORT.start.label).toMatch(/starts about 1\.8¢\/kWh in 2027/i);
     expect(CONTESTED_EXPORT.start.unit).toMatch(/2027/);
     expect(CONTESTED_EXPORT.start.note.technical).toMatch(/1\.8¢\/kWh beginning in 2027/);
     expect(CONTESTED_EXPORT.start.note.technical).toMatch(/starting reported path/);
     expect(CONTESTED_EXPORT.start.note.technical).toMatch(/not the 7\.4¢ life average/);
+    expect(CONTESTED_EXPORT.start.note.technical).toMatch(/CP24, 17 Aug 2026/);
     expect(CONTESTED_EXPORT.start.note.technical).not.toMatch(/payment÷TWh|\$0\.531B \/ 29\.207/);
     expect(CONTESTED_EXPORT.start.sources).toEqual(
       expect.arrayContaining(["cpChurchillGraph"])
     );
 
     expect(CONTESTED_EXPORT.average.value).toBe("7.4");
-    expect(CONTESTED_EXPORT.average.label).toMatch(/Average effective price/i);
+    expect(CONTESTED_EXPORT.average.label).toMatch(
+      /averages about 7\.4¢\/kWh over ~50 years/i
+    );
     expect(CONTESTED_EXPORT.average.unit).toMatch(/50 years/);
     expect(CONTESTED_EXPORT.average.note.technical).toMatch(
       /7\.4 cents per kilowatt hour over the next 50 years/i
@@ -87,19 +90,24 @@ describe("horizon desk facts", () => {
     expect(CONTESTED_EXPORT.average.note.technical).not.toMatch(/premium rate|2027 dollars/);
     expect(CONTESTED_EXPORT.average.sources).toEqual(["cpChurchillGraph"]);
 
-    expect(CONTESTED_EXPORT.title).toMatch(/1\.8/);
-    expect(CONTESTED_EXPORT.title).toMatch(/7\.4/);
+    expect(CONTESTED_EXPORT.title).toMatch(/Starts about 1\.8¢\/kWh in 2027/);
+    expect(CONTESTED_EXPORT.title).toMatch(/Averages about 7\.4¢\/kWh over ~50 years/);
     expect(CONTESTED_EXPORT.intro.plain).toMatch(/different measurements/i);
+    expect(CONTESTED_EXPORT.intro.plain).toMatch(/not a contradiction/i);
+    expect(CONTESTED_EXPORT.intro.plain.split(".").filter(Boolean)).toHaveLength(1);
     expect(CONTESTED_EXPORT.intro.technical).toMatch(/Do not reconcile them into one number/);
+    expect(CONTESTED_EXPORT.intro.technical).toMatch(/Annex D \(17 Aug 2026\) is target \$ payments/);
+    expect(CONTESTED_EXPORT.intro.technical).toMatch(/LAB-IND-1 stays a formula/);
     expect(CONTESTED_EXPORT.average.value).not.toBe(CONTESTED_EXPORT.start.value);
 
     expect(CONTESTED_EXPORT.bridge.value).toBe("UNKNOWN");
     expect(CONTESTED_EXPORT.bridge.status).toBe("unknown");
     expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/UNKNOWN/);
-    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/target payments/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/target \$ payments/);
     expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/Annex F/);
     expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/does not invent a payment÷TWh industrial ¢/);
     expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/Heritage 0\.2¢/);
+    expect(CONTESTED_EXPORT.bridge.note.technical).toMatch(/labeled heritage/);
     expect(CONTESTED_EXPORT.bridge.note.technical).not.toMatch(
       /therefore 7\.4 =|bridge formula is|equals 7\.4 because/i
     );

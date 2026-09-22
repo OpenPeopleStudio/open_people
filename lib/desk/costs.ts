@@ -17,9 +17,9 @@ export const COST_INTRO = {
   lastVerified: DESK_VERIFIED,
   body: {
     plain:
-      "Four different price stories get mashed together in this file. One is the old export lore. One is the structure of the new paper — blocks, inflation, leftover-power options — not a locked industrial tariff. One is what NL Hydro posts for Labrador households today. One is the Labrador industrial tariff, which is a formula with demand charges, not a single cent. A fifth fight sits on top: two public cent stories about Hydro-Québec’s export price that are not the same thing. We keep them apart.",
+      "This page keeps five price stories apart so they do not mash. The old export lore. The new paper’s dollar-and-inflation structure — not a locked industrial tariff. What Hydro posts for Labrador households. The mine tariff, which is a formula, not one cent. And two public Hydro-Québec export stories — a start and a life average — that are different measurements.",
     technical:
-      "Do not present illustrative MOU ¢/kWh schedules, Annex D target payments, or reported HQ export paths as locked PPAs. Heritage 0.2¢/kWh is the 1969-lineage renewal export price. DCIA Material Terms describe availability / take-or-pay architecture, CPI adjustment, and HQ purchase options. Labrador Interconnected domestic energy is Rate No. 1.1L at 3.154¢/kWh (Jul 2026 schedule; Hydro current-rates page). LAB-IND-1 is demand plus a monthly RFIRM blend of Development and Market energy blocks — not one ¢/kWh. Island Industrial Firm is a different class on the Island grid. None of these is Churchill Falls offtake. Reported 1.8 ¢/kWh (2027 start) and 7.4 ¢/kWh (~50-year average) are labeled separately below — different measurements, not one industrial ¢. Methodology turning Annex D $B into a locked ¢ tariff: UNKNOWN.",
+      "Do not present illustrative MOU ¢/kWh schedules, Annex D target payments, or reported HQ export paths as locked PPAs. Heritage 0.2¢/kWh is the 1969-lineage renewal export price (labeled heritage). DCIA Material Terms (17 Aug 2026): availability / take-or-pay, Annex D target $ + Annex F CPI, HQ purchase options. Rate No. 1.1L is Labrador Interconnected domestic, 3.154¢/kWh (Jul 2026 schedule; Hydro current-rates page). LAB-IND-1 is demand plus a monthly RFIRM formula — not one ¢/kWh. Island Industrial Firm is a different class on the Island grid. None of these is Churchill Falls offtake. Reported 1.8¢/kWh (2027 start) and 7.4¢/kWh (~50-year average) are labeled separately below. Annex D $ → locked ¢ tariff: UNKNOWN.",
   } satisfies DeskVoice,
 };
 
@@ -31,40 +31,38 @@ export const COST_INTRO = {
 export const CONTESTED_EXPORT = {
   lastVerified: DESK_VERIFIED,
   kicker: "Contested communications — not a locked industrial ¢",
-  title: "Starts about 1.8¢ in 2027. Averages about 7.4¢ over ~50 years.",
+  title: "Starts about 1.8¢/kWh in 2027. Averages about 7.4¢/kWh over ~50 years.",
   intro: {
     plain:
-      "Those are two different measurements of Hydro-Québec’s Churchill Falls export price — a starting price and a life average — not a contradiction to mash into one number, and not a posted rate for Labrador mines or compute.",
+      "Those are two different measurements, not a contradiction to mash into one number.",
     technical:
-      "Canadian Press via CP24 (17 Aug 2026, corrected): a graph provided to media showed HQ paying 1.8¢/kWh beginning in 2027, rising through 2077, averaging 7.4¢/kWh over the next 50 years. Prior MOU average cited ~5.9¢. 1.8 is the starting reported path; 7.4 is the life average. Do not reconcile them into one number. Annex D is target $ payments + CPI (Annex F), not a ¢ column. Converting Annex D alone into a voter ¢/kWh industrial tariff without published methodology: UNKNOWN. Heritage 0.2¢/kWh is the 1969-lineage comparator. Open People is not a DCIA party.",
+      "Canadian Press via CP24, 17 Aug 2026 (corrected): a graph provided to media showed Hydro-Québec paying 1.8¢/kWh beginning in 2027, rising through 2077, averaging 7.4¢/kWh over the next 50 years. Prior MOU average cited ~5.9¢. 1.8 is the starting reported path; 7.4 is the life average. Do not reconcile them into one number. DCIA Annex D (17 Aug 2026) is target $ payments; Annex F is CPI. Converting Annex D into a voter ¢/kWh industrial tariff without a published method: UNKNOWN. Heritage 0.2¢/kWh is the 1969-lineage comparator (labeled heritage). LAB-IND-1 stays a formula, not one ¢. Open People is not a DCIA party.",
   } satisfies DeskVoice,
   start: {
     id: "start-18",
-    label: "Starting reported price (2027)",
+    label: "Starts about 1.8¢/kWh in 2027",
     value: "1.8",
     unit: "¢/kWh in 2027",
     status: "reported" as const,
     lastVerified: DESK_VERIFIED,
     note: {
-      plain:
-        "The press graph starts at about 1.8 cents a kilowatt-hour in 2027. That is the starting price — not the fifty-year average, and not a mine rate.",
+      plain: "The starting price on the press graph — not the fifty-year average.",
       technical:
-        "Canadian Press via CP24 (17 Aug 2026, corrected): graph provided to media — Hydro-Québec pays 1.8¢/kWh beginning in 2027. That 1.8¢ is the starting reported path, not the 7.4¢ life average. Financial Post separately described a rise to 11.5¢/kWh by 2041; that is a reported path, not the 50-year average, and not the raw 2041 Annex D division. Annex D is not this ¢: it posts target $ payments (CPI-adjustable). Not Rate 1.1L, not LAB-IND-1, not a locked industrial PPA ¢ for Labrador mines or compute.",
+        "Canadian Press via CP24, 17 Aug 2026 (corrected): graph provided to media — Hydro-Québec pays 1.8¢/kWh beginning in 2027. That 1.8¢ is the starting reported path, not the 7.4¢ life average. Financial Post (18 Aug 2026) separately described a rise to 11.5¢/kWh by 2041; that is a reported path, not the 50-year average. Annex D is not this ¢: it posts target $ payments. Not a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
     sources: ["cpChurchillGraph", "financialPostPath"] as DeskSourceId[],
   },
   average: {
     id: "average-74",
-    label: "Average effective price (~50 years)",
+    label: "Averages about 7.4¢/kWh over ~50 years",
     value: "7.4",
     unit: "¢/kWh over ~50 years",
     status: "reported" as const,
     lastVerified: DESK_VERIFIED,
     note: {
-      plain:
-        "The same graph averages about 7.4 cents a kilowatt-hour from 2027 through 2077. The old memorandum’s public average was about 5.9 cents. 7.4 is not the starting price, and it is not a mine rate.",
+      plain: "The life average on the same graph — not the 2027 starting price.",
       technical:
-        "Canadian Press via CP24 (17 Aug 2026, corrected): “averaging out to an effective price of 7.4 cents per kilowatt hour over the next 50 years” (price increases until 2077). The previous 2024 MOU draft’s average effective price was cited at about 5.9¢/kWh. 7.4 is that 50-year average effective price — not the 1.8¢ 2027 start. Financial Post also used “higher effective ~7.4¢” wording; this desk prefers CP24’s start-plus-average framing. Not Rate 1.1L, not LAB-IND-1, and not a locked industrial PPA ¢ for Labrador mines or compute.",
+        "Canadian Press via CP24, 17 Aug 2026 (corrected): “averaging out to an effective price of 7.4 cents per kilowatt hour over the next 50 years.” Prior 2024 MOU average cited ~5.9¢/kWh. 7.4 is that 50-year average — not the 1.8¢ 2027 start. This desk prefers CP24’s start-plus-average framing over other 7.4 wording. Not a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
     sources: ["cpChurchillGraph"] as DeskSourceId[],
   },
@@ -77,9 +75,9 @@ export const CONTESTED_EXPORT = {
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "The cooperation paper pays a table of target dollars, then an inflation band. Nobody has published how to turn that table into a locked industrial cent a voter can use for mines or compute. We do not invent it. 1.8 at the start and 7.4 as a fifty-year average stay two measurements.",
+        "The paper pays target dollars, then inflation. Nobody has published how to turn that table into a locked industrial cent. We do not invent it.",
       technical:
-        "UNKNOWN: a published methodology that converts Annex D target payments into a locked ¢/kWh industrial tariff. DCIA Annex D (17 Aug 2026) posts yearly “Payments by HQ for existing CF volumes” in $B (2027: $0.531B) beside energy TWh (2027: 29.207 TWh) and MW; amounts as of 31 Dec of the year. Annex F then CPI-adjusts those target payments (Statistics Canada All-items, Canada; 2027 base; deadband 2.06% ± 0.40%). Annex D is not a ¢ column. Open People does not invent a payment÷TWh industrial ¢, and does not reconcile 7.4 with Annex D $B. Heritage 0.2¢/kWh remains the 1969-lineage comparator (labeled heritage, not current). None of 7.4, 1.8, or 11.5 is a locked industrial PPA ¢ for Labrador mines or compute.",
+        "UNKNOWN: a published method that converts DCIA Annex D (17 Aug 2026) target $ payments into a locked ¢/kWh industrial tariff. Annex D posts yearly “Payments by HQ for existing CF volumes” in $B (2027: $0.531B beside 29.207 TWh). Annex F CPI-adjusts those payments (Statistics Canada All-items, Canada; 2027 base). Annex D is not a ¢ column. Open People does not invent a payment÷TWh industrial ¢, and does not reconcile 7.4 with Annex D. Heritage 0.2¢/kWh remains the 1969-lineage comparator (labeled heritage). LAB-IND-1 stays a formula. None of 7.4, 1.8, or 11.5 is a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
     sources: ["dciaHq", "dciaNl", "cpChurchillGraph"] as DeskSourceId[],
   },
