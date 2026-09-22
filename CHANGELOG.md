@@ -2,6 +2,13 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.4.1 — 2026-09-22 — Contested 7.4 vs Annex D 1.8 on /costs
+
+Hogan-calm polish: two public HQ-export ¢ stories stay labeled, not merged. Innu tracker matches the contact gap.
+
+- `/costs`: contested-communications card — two equal claims: **starts about 1.8¢/kWh in 2027** vs **averages about 7.4¢/kWh over ~50 years** (CP24 corrected graph, 17 Aug 2026; prior MOU ~5.9¢). One plain sentence: different measurements, not a contradiction to mash. Technical: citations, dates, document names — Annex D is target **$ + CPI**; Annex D → voter industrial ¢: **UNKNOWN**. Heritage 0.2¢ labeled heritage; LAB-IND-1 stays a formula.
+- `/tracker`: Innu Nation urged a no vote; partnership remains open; Premier-contact gap (VOCM 21 Sep: Grand Chief says he has yet to contact them).
+
 ## 0.4.0 — 2026-09-22 — Horizon desk IA (first slice)
 
 Public site reads as a Churchill River / Labrador power **information desk**, not a data-centre pitch.

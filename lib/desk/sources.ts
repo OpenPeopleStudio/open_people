@@ -38,6 +38,34 @@ export const DESK_SOURCES = {
     date: "2026-08-17",
     kind: "primary",
   },
+  abetterDealFaq: {
+    id: "abetterdeal-faq-74",
+    label: "A Better Deal NL FAQ — 7.4 ¢/kWh estimate (2027 dollars, premium-rate assumption)",
+    href: "https://www.abetterdealnl.ca/",
+    date: "2026-08-17",
+    kind: "primary",
+  },
+  cpChurchillGraph: {
+    id: "cp-churchill-graph",
+    label: "Canadian Press — media graph: 1.8¢ in 2027; 7.4¢ 50-year average (corrected 17 Aug 2026)",
+    href: "https://www.cp24.com/news/canada/2026/08/17/quebec-and-newfoundland-and-labrador-reach-energy-agreement/",
+    date: "2026-08-17",
+    kind: "press",
+  },
+  hqDciaSix: {
+    id: "hq-dcia-6c",
+    label: "Hydro-Québec DCIA release — “competitive rate of 6¢/kWh,” 17 Aug 2026",
+    href: "https://news.hydroquebec.com/news/press-releases/all-quebec/power-generation-labrador-hydro-quebec-secures-quebec-energy-future-competitive-cost.html",
+    date: "2026-08-17",
+    kind: "primary",
+  },
+  financialPostPath: {
+    id: "fp-18-115",
+    label: "Financial Post — 1.8¢ in 2027 rising to 11.5¢ by 2041",
+    href: "https://financialpost.com/commodities/energy/money-power-how-good-is-churchill-falls-deal-newfoundland",
+    date: "2026-08-18",
+    kind: "press",
+  },
   ircReport: {
     id: "irc-report",
     label: "Independent Churchill River Review Committee report, 30 Apr 2026 (released 19 May)",
@@ -64,6 +92,13 @@ export const DESK_SOURCES = {
     label: "VOCM — Innu Nation letter; Premier to meet, 18 Sep 2026",
     href: "https://vocm.com/2026/09/18/310730/",
     date: "2026-09-18",
+    kind: "press",
+  },
+  vocmInnuContact: {
+    id: "vocm-innu-contact",
+    label: "VOCM — Grand Chief: Premier has yet to contact Innu, 21 Sep 2026",
+    href: "https://vocm.com/2026/09/21/premier-has-yet-to-contact-innu-about-hydro-deal-says-grand-chief/",
+    date: "2026-09-21",
     kind: "press",
   },
   saltwireInnu: {

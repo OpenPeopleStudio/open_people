@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.4.1 tools=70 commits=4 files=12 note=Contested 1.8 start vs 7.4 average card; Tom digestibility lock
 0.4.0 tools=90 commits=1 files=28 note=Horizon desk IA: /tracker /industries /costs /compute + nav/home scrub
 0.3.1 tools=40 commits=1 files=18 note=Coalition voice lock + /engage copy-first, Innu template, share
 0.3.0 tools=90 commits=1 files=20 note=Post-17 Sep DCIA House vote + /engage keep-power-here path

@@ -4,6 +4,7 @@ import SiteShell from "@/components/marketing/SiteShell";
 import { Dual, ScaleAnchor } from "@/components/marketing/voice";
 import { DeskKicker, DeskVerified, SourceLinks, StatusPill } from "@/components/marketing/desk";
 import {
+  CONTESTED_EXPORT,
   COST_ERA_NOTE,
   COST_INTRO,
   COST_MARKERS,
@@ -15,7 +16,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata: Metadata = {
   title: "Costs",
   description:
-    "Heritage 0.2¢/kWh export lore, DCIA pricing structure, Labrador Interconnected domestic 3.154¢ (Rate 1.1L), and LAB-IND-1 as demand + energy formula — not a single industrial ¢. Not locked PPAs.",
+    "Starts about 1.8¢/kWh in 2027 vs averages about 7.4¢/kWh over ~50 years — different measurements, not one industrial ¢. Heritage 0.2¢ labeled heritage. LAB-IND-1 stays a formula. Annex D $ → voter ¢: UNKNOWN.",
   alternates: { canonical: "/costs" },
 };
 
@@ -35,6 +36,76 @@ export default function CostsPage() {
             source={`Last verified ${COST_INTRO.lastVerified}`}
           />
           <DeskVerified date={DESK_VERIFIED} />
+
+          <section
+            id="contested"
+            className="mt-12 rounded border border-[var(--border-subtle)] bg-[var(--surface-1)] p-5 sm:p-6"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--warning)]">
+              {CONTESTED_EXPORT.kicker}
+            </p>
+            <h2 className="mt-3 font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">
+              {CONTESTED_EXPORT.title}
+            </h2>
+            <ScaleAnchor
+              className="mt-4 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+              technical={CONTESTED_EXPORT.intro.technical}
+              plain={CONTESTED_EXPORT.intro.plain}
+              source={`Last verified ${CONTESTED_EXPORT.lastVerified}`}
+            />
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {[CONTESTED_EXPORT.start, CONTESTED_EXPORT.average].map((path) => (
+                <section
+                  key={path.id}
+                  id={path.id}
+                  className="rounded border border-[var(--border-subtle)] p-4 sm:p-5"
+                >
+                  <h3 className="text-lg font-semibold leading-snug tracking-[-0.01em]">
+                    {path.label}
+                  </h3>
+                  <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+                    <StatusPill status={path.status} />
+                    <span className="font-mono text-[22px] leading-none text-[var(--plasma)] sm:text-[26px]">
+                      {path.value}
+                      {path.unit ? (
+                        <span className="ml-1 text-[12px] text-[var(--text-muted)]">{path.unit}</span>
+                      ) : null}
+                    </span>
+                  </div>
+                  <ScaleAnchor
+                    className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                    technical={path.note.technical}
+                    plain={path.note.plain}
+                    source={`Last verified ${path.lastVerified}`}
+                  />
+                  <SourceLinks sources={path.sources.map((id) => DESK_SOURCES[id])} />
+                </section>
+              ))}
+            </div>
+
+            <section
+              id={CONTESTED_EXPORT.bridge.id}
+              className="mt-4 rounded border border-[var(--border-subtle)] p-4 sm:p-5"
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <StatusPill status={CONTESTED_EXPORT.bridge.status} />
+                <span className="font-mono text-[13px] text-[var(--warning)]">
+                  {CONTESTED_EXPORT.bridge.value}
+                </span>
+              </div>
+              <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em]">
+                {CONTESTED_EXPORT.bridge.label}
+              </h3>
+              <ScaleAnchor
+                className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]"
+                technical={CONTESTED_EXPORT.bridge.note.technical}
+                plain={CONTESTED_EXPORT.bridge.note.plain}
+                source={`Last verified ${CONTESTED_EXPORT.bridge.lastVerified}`}
+              />
+              <SourceLinks sources={CONTESTED_EXPORT.bridge.sources.map((id) => DESK_SOURCES[id])} />
+            </section>
+          </section>
 
           <section className="mt-12">
             <h2 className="font-display text-2xl font-normal tracking-[-0.018em] sm:text-3xl">

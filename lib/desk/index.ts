@@ -1,7 +1,7 @@
 export { DESK_SOURCES, DESK_VERIFIED, sourceList, type DeskSource, type DeskSourceId } from "./sources";
 export { TRACKER_ITEMS } from "./tracker";
 export { INDUSTRY_CARDS, COMPUTE_SECONDARY_LINE } from "./industries";
-export { COST_MARKERS, COST_INTRO, COST_ERA_NOTE } from "./costs";
+export { COST_MARKERS, COST_INTRO, COST_ERA_NOTE, CONTESTED_EXPORT } from "./costs";
 export {
   COMPUTE_HERO,
   COMPUTE_RULES,
