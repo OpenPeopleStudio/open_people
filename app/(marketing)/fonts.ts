@@ -8,7 +8,7 @@ import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 export const display = Newsreader({
   subsets: ["latin"],
   axes: ["opsz"],
-  weight: ["400", "500"],
+  weight: "variable",
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-display",
@@ -16,14 +16,14 @@ export const display = Newsreader({
 
 export const body = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "variable",
   display: "swap",
   variable: "--font-body",
 });
 
 export const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "variable",
   display: "swap",
   variable: "--font-mono",
 });

@@ -49,7 +49,12 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className="inst gate-clock" aria-label="Gate clock">
+    <div
+      id="gate-clock"
+      className="inst gate-clock"
+      aria-label="Gate clock"
+      style={{ scrollMarginTop: "calc(var(--desk-nav-offset) + 1rem)" }}
+    >
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="gc-title gc-desc">
         <title id="gc-title">The gate clock</title>
         <desc id="gc-desc">

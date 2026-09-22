@@ -20,13 +20,13 @@ export function Figure({
   className = "",
 }: {
   value: string;
-  unit?: string;
+  unit?: string | undefined;
   status: DeskChromeStatus;
-  sources?: DeskSource[];
-  lastVerified?: string;
-  note?: string;
-  size?: "sm" | "md" | "lg" | "xl";
-  className?: string;
+  sources?: DeskSource[] | undefined;
+  lastVerified?: string | undefined;
+  note?: string | undefined;
+  size?: "sm" | "md" | "lg" | "xl" | undefined;
+  className?: string | undefined;
 }) {
   const [open, setOpen] = useState(false);
   const [align, setAlign] = useState<"left" | "right">("left");

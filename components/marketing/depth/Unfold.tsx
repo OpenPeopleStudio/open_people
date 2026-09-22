@@ -44,16 +44,16 @@ export function Unfold({
   className = "",
   nudge = true,
 }: {
-  id?: string;
+  id?: string | undefined;
   plain: ReactNode;
   technical: ReactNode;
   /** the figure the technical block backs, e.g. "1.8¢" — used in the toggle copy */
-  label?: string;
-  sources?: DeskSource[];
+  label?: string | undefined;
+  sources?: DeskSource[] | undefined;
   /** override the guided teaser line */
-  teaser?: string;
-  className?: string;
-  nudge?: boolean;
+  teaser?: string | undefined;
+  className?: string | undefined;
+  nudge?: boolean | undefined;
 }) {
   const { depth } = useDepth();
   const autoId = useId();

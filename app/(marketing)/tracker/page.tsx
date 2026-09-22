@@ -1,109 +1,125 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import SiteShell from "@/components/marketing/SiteShell";
-import { DeskKicker, DeskVerified, LeadTakeaway, Receipts, TrackerBoard } from "@/components/marketing/desk";
-import { DESK_SOURCES, DESK_VERIFIED, TRACKER_ITEMS } from "@/lib/desk";
-import { SCALE_ANCHORS } from "@/lib/voice-mode";
+import { DeskPage, DeskSection } from "@/components/marketing/shell";
+import { Fig, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
+import { TrackerBoard } from "@/components/marketing/desk";
+import { AnnexRamp, GateClock, UnknownBoard } from "@/components/marketing/instruments";
+import { DESK_SOURCES, TRACKER_ITEMS } from "@/lib/desk";
 
 export const metadata: Metadata = {
   title: "Tracker",
   description:
-    "Living board for the Churchill Falls / Gull Island DCIA: what’s signed, what’s open, and what stays UNKNOWN. Framework, not binding PPAs. Mining first.",
+    "Living board for the Churchill Falls / Gull Island framework: what is signed, what is open, and what the public text still does not say. Framework, not binding contracts. Mining first.",
   alternates: { canonical: "/tracker" },
 };
 
 export default function TrackerPage() {
+  const unknown = TRACKER_ITEMS.filter((i) => i.status === "unknown");
   return (
-    <SiteShell>
-      <main className="desk-page pb-24 sm:pb-32">
-        <DeskVerified date={DESK_VERIFIED} sticky />
-        <article className="mx-auto max-w-[1080px] px-4 pt-10 sm:px-6 sm:pt-14">
-          <DeskKicker>Horizon desk · Tracker</DeskKicker>
-          <h1 className="desk-h1 mt-5 max-w-[22ch]">
-            What’s signed. What’s open. What we still mark UNKNOWN.
-          </h1>
-          <LeadTakeaway className="mt-8 text-lg leading-relaxed">
-            August’s cooperation agreement is a framework. The September House vote is a political
-            yes. The contracts that lock the power are still ahead.
-          </LeadTakeaway>
-          <div className="max-w-[780px]">
-            <Receipts summary="Receipts — DCIA, House, binding window">
-              <p>
-                Living board for the 17 August 2026 DCIA and the 17 September House endorsement.
-                Material Terms are the drafting basis for Definitive Agreements targeted around 31
-                December 2026; the instrument can run to 31 March 2027. Open People is not a DCIA
-                party.
-              </p>
-            </Receipts>
-            <p className="mt-6 text-sm text-[var(--text-muted)]">
-              Primary PDFs:{" "}
-              <a
-                href={DESK_SOURCES.dciaHq.href}
-                className="text-[var(--plasma)] no-underline hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Hydro-Québec DCIA
-              </a>
-              {" · "}
-              <a
-                href={DESK_SOURCES.dciaNl.href}
-                className="text-[var(--plasma)] no-underline hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                NL copy
-              </a>
-              {" · "}
-              <a
-                href={DESK_SOURCES.ircBriefing.href}
-                className="text-[var(--plasma)] no-underline hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                IRC technical briefing
-              </a>
-              .
+    <DeskPage
+      kicker="Churchill River desk · Tracker"
+      title={
+        <>
+          What&apos;s signed. What&apos;s open. <em>What we still mark unknown.</em>
+        </>
+      }
+      lede={
+        <Unfold
+          id="tracker-lede"
+          label="21–18"
+          plain={
+            <p>
+              August&apos;s cooperation agreement is a <Term k="framework">framework</Term>. The
+              September House vote (<Fig id="a">21–18</Fig>) is a political yes. The contracts that
+              lock the power are still ahead, and the Premier has not promised MHAs a vote on them.
             </p>
+          }
+          technical="Living board for the 17 August 2026 DCIA and the 17 September House endorsement. Material Terms are the drafting basis for Definitive Agreements targeted around 31 December 2026 (Art. 2.1); the instrument's Term runs to 31 March 2027 unless extended (§6.3). On 18 September the Premier said the deal returns to the House before definitive agreements but would not commit to a vote. Open People is not a DCIA party."
+          sources={[DESK_SOURCES.dciaHq, DESK_SOURCES.ntvVote, DESK_SOURCES.ircBriefing]}
+        />
+      }
+      meta={
+        <p className="text-sm text-[var(--ink-3)]">
+          Primary PDFs:{" "}
+          <a href={DESK_SOURCES.dciaHq.href} className="desk-link" target="_blank" rel="noreferrer">
+            Hydro-Québec DCIA
+          </a>
+          {" · "}
+          <a href={DESK_SOURCES.dciaNl.href} className="desk-link" target="_blank" rel="noreferrer">
+            NL copy
+          </a>
+          {" · "}
+          <a href={DESK_SOURCES.ircBriefing.href} className="desk-link" target="_blank" rel="noreferrer">
+            IRC technical briefing
+          </a>
+          .
+        </p>
+      }
+      actions={<WalkLaunch />}
+      hero={
+        <>
+          <GateClock compact />
+          <div className="mt-10">
+            <UnknownBoard />
           </div>
+        </>
+      }
+      sections={[
+        { id: "board", label: "The board" },
+        { id: "ramp", label: "Annex B ramp" },
+        { id: "corrections", label: "Corrections" },
+      ]}
+      walkthrough={{
+        title: "Walk the unknowns",
+        steps: [
+          ...unknown.map((item) => ({
+            anchor: item.id,
+            text: item.body.plain,
+            unfold: `row-${item.id}`,
+          })),
+          {
+            anchor: "ramp",
+            text: "And the timeline for new megawatts: a decade out, and preliminary.",
+          },
+        ],
+      }}
+    >
+      <DeskSection id="board" wide>
+        <TrackerBoard items={TRACKER_ITEMS} />
+      </DeskSection>
 
-          <div className="mt-14">
-            <TrackerBoard
-              items={TRACKER_ITEMS}
-              extras={{
-                "gull-island": (
-                  <>
-                    <p className="mt-3">{SCALE_ANCHORS.gulIslandRange.technical}</p>
-                    <p className="mt-2 desk-fact text-[var(--text-muted)]">
-                      {SCALE_ANCHORS.gulIslandRange.source}
-                    </p>
-                  </>
-                ),
-              }}
-            />
-          </div>
+      <DeskSection
+        id="ramp"
+        num="Annex B"
+        title="New megawatts are a decade out. The contracts are months out."
+        wide
+      >
+        <div data-rise>
+          <AnnexRamp />
+        </div>
+      </DeskSection>
 
-          <p className="mt-14 max-w-[780px] text-sm leading-relaxed text-[var(--text-muted)]">
-            Civic watchlist / moderated wall is not this page — deferred. Corrections:{" "}
-            <a href="mailto:tom@openpeople.ai" className="text-[var(--plasma)] no-underline hover:underline">
-              tom@openpeople.ai
-            </a>
-            . Also:{" "}
-            <Link href="/industries" className="text-[var(--plasma)] no-underline hover:underline">
-              Industries
-            </Link>
-            {" · "}
-            <Link href="/costs" className="text-[var(--plasma)] no-underline hover:underline">
-              Costs
-            </Link>
-            {" · "}
-            <Link href="/brief" className="text-[var(--plasma)] no-underline hover:underline">
-              Evidence brief
-            </Link>
-            .
-          </p>
-        </article>
-      </main>
-    </SiteShell>
+      <DeskSection id="corrections">
+        <p className="text-sm leading-relaxed text-[var(--ink-3)]">
+          Civic watchlist / moderated wall is not this page. Corrections:{" "}
+          <a href="mailto:tom@openpeople.ai" className="desk-link">
+            tom@openpeople.ai
+          </a>
+          . Also:{" "}
+          <Link href="/industries" className="desk-link">
+            Industries
+          </Link>
+          {" · "}
+          <Link href="/costs" className="desk-link">
+            Costs
+          </Link>
+          {" · "}
+          <Link href="/brief" className="desk-link">
+            Evidence brief
+          </Link>
+          .
+        </p>
+      </DeskSection>
+    </DeskPage>
   );
 }
