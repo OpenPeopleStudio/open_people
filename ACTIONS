@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.4 tools=25 commits=1 files=14 note=OG share cards: 8px plasma chassis, instrument not brochure (rebase onto copy pass 1)
 0.5.3 tools=40 commits=1 files=8 note=Copy pass 1: og:description + Dual plain Hogan (What matters is what we keep)
 0.5.2 tools=25 commits=1 files=8 note=Explicit og:image / twitter:image in root + deskMetadata so HTML actually references the PNG
 0.5.1 tools=80 commits=1 files=40 note=Desk v2 Open Graph / Twitter previews: real 1200x630 PNG + per-route ImageResponse
