@@ -7,6 +7,7 @@ export {
   parseStoredVoiceMode,
   parseVoiceQueryParam,
   voiceModeLabel,
+  voiceModeShortLabel,
   voiceModeToQueryValue,
   type VoiceMode,
 } from "./parse";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import SiteShell from "@/components/marketing/SiteShell";
+import { DeskPage } from "@/components/marketing/shell";
 
 const TITLE = "Churchill Falls — put the next generations first";
 const DESCRIPTION =
@@ -82,65 +82,66 @@ function Pull({ children }: { children: React.ReactNode }) {
 
 export default function LetterPage() {
   return (
-    <SiteShell>
-      <main>
-        <header className="border-b border-[var(--border-subtle)] px-4 pb-12 pt-28 sm:px-6 sm:pb-16 sm:pt-36">
-          <div className="mx-auto max-w-[780px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--plasma)]">
-              Letter · 15 September 2026
+    <DeskPage
+      kicker="Letter · 15 September 2026"
+      title={
+        <>
+          Churchill Falls — <em>put the next generations first</em>
+        </>
+      }
+      lede={
+        <p>
+          A constituent letter from Tom Lane to The Honourable Tony Wakeham, Premier of Newfoundland
+          and Labrador. The text below is the 15 September letter, unchanged.
+        </p>
+      }
+      verified={false}
+      meta={
+        <>
+          <aside className="border border-[rgba(212,168,75,0.22)] bg-[rgba(212,168,75,0.045)] p-5 sm:p-6">
+            <p className="desk-kicker" style={{ color: "var(--amber)" }}>
+              After this letter · House vote 17 September 2026
             </p>
-            <h1 className="mt-6 font-display text-[2rem] font-normal leading-[1.08] tracking-[-0.022em] sm:text-5xl md:text-[3.4rem]">
-              Churchill Falls —{" "}
-              <em className="not-italic text-[var(--plasma)]">put the next generations first</em>
-            </h1>
-            <p className="mt-6 max-w-[62ch] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-              A constituent letter from Tom Lane to The Honourable Tony Wakeham, Premier of
-              Newfoundland and Labrador. The text below is the 15 September letter, unchanged.
+            <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
+              Two days after this letter, the House of Assembly{" "}
+              <strong className="font-semibold text-[var(--ink)]">endorsed</strong> the Churchill
+              Falls / Gull Island DCIA framework{" "}
+              <strong className="font-semibold text-[var(--ink)]">21–18</strong> on 17 September,
+              with no referendum. That vote is an endorsement, not signed power-purchase agreements.
+              Binding definitive agreements are still targeted around{" "}
+              <strong className="font-semibold text-[var(--ink)]">31 December 2026</strong>; the DCIA
+              instrument can run to{" "}
+              <strong className="font-semibold text-[var(--ink)]">31 March 2027</strong>. The Premier
+              has said the deal returns to the House before then but has not promised a vote. Next
+              public political gate: Québec election{" "}
+              <strong className="font-semibold text-[var(--ink)]">5 October</strong>. Innu Nation
+              partnership and the federal assessment scope remain unresolved.
             </p>
-            <aside className="mt-8 rounded border border-[rgba(212,168,75,0.22)] bg-[rgba(212,168,75,0.045)] p-5 sm:p-6">
-              <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--warning)]">
-                After this letter · House vote 17 September 2026
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
-                Two days after this letter, the House of Assembly{" "}
-                <strong className="font-semibold text-[var(--text-primary)]">endorsed</strong> the
-                Churchill Falls / Gull Island DCIA framework{" "}
-                <strong className="font-semibold text-[var(--text-primary)]">21–18</strong> on 17
-                September, with no referendum. That vote is an endorsement, not signed
-                power-purchase agreements — it does not create contracts. Binding definitive
-                agreements are still targeted around{" "}
-                <strong className="font-semibold text-[var(--text-primary)]">31 December 2026</strong>.
-                The DCIA instrument can run to{" "}
-                <strong className="font-semibold text-[var(--text-primary)]">31 March 2027</strong>.
-                Next public political gate: Québec election{" "}
-                <strong className="font-semibold text-[var(--text-primary)]">5 October</strong>. Innu
-                Nation partnership and the federal assessment scope remain unresolved.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
-                Public next steps — doors this month, a form, and starter questions for your MHA —
-                are at{" "}
-                <Link href="/engage" className="text-[var(--plasma)] no-underline hover:underline">
-                  openpeople.ai/engage
-                </Link>
-                .
-              </p>
-            </aside>
-            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-t border-[var(--border-subtle)] pt-5 font-mono text-[11.5px] tracking-[0.04em] text-[var(--text-muted)]">
-              <span>
-                <span className="text-[rgba(242,244,246,0.24)]">From</span> Tom Lane · St. John’s, NL
-              </span>
-              <span>
-                <span className="text-[rgba(242,244,246,0.24)]">To</span> Premier Tony Wakeham
-              </span>
-              <span>
-                <span className="text-[rgba(242,244,246,0.24)]">cc</span> Sheilagh O’Leary, MHA
-              </span>
-            </div>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
+              Public next steps are at{" "}
+              <Link href="/engage" className="desk-link">
+                openpeople.ai/engage
+              </Link>
+              .
+            </p>
+          </aside>
+          <div className="desk-fact mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-[var(--hairline)] pt-5 text-[var(--ink-3)]">
+            <span>
+              <span className="text-[var(--ink-4)]">From</span> Tom Lane · St. John’s, NL
+            </span>
+            <span>
+              <span className="text-[var(--ink-4)]">To</span> Premier Tony Wakeham
+            </span>
+            <span>
+              <span className="text-[var(--ink-4)]">cc</span> Sheilagh O’Leary, MHA
+            </span>
           </div>
-        </header>
-
-        <article className="px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-16">
-          <div className="mx-auto max-w-[780px]">
+        </>
+      }
+      sections={SECTIONS.map((s) => ({ id: s.id, label: s.title }))}
+    >
+        <article className="desk-prose pb-16 pt-12 sm:pb-24 sm:pt-16">
+          <div>
             <div className="overflow-hidden rounded border border-[var(--border-subtle)]">
               {ADDRESS.map((row, i) => (
                 <div
@@ -165,7 +166,7 @@ export default function LetterPage() {
 
             <nav
               aria-label="Letter sections"
-              className="mt-8 border-l border-[var(--border-medium)] pl-4 print:hidden"
+              className="mt-8 border-l border-[var(--hairline-strong)] pl-4 print:hidden lg:hidden"
             >
               <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
                 On this page
@@ -234,8 +235,8 @@ export default function LetterPage() {
               </Body>
             </div>
 
-            <section id="better-price" className="scroll-mt-24 border-t border-[var(--border-subtle)] pt-12 mt-12">
-              <h2 className="font-display text-2xl font-normal tracking-[-0.015em] text-[var(--text-primary)] sm:text-3xl">
+            <section id="better-price" className="scroll-mt-[calc(var(--desk-nav-offset)+1rem)] border-t border-[var(--border-subtle)] pt-12 mt-12">
+              <h2 className="desk-h2">
                 Take the better price. Keep a door open.
               </h2>
               <div className="mt-6 space-y-5">
@@ -267,8 +268,8 @@ export default function LetterPage() {
               </div>
             </section>
 
-            <section id="labrador-power" className="scroll-mt-24 border-t border-[var(--border-subtle)] pt-12 mt-12">
-              <h2 className="font-display text-2xl font-normal tracking-[-0.015em] text-[var(--text-primary)] sm:text-3xl">
+            <section id="labrador-power" className="scroll-mt-[calc(var(--desk-nav-offset)+1rem)] border-t border-[var(--border-subtle)] pt-12 mt-12">
+              <h2 className="desk-h2">
                 Keep enough power in Labrador to build on.
               </h2>
               <div className="mt-6 space-y-5">
@@ -300,8 +301,8 @@ export default function LetterPage() {
               </div>
             </section>
 
-            <section id="gull-island" className="scroll-mt-24 border-t border-[var(--border-subtle)] pt-12 mt-12">
-              <h2 className="font-display text-2xl font-normal tracking-[-0.015em] text-[var(--text-primary)] sm:text-3xl">
+            <section id="gull-island" className="scroll-mt-[calc(var(--desk-nav-offset)+1rem)] border-t border-[var(--border-subtle)] pt-12 mt-12">
+              <h2 className="desk-h2">
                 Keep Gull Island a separate decision.
               </h2>
               <div className="mt-6 space-y-5">
@@ -324,8 +325,8 @@ export default function LetterPage() {
               </div>
             </section>
 
-            <section id="figures" className="scroll-mt-24 border-t border-[var(--border-subtle)] pt-12 mt-12">
-              <h2 className="font-display text-2xl font-normal tracking-[-0.015em] text-[var(--text-primary)] sm:text-3xl">
+            <section id="figures" className="scroll-mt-[calc(var(--desk-nav-offset)+1rem)] border-t border-[var(--border-subtle)] pt-12 mt-12">
+              <h2 className="desk-h2">
                 Say the figures the way a treasury would.
               </h2>
               <div className="mt-6 space-y-5">
@@ -400,16 +401,15 @@ export default function LetterPage() {
             </aside>
 
             <div className="mt-14 flex flex-col gap-3 print:hidden sm:flex-row">
-              <Link href="/engage" className="btn-primary justify-center px-5 py-3 text-sm">
+              <Link href="/engage" className="btn-primary">
                 Get involved — keep firm power here
               </Link>
-              <Link href="/brief" className="btn-secondary justify-center px-5 py-3 text-sm">
+              <Link href="/brief" className="btn-secondary">
                 Public evidence brief
               </Link>
             </div>
           </div>
         </article>
-      </main>
-    </SiteShell>
+    </DeskPage>
   );
 }

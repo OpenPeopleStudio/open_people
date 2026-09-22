@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import "./desk.css";
+import { fontClassName } from "./fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -6,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s · Open People",
   },
   description:
-    "Horizon desk for Churchill Falls / Gull Island firm power in Newfoundland and Labrador. Mining first. Compute is a separate page — not the opener.",
+    "Churchill River desk: what is signed, what is open, and what the public text still does not say about Churchill Falls / Gull Island firm power. Mining first. Compute is a separate page.",
 };
 
 export default function MarketingLayout({
@@ -14,5 +16,5 @@ export default function MarketingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <div className={`desk-root ${fontClassName}`}>{children}</div>;
 }

@@ -65,30 +65,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Inter font for clean, modern typography */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-
         {/* Favicon and icons */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
         {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#e8893c" />
+        <meta name="theme-color" content="#040404" />
         <meta name="msapplication-TileColor" content="#040404" />
       </head>
       <body className="antialiased">
-        {/* Noise texture overlay */}
-        <div className="noise" aria-hidden="true" />
         <ErrorBoundary>
           {children}
         </ErrorBoundary>

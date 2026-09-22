@@ -114,3 +114,15 @@ export function useVoiceMode() {
   }
   return ctx;
 }
+
+/** Depth helpers on top of the same store. */
+export function useDepth() {
+  const { mode, setMode } = useVoiceMode();
+  return {
+    depth: mode,
+    setDepth: setMode,
+    isPlain: mode === "plain",
+    isGuided: mode === "guided",
+    isTechnical: mode === "technical",
+  };
+}

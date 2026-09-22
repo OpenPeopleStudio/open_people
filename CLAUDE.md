@@ -19,11 +19,14 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - `packages/` — Future reference implementation (identity, package, verify, migrate)
 - `examples/` — Example `.opkg` files
 - `decisions/` — Architecture Decision Records
-- `public/brief.html` → **https://openpeople.ai/brief** (public Labrador power & industry case)
-- `public/coalition.html` → **https://openpeople.ai/coalition** (partner brief; noindex; not in sitemap)
-- `app/(marketing)/` — Phase 2 public pages: `/`, `/tracker`, `/industries`, `/costs`, `/compute`, `/about`, `/approach`, `/contact`, `/letter`, `/engage`
-- `components/marketing/` — SiteNav, SiteFooter, SiteShell (plasma brand)
-- `next.config.ts` — rewrites for `/brief` and `/coalition`; 301s for retired SaaS marketing routes
+- `app/(marketing)/` — public pages on the shared `DeskPage` shell: `/`, `/tracker`, `/industries`, `/costs`, `/brief` (public Labrador power & industry case), `/coalition` (partner brief; noindex via metadata + header; not in sitemap), `/compute`, `/engage`, `/letter`, `/about`, `/approach`, `/contact`
+- `app/(marketing)/desk.css` + `fonts.ts` — design system v2 (void / plasma = plain layer / steel = technical layer; Newsreader, Inter, JetBrains Mono via next/font)
+- `components/marketing/shell/` — DeskPage, DeskSection, Rail, MobileStrip
+- `components/marketing/depth/` — Unfold, Fig, Term, Figure, Nudge, Walkthrough (three reading depths: plain · guided · technical, `?v=plain|guided|tech`)
+- `components/marketing/instruments/` — GateClock, UnknownBoard, PriceLadder, FlowBars, CorridorSchematic, AnnexRamp, DefaultPath (pure SVG; every number is a `Figure` bound to `lib/desk`)
+- `lib/desk/` — the data spine: sources registry, tracker rows, cost markers, industries, compute, gates, glossary, ladder, flows, annexB. No number reaches a page except through these objects.
+- `docs/plans/2026-09-22-desk-v2-redesign.md` — the v2 plan and the 22 Sep data audit
+- `next.config.ts` — 301s for retired SaaS marketing routes; `X-Robots-Tag` on `/coalition`
 - Track 2 (planned): `app.openpeople.ai` → Phase 2 project-management desk (not multi-tenant SaaS)
 
 ## Conventions
@@ -41,7 +44,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - This project is independent but referenced from mars-hq's VISION.md and TODO.md
 
 ## Current State
-Public Phase 2 site is live as a Churchill River / Labrador **horizon desk** (2026-09-22): `/tracker`, `/industries`, `/costs`, home, `/brief`, `/engage`. Compute quarantined at `/compute`. House 21–18 endorsement of the DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Mining first. Open People is constituent/catalyst only. Parked SaaS shell remains unpublished as the public story.
+Public site is the Churchill River desk, v2 (2026-09-22, VERSION 0.5.0): home, `/tracker`, `/industries`, `/costs`, `/brief`, `/engage`, `/letter`. Compute is a separate page at `/compute`, never the opener. House 21–18 endorsement of the DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Mining first. Open People is constituent/catalyst only. Parked SaaS shell remains unpublished as the public story.
 
 ---
 

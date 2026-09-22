@@ -1,33 +1,35 @@
 "use client";
 
-import { voiceModeLabel, type VoiceMode } from "@/lib/voice-mode";
+import { VOICE_MODES, voiceModeLabel, voiceModeShortLabel, type VoiceMode } from "@/lib/voice-mode";
 import { useVoiceMode } from "./VoiceModeProvider";
 
-const SEGMENTS: VoiceMode[] = ["plain", "technical"];
-
-export function VoiceToggle({
+/**
+ * Three-position depth control: Plain · Guided · Technical.
+ * `variant="echo"` renders a one-line "Showing … · Switch" note for inline use.
+ */
+export function DepthControl({
   variant = "control",
   className = "",
+  full = false,
 }: {
   variant?: "control" | "echo";
   className?: string;
+  full?: boolean;
 }) {
   const { mode, setMode } = useVoiceMode();
 
   if (variant === "echo") {
-    const other: VoiceMode = mode === "plain" ? "technical" : "plain";
+    const next: VoiceMode = mode === "technical" ? "plain" : "technical";
     return (
-      <p
-        className={`font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] ${className}`.trim()}
-      >
+      <p className={`desk-fact uppercase tracking-[0.12em] text-[var(--ink-3)] ${className}`.trim()}>
         Showing: {voiceModeLabel(mode)}
         {" · "}
         <button
           type="button"
           className="text-[var(--plasma)] underline-offset-4 hover:underline"
-          onClick={() => setMode(other)}
+          onClick={() => setMode(next)}
         >
-          Switch to {voiceModeLabel(other)}
+          Switch to {voiceModeLabel(next)}
         </button>
       </p>
     );
@@ -36,27 +38,27 @@ export function VoiceToggle({
   return (
     <div
       role="group"
-      aria-label="Voice mode"
-      className={`inline-flex shrink-0 rounded border border-[var(--border-medium)] ${className}`.trim()}
+      aria-label="Reading depth"
+      className={`depth ${full ? "depth-full" : ""} ${className}`.trim()}
     >
-      {SEGMENTS.map((segment) => {
+      {VOICE_MODES.map((segment) => {
         const active = mode === segment;
         return (
           <button
             key={segment}
             type="button"
             aria-pressed={active}
+            data-depth={segment}
+            title={voiceModeLabel(segment)}
             onClick={() => setMode(segment)}
-            className={`flex-1 whitespace-nowrap px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] transition-colors md:flex-none lg:text-[11px] ${
-              active
-                ? "bg-[var(--plasma-soft)] text-[var(--plasma)]"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
           >
-            {voiceModeLabel(segment)}
+            {voiceModeShortLabel(segment)}
           </button>
         );
       })}
     </div>
   );
 }
+
+/** v1 name kept for callers and tests. */
+export { DepthControl as VoiceToggle };

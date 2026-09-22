@@ -65,3 +65,7 @@ Thumbs.db
 
 # source maps (build artifacts)
 *.map
+
+# Playwright output
+/test-results/
+/playwright-report/

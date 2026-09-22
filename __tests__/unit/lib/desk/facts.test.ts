@@ -7,6 +7,7 @@ import {
   TRACKER_ITEMS,
 } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
+import { DESK_SOURCES } from "@/lib/desk";
 
 describe("horizon desk facts", () => {
   it("gives every tracker row sources, a last-verified date, and dual voice", () => {
@@ -182,6 +183,48 @@ describe("horizon desk facts", () => {
       expect(item.title.trim().length).toBeGreaterThan(8);
       expect(item.title).not.toMatch(/^Transparency —/);
       expect(item.body.plain.trim().length).toBeGreaterThan(40);
+    }
+  });
+});
+
+describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
+  it("dates the IRC levelized MOU path 2025–2041, not 2024–2041", () => {
+    const mou = COST_MARKERS.find((row) => row.id === "mou-irc-path");
+    expect(mou?.note.technical).toMatch(/3\.8¢\/kWh over 2025–2041/);
+    expect(mou?.note.technical).not.toMatch(/2024–2041/);
+  });
+
+  it("attributes 31 March 2027 to the DCIA Term clause and records Gull Island exclusivity", () => {
+    const window = TRACKER_ITEMS.find((item) => item.id === "binding-window");
+    expect(window?.body.technical).toMatch(/Article 2\.1/);
+    expect(window?.body.technical).toMatch(/§6\.3\(a\)/);
+    expect(window?.body.technical).toMatch(/exclusivity on Gull Island/);
+    expect(window?.body.plain).toMatch(/exclusive/i);
+  });
+
+  it("carries the post-vote return-to-House gap and the Québec Innu file as open rows", () => {
+    const back = TRACKER_ITEMS.find((item) => item.id === "house-return");
+    expect(back?.status).toBe("open");
+    expect(back?.body.technical).toMatch(/would not commit to a vote/);
+    expect(back?.body.technical).toMatch(/UNKNOWN/);
+    const qcInnu = TRACKER_ITEMS.find((item) => item.id === "qc-innu");
+    expect(qcInnu?.status).toBe("open");
+    expect(qcInnu?.sources).toContain("aptnQcInnu");
+  });
+
+  it("does not ship a source URL nobody has opened (SaltWire guess replaced by a loadable mirror)", () => {
+    for (const source of Object.values(DESK_SOURCES)) {
+      expect(source.href).not.toMatch(/saltwire\.com/);
+      expect(source.href).toMatch(/^https?:\/\//);
+      expect(source.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+    expect(DESK_SOURCES.cbcMining.date).toBe("2025-01-15");
+    expect(DESK_SOURCES.cerNl.href).toMatch(/province-territory-energy-profiles\/newfoundland-labrador/);
+  });
+
+  it("keeps every tracker source id resolvable", () => {
+    for (const item of TRACKER_ITEMS) {
+      for (const id of item.sources) expect(DESK_SOURCES[id]).toBeDefined();
     }
   });
 });

@@ -20,7 +20,7 @@ export const INDUSTRY_CARDS: IndustryCard[] = [
     rank: "first",
     lastVerified: DESK_VERIFIED,
     figure: "~312 MW",
-    figureNote: "CBC report of NL Hydro officials on IOC (Labrador City) + Tacora (Wabush), against a 525 MW NLH allocation from Churchill Falls. Press cite, not a PUB order.",
+    figureNote: "CBC report (15 Jan 2025, 2024 MOU era) of NL Hydro officials on IOC (Labrador City) + Tacora (Wabush), against a 525 MW NLH allocation from Churchill Falls. DCIA Annex B shows the same 525 MW existing-CF volume for NLH in 2027. Press cite, not a PUB order.",
     body: {
       plain:
         "The mines that already live on this grid are the first industrial claim. The west Labrador lines are tight. New large loads wait on a bigger line — and on contracts that still are not signed.",
@@ -40,9 +40,9 @@ export const INDUSTRY_CARDS: IndustryCard[] = [
       plain:
         "Hydro’s own study says the existing west lines are at their limit. A bigger line is the mining-first piece of steel. August’s announcement attaches money. In-service date is still unknown.",
       technical:
-        "NL Hydro Labrador West Transmission Expansion Study: Churchill Falls has minimal surplus for new Labrador loads; existing 230 kV lines to Labrador West are at operational limits. Phase 1 preferred a single 735 kV line with a maximum power transfer limit of approximately 1,500 MW. Four large mining customers in Labrador West requested additional power. Government of NL (17 Aug 2026) describes the Labrador West line as funded. Commercial operation date: UNKNOWN.",
+        "NL Hydro Labrador West Transmission Expansion Study: Churchill Falls has minimal surplus for new Labrador loads; existing 230 kV lines to Labrador West are at operational limits. Phase 1 preferred a single 735 kV line with a maximum power transfer limit of approximately 1,500 MW. Four large mining customers in Labrador West requested additional power. As of September 2026: FEED under way, geotechnical permits sought for summer/fall 2026, FEED completion targeted December 2026. Government of NL (17 Aug 2026) lists $1 billion (2026 NPV) in federal support for the line as publicly described. Commercial operation date: UNKNOWN.",
     },
-    sources: ["nlhLabWest", "govNlDcia"],
+    sources: ["nlhLabWest", "govNlDcia", "canadaDcia"],
   },
   {
     id: "named-minerals",

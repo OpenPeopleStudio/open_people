@@ -46,7 +46,7 @@ export const COMPUTE_NEIGHBOURS: DeskVoice = {
   plain:
     "Other provinces are rationing large new computing loads. That is context for leftover hydro — not a Labrador booking.",
   technical:
-    "Québec has proposed a dedicated data-centre tariff (Hydro-Québec, Feb 2026, Régie pending) reported at 13¢/kWh. British Columbia and Alberta have capped or screened large AI / crypto-adjacent load. Those postures do not allocate Labrador megawatts. They are neighbouring-grid facts, quarantined here so they do not open the public site.",
+    "Hydro-Québec filed a dedicated data-centre rate with the Régie de l’énergie on 19 February 2026: 13¢/kWh for data centres of 5 MW and up (blockchain 19.5¢), requested effective 1 November 2026; the Régie hearing is set for fall 2026 with a decision expected around year-end or early 2027. British Columbia’s regulation in force from 1 February 2026 caps allocations at 100 MW conventional plus 300 MW AI data-centre load for two years, and its crypto-mining moratorium is permanent. Alberta’s AESO 1,200 MW interim large-load limit (to 2028) is described by the province as fully taken, with a Data Centre Regulation in effect since June 2026. Those postures do not allocate Labrador megawatts. They are neighbouring-grid facts, kept on this page so they do not open the public site.",
 };
 
 export const COMPUTE_HONESTY = [
