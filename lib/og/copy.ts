@@ -15,7 +15,7 @@ export type DeskOgCard = {
 
 export const HOME_TITLE = "Open People — Churchill River desk · Keep the power here";
 export const HOME_DESCRIPTION =
-  "The clock on the Churchill Falls / Gull Island framework, the things the public text still does not say, and what the paper already decides if nobody writes anything else. Mining first. Compute is a separate page.";
+  "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.";
 
 export const DESK_OG = {
   home: {

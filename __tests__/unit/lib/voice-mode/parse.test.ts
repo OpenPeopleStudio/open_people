@@ -70,7 +70,12 @@ describe("scale anchors", () => {
   it("keeps GATES numbers and grounds retained MW + TWh in live figures", () => {
     expect(HOME_GATES.map((gate) => gate.v)).toEqual(["21–18", "5 Oct", "YE 2026", "31 Mar"]);
     expect(SCALE_ANCHORS.exportScale.technical).toContain("43 TWh");
-    expect(SCALE_ANCHORS.exportScale.plain).toContain("43 TWh");
+    expect(SCALE_ANCHORS.exportScale.technical).toContain("DCIA");
+    expect(SCALE_ANCHORS.exportScale.technical).toContain("21–18");
+    expect(SCALE_ANCHORS.exportScale.plain).toBe(
+      "We make a huge amount of clean electricity — about 43 TWh a year — and ship most of it out. What matters is what we keep for industry here: mining and resources first, so Labrador and the island can build on firm power that stays. August’s paper and the September House vote (21–18) are a framework and a political yes. The contracts that lock the power are still ahead.",
+    );
+    expect(SCALE_ANCHORS.exportScale.plain).not.toMatch(/The fight is/);
     expect(SCALE_ANCHORS.retainedMw.technical).toContain("2,350 MW");
     expect(SCALE_ANCHORS.retainedMw.plain).toContain("illustration, not a project");
     expect(SCALE_ANCHORS.federalAssessment.technical).toContain("2,000 MW");

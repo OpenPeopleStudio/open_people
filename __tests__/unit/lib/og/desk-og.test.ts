@@ -27,6 +27,9 @@ describe("desk Open Graph", () => {
 
   it("keeps the live home title and description", () => {
     expect(HOME_TITLE).toBe("Open People — Churchill River desk · Keep the power here");
+    expect(HOME_DESCRIPTION).toBe(
+      "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.",
+    );
     expect(HOME_DESCRIPTION).toMatch(/Mining first/);
     expect(HOME_DESCRIPTION).toMatch(/Compute is a separate page/);
     expect(HOME_TITLE.toLowerCase()).not.toMatch(/horizon desk|data.?centre|data.?center/);
@@ -74,6 +77,14 @@ describe("desk Open Graph", () => {
     }
     expect(DESK_OG.home.headline).toBe("Keep the power here.");
     expect(DESK_OG.home.accent).toBe("Watch the gates.");
+    expect(`${DESK_OG.home.kicker} · ${DESK_OG.home.kickerAccent}`.toUpperCase()).toBe(
+      "OPEN PEOPLE · CHURCHILL RIVER DESK",
+    );
+    expect(DESK_OG.home.alt).toBe(
+      "Open People — Churchill River desk. Keep the power here. Watch the gates.",
+    );
+    expect(DESK_OG.compute.headline).toBe("A compute plan,");
+    expect(DESK_OG.compute.accent).toBe("not a campus landing.");
     expect(DESK_OG.compute.quiet).toBe(true);
   });
 
