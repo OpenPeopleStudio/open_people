@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Term, Unfold } from "@/components/marketing/depth";
 import { StatusPill } from "@/components/marketing/desk";
 import { DefaultPath, GateClock } from "@/components/marketing/instruments";
 import { DESK_SOURCES, TRACKER_ITEMS } from "@/lib/desk";
+import { deskMetadata } from "@/lib/og/metadata";
 import {
   ENGAGE_CHECKS,
   ENGAGE_HERO_LEDE,
@@ -15,26 +15,14 @@ import MhaTemplates from "./MhaTemplates";
 import ShareEngage from "./ShareEngage";
 import PrintButton from "./PrintButton";
 
-export const metadata: Metadata = {
+export const metadata = deskMetadata({
   title: "Keep firm power in NL",
   description:
     "The Churchill Falls / Gull Island DCIA is a framework, not binding contracts. Seven checks an MHA can put to the long-form before it hardens. Mining first. Compute is a named use, not a reserved block.",
-  alternates: { canonical: "/engage" },
-  openGraph: {
-    title: "Keep firm power in NL",
-    description:
-      "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
-    url: "/engage",
-    type: "website",
-    locale: "en_CA",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Keep firm power in NL",
-    description:
-      "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
-  },
-};
+  path: "/engage",
+  ogDescription:
+    "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
+});
 
 const OPEN = [
   {

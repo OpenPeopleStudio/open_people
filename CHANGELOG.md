@@ -2,6 +2,16 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.1 — 2026-09-22 — Desk v2 Open Graph / Twitter previews
+
+Share cards match the live Churchill River desk instead of empty PNGs and leftover “horizon desk” OG copy.
+
+- Real **1200×630** `public/og-image.png` / `twitter-image.png` (void + plasma hairline, “Keep the power here.”). Same ImageResponse layout as the `opengraph-image.tsx` routes, so they cannot ship as 0-byte placeholders. SVG twin at `public/og-image.svg`.
+- Next.js `opengraph-image.tsx` / `twitter-image.tsx` (ImageResponse) on home, tracker, costs, industries, engage, brief, coalition, compute — compute stays quieter.
+- Root `og:title` / `twitter:title` now match the live tab title. Child routes set their own OG so they no longer inherit the root card.
+- `metadataBase` / sitemap / robots use `www.openpeople.ai` (apex 307s; crawlers that skip redirects were fetching empty images).
+- No invented ¢/MW on the image.
+
 ## 0.5.0 — 2026-09-22 — Desk v2: instrument, guided depth, verified data
 
 Public site rebuilt as a precision instrument. Same doctrine, same facts, one design system, three reading depths, seven SVG instruments, every number bound to a sourced object.

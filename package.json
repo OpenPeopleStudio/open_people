@@ -21,6 +21,7 @@
     "test:admin": "vitest run --testPathPattern=admin",
     "test:vault": "vitest run --testPathPattern=vault",
     "generate-assets": "node scripts/generate-assets.js",
+    "generate:og": "tsx scripts/generate-og-images.ts",
     "generate:openapi": "node scripts/generate-openapi.js",
     "generate:sdk:ts": "npm run generate:openapi && npx openapi-typescript docs/api/openapi.json -o sdk/typescript/index.d.ts",
     "generate:sdk": "npm run generate:sdk:ts",

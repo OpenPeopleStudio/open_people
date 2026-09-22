@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
 import { TrackerBoard } from "@/components/marketing/desk";
 import { AnnexRamp, GateClock, UnknownBoard } from "@/components/marketing/instruments";
 import { DESK_SOURCES, TRACKER_ITEMS } from "@/lib/desk";
+import { deskMetadata } from "@/lib/og/metadata";
 
-export const metadata: Metadata = {
+export const metadata = deskMetadata({
   title: "Tracker",
   description:
     "Living board for the Churchill Falls / Gull Island framework: what is signed, what is open, and what the public text still does not say. Framework, not binding contracts. Mining first.",
-  alternates: { canonical: "/tracker" },
-};
+  path: "/tracker",
+});
 
 export default function TrackerPage() {
   const unknown = TRACKER_ITEMS.filter((i) => i.status === "unknown");

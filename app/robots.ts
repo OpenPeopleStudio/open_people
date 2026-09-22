@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
+import { siteOrigin } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://openpeople.ai";
+  const baseUrl = siteOrigin();
 
   return {
     rules: [

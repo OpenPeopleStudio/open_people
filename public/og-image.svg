@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#040404"/>
+  <rect width="1200" height="2" fill="#e8893c"/>
+  <text x="72" y="108" font-family="JetBrains Mono, ui-monospace, monospace" font-size="18" letter-spacing="2.6" fill="#e8893c">OPEN PEOPLE<tspan fill="#8a9bb0" dx="14">·</tspan><tspan fill="rgba(242,244,246,0.74)" dx="14">CHURCHILL RIVER DESK</tspan></text>
+  <text x="72" y="268" font-family="Noto Serif, Georgia, serif" font-size="58" fill="#f2f4f6">Keep the power here.</text>
+  <text x="72" y="340" font-family="Noto Serif, Georgia, serif" font-size="58" fill="#e8893c">Watch the gates.</text>
+  <line x1="72" y1="528" x2="1128" y2="528" stroke="rgba(255,255,255,0.16)" stroke-width="1"/>
+  <text x="72" y="572" font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" letter-spacing="1.8" fill="#8a9bb0">OPEN PEOPLE<tspan fill="#e8893c"> · NL</tspan></text>
+  <text x="1128" y="572" text-anchor="end" font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" letter-spacing="1.6" fill="#8a9bb0">OPENPEOPLE.AI</text>
+</svg>

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import "./desk.css";
 import { fontClassName } from "./fonts";
+import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/og/copy";
 
 export const metadata: Metadata = {
   title: {
-    default: "Open People — Keep firm power in Newfoundland and Labrador",
+    default: HOME_TITLE,
     template: "%s · Open People",
   },
-  description:
-    "Churchill River desk: what is signed, what is open, and what the public text still does not say about Churchill Falls / Gull Island firm power. Mining first. Compute is a separate page.",
+  description: HOME_DESCRIPTION,
 };
 
 export default function MarketingLayout({

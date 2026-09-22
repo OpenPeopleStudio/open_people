@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
 import { StatusPill } from "@/components/marketing/desk";
+import { deskMetadata } from "@/lib/og/metadata";
 import {
   CorridorSchematic,
   DefaultPath,
@@ -30,26 +30,15 @@ import {
 } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
-export const metadata: Metadata = {
+export const metadata = deskMetadata({
   title: "Labrador power & industry case",
   description:
     "Firm in-province power for Labrador and Newfoundland industry first. The Churchill Falls / Gull Island DCIA is a framework, not binding PPAs. Compute is a separate page.",
-  alternates: { canonical: "/brief" },
-  openGraph: {
-    title: "Labrador power & industry case",
-    description:
-      "Keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. Compute is not the opener.",
-    url: "/brief",
-    type: "article",
-    locale: "en_CA",
-  },
-  twitter: {
-    card: "summary",
-    title: "Labrador power & industry case",
-    description:
-      "Keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. Compute is not the opener.",
-  },
-};
+  path: "/brief",
+  type: "article",
+  ogDescription:
+    "Keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. Compute is not the opener.",
+});
 
 /* ── data lookups: every number on this page is bound to a lib/desk object ── */
 

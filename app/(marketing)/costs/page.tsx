@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
@@ -10,14 +9,15 @@ import {
   COST_MARKERS,
   DESK_SOURCES,
 } from "@/lib/desk";
+import { deskMetadata } from "@/lib/og/metadata";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
-export const metadata: Metadata = {
+export const metadata = deskMetadata({
   title: "Costs",
   description:
     "Seven price families on one ladder, labelled, not merged. Starts about 1.8¢/kWh in 2027; averages about 7.4¢/kWh over 50 years; heritage 0.2¢; Labrador household 3.154¢; the mine rate is a formula; the signed industrial rate is not published.",
-  alternates: { canonical: "/costs" },
-};
+  path: "/costs",
+});
 
 export default function CostsPage() {
   return (
