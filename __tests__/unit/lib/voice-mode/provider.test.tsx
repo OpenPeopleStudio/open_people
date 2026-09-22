@@ -3,11 +3,12 @@
 import type { ReactElement } from "react";
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { Dual, VoiceModeProvider, VoiceToggle } from "@/components/marketing/voice";
+import { Dual, VoiceModeProvider, VoiceToggle, resetVoiceModeStore } from "@/components/marketing/voice";
 import { VOICE_STORAGE_KEY } from "@/lib/voice-mode";
 
 afterEach(() => {
   cleanup();
+  resetVoiceModeStore();
   window.localStorage.clear();
   window.history.replaceState(null, "", "/");
 });

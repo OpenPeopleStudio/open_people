@@ -4,9 +4,8 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import {
@@ -26,6 +25,10 @@ type VoiceModeContextValue = {
 
 const VoiceModeContext = createContext<VoiceModeContextValue | null>(null);
 
+const listeners = new Set<() => void>();
+let clientMode: VoiceMode | null = null;
+let didPersistUrl = false;
+
 function persistMode(mode: VoiceMode) {
   try {
     window.localStorage.setItem(VOICE_STORAGE_KEY, mode);
@@ -40,31 +43,65 @@ function writeQuery(mode: VoiceMode) {
   window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
+function readClientMode(): VoiceMode {
+  const fromUrl = parseVoiceQueryParam(
+    new URLSearchParams(window.location.search).get(VOICE_QUERY_PARAM)
+  );
+  if (fromUrl) return fromUrl;
+  try {
+    const stored = parseStoredVoiceMode(window.localStorage.getItem(VOICE_STORAGE_KEY));
+    if (stored) return stored;
+  } catch {
+    // ignore
+  }
+  return DEFAULT_VOICE_MODE;
+}
+
+function emit() {
+  for (const listener of listeners) listener();
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  if (!didPersistUrl) {
+    didPersistUrl = true;
+    const fromUrl = parseVoiceQueryParam(
+      new URLSearchParams(window.location.search).get(VOICE_QUERY_PARAM)
+    );
+    if (fromUrl) persistMode(fromUrl);
+  }
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getSnapshot(): VoiceMode {
+  if (clientMode === null) clientMode = readClientMode();
+  return clientMode;
+}
+
+function getServerSnapshot(): VoiceMode {
+  return DEFAULT_VOICE_MODE;
+}
+
+function applyMode(next: VoiceMode) {
+  clientMode = next;
+  persistMode(next);
+  writeQuery(next);
+  emit();
+}
+
+/** Test-only: clear the client store between jsdom cases. */
+export function resetVoiceModeStore() {
+  clientMode = null;
+  didPersistUrl = false;
+}
+
 export function VoiceModeProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<VoiceMode>(DEFAULT_VOICE_MODE);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const fromUrl = parseVoiceQueryParam(params.get(VOICE_QUERY_PARAM));
-    if (fromUrl) {
-      setModeState(fromUrl);
-      persistMode(fromUrl);
-      return;
-    }
-    try {
-      const stored = parseStoredVoiceMode(window.localStorage.getItem(VOICE_STORAGE_KEY));
-      if (stored) setModeState(stored);
-    } catch {
-      // ignore
-    }
-  }, []);
-
+  const mode = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const setMode = useCallback((next: VoiceMode) => {
-    setModeState(next);
-    persistMode(next);
-    writeQuery(next);
+    applyMode(next);
   }, []);
-
   const value = useMemo(() => ({ mode, setMode }), [mode, setMode]);
 
   return <VoiceModeContext.Provider value={value}>{children}</VoiceModeContext.Provider>;
