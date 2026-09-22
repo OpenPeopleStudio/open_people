@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/og/copy";
+import { HOME_DESCRIPTION, HOME_TITLE, DESK_OG_IMAGE, DESK_OG_IMAGE_PATH } from "@/lib/og/copy";
 import { siteOrigin } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -29,11 +29,20 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_CA",
     siteName: "Open People",
+    images: [
+      {
+        url: DESK_OG_IMAGE.url,
+        width: DESK_OG_IMAGE.width,
+        height: DESK_OG_IMAGE.height,
+        alt: DESK_OG_IMAGE.alt,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
+    images: [DESK_OG_IMAGE_PATH],
   },
   icons: {
     icon: [
