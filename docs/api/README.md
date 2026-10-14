@@ -1,6 +1,8 @@
-# API Docs
+# API Docs (stable)
 
 Owner: CTO
+
+Envelope: `{ data, error, traceId }` per `docs/api/STANDARDS.md`. This index lists the route docs; it is not itself an endpoint.
 
 ## Index
 
