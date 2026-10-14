@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import type { DeskSource } from "@/lib/desk";
+import { sourceHasHref, type DeskSource } from "@/lib/desk";
 
 /** Always-visible one-breath human takeaway. Numbers belong after this, not instead of it. */
 export function LeadTakeaway({
@@ -16,14 +16,18 @@ export function LeadTakeaway({
 export function PrimarySource({ source }: { source: DeskSource }) {
   return (
     <p className="mt-3">
-      <a
-        href={source.href}
-        className="desk-fact text-[var(--plasma)] no-underline hover:underline"
-        target="_blank"
-        rel="noreferrer"
-      >
-        {source.label} →
-      </a>
+      {sourceHasHref(source) ? (
+        <a
+          href={source.href}
+          className="desk-fact text-[var(--plasma)] no-underline hover:underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {source.label} →
+        </a>
+      ) : (
+        <span className="desk-fact text-[var(--ink-3)]">{source.label}</span>
+      )}
     </p>
   );
 }
@@ -72,14 +76,18 @@ export function SourceLinks({ sources }: { sources: DeskSource[] }) {
     <ul className="mt-4 space-y-1">
       {sources.map((source) => (
         <li key={source.id}>
-          <a
-            href={source.href}
-            className="desk-fact text-[var(--plasma)] no-underline hover:underline"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {source.label} →
-          </a>
+          {sourceHasHref(source) ? (
+            <a
+              href={source.href}
+              className="desk-fact text-[var(--plasma)] no-underline hover:underline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {source.label} →
+            </a>
+          ) : (
+            <span className="desk-fact text-[var(--ink-3)]">{source.label}</span>
+          )}
         </li>
       ))}
     </ul>

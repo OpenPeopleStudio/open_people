@@ -1,4 +1,4 @@
-import { DESK_SOURCES } from "@/lib/desk";
+import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
 
 /**
@@ -267,9 +267,9 @@ export function CorridorSchematic() {
               value="~1,500 MW"
               status="framework"
               size="sm"
-              sources={[DESK_SOURCES.nlhLabWest, DESK_SOURCES.govNlDcia]}
-              lastVerified="2026-09-22"
-              note="NL Hydro Phase 1 preferred a single 735 kV line with a maximum transfer of approximately 1,500 MW. FEED under way; completion targeted December 2026. No in-service date."
+              sources={[DESK_SOURCES.nlhContractorOct, DESK_SOURCES.nlhLabWest, DESK_SOURCES.govNlDcia]}
+              lastVerified={DESK_VERIFIED}
+              note="NL Hydro October 2026 contractor notice: a single 735 kV line with a maximum transfer of approximately 1,500 MW — a ceiling, not a reserved block. FEED targeted December 2026. Construction contracts expected Q1 2028. No in-service date."
             />{" "}
             <span className="text-[var(--ink-3)]">
               — proposed 735 kV transfer limit, a planning figure
@@ -284,7 +284,7 @@ export function CorridorSchematic() {
               status="reported"
               size="sm"
               sources={[DESK_SOURCES.cbcMining]}
-              lastVerified="2026-09-22"
+              lastVerified={DESK_VERIFIED}
               note="Mining load sold to IOC and Tacora on the two Labrador West lines, per NL Hydro officials (CBC, Jan 2025). Press cite."
             />{" "}
             <span className="text-[var(--ink-3)]">

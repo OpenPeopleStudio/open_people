@@ -3,11 +3,12 @@ import {
   CONTESTED_EXPORT,
   COST_ERA_NOTE,
   COST_MARKERS,
+  DESK_SOURCES,
+  DESK_VERIFIED,
   INDUSTRY_CARDS,
   TRACKER_ITEMS,
 } from "@/lib/desk";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
-import { DESK_SOURCES } from "@/lib/desk";
 
 describe("horizon desk facts", () => {
   it("gives every tracker row sources, a last-verified date, and dual voice", () => {
@@ -214,17 +215,160 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
 
   it("does not ship a source URL nobody has opened (SaltWire guess replaced by a loadable mirror)", () => {
     for (const source of Object.values(DESK_SOURCES)) {
-      expect(source.href).not.toMatch(/saltwire\.com/);
-      expect(source.href).toMatch(/^https?:\/\//);
+      if (source.href) {
+        expect(source.href).not.toMatch(/saltwire\.com/);
+        expect(source.href).toMatch(/^https?:\/\//);
+      } else {
+        expect(source.label.length).toBeGreaterThan(10);
+      }
       expect(source.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
     expect(DESK_SOURCES.cbcMining.date).toBe("2025-01-15");
     expect(DESK_SOURCES.cerNl.href).toMatch(/province-territory-energy-profiles\/newfoundland-labrador/);
+    expect(DESK_SOURCES.saltwireParrott.href).toBeUndefined();
+    expect(DESK_SOURCES.pubTechConf.href).toBeUndefined();
   });
 
   it("keeps every tracker source id resolvable", () => {
     for (const item of TRACKER_ITEMS) {
       for (const id of item.sources) expect(DESK_SOURCES[id]).toBeDefined();
     }
+  });
+});
+
+describe("horizon desk facts — 14 Oct 2026 verification pass", () => {
+  it("bumps the desk verified date to 2026-10-14", () => {
+    expect(DESK_VERIFIED).toBe("2026-10-14");
+    for (const item of TRACKER_ITEMS) {
+      expect(item.lastVerified).toBe("2026-10-14");
+    }
+  });
+
+  it("records Williams: material terms will not be reopened, and ~17–18 agreements still in draft", () => {
+    const row = TRACKER_ITEMS.find((item) => item.id === "material-terms-lock");
+    expect(row?.status).toBe("open");
+    expect(row?.body.technical).toMatch(/will not renegotiate the material terms/i);
+    expect(row?.body.technical).toMatch(/17 to 18/);
+    expect(row?.sources).toContain("cbcWilliamsTerms");
+  });
+
+  it("treats 31 December as a soft target that can run to the 31 March 2027 Term", () => {
+    const window = TRACKER_ITEMS.find((item) => item.id === "binding-window");
+    expect(window?.body.plain).toMatch(/not the end of the world/i);
+    expect(window?.body.technical).toMatch(/Saltwire\/Telegram, 9 Oct 2026/);
+    expect(window?.body.technical).toMatch(/31 March 2027/);
+    expect(window?.sources).toEqual(expect.arrayContaining(["dciaHq", "saltwireParrott"]));
+  });
+
+  it("records the PQ minority, the 13 Oct transition meeting, cabinet 21 Oct, and Assembly 17 Nov", () => {
+    const qc = TRACKER_ITEMS.find((item) => item.id === "qc-gate");
+    expect(qc?.title).toMatch(/PQ minority/i);
+    expect(qc?.body.plain).toMatch(/5 October/);
+    expect(qc?.body.plain).toMatch(/13 October/);
+    expect(qc?.body.plain).toMatch(/21 October/);
+    expect(qc?.body.plain).toMatch(/17 November/);
+    expect(qc?.body.technical).toMatch(/no decision/i);
+    expect(qc?.sources).toEqual(
+      expect.arrayContaining(["qcElectionResult", "lactualiteTransition", "assnatReturn"]),
+    );
+  });
+
+  it("records the cancelled PUB technical conference without inventing a URL", () => {
+    const pub = TRACKER_ITEMS.find((item) => item.id === "pub-tech-conf");
+    expect(pub?.status).toBe("open");
+    expect(pub?.body.plain).toMatch(/cancelled/i);
+    expect(pub?.sources).toContain("pubTechConf");
+    expect(DESK_SOURCES.pubTechConf.href).toBeUndefined();
+  });
+
+  it("labels the Labrador West 1,500 MW as a ceiling, with FEED Dec 2026 and construction early 2028", () => {
+    const line = TRACKER_ITEMS.find((item) => item.id === "labrador-west");
+    expect(line?.body.plain).toMatch(/ceiling/i);
+    expect(line?.body.technical).toMatch(/1,500 MW/);
+    expect(line?.body.technical).toMatch(/December 2026/);
+    expect(line?.body.technical).toMatch(/Q1 2028/);
+    expect(line?.sources).toContain("nlhContractorOct");
+  });
+
+  it("sources NECEC in-service and hold-back, and CHPE commercial then outage", () => {
+    const lines = TRACKER_ITEMS.find((item) => item.id === "necec-chpe");
+    expect(lines?.body.technical).toMatch(/16 January 2026/);
+    expect(lines?.body.technical).toMatch(/24–26 January/);
+    expect(lines?.body.technical).toMatch(/May 2026/);
+    expect(lines?.sources).toEqual(expect.arrayContaining(["eiaNecec", "eiaChpe"]));
+  });
+
+  it("keeps Gull Island unfiled with IAAC and the Innu file unresolved", () => {
+    const gull = TRACKER_ITEMS.find((item) => item.id === "gull-island");
+    expect(gull?.body.technical).toMatch(/still not filed/i);
+    expect(gull?.body.plain).toMatch(/Innu dispute is unresolved/);
+    const innu = TRACKER_ITEMS.find((item) => item.id === "innu");
+    expect(innu?.status).toBe("open");
+  });
+
+  it("carries the 17 Aug package figures as announcement language, not a locked ¢", () => {
+    const pack = COST_MARKERS.find((row) => row.id === "dcia-package");
+    expect(pack?.note.technical).toMatch(/2,350 MW/);
+    expect(pack?.note.technical).toMatch(/150 per cent/);
+    expect(pack?.note.technical).toMatch(/985 MW/);
+    expect(pack?.note.technical).toMatch(/\$49 billion/);
+    expect(pack?.note.technical).toMatch(/\$3\.5 billion/);
+    expect(pack?.note.technical).toMatch(/15%/);
+    expect(pack?.note.technical).toMatch(/Not executed PPAs/);
+    expect(pack?.sources).toEqual(expect.arrayContaining(["govNlDcia", "pmCarneyAug17"]));
+  });
+
+  it("sources the $8B wind capital cost and still does not name a developer", () => {
+    const wind = TRACKER_ITEMS.find((item) => item.id === "wind-spe");
+    expect(wind?.status).toBe("unknown");
+    expect(wind?.body.technical).toMatch(/estimated capital cost \$8B/);
+    expect(wind?.body.technical).toMatch(/developer: UNKNOWN/);
+    expect(wind?.body.plain).toMatch(/not named/i);
+    const marker = COST_MARKERS.find((row) => row.id === "wind-8b");
+    expect(marker?.value).toBe("$8B");
+    expect(marker?.sources).toContain("agreementSummary");
+  });
+
+  it("dates the 15% rebate after definitive agreements, with a possible April slip", () => {
+    const rebate = COST_MARKERS.find((row) => row.id === "rebate-timing");
+    expect(rebate?.note.technical).toMatch(/upon the finalization of the definitive agreements/);
+    expect(rebate?.note.technical).toMatch(/April/);
+    expect(rebate?.sources).toEqual(expect.arrayContaining(["govNlDcia", "vocmRebateOct"]));
+  });
+
+  it("carries HQ Rate CD as a two-part tariff, not a mashed 13¢", () => {
+    const rate = COST_MARKERS.find((row) => row.id === "hq-rate-cd");
+    expect(rate?.value).toBe("$32.704 + 8.710¢");
+    expect(rate?.note.technical).toMatch(/\$32\.704\/kW-month/);
+    expect(rate?.note.technical).toMatch(/8\.710¢\/kWh/);
+    expect(rate?.note.technical).toMatch(/NL data-centre rate: UNKNOWN/);
+    expect(rate?.sources).toContain("hqRateCd");
+  });
+
+  it("sources the 10% US energy duty pass-through and Goose Bay Labrador electricity contract", () => {
+    const duty = COST_MARKERS.find((row) => row.id === "us-energy-duty");
+    expect(duty?.value).toBe("10%");
+    expect(duty?.sources).toContain("fercEnergyDuty");
+    const goose = COST_MARKERS.find((row) => row.id === "goose-bay");
+    expect(goose?.note.technical).toMatch(/\$187M/);
+    expect(goose?.note.technical).toMatch(/MW requirement: UNKNOWN/);
+    expect(goose?.sources).toContain("gooseBayDnd");
+  });
+
+  it("keeps domestic load, signed industrial ¢, and firm-MW unpublished", () => {
+    expect(TRACKER_ITEMS.find((item) => item.id === "domestic-load")?.status).toBe("unknown");
+    expect(COST_MARKERS.find((row) => row.id === "dcia-industrial-alloc")?.value).toBe("UNKNOWN");
+    expect(COST_MARKERS.find((row) => row.id === "dcia-industrial-alloc")?.note.technical).toMatch(
+      /firm-MW value/,
+    );
+  });
+
+  it("records mines competing for the same megawatts, with Iron Bear and Kami sourced", () => {
+    const mines = TRACKER_ITEMS.find((item) => item.id === "mine-queue");
+    expect(mines?.status).toBe("open");
+    expect(mines?.body.technical).toMatch(/nearly a third of all the expansions of Churchill Falls/);
+    expect(mines?.body.technical).toMatch(/Nippon Steel and Sojitz/);
+    expect(mines?.body.technical).toMatch(/UNKNOWN: a published queue/);
+    expect(mines?.sources).toEqual(expect.arrayContaining(["cbcIronBear", "championKami"]));
   });
 });

@@ -2,6 +2,14 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.5 — 2026-10-14 — Desk facts pass: tracker, costs, brief
+
+Sourced update from 22 Sep–14 Oct 2026 on `/tracker`, `/costs`, and `/brief`. Hogan-calm, cite-honest. `DESK_VERIFIED` is 2026-10-14. No new claims.
+
+- **Tracker:** material terms will not be reopened (Williams; ~17–18 agreements still in draft); 31 Dec target is soft and can run to the DCIA Term of 31 Mar 2027 (Saltwire/Telegram, 9 Oct, outlet+date — no loadable URL); PQ minority 5 Oct; St-Pierre Plamondon met Fréchette 13 Oct, Churchill Falls raised, no decision; cabinet 21 Oct; National Assembly 17 Nov; PUB 8 Oct technical conference cancelled (outlet+date); Labrador West 735 kV / 1,500 MW ceiling, FEED Dec 2026, construction contracts expected Q1 2028; NECEC in-service 16 Jan 2026 and held back 24–26 Jan; CHPE commercial May 2026 then outage; Gull Island still not filed with IAAC; Innu unresolved.
+- **Costs:** 17 Aug package (2,350 MW, 150% sell-to-HQ option, 985 MW transmission, $49B 2026 NPV, $3.5B NPV federal support, 15% rebate after DAs); $8B wind capital cost estimate, developer unnamed; rebate may slip to April (VOCM, 13 Oct); HQ Rate CD $32.704/kW-month + 8.710¢/kWh; US 10% energy duty with ISO-NE pass-through; Goose Bay up to $8B, first contract $187M.
+- **Brief:** gaps stay UNKNOWN — domestic load undefined; 3-year recall is testimony, not signed text; no NL data-centre rate or firm-MW value. Mines competing for the same MW: Iron Bear nearly a third of CF expansions; Kami with Nippon Steel and Sojitz.
+
 ## 0.5.4 — 2026-09-22 — Share cards: instrument, not poster
 
 Tom rejected the soft brochure OG (2px hairline, equal-weight serif, empty void). Home card is a denser instrument: 8px plasma chassis, grotesque dominant line, mono plasma secondary, abstract gate ticks, locked copy. Copy-pass 1 living-desk `og:description` and Dual plain stay as on main.

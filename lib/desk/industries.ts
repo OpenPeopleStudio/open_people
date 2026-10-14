@@ -35,14 +35,14 @@ export const INDUSTRY_CARDS: IndustryCard[] = [
     rank: "first",
     lastVerified: DESK_VERIFIED,
     figure: "~1,500 MW",
-    figureNote: "NL Hydro preferred 735 kV transfer limit from the Labrador West study — a planning figure, not an in-service line.",
+    figureNote: "NL Hydro October 2026 contractor notice: 735 kV maximum transfer of approximately 1,500 MW — a ceiling, not a reserved block. Not an in-service line.",
     body: {
       plain:
-        "Hydro’s own study says the existing west lines are at their limit. A bigger line is the mining-first piece of steel. August’s announcement attaches money. In-service date is still unknown.",
+        "Hydro’s October notice describes a 735 kV line to Labrador West with a 1,500 MW ceiling, not a guaranteed block. Design work is aimed at December 2026. Construction contracts are expected early 2028. In-service date is still unknown.",
       technical:
-        "NL Hydro Labrador West Transmission Expansion Study: Churchill Falls has minimal surplus for new Labrador loads; existing 230 kV lines to Labrador West are at operational limits. Phase 1 preferred a single 735 kV line with a maximum power transfer limit of approximately 1,500 MW. Four large mining customers in Labrador West requested additional power. As of September 2026: FEED under way, geotechnical permits sought for summer/fall 2026, FEED completion targeted December 2026. Government of NL (17 Aug 2026) lists $1 billion (2026 NPV) in federal support for the line as publicly described. Commercial operation date: UNKNOWN.",
+        "NL Hydro Notice to Contractors, October 2026: preferred option is a single 735 kV line from Churchill Falls with a maximum transfer of approximately 1,500 MW — a ceiling, not a reserved block. FEED targeted December 2026. Construction RFPs for the Churchill Falls terminal, Flora Lake terminal, and the line are listed as project-approval pending, anticipated Q1 2028. Four large mining customers in Labrador West requested additional power. Government of NL (17 Aug 2026) lists $1 billion (2026 NPV) in federal support for the line as publicly described. Commercial operation date: UNKNOWN.",
     },
-    sources: ["nlhLabWest", "govNlDcia", "canadaDcia"],
+    sources: ["nlhContractorOct", "nlhLabWest", "govNlDcia", "canadaDcia"],
   },
   {
     id: "named-minerals",

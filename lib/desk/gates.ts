@@ -61,17 +61,47 @@ export const GATES: Gate[] = [
   {
     id: "qc",
     date: "2026-10-05",
-    label: "Québec votes",
+    label: "PQ minority elected",
     short: "5 Oct",
     status: "open",
     kind: "fixed",
     body: {
-      plain: "The other government on the paper faces its voters. The party that signed is running third.",
+      plain: "Québec elected a Parti Québécois minority. Churchill Falls came up in the transition meeting. No decision.",
       technical:
-        "Québec general election, 5 October 2026 (writs 27 Aug). CAQ signed the DCIA; Léger 21 Sep has it third. Outcome UNKNOWN.",
+        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet 21 Oct; National Assembly 17 Nov.",
     },
     trackerId: "qc-gate",
-    sources: ["qcElection"],
+    sources: ["qcElectionResult", "lactualiteTransition", "assnatReturn"],
+  },
+  {
+    id: "qc-cabinet",
+    date: "2026-10-21",
+    label: "Québec cabinet sworn in",
+    short: "21 Oct",
+    status: "open",
+    kind: "fixed",
+    body: {
+      plain: "The new Québec cabinet is to be sworn in. Until then the deal sits with a government in transition.",
+      technical:
+        "Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon is to be sworn in with his cabinet on 21 October. No public decision on Churchill Falls at the 13 October transition meeting.",
+    },
+    trackerId: "qc-gate",
+    sources: ["lactualiteTransition"],
+  },
+  {
+    id: "qc-assembly",
+    date: "2026-11-17",
+    label: "National Assembly returns",
+    short: "17 Nov",
+    status: "open",
+    kind: "fixed",
+    body: {
+      plain: "Québec’s National Assembly comes back. Any promised review or vote would have a floor to stand on.",
+      technical:
+        "National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. Whether Churchill Falls is debated or voted: UNKNOWN.",
+    },
+    trackerId: "qc-gate",
+    sources: ["assnatReturn", "lactualiteTransition"],
   },
   {
     id: "binding",

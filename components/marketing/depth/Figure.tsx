@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import type { DeskSource } from "@/lib/desk";
+import { sourceHasHref, type DeskSource } from "@/lib/desk";
 import { StatusPill, type DeskChromeStatus } from "@/components/marketing/desk/StatusChip";
 
 /**
@@ -88,11 +88,15 @@ export function Figure({
             {lastVerified ? <span className="desk-fact">Last verified {lastVerified}</span> : null}
           </span>
           {note ? <span className="block">{note}</span> : null}
-          {sources.map((s) => (
-            <a key={s.id} href={s.href} target="_blank" rel="noreferrer">
-              {s.label} →
-            </a>
-          ))}
+          {sources.map((s) =>
+            sourceHasHref(s) ? (
+              <a key={s.id} href={s.href} target="_blank" rel="noreferrer">
+                {s.label} →
+              </a>
+            ) : (
+              <span key={s.id}>{s.label}</span>
+            ),
+          )}
         </span>
       ) : null}
     </span>

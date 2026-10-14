@@ -217,6 +217,96 @@ export const COST_MARKERS: CostMarker[] = [
     sources: ["nlhRates2026", "pubIsland2026", "pubUtility2026"],
   },
   {
+    id: "dcia-package",
+    label: "17 Aug deal package (announcement language)",
+    value: "2,350 MW · 150% · 985 MW · $49B",
+    unit: "2026 NPV framing",
+    status: "structure",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "The August announcement says NL may keep up to 2,350 MW, sell unused retain to Hydro-Québec at a 150% premium, and holds 985 MW of export transmission. The province values the package at $49 billion in 2026 dollars, with $3.5 billion NPV in federal support, and a 15% residential rebate after the definitive agreements. That is announcement language, not signed contracts.",
+      technical:
+        "Government of NL, 17 Aug 2026: retain up to 2,350 MW from Churchill Falls and Gull Island; option to sell CF base power to HQ “at a 150 per cent price premium over base PPA prices”; 985 MW transmission portfolio (CHPE up to 240, NECEC 200, synthetic up to 280, direct 265); $49 billion (2026 NPV) claimed value; $3.5 billion (2026 NPV) in federal support; 15% “Churchill River Electricity Rebate” for residential ratepayers on the first 2,000 kWh/month upon finalization of the definitive agreements. Prime Minister of Canada, same day. Not executed PPAs. Not a locked industrial ¢.",
+    },
+    sources: ["govNlDcia", "pmCarneyAug17", "canadaDcia"],
+  },
+  {
+    id: "wind-8b",
+    label: "Wind project capital cost (estimate)",
+    value: "$8B",
+    unit: "estimated · 2,000 MW study",
+    status: "structure",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "The public agreement summary puts the estimated capital cost of the 2,000 MW wind study at $8 billion. No developer is named.",
+      technical:
+        "Agreement Summary p.13: estimated capital cost $8B for the 2,000 MW wind development; feasibility study; SPE unnamed. Schedule B §7: owner SPE held as NLH may determine in its sole discretion. Developer / SPE legal name: UNKNOWN. A 100% CPP-held company is not in the public summary — do not invent one.",
+    },
+    sources: ["agreementSummary", "dciaHq"],
+  },
+  {
+    id: "rebate-timing",
+    label: "15% residential rebate — after finals",
+    value: "after DAs",
+    unit: "may slip to April",
+    status: "reported",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "The 15% residential rebate is promised only after the definitive agreements are signed. VOCM reported it may not show on bills until April if talks run to the framework’s March end.",
+      technical:
+        "Government of NL, 17 Aug 2026: the 15% Churchill River Electricity Rebate is introduced “upon the finalization of the definitive agreements,” first 2,000 kWh/month, estimated average saving $351/year. VOCM, 13 Oct 2026: Finance says plans have not changed and the rebate will be implemented “as soon as possible” once the deal is finalized; if negotiations run to the 31 March 2027 Term, the rebate could first appear in April. Not in force.",
+    },
+    sources: ["govNlDcia", "vocmRebateOct"],
+  },
+  {
+    id: "hq-rate-cd",
+    label: "HQ proposed Rate CD (data centres ≥5 MW)",
+    value: "$32.704 + 8.710¢",
+    unit: "/kW-month + ¢/kWh",
+    status: "reported",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "Québec’s filed data-centre tariff is a demand charge plus an energy charge, not one cent. Newfoundland and Labrador has published no equivalent.",
+      technical:
+        "Hydro-Québec filing R-4333-2026-B-0076, 4 Aug 2026: proposed Rate CD for data centres ≥5 MW is $32.704/kW-month plus 8.710¢/kWh. HQ’s 19 Feb 2026 press release framed a 13¢/kWh data-centre rate; that press figure is a different measurement from this two-part filing. Neither is a Labrador tariff. NL data-centre rate: UNKNOWN.",
+    },
+    sources: ["hqRateCd", "hqDataCentreTariff"],
+  },
+  {
+    id: "us-energy-duty",
+    label: "US duty on Canadian energy",
+    value: "10%",
+    unit: "import duty · ISO-NE pass-through",
+    status: "reported",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "The United States put a 10% duty on Canadian energy. ISO New England was approved to pass that cost through to customers. Power used in Labrador is not at that border.",
+      technical:
+        "US executive order of 1 Feb 2025 put a 10% duty on Canadian “energy or energy resources.” FERC, 14 Apr 2025 (20250414-3066): ISO-NE approved to pass any import duty on Canadian power through to customers. This is a neighbouring-market fact. It is not a Labrador tariff and not a DCIA PPA ¢.",
+    },
+    sources: ["fercEnergyDuty"],
+  },
+  {
+    id: "goose-bay",
+    label: "5 Wing Goose Bay — Labrador electricity",
+    value: "up to $8B",
+    unit: "defence plan · $187M first contract",
+    status: "reported",
+    lastVerified: DESK_VERIFIED,
+    note: {
+      plain:
+        "Ottawa announced up to $8 billion for Goose Bay, starting with a $187 million contract to switch heating to Labrador electricity. The base’s megawatt need is not published.",
+      technical:
+        "National Defence, April 2026: up to $8B for 5 Wing Goose Bay as a NORAD northern basing site; first contract $187M to replace diesel heating with electric boilers “leveraging Labrador's clean” power. The base’s MW requirement: UNKNOWN.",
+    },
+    sources: ["gooseBayDnd"],
+  },
+  {
     id: "dcia-industrial-alloc",
     label: "Signed industrial ¢ for new retain",
     value: "UNKNOWN",
@@ -225,9 +315,9 @@ export const COST_MARKERS: CostMarker[] = [
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "There is no public, locked cent rate that says what a new Labrador mine — or any other new load — pays for retained Churchill / Gull Island megawatts under the still-unsigned PPAs.",
+        "There is no public, locked cent rate that says what a new Labrador mine — or any other new load — pays for retained Churchill / Gull Island megawatts under the still-unsigned PPAs. No NL data-centre rate or firm-MW value has been published.",
       technical:
-        "UNKNOWN: a published firm industrial tariff for DCIA retain megawatts; a compute tariff; a locked ¢/kWh HQ PPA. Open People does not invent one. Rate 1.1L 3.154¢ and LAB-IND-1’s 2026 RD/RM inputs are current Hydro schedules, not DCIA offtake. Illustrative 4–6¢ “asks” on older campaign material are Open People asks, not government figures, and are not repeated here as rates.",
+        "UNKNOWN: a published firm industrial tariff for DCIA retain megawatts; a compute tariff; a locked ¢/kWh HQ PPA; a firm-MW value for Labrador industrial or data-centre load. Open People does not invent one. Rate 1.1L 3.154¢ and LAB-IND-1’s 2026 RD/RM inputs are current Hydro schedules, not DCIA offtake. Illustrative 4–6¢ “asks” on older campaign material are Open People asks, not government figures, and are not repeated here as rates.",
     },
     sources: ["dciaHq"],
   },

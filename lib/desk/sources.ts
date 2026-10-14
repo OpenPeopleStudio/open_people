@@ -4,14 +4,15 @@
  * locked. Do not invent MW, ¢/kWh, $B, or SPE names here.
  */
 
-export const DESK_VERIFIED = "2026-09-22";
+export const DESK_VERIFIED = "2026-10-14";
 
 export type DeskSourceKind = "primary" | "regulator" | "utility" | "press" | "scholarship";
 
 export type DeskSource = {
   id: string;
   label: string;
-  href: string;
+  /** Omit or leave undefined when no loadable URL was located; cite by outlet and date in `label`. */
+  href?: string | undefined;
   date: string;
   kind: DeskSourceKind;
 };
@@ -171,6 +172,125 @@ export const DESK_SOURCES = {
     date: "2026-09-21",
     kind: "press",
   },
+  qcElectionResult: {
+    id: "qc-election-result",
+    label: "CBC — PQ projected to form a minority government, 5 Oct 2026",
+    href: "https://www.cbc.ca/news/canada/montreal/livestory/quebec-election-2026-results-9.7369473",
+    date: "2026-10-05",
+    kind: "press",
+  },
+  cbcWilliamsTerms: {
+    id: "cbc-williams-terms",
+    label: "CBC — Williams: material terms will not be renegotiated; Wakeham: ~17–18 agreements, 6 Oct 2026",
+    href: "https://www.cbc.ca/news/canada/newfoundland-labrador/nl-quebec-churchill-falls-9.7371016",
+    date: "2026-10-06",
+    kind: "press",
+  },
+  saltwireParrott: {
+    id: "saltwire-parrott",
+    label: "Saltwire/Telegram — Parrott on the 31 Dec target, 9 Oct 2026",
+    href: undefined,
+    date: "2026-10-09",
+    kind: "press",
+  },
+  lactualiteTransition: {
+    id: "lactualite-transition",
+    label: "L’actualité (Canadian Press) — St-Pierre Plamondon met Fréchette; Churchill Falls raised; cabinet 21 Oct, 13 Oct 2026",
+    href: "https://lactualite.com/actualites/transition-gouvernementale-st-pierre-plamondon-et-frechette-se-rencontreront-mardi/",
+    date: "2026-10-13",
+    kind: "press",
+  },
+  assnatReturn: {
+    id: "assnat-return",
+    label: "National Assembly of Québec — summoned 17 Nov 2026, 2 p.m.",
+    href: "https://www.assnat.qc.ca/en/travaux-parlementaires/assemblee-nationale/index.html",
+    date: "2026-10-14",
+    kind: "primary",
+  },
+  pubTechConf: {
+    id: "pub-tech-conf",
+    label: "PUB — 8 Oct 2026 technical conference cancelled",
+    href: undefined,
+    date: "2026-10-08",
+    kind: "regulator",
+  },
+  nlhContractorOct: {
+    id: "nlh-contractor-oct",
+    label: "NL Hydro Notice to Contractors, October 2026 — Labrador West 735 kV / 1,500 MW",
+    href: "https://nlhydro.com/wp-content/uploads/2026/10/Notice-to-Contractors-OCT2026_V3.pdf",
+    date: "2026-10-01",
+    kind: "utility",
+  },
+  eiaNecec: {
+    id: "eia-necec",
+    label: "EIA Today in Energy — NECEC commercial 16 Jan 2026; held back 24–26 Jan, 30 Jan 2026",
+    href: "https://www.eia.gov/todayinenergy/detail.php?id=67105",
+    date: "2026-01-30",
+    kind: "regulator",
+  },
+  eiaChpe: {
+    id: "eia-chpe",
+    label: "EIA Today in Energy — CHPE commercial May 2026, then outages for repairs",
+    href: "https://www.eia.gov/todayinenergy/detail.php?id=67867",
+    date: "2026-07-20",
+    kind: "regulator",
+  },
+  pmCarneyAug17: {
+    id: "pm-carney-0817",
+    label: "Prime Minister of Canada — Churchill River partnership release, 17 Aug 2026",
+    href: "https://www.pm.gc.ca/en/news/news-releases/2026/08/17/prime-minister-carney-announces-largest-clean-energy-investment-north",
+    date: "2026-08-17",
+    kind: "primary",
+  },
+  agreementSummary: {
+    id: "agreement-summary",
+    label: "A Better Deal NL — Summary of 2026 Agreement (p.13 wind capital cost)",
+    href: "https://www.abetterdealnl.ca/files/Agreement-Summary-2026.pdf",
+    date: "2026-08-17",
+    kind: "primary",
+  },
+  vocmRebateOct: {
+    id: "vocm-rebate-oct",
+    label: "VOCM — electricity rebate may not be in place until spring, 13 Oct 2026",
+    href: "https://vocm.com/2026/10/13/provinceelectricity-rebate-may-not-be-in-place-until-spring/",
+    date: "2026-10-13",
+    kind: "press",
+  },
+  hqRateCd: {
+    id: "hq-rate-cd",
+    label: "Hydro-Québec Rate CD filing (R-4333-2026-B-0076), 4 Aug 2026",
+    href: "https://www.regie-energie.qc.ca/fr/participants/dossiers/R-4333-2026/doc/R-4333-2026-B-0076-Dem-PieceRev-2026_08_04.pdf",
+    date: "2026-08-04",
+    kind: "regulator",
+  },
+  fercEnergyDuty: {
+    id: "ferc-energy-duty",
+    label: "FERC — ISO-NE pass-through of Canadian energy import duty, 14 Apr 2025",
+    href: "https://ferc.gov/sites/default/files/2025-04/20250414-3066.PDF",
+    date: "2025-04-14",
+    kind: "regulator",
+  },
+  gooseBayDnd: {
+    id: "goose-bay-dnd",
+    label: "National Defence — 5 Wing Goose Bay investment, April 2026",
+    href: "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-defence-investment-in-newfoundland-and-labradors-history.html",
+    date: "2026-04-01",
+    kind: "primary",
+  },
+  cbcIronBear: {
+    id: "cbc-iron-bear",
+    label: "CBC — Iron Bear wants nearly a third of Churchill Falls expansions",
+    href: "https://www.cbc.ca/news/canada/newfoundland-labrador/iron-bear-mining-9.7249642",
+    date: "2026-06-28",
+    kind: "press",
+  },
+  championKami: {
+    id: "champion-kami",
+    label: "Champion Iron — Kami partnership with Nippon Steel and Sojitz, 29 Sep 2025",
+    href: "https://newsroom.championiron.com/2025-09-29-CHAMPION-IRON-FORMS-A-PARTNERSHIP-FOR-THE-KAMI-PROJECT-WITH-NIPPON-STEEL-AND-SOJITZ",
+    date: "2025-09-29",
+    kind: "primary",
+  },
   radioCanadaQcOpposition: {
     id: "rc-qc-opposition",
     label: "Radio-Canada — Québec opposition parties on the Churchill Falls signing, Aug 2026",
@@ -324,4 +444,10 @@ export type DeskSourceId = keyof typeof DESK_SOURCES;
 
 export function sourceList(ids: DeskSourceId[]): DeskSource[] {
   return ids.map((id) => DESK_SOURCES[id]);
+}
+
+export function sourceHasHref(
+  source: DeskSource,
+): source is DeskSource & { href: string } {
+  return typeof source.href === "string" && /^https?:\/\//.test(source.href);
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DESK_SOURCES } from "@/lib/desk";
+import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
 
 /**
@@ -202,7 +202,7 @@ export function DefaultPath() {
               status="framework"
               size="sm"
               sources={[DESK_SOURCES.dciaHq, DESK_SOURCES.dciaNl]}
-              lastVerified="2026-09-22"
+              lastVerified={DESK_VERIFIED}
               note="Schedule B §4(b)(iv): unplanned unused energy to serve domestic load may be sold to HQ at the Discounted PPA Price, 95% of the applicable PPA price. HQ is obligated to purchase."
             />
           </span>
@@ -216,7 +216,7 @@ export function DefaultPath() {
               status="framework"
               size="sm"
               sources={[DESK_SOURCES.dciaHq]}
-              lastVerified="2026-09-22"
+              lastVerified={DESK_VERIFIED}
               note="Synthetic export up to 280 MW (⅓ New England, ⅓ New York Astoria, ⅓ Ontario PQAT, net of transmission); CHPE-equivalent up to 240 MW; NECEC-equivalent up to 200 MW. Three years' prior notice."
             />
           </span>
