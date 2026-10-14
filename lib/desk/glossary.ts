@@ -136,7 +136,7 @@ const GLOSSARY_DATA = {
   iaac: {
     term: "IAAC",
     what: "Impact Assessment Agency of Canada, the federal environmental assessment body.",
-    why: "It has said no new assessment is needed if 2026 Gull Island matches the 2012 review. The proponent has not confirmed that.",
+    why: "Gull Island is still not filed with the agency. A 2012 review does not by itself lock the 2026 plant.",
     where: { href: "/engage", label: "Engage · Federal assessment check" },
   },
   pub: {

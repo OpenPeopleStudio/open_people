@@ -34,8 +34,15 @@ export default function TrackerPage() {
               lock the power are still ahead, and the Premier has not promised MHAs a vote on them.
             </p>
           }
-          technical="Living board for the 17 August 2026 DCIA and the 17 September House endorsement. Material Terms are the drafting basis for Definitive Agreements targeted around 31 December 2026 (Art. 2.1); the instrument's Term runs to 31 March 2027 unless extended (§6.3). On 18 September the Premier said the deal returns to the House before definitive agreements but would not commit to a vote. Open People is not a DCIA party."
-          sources={[DESK_SOURCES.dciaHq, DESK_SOURCES.ntvVote, DESK_SOURCES.ircBriefing]}
+          technical="Living board for the 17 August 2026 DCIA and the 17 September House endorsement. Material Terms are the drafting basis for Definitive Agreements targeted around 31 December 2026 (Art. 2.1); the instrument's Term runs to 31 March 2027 unless extended (§6.3). NL Hydro's CEO says those material terms will not be reopened; about 17–18 definitive agreements are still being finished. The 31 December target is a goal — Saltwire/Telegram, 9 Oct, quoting Parrott, said slipping it is not the end of the world. Québec elected a PQ minority on 5 October; cabinet 21 October; National Assembly 17 November. On 18 September the Premier said the deal returns to the House before definitive agreements but would not commit to a vote. Open People is not a DCIA party."
+          sources={[
+            DESK_SOURCES.dciaHq,
+            DESK_SOURCES.ntvVote,
+            DESK_SOURCES.cbcWilliamsTerms,
+            DESK_SOURCES.saltwireParrott,
+            DESK_SOURCES.qcElectionResult,
+            DESK_SOURCES.lactualiteTransition,
+          ]}
         />
       }
       meta={

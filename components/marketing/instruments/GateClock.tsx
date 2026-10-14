@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { GATES, railPosition, type Gate } from "@/lib/desk";
+import { DESK_SOURCES, DESK_VERIFIED, GATES, railPosition, type Gate } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
-import { DESK_SOURCES } from "@/lib/desk";
 import { GateLive, TodayMarker } from "./GateClockLive";
 
 /**
@@ -96,8 +95,9 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           <desc id="gc-desc">
             A time rail from 17 August 2026, when the framework was signed, to
             31 March 2027, when its term ends. Gates: House vote 17 September,
-            Québec election 5 October, binding target 31 December, term end 31
-            March. First Gull Island power is pencilled for 2036, off the scale.
+            Québec PQ minority 5 October, cabinet 21 October, National Assembly
+            17 November, binding target 31 December, term end 31 March. First
+            Gull Island power is pencilled for 2036, off the scale.
           </desc>
           <defs>
             <pattern
@@ -278,7 +278,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
                 status={g.status}
                 size="sm"
                 sources={g.sources.map((id) => DESK_SOURCES[id])}
-                lastVerified={"2026-09-22"}
+                lastVerified={DESK_VERIFIED}
                 note={g.body.technical}
               />{" "}
               <span className="text-[var(--ink-3)]">— {g.body.plain}</span>

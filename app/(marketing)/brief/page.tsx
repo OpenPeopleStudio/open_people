@@ -20,6 +20,7 @@ import {
   INDUSTRY_CARDS,
   LADDER_POINTS,
   TRACKER_ITEMS,
+  sourceHasHref,
   sourceList,
   type CostMarker,
   type DeskItem,
@@ -75,13 +76,19 @@ function rung(id: string): LadderPoint {
 const DCIA = tracker("dcia");
 const HOUSE = tracker("house");
 const HOUSE_RETURN = tracker("house-return");
+const TERMS_LOCK = tracker("material-terms-lock");
 const BINDING = tracker("binding-window");
 const QC = tracker("qc-gate");
+const PUB_CONF = tracker("pub-tech-conf");
 const LAB_WEST = tracker("labrador-west");
+const MINE_QUEUE = tracker("mine-queue");
 const INNU = tracker("innu");
 const WIND = tracker("wind-spe");
 const UNUSED = tracker("unused-retain");
 const DOMESTIC = tracker("domestic-load");
+const GULL = tracker("gull-island");
+const NECEC = tracker("necec-chpe");
+const RATE_CD = marker("hq-rate-cd");
 
 const RETAIN = bar("retain");
 const WIND_BAR = bar("wind");
@@ -100,6 +107,8 @@ const PAGE_SOURCES: DeskSourceId[] = [
   "dciaNl",
   "govNlDcia",
   "canadaDcia",
+  "pmCarneyAug17",
+  "agreementSummary",
   "ircReport",
   "ircBriefing",
   "cpChurchillGraph",
@@ -112,6 +121,12 @@ const PAGE_SOURCES: DeskSourceId[] = [
   "ndpConditions",
   "vocmPerry",
   "qcElection",
+  "qcElectionResult",
+  "cbcWilliamsTerms",
+  "saltwireParrott",
+  "lactualiteTransition",
+  "assnatReturn",
+  "pubTechConf",
   "radioCanadaQcOpposition",
   "globeQc",
   "vocmInnu",
@@ -125,7 +140,12 @@ const PAGE_SOURCES: DeskSourceId[] = [
   "cbcIaac",
   "powerAdvisory",
   "nlhLabWest",
+  "nlhContractorOct",
+  "eiaNecec",
+  "eiaChpe",
   "cbcMining",
+  "cbcIronBear",
+  "championKami",
   "nlhRates2026",
   "nlhCurrentRates",
   "heritage1969",
@@ -134,6 +154,10 @@ const PAGE_SOURCES: DeskSourceId[] = [
   "cerNl",
   "cerRenewables",
   "hqDataCentreTariff",
+  "hqRateCd",
+  "fercEnergyDuty",
+  "gooseBayDnd",
+  "vocmRebateOct",
   "aesoCap",
 ];
 
@@ -229,9 +253,11 @@ const NOT_PROVEN = [
   "That binding definitive agreements will be signed on the announced timeline, or that they will free near-term megawatts for a compute node. House endorsement of the framework is not that signature, and the Premier has not promised a vote on the final text.",
   "That a single industrial cent exists for Labrador mines. The current Labrador industrial schedule is a formula, demand charges plus a monthly energy mix. We do not flatten it, and we do not quote the 2015 schedule as current.",
   "The reconciliation between the public retain figure and other published splits of the existing plant. Public releases also give Gull Island as a range. We do not pick a number.",
-  "That a three-year notice recall, as described to the House, appears in signed contract text.",
-  "That 2026 Gull Island matches the 2012 Lower Churchill federal review scope. IAAC has not received that proponent confirmation.",
-  "The name of the wind company. The special-purpose entity is unnamed in the public paper and the federal equity share is not in the Material Terms we read. We do not invent either.",
+  "That a three-year notice recall, as described to the House, appears in signed contract text. It rests on testimony. UNKNOWN.",
+  "That 2026 Gull Island matches the 2012 Lower Churchill federal review scope. The project is still not filed with the federal impact assessment agency.",
+  "The name of the wind company. The special-purpose entity is unnamed in the public paper. Agreement Summary p.13 estimates capital cost at $8 billion. We do not invent a developer.",
+  "A contract definition of “domestic load” in anything published. UNKNOWN.",
+  "An NL data-centre rate or a firm-MW value for Labrador industrial or compute load. UNKNOWN.",
 ];
 
 export default function BriefPage() {
@@ -412,21 +438,34 @@ export default function BriefPage() {
               price, a Labrador West line and a wind study. It is a framework, not binding PPAs.
               The House endorsed it <Fig id="b">21–18</Fig> on 17 September, with no referendum. That
               vote does not create contracts. Binding agreements are targeted around{" "}
-              <Fig id="c">31 December 2026</Fig>. The framework can run to{" "}
-              <Fig id="d">31 March 2027</Fig>. Québec votes 5 October. The province&apos;s stated
-              industrial use is critical minerals. Mining matters, and it is first. Compute is
-              optionality: not confirmed as reserved megawatts, price, queue or policy preference.
+              <Fig id="c">31 December 2026</Fig>. That date is a goal and can slip. The framework
+              can run to <Fig id="d">31 March 2027</Fig>. Québec elected a Parti Québécois minority
+              on 5 October; cabinet is sworn in 21 October; the National Assembly returns 17
+              November. The province&apos;s stated industrial use is critical minerals. Mining
+              matters, and it is first. Compute is optionality: not confirmed as reserved megawatts,
+              price, queue or policy preference.
             </p>
           }
           technical={
             <>
               <p>{DCIA.body.technical}</p>
               <p>{HOUSE.body.technical}</p>
+              <p>{TERMS_LOCK.body.technical}</p>
               <p>{BINDING.body.technical}</p>
+              <p>{QC.body.technical}</p>
               <p>{MOU_PATH.note.technical}</p>
             </>
           }
-          sources={sourceList(["dciaHq", "govNlDcia", "vocmVote", "ntvVote", "ircReport"])}
+          sources={sourceList([
+            "dciaHq",
+            "govNlDcia",
+            "vocmVote",
+            "ntvVote",
+            "ircReport",
+            "qcElectionResult",
+            "saltwireParrott",
+            "lactualiteTransition",
+          ])}
         />
         <aside className="mt-10 border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
           <p className="desk-h3">
@@ -612,23 +651,24 @@ export default function BriefPage() {
 
           <Unfold
             id="gap-quebec"
-            label="13¢"
+            label="Rate CD"
             plain={
               <p className="desk-takeaway">
-                In February 2026 Hydro-Québec proposed a dedicated data-centre rate of{" "}
-                <Fig id="a">13¢/kWh</Fig> for loads of 5 MW and up. It still expects takers. Québec
-                is rationing and repricing exactly the hydro-seeking compute demand Labrador could
-                serve. Near-term, this province would still sell the underlying power at a fraction
-                of that.
+                Hydro-Québec&apos;s filed data-centre tariff is a demand charge of{" "}
+                <Fig id="a">$32.704/kW-month</Fig> plus <Fig id="b">8.710¢/kWh</Fig> for loads of 5
+                MW and up. Its February press release framed that as about 13¢/kWh. Those are
+                Québec figures. This province has published no equivalent rate, and no firm-MW
+                value, for Labrador data-centre load.
               </p>
             }
             technical={
               <>
+                <p>{RATE_CD.note.technical}</p>
                 <p>{QC_RATE.note}</p>
                 <p>{COMPUTE_NEIGHBOURS.technical}</p>
               </>
             }
-            sources={sourceList(["hqDataCentreTariff", "aesoCap"])}
+            sources={sourceList(["hqRateCd", "hqDataCentreTariff", "aesoCap"])}
           />
 
           <Unfold
@@ -637,7 +677,8 @@ export default function BriefPage() {
             plain={
               <p className="desk-takeaway">
                 The number that would matter for a new Labrador mine, or any new load, is the signed
-                industrial cent for retained power. It is not published. We do not invent it.
+                industrial cent for retained power. No NL data-centre rate or firm-MW value has been
+                published. We do not invent either.
               </p>
             }
             technical={
@@ -774,10 +815,30 @@ export default function BriefPage() {
             year="2026"
             title={QC.title}
             unfoldId="tl-qc-unfold"
-            label="5 October"
+            label="PQ minority"
             plain={QC.body.plain}
             technical={QC.body.technical}
             sources={sourceList(QC.sources)}
+          />
+          <TimelineRow
+            id="tl-terms-lock"
+            when="6 Oct 2026"
+            title={TERMS_LOCK.title}
+            unfoldId="tl-terms-lock-unfold"
+            label="material terms"
+            plain={TERMS_LOCK.body.plain}
+            technical={TERMS_LOCK.body.technical}
+            sources={sourceList(TERMS_LOCK.sources)}
+          />
+          <TimelineRow
+            id="tl-pub"
+            when="8 Oct 2026"
+            title={PUB_CONF.title}
+            unfoldId="tl-pub-unfold"
+            label="the PUB"
+            plain={PUB_CONF.body.plain}
+            technical={PUB_CONF.body.technical}
+            sources={sourceList(PUB_CONF.sources)}
           />
           <TimelineRow
             id="tl-binding"
@@ -845,7 +906,10 @@ export default function BriefPage() {
           </p>
           <div className="mt-4 grid gap-3">
             <div className="desk-surface p-5 sm:p-6" data-rise>
-              <div className="desk-kicker">01 · Recall</div>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="desk-kicker">01 · Recall</div>
+                <StatusPill status="unknown" />
+              </div>
               <Unfold
                 id="open-recall"
                 className="mt-3"
@@ -854,10 +918,10 @@ export default function BriefPage() {
                   <p className="desk-takeaway">
                     A consultant told the House a <Fig id="a">three-year notice</Fig> recall could let
                     the province keep more power at home. That is testimony. It is not confirmed in
-                    signed contract text.
+                    signed contract text. UNKNOWN.
                   </p>
                 }
-                technical="Jason Chee-Aloy of Power Advisory told the House a three-year notice recall could let NL keep more power at home. Material Terms describe three-year notice for recapture of volumes previously sold to HQ, for domestic load. Whether that survives into the Definitive Agreements is not public."
+                technical="Jason Chee-Aloy of Power Advisory told the House a three-year notice recall could let NL keep more power at home. Material Terms describe three-year notice for recapture of volumes previously sold to HQ, for domestic load. That is framework language, not signed contract text. Whether a three-year recall survives into the Definitive Agreements: UNKNOWN."
                 sources={sourceList(["dciaHq", "powerAdvisory"])}
               />
             </div>
@@ -888,16 +952,17 @@ export default function BriefPage() {
               <Unfold
                 id="open-federal"
                 className="mt-3"
-                label="2,000 MW"
+                label="not filed"
                 plain={
                   <p className="desk-takeaway">
-                    <Term k="iaac">IAAC</Term> has not received proponent confirmation that 2026 Gull
-                    Island matches the 2012 review. The 2026 plant as described is larger than the
-                    roughly <Fig id="a">2,000 MW</Fig> studied then.
+                    <Term k="gull">Gull Island</Term> is still not filed with the federal{" "}
+                    <Term k="iaac">impact assessment agency</Term>. The 2012 review was on the order
+                    of <Fig id="a">2,000 MW</Fig>. The 2026 plant as described is larger. The Innu
+                    dispute is unresolved.
                   </p>
                 }
-                technical={SCALE_ANCHORS.federalAssessmentEngage.technical}
-                sources={sourceList(["cbcIaac"])}
+                technical={GULL.body.technical}
+                sources={sourceList(["cbcIaac", "dciaHq", "vocmInnu"])}
               />
             </div>
             <div className="desk-surface p-5 sm:p-6" data-rise>
@@ -911,12 +976,61 @@ export default function BriefPage() {
                 label="the SPE"
                 plain={
                   <p className="desk-takeaway">
-                    The wind company, an <Term k="spe">SPE</Term>, is unnamed and at NL Hydro&apos;s
-                    sole discretion. We do not invent the name, a dollar figure or a federal share.
+                    The public summary puts the estimated capital cost at{" "}
+                    <Fig id="a">$8 billion</Fig>. The company that would own it, an{" "}
+                    <Term k="spe">SPE</Term>, is unnamed and at NL Hydro&apos;s sole discretion. We
+                    do not invent a developer or a federal share.
                   </p>
                 }
                 technical={WIND.body.technical}
                 sources={sourceList(WIND.sources)}
+              />
+            </div>
+            <div className="desk-surface p-5 sm:p-6" data-rise>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="desk-kicker">05 · {MINE_QUEUE.title}</div>
+                <StatusPill status={MINE_QUEUE.status} />
+              </div>
+              <Unfold
+                id="open-mines"
+                className="mt-3"
+                label="the same MW"
+                plain={<p className="desk-takeaway">{MINE_QUEUE.body.plain}</p>}
+                technical={MINE_QUEUE.body.technical}
+                sources={sourceList(MINE_QUEUE.sources)}
+              />
+            </div>
+            <div className="desk-surface p-5 sm:p-6" data-rise>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="desk-kicker">06 · {DOMESTIC.title}</div>
+                <StatusPill status={DOMESTIC.status} />
+              </div>
+              <Unfold
+                id="open-domestic"
+                className="mt-3"
+                label="domestic load"
+                plain={<p className="desk-takeaway">{DOMESTIC.body.plain} UNKNOWN.</p>}
+                technical={DOMESTIC.body.technical}
+                sources={sourceList(DOMESTIC.sources)}
+              />
+            </div>
+            <div className="desk-surface p-5 sm:p-6" data-rise>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="desk-kicker">07 · No NL data-centre rate or firm MW</div>
+                <StatusPill status={SIGNED_UNKNOWN.status} />
+              </div>
+              <Unfold
+                id="open-nl-dc"
+                className="mt-3"
+                label="not published"
+                plain={
+                  <p className="desk-takeaway">
+                    No NL data-centre rate or firm-MW value has been published. The signed industrial
+                    cent for retained power is blank. UNKNOWN.
+                  </p>
+                }
+                technical={SIGNED_UNKNOWN.note.technical}
+                sources={sourceList(SIGNED_UNKNOWN.sources)}
               />
             </div>
           </div>
@@ -941,6 +1055,13 @@ export default function BriefPage() {
       >
         <div className="grid gap-8">
           <Unfold
+            id="buyer-lines"
+            label="NECEC and CHPE"
+            plain={<p className="desk-takeaway">{NECEC.body.plain}</p>}
+            technical={NECEC.body.technical}
+            sources={sourceList(NECEC.sources)}
+          />
+          <Unfold
             id="buyer-neighbours"
             label="the postures"
             plain={
@@ -956,8 +1077,8 @@ export default function BriefPage() {
                   <li>
                     <span className="n">QC</span>
                     <span>
-                      Ministerial approval for large new loads. Proposed 13¢/kWh data-centre rate,
-                      filed 19 February 2026, before the Régie.
+                      Ministerial approval for large new loads. Filed Rate CD: $32.704/kW-month plus
+                      8.710¢/kWh (4 Aug 2026). February press framing was 13¢/kWh.
                     </span>
                   </li>
                   <li>
@@ -988,7 +1109,7 @@ export default function BriefPage() {
                 </ul>
               </>
             }
-            sources={sourceList(["hqDataCentreTariff", "aesoCap"])}
+            sources={sourceList(["hqRateCd", "hqDataCentreTariff", "aesoCap"])}
           />
 
           <div>
@@ -1330,9 +1451,13 @@ export default function BriefPage() {
                 <ul className="mt-3 grid gap-2">
                   {items.map((s) => (
                     <li key={s.id} className="text-[14px] leading-relaxed text-[var(--ink-2)]">
-                      <a href={s.href} className="desk-link" target="_blank" rel="noreferrer">
-                        {s.label}
-                      </a>{" "}
+                      {sourceHasHref(s) ? (
+                        <a href={s.href} className="desk-link" target="_blank" rel="noreferrer">
+                          {s.label}
+                        </a>
+                      ) : (
+                        <span>{s.label}</span>
+                      )}{" "}
                       <span className="desk-fact text-[var(--ink-4)]">{s.date}</span>
                     </li>
                   ))}

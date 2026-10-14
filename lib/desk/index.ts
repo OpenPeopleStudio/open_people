@@ -1,4 +1,11 @@
-export { DESK_SOURCES, DESK_VERIFIED, sourceList, type DeskSource, type DeskSourceId } from "./sources";
+export {
+  DESK_SOURCES,
+  DESK_VERIFIED,
+  sourceList,
+  sourceHasHref,
+  type DeskSource,
+  type DeskSourceId,
+} from "./sources";
 export { TRACKER_ITEMS } from "./tracker";
 export { INDUSTRY_CARDS, COMPUTE_SECONDARY_LINE } from "./industries";
 export { COST_MARKERS, COST_INTRO, COST_ERA_NOTE, CONTESTED_EXPORT } from "./costs";

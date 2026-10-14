@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { DeskSource } from "@/lib/desk";
+import { sourceHasHref, type DeskSource } from "@/lib/desk";
 import { useDepth } from "@/components/marketing/voice";
 import { UNFOLD_EVENT } from "./Walkthrough";
 import {
@@ -190,9 +190,13 @@ export function Unfold({
               <ul className="unfold-sources">
                 {sources.map((s) => (
                   <li key={s.id}>
-                    <a href={s.href} target="_blank" rel="noreferrer">
-                      {s.label} →
-                    </a>
+                    {sourceHasHref(s) ? (
+                      <a href={s.href} target="_blank" rel="noreferrer">
+                        {s.label} →
+                      </a>
+                    ) : (
+                      <span>{s.label}</span>
+                    )}
                   </li>
                 ))}
               </ul>

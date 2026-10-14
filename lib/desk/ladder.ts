@@ -199,8 +199,8 @@ export const LADDER_POINTS: LadderPoint[] = [
     value: "13",
     label: "HQ proposed data-centre rate",
     status: "reported",
-    note: "Filed with the Régie 19 Feb 2026 for data centres of 5 MW and up; decision expected around year-end.",
-    sources: ["hqDataCentreTariff"],
+    note: "HQ’s 19 Feb 2026 press framing for data centres ≥5 MW. The 4 Aug Régie filing is a two-part Rate CD ($32.704/kW-month + 8.710¢/kWh), not this single ¢. Neither is a Labrador tariff.",
+    sources: ["hqDataCentreTariff", "hqRateCd"],
     lastVerified: DESK_VERIFIED,
   },
   {
