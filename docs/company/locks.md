@@ -16,6 +16,7 @@ Source of truth for active edit locks. See `docs/company/lock-policy.md` for rul
 
 | Owner | Date | Scope | Type | Expires | Status | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
+| Cursor | 2026-10-14 | app/(marketing)/vision/*, app/(marketing)/page.tsx, app/(marketing)/desk.css, components/marketing/shell/DeskPage.tsx, app/sitemap.ts, __tests__/e2e/desk.spec.ts | exclusive | 2026-10-15 | active | Public /vision page from letter layout |
 | Cursor | 2026-09-22 | lib/voice-mode/*, components/marketing/SiteShell.tsx, components/marketing/SiteNav.tsx, components/marketing/voice/*, app/(marketing)/page.tsx, app/(marketing)/engage/page.tsx, app/globals.css | exclusive | 2026-09-23 | released | Voice mode first slice — merged as PR #5 |
 | Cursor | 2026-09-22 | components/marketing/SiteNav.tsx, components/marketing/SiteFooter.tsx, app/(marketing)/page.tsx, app/(marketing)/tracker/*, app/(marketing)/industries/*, app/(marketing)/costs/*, app/(marketing)/compute/*, lib/desk/*, lib/voice-mode/anchors.ts, public/brief.html, public/coalition.html, app/sitemap.ts, next.config.ts | exclusive | 2026-09-23 | released | Horizon desk IA first slice — merged on main (f7faf1e) |
 | Cursor | 2026-09-22 | lib/desk/costs.ts, lib/desk/sources.ts, lib/desk/tracker.ts, lib/desk/index.ts, app/(marketing)/costs/page.tsx, app/(marketing)/tracker/page.tsx, __tests__/unit/lib/desk/facts.test.ts, components/marketing/desk/index.tsx | exclusive | 2026-09-23 | released | Contested 7.4 vs Annex D 1.8 — merged as PR #7 (bea201e) |

@@ -20,6 +20,7 @@ export function DeskPage({
   walkthrough,
   verified = true,
   quiet = false,
+  singleVoice = false,
   children,
 }: {
   kicker: ReactNode;
@@ -34,16 +35,20 @@ export function DeskPage({
   walkthrough?: { title: string; steps: WalkStep[] };
   verified?: boolean | string;
   quiet?: boolean;
+  /** Typographic pages with one voice: no Plain / Guided / Technical chrome. */
+  singleVoice?: boolean;
   children: ReactNode;
 }) {
   const verifiedDate = typeof verified === "string" ? verified : DESK_VERIFIED;
   return (
     <SiteShell>
-      <main className={`desk-page ${quiet ? "desk-quiet" : ""}`.trim()}>
-        <MobileStrip />
+      <main
+        className={`desk-page ${quiet ? "desk-quiet" : ""} ${singleVoice ? "desk-single" : ""}`.trim()}
+      >
+        {singleVoice ? null : <MobileStrip />}
         {walkthrough ? <WalkSteps title={walkthrough.title} steps={walkthrough.steps} /> : null}
         <div className="desk-frame">
-          <Rail sections={sections ?? []} />
+          {singleVoice ? null : <Rail sections={sections ?? []} />}
           <div className="desk-content">
             <header className="desk-hero desk-hero-fade">
               <p className={`desk-kicker ${quiet ? "desk-kicker-quiet" : ""}`.trim()}>{kicker}</p>
