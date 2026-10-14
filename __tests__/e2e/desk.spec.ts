@@ -4,7 +4,17 @@ import { test, expect } from "@playwright/test";
  * Desk v2 smoke: pages render, depth control persists, unfolds respond,
  * terms explain, figures show provenance, walkthrough steps.
  */
-const PAGES = ["/", "/tracker", "/costs", "/industries", "/engage", "/compute", "/brief", "/letter"];
+const PAGES = [
+  "/",
+  "/tracker",
+  "/costs",
+  "/industries",
+  "/engage",
+  "/compute",
+  "/brief",
+  "/letter",
+  "/vision",
+];
 
 for (const path of PAGES) {
   test(`${path} renders without page errors`, async ({ page }) => {
@@ -63,4 +73,30 @@ test("the unknown board counts the tracker's not-published rows", async ({ page 
   const rows = await page.locator('.desk-board-col[aria-label="Not published"] article').count();
   expect(slots).toBe(rows);
   expect(slots).toBeGreaterThanOrEqual(3);
+});
+
+test("/vision is a single-voice page with locked copy", async ({ page }) => {
+  await page.goto("/vision");
+  const main = page.locator("main.desk-page");
+  await expect(main).toContainText("People who care for this land should prosper from it.");
+  await expect(main).toContainText("People working toward a shared goal should share in what it yields.");
+  await expect(main).toContainText(
+    "Big goals raise hard questions; hard questions lead to discovery, and a better life for everyone who calls Earth home.",
+  );
+  await expect(main).toContainText("Explorers bring us together.");
+  await expect(main).toContainText("Tom Lane");
+  await expect(page.locator('[aria-label="Reading depth"]')).toHaveCount(0);
+});
+
+test("home links to /vision near the letter", async ({ page }) => {
+  await page.goto("/");
+  const letter = page.locator('main a[href="/letter"]');
+  const vision = page.locator('main a[href="/vision"]');
+  await expect(letter).toBeVisible();
+  await expect(vision).toBeVisible();
+  await vision.click();
+  await expect(page).toHaveURL(/\/vision$/);
+  await expect(page.locator("h1.desk-h1")).toContainText(
+    "People who care for this land should prosper from it.",
+  );
 });

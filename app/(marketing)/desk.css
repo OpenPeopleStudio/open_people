@@ -378,6 +378,16 @@
   min-height: 100vh;
 }
 
+/* Single-voice reading pages (/vision): no depth strip, no rail. */
+.desk-single {
+  padding-top: var(--nav-h);
+}
+
+.desk-single .desk-frame {
+  display: block;
+  max-width: 50rem;
+}
+
 .desk-frame {
   margin: 0 auto;
   max-width: var(--wide);

@@ -361,6 +361,20 @@ export default function HomePage() {
           <div>Tom Lane · Founder, Open People</div>
           <div className="mt-1 text-[var(--ink-3)]">St. John&apos;s, Newfoundland and Labrador</div>
         </div>
+        <p className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+          <Link
+            href="/letter"
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]"
+          >
+            Letter to the Premier · 15 Sep 2026 →
+          </Link>
+          <Link
+            href="/vision"
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] no-underline hover:text-[var(--plasma)]"
+          >
+            Vision →
+          </Link>
+        </p>
       </DeskSection>
     </DeskPage>
   );
