@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.8 — 2026-10-22 — Coalition leftovers: Open People leads
+
+`/brief` already said Open People leads (0.5.7). Remaining catalyst / “not a deal seat” / “partners own any steel” copy was on `/coalition` (noindex) and its OG card. Replaced with a short proponent line: Open People leads the proposed Labrador campus, partnering with NL Hydro, Indigenous nations (consent first), and capital. Still proposed / in feasibility. `/letter` untouched. No merge.
+
 ## 0.5.7 — 2026-10-22 — Open People leads the proposed campus
 
 Tom: Open People is the proponent. `/brief`, `/compute`, `/about` (plus home/approach/footer/engage meta) no longer say catalyst, leftover optionality, or “wrong page”. 500 MW Labrador campus + research campus, proposed / in feasibility. Mines are a real constraint. No dollar figures, funding asks, or named customers. `/letter` untouched. Same PR, no merge.

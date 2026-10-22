@@ -44,7 +44,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - This project is independent but referenced from mars-hq's VISION.md and TODO.md
 
 ## Current State
-Public site is the Churchill River desk, v2 (2026-09-22, VERSION 0.5.0): home, `/tracker`, `/industries`, `/costs`, `/brief`, `/engage`, `/letter`. Compute is a separate page at `/compute`, never the opener. House 21–18 endorsement of the DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Mining first. Open People is constituent/catalyst only. Parked SaaS shell remains unpublished as the public story.
+Public site is the Churchill River desk, v2 (2026-09-22, VERSION 0.5.0): home, `/tracker`, `/industries`, `/costs`, `/brief`, `/engage`, `/letter`. Compute is a separate page at `/compute`, never the opener. House 21–18 endorsement of the DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Mining first. Open People is the proponent leading the proposed 500 MW Labrador AI campus (in feasibility). Parked SaaS shell remains unpublished as the public story.
 
 ---
 
