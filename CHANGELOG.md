@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.11 — 2026-10-22 — /ask skips Gateway OpenAI BYOK
+
+Production chat streamed then failed: AI Gateway 403 `byok_requires_paid_credits` on `openai/gpt-4.1-mini`. OIDC was fine; knowledge file loaded. If `OPENAI_API_KEY` is already on the project, `/ask` calls OpenAI directly. Otherwise Gateway still uses OIDC but routes through Azure system credentials, not team OpenAI BYOK. `ASK_ADMIN_TOKEN` remains Tom-only.
+
 ## 0.5.10 — 2026-10-22 — /ask accepts Vercel OIDC on production
 
 `POST /api/ask` no longer 503s on Vercel when `AI_GATEWAY_API_KEY` is unset. Gateway auth is OIDC (`VERCEL_OIDC_TOKEN` or the runtime `x-vercel-oidc-token` header, or `VERCEL=1`). `ASK_ADMIN_TOKEN` remains Tom-only for the follow-ups poll API.

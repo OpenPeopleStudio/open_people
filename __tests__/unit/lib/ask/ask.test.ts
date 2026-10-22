@@ -7,9 +7,16 @@ import { parseFollowUp } from "@/lib/ask/follow-up";
 import { knowledgeIsPlaceholder, loadProposalKnowledge } from "@/lib/ask/knowledge";
 import { logAskFollowUp, logAskQuestion } from "@/lib/ask/log";
 import {
+  openaiDirectConfigured,
+  openaiDirectModel,
+  toOpenAIChatMessages,
+} from "@/lib/ask/openai-direct";
+import {
   ASK_MODEL_DEFAULT,
   answerLooksCovered,
+  askGatewayProviderOptions,
   askModel,
+  assistantConfigured,
   buildAskInstructions,
   gatewayConfigured,
   lastUserText,
@@ -92,6 +99,31 @@ describe("ask gateway config", () => {
         }),
       ),
     ).toBe(true);
+  });
+
+  it("treats an OpenAI key as configured without Gateway", () => {
+    delete process.env.AI_GATEWAY_API_KEY;
+    delete process.env.VERCEL_OIDC_TOKEN;
+    delete process.env.VERCEL;
+    const previousOpenAI = process.env.OPENAI_API_KEY;
+    process.env.OPENAI_API_KEY = "sk-test-not-a-real-key";
+    expect(assistantConfigured()).toBe(true);
+    expect(openaiDirectConfigured()).toBe(true);
+    if (previousOpenAI === undefined) delete process.env.OPENAI_API_KEY;
+    else process.env.OPENAI_API_KEY = previousOpenAI;
+  });
+
+  it("routes Gateway gpt-4.1-mini through Azure to skip OpenAI BYOK", () => {
+    expect(askGatewayProviderOptions()).toEqual({ gateway: { only: ["azure"] } });
+    expect(openaiDirectModel("openai/gpt-4.1-mini")).toBe("gpt-4.1-mini");
+    expect(
+      toOpenAIChatMessages("INSTRUCTIONS", [
+        { id: "1", role: "user", parts: [{ type: "text", text: "What is the campus?" }] },
+      ]),
+    ).toEqual([
+      { role: "system", content: "INSTRUCTIONS" },
+      { role: "user", content: "What is the campus?" },
+    ]);
   });
 });
 

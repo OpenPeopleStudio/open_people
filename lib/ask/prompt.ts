@@ -16,17 +16,38 @@ export function gatewayConfigured(req?: Request): boolean {
   return process.env.VERCEL === "1";
 }
 
+export function assistantConfigured(req?: Request): boolean {
+  return gatewayConfigured(req) || Boolean(process.env.OPENAI_API_KEY?.trim());
+}
+
+/**
+ * Team OpenAI BYOK on AI Gateway requires paid Gateway credits and 403s
+ * (`byok_requires_paid_credits`). Route gpt-4.1-mini through Azure system
+ * credentials instead.
+ */
+export function askGatewayProviderOptions(): {
+  gateway: { only: ["azure"] };
+} {
+  return { gateway: { only: ["azure"] } };
+}
+
+export function messageText(
+  message: { parts?: Array<{ type: string; text?: string }> },
+): string {
+  return (message.parts ?? [])
+    .filter((part) => part.type === "text" && typeof part.text === "string")
+    .map((part) => part.text ?? "")
+    .join("\n")
+    .trim();
+}
+
 export function lastUserText(
   messages: { role: string; parts?: Array<{ type: string; text?: string }> }[],
 ): string {
   for (let i = messages.length - 1; i >= 0; i -= 1) {
     const message = messages[i];
     if (message.role !== "user") continue;
-    const text = (message.parts ?? [])
-      .filter((part) => part.type === "text" && typeof part.text === "string")
-      .map((part) => part.text ?? "")
-      .join("\n")
-      .trim();
+    const text = messageText(message);
     if (text) return text;
   }
   return "";
