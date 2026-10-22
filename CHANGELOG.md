@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.10 — 2026-10-22 — /ask accepts Vercel OIDC on production
+
+`POST /api/ask` no longer 503s on Vercel when `AI_GATEWAY_API_KEY` is unset. Gateway auth is OIDC (`VERCEL_OIDC_TOKEN` or the runtime `x-vercel-oidc-token` header, or `VERCEL=1`). `ASK_ADMIN_TOKEN` remains Tom-only for the follow-ups poll API.
+
 ## 0.5.9 — 2026-10-22 — /ask QR Q&A (first slice)
 
 Public `/ask` for the preliminary proposal (QR dest). Desk style. Chat via Vercel AI SDK + AI Gateway, answers only from `content/ask/proposal-knowledge.md` (placeholder). Follow-up form stores in private Supabase `ask_followups` (RLS on, service-role only). Admin poll: `GET/POST /api/ask/followups` behind `ASK_ADMIN_TOKEN`. No Resend on this path. Public copy still says we'll find out and email you. Rate limit + honeypot. No visitor auth, no analytics. `/letter` untouched.

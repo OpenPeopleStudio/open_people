@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.10 tools=45 commits=1 files=8 note=/ask: accept Vercel OIDC so prod POST /api/ask is not 503 without a Gateway key
 0.5.9 tools=70 commits=2 files=36 note=First slice: /ask QR Q&A; follow-ups in Supabase ask_followups, no Resend
 0.5.8 tools=25 commits=1 files=9 note=Follow-up: strip leftover catalyst / not-a-deal-seat copy on /coalition + OG
 0.5.7 tools=40 commits=1 files=28 note=Same PR: Open People leads proposed 500 MW + research campus; kill catalyst copy
