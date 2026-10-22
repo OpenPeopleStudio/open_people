@@ -98,6 +98,15 @@ export const DESK_OG = {
     alt: "Open People — a proposed 500 MW Labrador AI campus, in feasibility. Open People leads.",
     quiet: true,
   },
+  ask: {
+    kicker: "Ask",
+    kickerAccent: "Preliminary proposal",
+    headline: "Ask the proposal.",
+    accent: "Honest, labelled answers.",
+    footer: "openpeople.ai/ask",
+    alt: "Open People — ask about the preliminary proposal. Answers are honest and labelled.",
+    quiet: true,
+  },
 } as const satisfies Record<string, DeskOgCard>;
 
 export type DeskOgRoute = keyof typeof DESK_OG;

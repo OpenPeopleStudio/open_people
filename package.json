@@ -33,6 +33,7 @@
     "jobs:worker": "tsx scripts/jobs-worker.ts"
   },
   "dependencies": {
+    "@ai-sdk/react": "^4.0.152",
     "@aws-sdk/client-kms": "^3.972.0",
     "@aws-sdk/client-s3": "^3.971.0",
     "@aws-sdk/s3-request-presigner": "^3.971.0",
@@ -42,6 +43,7 @@
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.90.1",
     "@vercel/og": "^0.8.6",
+    "ai": "^7.0.148",
     "bullmq": "^5.3.0",
     "googleapis": "^170.1.0",
     "imapflow": "^1.2.6",

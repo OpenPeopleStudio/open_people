@@ -16,6 +16,7 @@ const SECONDARY = [
   { href: "/approach", label: "Approach" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/ask", label: "Ask" },
 ];
 
 export default function SiteFooter() {

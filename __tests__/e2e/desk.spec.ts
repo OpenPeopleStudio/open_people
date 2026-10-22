@@ -14,6 +14,7 @@ const PAGES = [
   "/brief",
   "/letter",
   "/vision",
+  "/ask",
 ];
 
 for (const path of PAGES) {
@@ -95,6 +96,17 @@ test("/vision is the public thesis with Dual depth and Tom’s close", async ({ 
   await expect(page.locator(`${scope} [aria-label="Reading depth"]`)).toBeVisible();
   await page.locator(`${scope} [aria-label="Reading depth"] button[data-depth="technical"]`).click();
   await expect(main).toContainText("proposed / in feasibility");
+});
+
+test("/ask states the locked intro and the follow-up form", async ({ page }) => {
+  await page.goto("/ask");
+  const main = page.locator("main.desk-page");
+  await expect(main).toContainText(
+    "Ask anything about Open People's preliminary proposal. Answers are honest and labelled. If we don't know yet, we'll find out and email you.",
+  );
+  await expect(main).toContainText("Email Tom a follow-up");
+  await expect(main).toContainText("Privacy:");
+  await expect(main).toContainText("no analytics trackers");
 });
 
 test("home links to /vision near the letter", async ({ page }) => {

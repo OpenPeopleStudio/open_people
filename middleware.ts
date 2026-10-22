@@ -19,6 +19,8 @@ const PUBLIC_API_PATHS: RegExp[] = [
   /^\/api\/v1\/notes$/,
   /^\/api\/events\/dispatch$/,
   /^\/api\/bots\/escalate$/,
+  /^\/api\/ask$/,
+  /^\/api\/ask\/follow-up$/,
 ];
 
 function isPublicApiPath(pathname: string) {

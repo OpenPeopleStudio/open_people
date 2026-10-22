@@ -2,9 +2,13 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.9 — 2026-10-22 — /ask QR Q&A (first slice)
+
+Public `/ask` for the preliminary proposal (QR dest). Desk style. Chat via Vercel AI SDK + AI Gateway, answers only from `content/ask/proposal-knowledge.md` (placeholder). Follow-up form stores privately for Tom to email. Rate limit + honeypot. No auth, no analytics. `/letter` untouched.
+
 ## 0.5.8 — 2026-10-22 — Coalition leftovers: Open People leads
 
-`/brief` already said Open People leads (0.5.7). Remaining catalyst / “not a deal seat” / “partners own any steel” copy was on `/coalition` (noindex) and its OG card. Replaced with a short proponent line: Open People leads the proposed Labrador campus, partnering with NL Hydro, Indigenous nations (consent first), and capital. Still proposed / in feasibility. `/letter` untouched. No merge.
+`/brief` already said Open People leads (0.5.7). Remaining catalyst / “not a deal seat” / “partners own any steel” copy was on `/coalition` (noindex) and its OG card. Replaced with a short proponent line: Open People leads the proposed Labrador campus, partnering with NL Hydro, Indigenous nations (consent first), and capital. Still proposed / in feasibility. `/letter` untouched. Merged as PR #17.
 
 ## 0.5.7 — 2026-10-22 — Open People leads the proposed campus
 
