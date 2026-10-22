@@ -4,8 +4,16 @@ export function askModel(): string {
   return process.env.AI_GATEWAY_MODEL?.trim() || ASK_MODEL_DEFAULT;
 }
 
-export function gatewayConfigured(): boolean {
-  return Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN);
+/**
+ * AI Gateway auth: an explicit key, a pulled OIDC env token, the runtime
+ * `x-vercel-oidc-token` header, or a Vercel deployment (the AI SDK then
+ * loads OIDC from request context — it is not always in process.env).
+ */
+export function gatewayConfigured(req?: Request): boolean {
+  if (process.env.AI_GATEWAY_API_KEY?.trim()) return true;
+  if (process.env.VERCEL_OIDC_TOKEN?.trim()) return true;
+  if (req?.headers.get("x-vercel-oidc-token")?.trim()) return true;
+  return process.env.VERCEL === "1";
 }
 
 export function lastUserText(

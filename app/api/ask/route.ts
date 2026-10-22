@@ -21,7 +21,7 @@ export const maxDuration = 30;
 const MAX_MESSAGES = 16;
 
 export async function POST(req: Request) {
-  if (!gatewayConfigured()) {
+  if (!gatewayConfigured(req)) {
     return Response.json(
       {
         error:

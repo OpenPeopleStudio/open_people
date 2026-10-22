@@ -11,6 +11,7 @@ import {
   answerLooksCovered,
   askModel,
   buildAskInstructions,
+  gatewayConfigured,
   lastUserText,
 } from "@/lib/ask/prompt";
 import { parseFollowupsStatus, parseMarkAnswered } from "@/lib/ask/store";
@@ -50,6 +51,47 @@ describe("ask prompt", () => {
   it("defaults the Gateway model id", () => {
     expect(ASK_MODEL_DEFAULT).toBe("openai/gpt-4.1-mini");
     expect(askModel()).toMatch(/\//);
+  });
+});
+
+describe("ask gateway config", () => {
+  const previous = {
+    key: process.env.AI_GATEWAY_API_KEY,
+    oidc: process.env.VERCEL_OIDC_TOKEN,
+    vercel: process.env.VERCEL,
+  };
+
+  afterEach(() => {
+    for (const [name, value] of [
+      ["AI_GATEWAY_API_KEY", previous.key],
+      ["VERCEL_OIDC_TOKEN", previous.oidc],
+      ["VERCEL", previous.vercel],
+    ] as const) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  });
+
+  it("is off locally without a key or OIDC token", () => {
+    delete process.env.AI_GATEWAY_API_KEY;
+    delete process.env.VERCEL_OIDC_TOKEN;
+    delete process.env.VERCEL;
+    expect(gatewayConfigured()).toBe(false);
+  });
+
+  it("accepts a Vercel deployment via OIDC (no API key)", () => {
+    delete process.env.AI_GATEWAY_API_KEY;
+    delete process.env.VERCEL_OIDC_TOKEN;
+    process.env.VERCEL = "1";
+    expect(gatewayConfigured()).toBe(true);
+    delete process.env.VERCEL;
+    expect(
+      gatewayConfigured(
+        new Request("https://www.openpeople.ai/api/ask", {
+          headers: { "x-vercel-oidc-token": "oidc-from-runtime" },
+        }),
+      ),
+    ).toBe(true);
   });
 });
 
