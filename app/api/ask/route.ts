@@ -1,5 +1,6 @@
 import {
   convertToModelMessages,
+  createUIMessageStream,
   createUIMessageStreamResponse,
   streamText,
   toUIMessageStream,
@@ -8,10 +9,16 @@ import {
 import { loadProposalKnowledge } from "@/lib/ask/knowledge";
 import { logAskQuestion } from "@/lib/ask/log";
 import {
+  openaiDirectConfigured,
+  openaiDirectModel,
+  streamOpenAIText,
+} from "@/lib/ask/openai-direct";
+import {
   answerLooksCovered,
+  askGatewayProviderOptions,
   askModel,
+  assistantConfigured,
   buildAskInstructions,
-  gatewayConfigured,
   lastUserText,
 } from "@/lib/ask/prompt";
 
@@ -19,9 +26,10 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 const MAX_MESSAGES = 16;
+const SNAG = "The assistant hit a snag. Try once more, or use the follow-up form.";
 
 export async function POST(req: Request) {
-  if (!gatewayConfigured(req)) {
+  if (!assistantConfigured(req)) {
     return Response.json(
       {
         error:
@@ -45,10 +53,35 @@ export async function POST(req: Request) {
   }
 
   const knowledge = loadProposalKnowledge();
+  const instructions = buildAskInstructions(knowledge);
+
+  if (openaiDirectConfigured()) {
+    const stream = createUIMessageStream({
+      execute: async ({ writer }) => {
+        const id = "ask-text";
+        writer.write({ type: "text-start", id });
+        let text = "";
+        for await (const delta of streamOpenAIText({
+          model: openaiDirectModel(askModel()),
+          instructions,
+          messages,
+        })) {
+          text += delta;
+          writer.write({ type: "text-delta", id, delta });
+        }
+        writer.write({ type: "text-end", id });
+        logAskQuestion({ question, covered: answerLooksCovered(text) });
+      },
+      onError: () => SNAG,
+    });
+    return createUIMessageStreamResponse({ stream });
+  }
+
   const result = streamText({
     model: askModel(),
-    instructions: buildAskInstructions(knowledge),
+    instructions,
     messages: await convertToModelMessages(messages),
+    providerOptions: askGatewayProviderOptions(),
     onFinish: ({ text }) => {
       logAskQuestion({ question, covered: answerLooksCovered(text) });
     },
@@ -57,7 +90,7 @@ export async function POST(req: Request) {
   return createUIMessageStreamResponse({
     stream: toUIMessageStream({
       stream: result.stream,
-      onError: () => "The assistant hit a snag. Try once more, or use the follow-up form.",
+      onError: () => SNAG,
     }),
   });
 }
