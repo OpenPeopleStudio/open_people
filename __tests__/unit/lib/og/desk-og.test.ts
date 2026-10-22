@@ -77,9 +77,12 @@ describe("desk Open Graph", () => {
   });
 
   it("does not invent deal numbers on the share card", () => {
-    for (const card of Object.values(DESK_OG)) {
+    for (const [key, card] of Object.entries(DESK_OG)) {
       const blob = `${card.kicker} ${card.kickerAccent} ${card.headline} ${card.accent} ${card.footer} ${card.alt}`;
-      expect(blob).not.toMatch(/¢|\$\/MWh|\bMW\b|\bkWh\b/);
+      expect(blob).not.toMatch(/¢|\$\/MWh|\bkWh\b/);
+      if (key !== "compute") {
+        expect(blob).not.toMatch(/\bMW\b/);
+      }
       expect(blob.toLowerCase()).not.toMatch(/horizon desk|hyperscale/);
     }
     expect(DESK_OG.home.headline).toBe("Keep the power here.");
@@ -92,8 +95,8 @@ describe("desk Open Graph", () => {
     );
     expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · CHURCHILL RIVER DESK");
     expect(deskOgFooterUrl(DESK_OG.home)).toBe("OPENPEOPLE.AI");
-    expect(DESK_OG.compute.headline).toBe("A compute plan,");
-    expect(DESK_OG.compute.accent).toBe("not a campus landing.");
+    expect(DESK_OG.compute.headline).toBe("A 500 MW Labrador campus.");
+    expect(DESK_OG.compute.accent).toBe("Open People leads.");
     expect(DESK_OG.compute.quiet).toBe(true);
   });
 
@@ -115,8 +118,9 @@ describe("desk Open Graph", () => {
 
     const compute = deskOgSvg(DESK_OG.compute);
     expect(compute).toContain(OG_COLOR.steel);
-    expect(compute).toContain("A compute plan,");
-    expect(compute).toContain("not a campus landing.");
+    expect(compute).toContain("A 500 MW Labrador");
+    expect(compute).toContain("campus.");
+    expect(compute).toContain("Open People leads.");
     expect(compute).not.toMatch(/¢/);
   });
 

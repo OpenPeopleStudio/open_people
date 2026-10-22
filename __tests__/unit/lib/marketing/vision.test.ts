@@ -24,6 +24,8 @@ describe("vision copy", () => {
     expect(VISION_DESCRIPTION).toMatch(/sovereign AI compute/i);
     expect(VISION_LEDE.plain).toMatch(/national grid/i);
     expect(VISION_LEDE.plain).toMatch(/federal sovereign-AI/i);
+    expect(text).toMatch(/Open People leads/i);
+    expect(text).toMatch(/consent first/i);
     expect(text).toMatch(/500 MW/);
     expect(text).toMatch(/Labrador/);
     expect(text).toMatch(/proposed/i);

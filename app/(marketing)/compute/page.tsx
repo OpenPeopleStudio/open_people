@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
-import { Term, Unfold } from "@/components/marketing/depth";
+import { Unfold } from "@/components/marketing/depth";
 import {
   COMPUTE_HERO,
   COMPUTE_HONESTY,
@@ -10,11 +10,12 @@ import {
   DESK_SOURCES,
 } from "@/lib/desk";
 import { deskMetadata } from "@/lib/og/metadata";
+import { VISION_CONTACT } from "@/lib/marketing/vision";
 
 export const metadata = deskMetadata({
-  title: "Compute plan",
+  title: "Proposed Labrador campus",
   description:
-    "Open People’s energy-use plan for compute only: mining first, named optionality, no reserved megawatts. Not a data-centre pitch. Not a seat at the deal table.",
+    "Open People leads a proposed 500 MW AI data campus in Labrador, and a research campus, in feasibility. Mines and existing industry are real constraints on the same power.",
   path: "/compute",
   robots: { index: true, follow: true },
 });
@@ -24,37 +25,32 @@ export default function ComputePage() {
     <DeskPage
       quiet
       verified={COMPUTE_LAST_VERIFIED}
-      kicker="Separate page · compute as a named use"
-      title="A compute plan, not a campus landing."
+      kicker="Proposed campus · in feasibility"
+      title="Open People leads a 500 MW Labrador campus."
       lede={
         <Unfold
           id="compute-lede"
-          label="the plan"
+          label="500 MW"
           plain={<p>{COMPUTE_HERO.plain}</p>}
           technical={COMPUTE_HERO.technical}
-          sources={[DESK_SOURCES.dciaHq]}
         />
       }
       meta={
         <p className="text-sm text-[var(--ink-3)]">
-          The public desk is{" "}
-          <Link href="/tracker" className="desk-link">
-            Tracker
+          Not approved. Not funded. Not under construction. The Churchill River evidence desk is{" "}
+          <Link href="/brief" className="desk-link">
+            /brief
           </Link>
-          ,{" "}
-          <Link href="/industries" className="desk-link">
-            Industries
+          . The thesis is{" "}
+          <Link href="/vision" className="desk-link">
+            /vision
           </Link>
-          , and{" "}
-          <Link href="/costs" className="desk-link">
-            Costs
-          </Link>
-          . This page exists so <Term k="compute">compute</Term> copy does not open the site. There
-          is no gate clock here on purpose: this is not a project timeline.
+          .
         </p>
       }
       sections={[
-        { id: "rules", label: "Three rules" },
+        { id: "rules", label: "Three facts" },
+        { id: "research", label: "Research campus" },
         { id: "neighbours", label: "Neighbouring grids" },
         { id: "honesty", label: "Not proven" },
       ]}
@@ -73,6 +69,17 @@ export default function ComputePage() {
             </section>
           ))}
         </div>
+      </DeskSection>
+
+      <DeskSection id="research" title="A research campus beside it">
+        <p className="desk-takeaway">
+          Open People also leads a proposed research campus: residencies, fellowships, gatherings.
+          People from across Canada, on the problems society will face in the age of AI. In the
+          spirit of the Perimeter Institute and the Banff Centre — named as spirit, not as partners.
+        </p>
+        <Link href="/vision" className="desk-kicker mt-6 inline-flex no-underline hover:underline">
+          Vision →
+        </Link>
       </DeskSection>
 
       <DeskSection id="neighbours" title="Neighbouring grids (context only)">
@@ -95,15 +102,15 @@ export default function ComputePage() {
           ))}
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
-          Calm public precision. No reserved megawatts. No invented wind company. Partners would own
-          any steel. Open People stays outside the agreement, constituent and catalyst only.
+          Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
+          Consent first.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <Link href="/engage" className="btn-primary">
-            Get involved — keep firm power here
-          </Link>
-          <Link href="/industries" className="btn-secondary">
-            Back to industries
+          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+            {VISION_CONTACT}
+          </a>
+          <Link href="/vision" className="btn-secondary">
+            Vision
           </Link>
         </div>
       </DeskSection>

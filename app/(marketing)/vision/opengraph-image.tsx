@@ -70,7 +70,7 @@ export default function Image() {
               fontFamily: "-apple-system, BlinkMacSystemFont, Inter, 'Segoe UI', sans-serif",
             }}
           >
-            A proposed 500 MW Labrador campus, in feasibility.
+            Open People leads. Proposed. In feasibility.
           </div>
           <div
             style={{

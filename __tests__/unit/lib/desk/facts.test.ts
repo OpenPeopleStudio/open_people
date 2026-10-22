@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  COMPUTE_HERO,
+  COMPUTE_RULES,
   CONTESTED_EXPORT,
   COST_ERA_NOTE,
   COST_MARKERS,
@@ -176,7 +178,20 @@ describe("horizon desk facts", () => {
     expect(SCALE_ANCHORS.heritagePrice.source.length).toBeGreaterThan(0);
     expect(SCALE_ANCHORS.gulIslandRange.technical).toMatch(/2,250 MW or 2,700 MW/);
     expect(SCALE_ANCHORS.miningLoad.technical).toMatch(/312 MW/);
-    expect(SCALE_ANCHORS.computeOptional.plain).toMatch(/not the front door/i);
+    expect(SCALE_ANCHORS.computeOptional.plain).toMatch(/Open People leads/i);
+    expect(SCALE_ANCHORS.computeOptional.plain).toMatch(/real constraints/i);
+    const computeBlob = [
+      COMPUTE_HERO.plain,
+      COMPUTE_HERO.technical,
+      ...COMPUTE_RULES.flatMap((rule) => [rule.body.plain, rule.body.technical]),
+    ].join("\n");
+    expect(computeBlob).toMatch(/Open People leads/i);
+    expect(computeBlob).toMatch(/consent first/i);
+    expect(computeBlob).not.toMatch(/catalyst/i);
+    expect(computeBlob).not.toMatch(/wrong page/i);
+    expect(computeBlob).not.toMatch(/wrong organisation/i);
+    expect(computeBlob).not.toMatch(/leftover-firm-power/i);
+    expect(computeBlob).not.toMatch(/bankable offtake/i);
   });
 
   it("gives tracker rows a plain-English title that is not a Transparency prefix", () => {

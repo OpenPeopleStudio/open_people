@@ -218,9 +218,9 @@ export default function EngagePage() {
       }
       meta={
         <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
-          Open People is a constituent and catalyst voice from St. John&apos;s. Tom Lane is not a
-          party to the agreement, an offtake seat, or a demand seat. Partners would own any steel.
-          This page is for people who want the optionality kept in writing.
+          Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.
+          Tom Lane is not a party to the Churchill Falls agreement. Mines and existing industry are
+          real constraints. This page is for people who want in-province use kept in writing.
         </p>
       }
       actions={
@@ -427,9 +427,9 @@ export default function EngagePage() {
       <DeskSection id="close">
         <p className="desk-h2">Keep what we can still keep. Use it on loads that live here.</p>
         <p className="desk-body mt-5">
-          Mining and Labrador industry first. <Term k="compute">Compute</Term> if, and only if, the
-          province writes it as an eligible use of leftover firm power. Partners own the steel. The
-          public owns the window until the contracts lock.
+          Mining and Labrador industry first — they are real constraints. Open People leads a
+          proposed 500 MW <Term k="compute">campus</Term>, in feasibility. The public owns the
+          window until the contracts lock.
         </p>
         <div className="desk-fact mt-8 leading-relaxed text-[var(--ink-2)]">
           <div>Tom Lane · Open People</div>

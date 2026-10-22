@@ -34,11 +34,11 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Labrador power & industry case",
   description:
-    "Firm in-province power for Labrador and Newfoundland industry first. The Churchill Falls / Gull Island DCIA is a framework, not binding PPAs. Compute is a separate page.",
+    "Firm in-province power for Labrador and Newfoundland industry first. Open People leads a proposed 500 MW Labrador AI campus, in feasibility. Mines are a real constraint.",
   path: "/brief",
   type: "article",
   ogDescription:
-    "Keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. Compute is not the opener.",
+    "Keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Open People leads a proposed 500 MW campus. Mines first as a constraint.",
 });
 
 /* ── data lookups: every number on this page is bound to a lib/desk object ── */
@@ -174,23 +174,23 @@ const KIND_LABEL: Record<string, string> = {
 const ASKS = [
   {
     title: "A named block",
-    body: "A scheduled allocation of Labrador capacity eligible for industrial load, including compute, drawn from the publicly framed retain from Churchill Falls and Gull Island (section 02), plus wind if built. No firm megawatts, price or queue for Labrador compute is confirmed. An illustrative first tranche of 100–150 MW, as new generation phases in, is our ask. It is not a government figure.",
+    body: "A scheduled allocation of Labrador capacity that can serve industrial load, including the 500 MW campus Open People proposes to lead. Drawn from the publicly framed retain from Churchill Falls and Gull Island (section 02), plus wind if built. No firm megawatts, price or queue for Labrador compute is confirmed. 500 MW is an Open People proposal, not a government figure. Mines and existing industry are real constraints on the same power.",
   },
   {
     title: "A transparent tariff",
-    body: "A published firm industrial rate, indicatively in the 4–6¢/kWh range, plus full network-addition cost causation. High enough to be unimpeachable after Muskrat Falls. Low enough to beat the data-centre rate Québec has proposed (section 05). The band is ours, not a posted rate.",
+    body: "A published firm industrial rate, plus full network-addition cost causation. High enough to be unimpeachable after Muskrat Falls. Québec has proposed a data-centre rate (section 05). This province has not. We do not invent a cent.",
   },
   {
     title: "Allocation criteria that keep the value home",
-    body: "Score for NL majority ownership, Indigenous equity participation, creditworthy offtake, local employment and balance-sheet substance. Criteria, not a ban, are the durable answer to the Great North Data experience.",
+    body: "Score for NL majority ownership, Indigenous equity participation, creditworthy offtake, local employment and balance-sheet substance. Criteria, not a ban, are the durable answer to the Great North Data experience. Consent first.",
   },
   {
     title: "An infrastructure audit",
-    body: "Direct NL Hydro to publish Labrador dark-fibre capacity and recall-block headroom, and commission a diverse-route fibre feasibility study. Co-fundable with federal connectivity programs.",
+    body: "Direct NL Hydro to publish Labrador dark-fibre capacity and recall-block headroom, and commission a diverse-route fibre feasibility study. Near-term work on this campus is feasibility on costs and impact, in general terms.",
   },
   {
     title: "A federal handshake",
-    body: "A joint NL–Canada expression of interest under the Sovereign AI Compute Strategy, so the next intake window opens with a Labrador consortium already on file.",
+    body: "Align the province’s in-province use with federal sovereign-AI goals, so a Labrador campus is not a leftover of someone else’s intake. That is a policy alignment, not a funding ask on this page.",
   },
 ];
 
@@ -209,40 +209,30 @@ const DOING_NOTHING = [
   },
   {
     lead: "2041 arrives with no domestic alternative.",
-    body: "The province's leverage in any future negotiation is a credible in-province use for the power: mines, towns, other industry, and compute if written eligible. The absence of that leverage is why 1969 happened.",
+    body: "The province's leverage in any future negotiation is a credible in-province use for the power: mines, towns, other industry, and a campus that actually gets built. The absence of that leverage is why 1969 happened.",
   },
 ];
 
 const STACK = [
   {
+    label: "Proponent",
+    us: true,
+    body: "Open People leads. We are the organisation proposing to build a 500 MW AI data campus in Labrador and a research campus beside it. Proposed. In feasibility. Not approved, not funded, not under construction.",
+  },
+  {
     label: "Power and site",
     us: false,
-    body: "Crown utility: capacity allocation, brownfield land at the point of generation, transmission.",
+    body: "NL Hydro, as a proposed partner: capacity allocation, land at the point of generation, transmission. Not a signed block. Mines and existing industry remain on this system.",
   },
   {
-    label: "Indigenous equity",
+    label: "Indigenous nations",
     us: false,
-    body: "Innu Nation and its development entities: ownership from day one, not consultation at the end. The structure federal programs explicitly reward.",
-  },
-  {
-    label: "Development",
-    us: false,
-    body: "An NL-based developer entity that assembles the coalition and carries the project.",
-  },
-  {
-    label: "Catalyst",
-    us: true,
-    body: "Where Open People sits today. A public campaign for in-province use. Open People is not a DCIA party, an offtake seat or a demand seat, and does not assemble bankable offtake. A catalyst role, not a deal seat.",
-  },
-  {
-    label: "Software layer",
-    us: true,
-    body: "Where Open People would sit if partners build. The sovereignty gateway, guardrails and model hosting that make in-province compute usable by buyers who cannot send data offshore.",
+    body: "Consent first. Equity from day one, not consultation at the end. Named as a proposed partnership, not as a signed impact-benefit agreement.",
   },
   {
     label: "Capital",
     us: false,
-    body: "Infrastructure investors and federal programs, following the power allocation, never preceding it.",
+    body: "Capital as a proposed partner, unnamed here. No funder, no customer, and no dollar figure is published on this page.",
   },
 ];
 
@@ -294,10 +284,11 @@ export default function BriefPage() {
               endorsed that framework <Fig id="b">21–18</Fig> on 17 September. Binding paper is
               still ahead. The industrial question is whether{" "}
               <Term k="firm-power">firm power</Term> this province keeps is used here: mines and
-              Labrador industry first. <Term k="compute">Compute</Term> is not the opener. It lives
-              on a{" "}
+              Labrador industry first. Open People leads a proposed 500 MW Labrador{" "}
+              <Term k="compute">campus</Term> on that power, in feasibility. Mines are a real
+              constraint. Detail on{" "}
               <Link href="/compute" className="desk-link">
-                separate page
+                /compute
               </Link>
               .
             </p>
@@ -442,8 +433,9 @@ export default function BriefPage() {
               can run to <Fig id="d">31 March 2027</Fig>. Québec elected a Parti Québécois minority
               on 5 October; cabinet is sworn in 21 October; the National Assembly returns 17
               November. The province&apos;s stated industrial use is critical minerals. Mining
-              matters, and it is first. Compute is optionality: not confirmed as reserved megawatts,
-              price, queue or policy preference.
+              matters, and it is first — a real constraint. Open People leads a proposed 500 MW
+              campus on the same power. That campus is not confirmed as reserved megawatts, price,
+              queue or policy preference.
             </p>
           }
           technical={
@@ -470,11 +462,12 @@ export default function BriefPage() {
         <aside className="mt-10 border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
           <p className="desk-h3">
             Labrador is not an infinite battery. It is enough firm green power to serve mines, towns
-            and other industry that lives here. Industry over raw export. Compute, if written
-            eligible at all, is leftover optionality.
+            and other industry that lives here — and a proposed 500 MW campus Open People leads.
+            Mines and existing industry are real constraints. The campus is proposed, in
+            feasibility, not a reserved block.
           </p>
           <Link href="/compute" className="desk-kicker mt-4 inline-flex no-underline hover:underline">
-            Compute plan (separate page) →
+            Proposed campus (Open People leads) →
           </Link>
         </aside>
       </DeskSection>
@@ -883,8 +876,8 @@ export default function BriefPage() {
             The Review recommended new transmission from Churchill Falls to Labrador West
             specifically to enable energy-intensive industry. The August framework attaches money to
             that line. What is still missing is a public allocation: year, megawatts, place, price
-            and line. Mines first, then other industrial load, including compute if the province
-            writes it.
+            and line. Mines first — a real constraint — then other industrial load, including the
+            500 MW campus Open People proposes to lead.
           </p>
         </div>
         <div className="mt-8" data-rise>
@@ -1046,10 +1039,11 @@ export default function BriefPage() {
           <p>
             Neighbouring-grid facts that used to open this brief now live on the{" "}
             <Link href="/compute" className="desk-link">
-              compute page
+              campus page
             </Link>
-            , a separate page. They are context for leftover firm hydro, not a campus pitch, and
-            not a named industrial class in the Material Terms.
+            . They are context. They are not a Labrador reservation. The Material Terms still do
+            not name compute as an industrial class. Open People leads a proposed campus anyway,
+            in feasibility, against real mine and industry constraints.
           </p>
         }
       >
@@ -1158,10 +1152,10 @@ export default function BriefPage() {
               plain={
                 <p className="desk-takeaway">
                   Canada&apos;s Sovereign AI Compute Strategy seeks Canadian-owned, Canadian-controlled
-                  projects with Indigenous participation. A Labrador consortium of Crown power, Innu
-                  equity, an NL developer and Canadian anchor demand fits that description. The first
-                  intake closed in 2026. We found no Newfoundland and Labrador entry in the public
-                  record, because there was no NL project to enter.
+                  projects with Indigenous participation. Open People leading a Labrador campus, with
+                  NL Hydro and Indigenous nations as proposed partners, fits that description. The
+                  first intake closed in 2026. We found no Newfoundland and Labrador entry in the
+                  public record, because there was no NL project to enter.
                 </p>
               }
               technical={
@@ -1271,12 +1265,12 @@ export default function BriefPage() {
       <DeskSection
         id="builds"
         num="07 — Who builds it"
-        title="A consortium, not a champion."
+        title="Open People leads. Partners are proposed, not signed."
         intro={
           <p>
-            The structure that works, demonstrated at Narvik and consistent with the Review&apos;s
-            governance critique, puts each risk with the party built to carry it. It is politically
-            viable after Muskrat Falls because no single champion holds it.
+            Open People is the proponent. NL Hydro, Indigenous nations (consent first), and capital
+            are the proposed partnership. None of those lines is a signed allocation, a signed
+            impact-benefit agreement, or a named funder.
           </p>
         }
       >
@@ -1364,11 +1358,15 @@ export default function BriefPage() {
       {/* ── 09 ── */}
       <DeskSection id="who" num="09 — Who we are" title="Open People.">
         <p className="desk-body">
-          Open People is a Newfoundland and Labrador AI company developing sovereign, self-hosted
-          computing: software built to run without resupply, on infrastructure its users actually
-          control. Our role in this campaign is deliberately narrow: constituent and catalyst. We
-          make the public case for keeping firm power in-province. We are not a DCIA party, an
-          offtake seat or a demand seat. We are not asking to own the steel.
+          Open People is a Newfoundland and Labrador company. We lead a proposed 500 MW AI data
+          campus in Labrador, and a research campus beside it: residencies, fellowships, gatherings,
+          in the spirit of the Perimeter Institute and the Banff Centre. Proposed. In feasibility.
+          Not approved, not funded, not under construction.
+        </p>
+        <p className="desk-body mt-5">
+          We are not a party to the DCIA. We are the proponent of the campus. Proposed partners: NL
+          Hydro, Indigenous nations (consent first), and capital. No customers are named. Mines and
+          existing industry are real constraints on the same power.
         </p>
         <div className="mt-8 flex gap-5">
           <div
@@ -1379,21 +1377,13 @@ export default function BriefPage() {
           </div>
           <div className="min-w-0">
             <p className="text-[1.05rem] font-semibold text-[var(--ink)]">Tom Lane</p>
-            <p className="desk-fact mt-1 text-[var(--ink-3)]">Founder, Open People · St. John&apos;s, NL</p>
+            <p className="desk-fact mt-1 text-[var(--ink-3)]">Founder, Open People</p>
             <p className="desk-body mt-4">
-              Tom Lane is an entrepreneur based in St. John&apos;s. He is the founder of Open People and
-              co-founder and owner of snōw white laundry, a seasonal restaurant on Water Street that
-              opened in 2026. He took that project from lease negotiation through design, permitting
-              and construction, acting as his own project manager with a local general contractor,
-              and built its operating stack himself: supplier price intelligence, demand
-              forecasting, financial automation and a custom staff platform.
-            </p>
-            <p className="desk-body mt-4">
-              It is a small building with a large point behind it. A regulated, multi-permit,
-              multi-trade physical build on a compressed schedule is the same job shape as a first
-              small compute node: site control, power and mechanical, inspectors, trades, and a
-              licence gate at the end. He runs a 70-seat restaurant with the instrumentation of a
-              data centre. This campaign is that continuity, applied to a bigger load.
+              Tom Lane founded Open People. Write to{" "}
+              <a href="mailto:tom@openpeople.ai" className="desk-link">
+                tom@openpeople.ai
+              </a>
+              .
             </p>
           </div>
         </div>
@@ -1494,9 +1484,9 @@ export default function BriefPage() {
           The power has to be allocatable here before anything else can happen.
         </p>
         <p className="desk-body mt-5">
-          If you want firm power kept in Newfoundland and Labrador, for mines, towns and other
-          industry, with compute as a named use rather than a forgotten leftover, there is a public
-          path this month.
+          If you want firm power kept in Newfoundland and Labrador — for mines, towns, other
+          industry, and a proposed 500 MW campus Open People leads — there is a public path while
+          this paper is still paper.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link href="/engage" className="btn-primary">
@@ -1509,7 +1499,7 @@ export default function BriefPage() {
         <div className="desk-fact mt-10 leading-relaxed text-[var(--ink-2)]">
           <div>Open People · St. John&apos;s, Newfoundland and Labrador</div>
           <div className="mt-1 text-[var(--ink-3)]">
-            Briefing updated {DESK_VERIFIED} · Constituent and catalyst voice · not a DCIA party
+            Briefing updated {DESK_VERIFIED} · Open People leads a proposed campus · not a DCIA party
           </div>
         </div>
       </DeskSection>

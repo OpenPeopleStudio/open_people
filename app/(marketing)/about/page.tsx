@@ -1,26 +1,42 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
-import { Term } from "@/components/marketing/depth";
+import { Dual } from "@/components/marketing/voice/Dual";
+import { VISION_CONTACT } from "@/lib/marketing/vision";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Open People is a Newfoundland and Labrador constituent voice for keeping Churchill Falls / Gull Island firm power in-province. Catalyst, not hyperscale steel. Not a party to the agreement.",
+    "Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility. Mines and existing industry are real constraints on the same power.",
 };
 
 export default function AboutPage() {
   return (
     <DeskPage
       kicker="About"
-      title="A Newfoundland company on the Labrador power story."
+      title="Open People leads a proposed Labrador campus."
       lede={
-        <p>
-          Open People is a constituent and catalyst voice for keeping firm Churchill Falls / Gull
-          Island power in Newfoundland and Labrador. Mining and Labrador industry first.{" "}
-          <Term k="compute">Compute</Term> is a named use of that power, not a reserved block, and
-          not a seat at the deal table.
-        </p>
+        <Dual
+          plain={
+            <p>
+              Open People is a Newfoundland and Labrador company. We lead a proposed 500 MW AI data
+              campus in Labrador, and a research campus beside it. Proposed. In feasibility. Not
+              approved, not funded, not under construction.
+            </p>
+          }
+          technical={
+            <p>
+              Open People is the proponent. Proposed partners are NL Hydro, Indigenous nations —
+              consent first — and capital. That structure is proposed, not signed. No customers are
+              named. Mines and existing industry are real constraints on Labrador firm power. The
+              public evidence on the Churchill Falls / Gull Island framework lives on the{" "}
+              <Link href="/brief" className="desk-link">
+                brief
+              </Link>
+              .
+            </p>
+          }
+        />
       }
       verified={false}
       sections={[
@@ -31,43 +47,38 @@ export default function AboutPage() {
       <DeskSection id="stance">
         <div className="space-y-5 desk-body">
           <p>
-            We are not a party to the <Term k="dcia">DCIA</Term>, an offtake seat, or a demand
-            seat. We are not raising to buy a hyperscale data centre. The public work is{" "}
-            <strong className="text-[var(--ink)]">in-province use</strong> and{" "}
-            <strong className="text-[var(--ink)]">transparency</strong> while the framework is still
-            a framework. If partners later build capacity, Open People&apos;s role is the{" "}
-            <strong className="text-[var(--ink)]">software layer</strong>, while infrastructure
-            partners carry construction and GPU balance sheets.
+            We are not a party to the Churchill Falls / Gull Island framework. We are the
+            organisation proposing to <strong className="text-[var(--ink)]">lead the campus</strong>
+            : the 500 MW AI data campus and the research campus. Consent with Indigenous nations
+            comes first. Capital comes in as a partner, unnamed here. NL Hydro is a proposed
+            partner for power and site — not a signed allocation.
           </p>
           <p>
-            That stance is deliberate. Capital reality killed the “raise to own the steel” path. The
-            durable position is catalyst, not principal ownership of billion-dollar shells.
-          </p>
-          <p>
-            The company is based in <strong className="text-[var(--ink)]">St. John&apos;s</strong>.
-            Founder Tom Lane also built and operates{" "}
-            <strong className="text-[var(--ink)]">Snow White Laundry</strong> on Water Street, a live
-            operator record and, under strict rules, a hospitality setting for coalition partners
-            (not for public officials).
+            Tom Lane is the founder. Write to{" "}
+            <a href={`mailto:${VISION_CONTACT}`} className="desk-link">
+              {VISION_CONTACT}
+            </a>
+            .
           </p>
         </div>
       </DeskSection>
 
       <DeskSection id="facts">
         <div className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
-          <p className="desk-kicker">Public facts only</p>
+          <p className="desk-kicker">Proposed. In feasibility.</p>
           <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
             Energy figures on this site map to Canada Energy Regulator, NL Hydro, and Independent
-            Review Committee materials. We do not invent rates. Claims that are unproven stay labelled
-            as work, not settled fact. Every number carries its source and a last-verified date.
+            Review Committee materials. We do not invent rates. The 500 MW figure is an Open People
+            proposal, not a reserved block. Claims that are unproven stay labelled as work, not
+            settled fact.
           </p>
         </div>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <Link href="/engage" className="btn-primary">
-            Get involved — keep firm power here
-          </Link>
-          <Link href="/brief" className="btn-secondary">
-            Read the public case
+          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+            {VISION_CONTACT}
+          </a>
+          <Link href="/vision" className="btn-secondary">
+            Vision
           </Link>
         </div>
       </DeskSection>

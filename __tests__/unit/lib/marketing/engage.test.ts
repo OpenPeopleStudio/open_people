@@ -56,7 +56,7 @@ describe("engage copy-first helper", () => {
     );
     expect(clipboard).toContain("Mining / resources");
     expect(clipboard).toContain("Unused retain should stay in Labrador.");
-    expect(clipboard).toContain("Not a DCIA party, offtake seat, or demand seat.");
+    expect(clipboard).toContain("Not a DCIA party.");
   });
 
   it("does not URL-encode the clipboard body", () => {

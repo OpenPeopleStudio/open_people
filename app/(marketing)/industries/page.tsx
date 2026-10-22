@@ -10,7 +10,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Industries",
   description:
-    "Mining and Labrador industry first. Megawatts drawn by how hard the number is; the corridor the mines need; sourced cards for Labrador West load. Compute is a short secondary line.",
+    "Mining and Labrador industry first — they are real constraints on the same power. Open People leads a proposed 500 MW campus, in feasibility.",
   path: "/industries",
 });
 
@@ -20,7 +20,7 @@ export default function IndustriesPage() {
       kicker="Churchill River desk · Industries"
       title={
         <>
-          Mining first. <em>Then the wire.</em> Compute last, and short.
+          Mining first. <em>Then the wire.</em> A campus has to live with that.
         </>
       }
       lede={
@@ -32,8 +32,8 @@ export default function IndustriesPage() {
               <Term k="firm-power">Firm power</Term> this province keeps should serve loads that
               already live in Labrador: mines, towns, the corridor between Churchill Falls and
               Labrador West. The mines already use about <Fig id="a">312 MW</Fig> of the roughly{" "}
-              <Fig id="b">525 MW</Fig> Hydro has for Labrador today. We do not invent a second
-              industrial class to dress a campus.
+              <Fig id="b">525 MW</Fig> Hydro has for Labrador today. They are a real constraint on
+              any campus.
             </p>
           }
           technical={SCALE_ANCHORS.miningLoad.technical}
@@ -44,7 +44,7 @@ export default function IndustriesPage() {
       sections={[
         { id: "corridor", label: "The corridor" },
         { id: "cards", label: "Mining first" },
-        { id: "compute", label: "Compute (secondary)" },
+        { id: "compute", label: "Proposed campus" },
       ]}
     >
       <DeskSection
@@ -107,21 +107,19 @@ export default function IndustriesPage() {
         </p>
       </DeskSection>
 
-      <DeskSection id="compute" num="Secondary — not the opener" title={undefined}>
-        <aside className="border-l-2 border-[var(--steel)] bg-[var(--steel-soft)] p-5 sm:p-6">
-          <p className="desk-kicker" style={{ color: "var(--steel)" }}>
-            Secondary · not the opener
-          </p>
+      <DeskSection id="compute" num="Proposed campus" title={undefined}>
+        <aside className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
+          <p className="desk-kicker">Open People leads · in feasibility</p>
           <Unfold
             id="compute-line"
             className="mt-3"
-            label="compute"
+            label="500 MW"
             plain={<p className="desk-takeaway">{COMPUTE_SECONDARY_LINE.plain}</p>}
             technical={COMPUTE_SECONDARY_LINE.technical}
             sources={[DESK_SOURCES.dciaHq]}
           />
-          <Link href="/compute" className="desk-kicker mt-4 inline-flex no-underline hover:underline" style={{ color: "var(--steel)" }}>
-            Compute plan (separate page) →
+          <Link href="/compute" className="desk-kicker mt-4 inline-flex no-underline hover:underline">
+            Proposed campus →
           </Link>
         </aside>
         <p className="mt-8 text-sm text-[var(--ink-3)]">

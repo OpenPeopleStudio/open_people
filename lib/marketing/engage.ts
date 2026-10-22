@@ -44,7 +44,7 @@ export function buildEngageMessage(values: EngageFormValues) {
     values.note?.trim() || "-",
     "",
     "— sent from openpeople.ai/engage",
-    "Open People is a constituent / catalyst voice. Not a DCIA party, offtake seat, or demand seat.",
+    "Open People leads a proposed 500 MW Labrador campus, in feasibility. Not a DCIA party.",
   ].join("\n");
 }
 
