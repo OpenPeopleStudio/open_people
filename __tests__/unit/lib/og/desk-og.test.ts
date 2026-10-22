@@ -100,6 +100,8 @@ describe("desk Open Graph", () => {
     expect(DESK_OG.compute.quiet).toBe(true);
     expect(DESK_OG.coalition.accent).toBe("Open People leads. Mining first.");
     expect(DESK_OG.coalition.alt).not.toMatch(/catalyst/i);
+    expect(DESK_OG.ask.headline).toBe("Ask the proposal.");
+    expect(DESK_OG.ask.accent).toBe("Honest, labelled answers.");
   });
 
   it("uses an 8px plasma chassis and steel on quiet compute", () => {

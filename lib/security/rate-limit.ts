@@ -17,6 +17,9 @@ interface RateLimitEntry {
 }
 
 const DEFAULT_RULES: RateLimitRule[] = [
+  { pattern: /^\/api\/ask\/follow-up$/, limit: 5, windowMs: 60_000 },
+  { pattern: /^\/api\/ask\/followups$/, limit: 30, windowMs: 60_000 },
+  { pattern: /^\/api\/ask$/, limit: 12, windowMs: 60_000 },
   { pattern: /^\/api\/auth\/login$/, limit: 10, windowMs: 60_000 },
   { pattern: /^\/api\/v1\/chat\/completions$/, limit: 60, windowMs: 60_000 },
   { pattern: /^\/api\/vault\/quick-upload$/, limit: 30, windowMs: 60_000 },

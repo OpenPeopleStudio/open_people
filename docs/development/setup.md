@@ -83,6 +83,9 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
+# Public /ask follow-ups (private store + admin poll). Never commit this token.
+ASK_ADMIN_TOKEN=generate-a-long-random-secret
+
 # Cloudflare R2 Storage (for file uploads)
 CLOUDFLARE_ACCOUNT_ID=your_account_id
 R2_ACCESS_KEY_ID=your_r2_access_key
