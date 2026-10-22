@@ -85,9 +85,9 @@ export const DESK_OG = {
     kicker: "Coalition",
     kickerAccent: "Partner brief",
     headline: "Keep firm power in NL.",
-    accent: "Catalyst only. Mining first.",
+    accent: "Open People leads. Mining first.",
     footer: "openpeople.ai/coalition",
-    alt: "Open People coalition brief — keep firm power in NL. Catalyst only. Mining first.",
+    alt: "Open People coalition brief — keep firm power in NL. Open People leads. Mining first.",
   },
   compute: {
     kicker: "Compute",

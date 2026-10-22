@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.8 tools=25 commits=1 files=9 note=Follow-up: strip leftover catalyst / not-a-deal-seat copy on /coalition + OG
 0.5.7 tools=40 commits=1 files=28 note=Same PR: Open People leads proposed 500 MW + research campus; kill catalyst copy
 0.5.6 tools=80 commits=1 files=12 note=First slice: /vision public thesis + Dual + OG; Vision in nav/footer
 0.5.5 tools=80 commits=1 files=22 note=Oct 14 desk facts pass on /tracker /costs /brief; DESK_VERIFIED 2026-10-14

@@ -28,12 +28,12 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Coalition brief — keep firm power in NL",
   description:
-    "Partner-confidential coalition for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador: mines, towns, Indigenous partners, infrastructure. Compute is a separate page. Open People is a catalyst, not an offtake seat.",
+    "Partner-confidential coalition for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador: mines, towns, Indigenous partners, infrastructure. Open People leads the proposed Labrador campus as proponent.",
   path: "/coalition",
   type: "article",
   robots: { index: false, follow: false },
   ogDescription:
-    "A coalition to keep firm Churchill Falls / Gull Island power in-province. Mining first. Compute if the paper writes it. Open People is a catalyst, not a DCIA party.",
+    "A coalition to keep firm Churchill Falls / Gull Island power in-province. Mining first. Open People leads the proposed Labrador campus as proponent.",
 });
 
 /* ── lib/desk lookups. A missing id is a build error, not a silent blank. ── */
@@ -212,17 +212,17 @@ const ROLES = [
   {
     layer: "Narrative and policy",
     what: "Firm power as industry, not raw export. Mines first; compute as a named use if the paper writes it.",
-    who: "Open People and allies. Catalyst, not a DCIA seat.",
+    who: "Open People leads as proponent. Not a DCIA party.",
   },
   {
     layer: "Demand",
     what: "Mines, towns, institutions, and any industrial load that would actually use in-province power.",
-    who: "Those buyers. Open People does not hold offtake.",
+    who: "Mines and existing industry first. Campus load is in feasibility.",
   },
   {
     layer: "Facility",
     what: "Labrador-sited industrial plant, or a compute campus only if eligible.",
-    who: "Partner, if anyone builds.",
+    who: "Open People as proponent, with construction and capital partners.",
     accent: true,
   },
   {
@@ -243,7 +243,7 @@ const SEQUENCE = [
   "Innu partnership before large Labrador builds.",
   "Mines and towns served first.",
   "Leftover firm power eligible for named uses, including compute if written.",
-  "Partners own any steel. Open People stays catalyst.",
+  "Open People leads the proposed campus. Consent first. Capital as partner.",
 ];
 
 const PHASES = [
@@ -261,17 +261,17 @@ const PHASES = [
   {
     yr: "Y2 · 2028",
     t: "Architecture in writing",
-    d: "If leftover firm power is eligible for named industrial uses beyond mining, partners can talk term sheets on their own paper. Open People still not the buyer. Site options remain research, not a queue position.",
+    d: "If leftover firm power is eligible for named industrial uses beyond mining, the proposed campus can talk term sheets. Open People leads as proponent; nothing is signed. Site options remain research, not a queue position.",
   },
   {
     yr: "Y3 · 2029",
     t: "Partner choice",
-    d: "Any go-decision or FID is a partner’s, not Open People’s. Federal co-funding outcome known only if someone actually files. We do not pretend a path exists before that.",
+    d: "Any go-decision or FID is still ahead. Open People leads as proponent; proposed, in feasibility. Federal co-funding outcome known only if someone actually files. We do not pretend a path exists before that.",
   },
   {
     yr: "Y4–Y5",
     t: "Use it here",
-    d: "In-province load that lives here is served first. Compute may be a standing eligible use if the province wrote it. Open People remains catalyst and software, not the offtake desk.",
+    d: "In-province load that lives here is served first. Compute may be a standing eligible use if the province wrote it. Open People remains the campus proponent, with software. Mines first.",
   },
 ];
 
@@ -308,8 +308,8 @@ const ASKS = [
   },
   {
     who: "Utility / telco / infrastructure developer",
-    lead: "You would build and own any steel. We do not bring bankable offtake.",
-    body: "What we need from you now: an honest read on whether a Labrador industrial or optional compute node is buildable on your terms, if the contracts write eligibility. What you get: a public campaign for in-province optionality already in motion, not an anchor tenant we pretend to be.",
+    lead: "Open People leads the proposed campus as proponent. We partner on the build.",
+    body: "What we need from you now: an honest read on whether a Labrador industrial or compute node is buildable on your terms, if the contracts write eligibility. What you get: a public campaign already in motion, and a proposed campus in feasibility — not a signed offtake.",
   },
   {
     who: "Connectivity / subsea",
@@ -324,7 +324,7 @@ const ASKS = [
   {
     who: "Institutional and public-sector demand",
     lead: "Tell us what in-province load you would actually use.",
-    body: "Mining, town, institutional, or residency-bound compute if the province writes it eligible. A non-binding note describing volume and term is useful. It is not an offtake Open People holds, and it does not bank a facility on its own.",
+    body: "Mining, town, institutional, or residency-bound compute if the province writes it eligible. A non-binding note describing volume and term is useful. It does not bank a facility on its own.",
   },
   {
     who: "Advisors and connectors",
@@ -369,7 +369,7 @@ const HONESTY_EXTRA = [
   "That an Indigenous partnership path exists for any specific site — site-specific work, not a generic assumption. Innu Nation’s post-vote position is unresolved.",
   "The wind SPE under DCIA Schedule B §7 is unnamed. We do not invent the name, the dollar figure, or a federal share.",
   "Our research opinion that in-province energy use with data export faces no energy-law ban — counsel has not validated it. We do not rely on it publicly.",
-  "No firm MW, price, or queue for Labrador compute is confirmed. Open People does not hold offtake, a FID path, or a reserved Labrador DC block.",
+  "No firm MW, price, or queue for Labrador compute is confirmed. Proposed, in feasibility. Not approved, not funded, not under construction.",
 ];
 
 /* ── page ───────────────────────────────────────────────────────────────── */
@@ -390,12 +390,13 @@ export default function CoalitionPage() {
           plain={
             <p>
               This is a coalition for keeping Churchill Falls / Gull Island{" "}
-              <Term k="firm-power">firm power</Term> in-province, not an invitation to join a campus
-              build. The <Term k="dcia">DCIA</Term> signed 17 August 2026 is a{" "}
+              <Term k="firm-power">firm power</Term> in-province. Open People leads a proposed
+              Labrador campus as proponent — in feasibility, not approved. The{" "}
+              <Term k="dcia">DCIA</Term> signed 17 August 2026 is a{" "}
               <Term k="framework">framework</Term>, not binding <Term k="ppa">PPAs</Term>. The House
               endorsed it <Fig id="a">21–18</Fig> on 17 September. Binding paper is still ahead.
-              Mining and Labrador industry come first. <Term k="compute">Compute</Term> optionality,
-              if any, lives on a{" "}
+              Mining and Labrador industry come first as a real constraint. Campus detail lives on
+              a{" "}
               <Link href="/compute" className="desk-link">
                 separate page
               </Link>
@@ -409,9 +410,9 @@ export default function CoalitionPage() {
       meta={
         <div className="grid gap-4">
           <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
-            Open People is a constituent and catalyst voice from St. John&apos;s. It is not a DCIA
-            party, not an offtake seat, and not a reserved megawatt block. Partners would own any
-            steel.
+            Open People leads the proposed Labrador campus from St. John&apos;s as proponent. NL
+            Hydro, Indigenous nations (consent first), and capital are proposed partners. Not a DCIA
+            party. Proposed, in feasibility.
           </p>
           <p className="desk-verified">
             <span>
@@ -478,7 +479,7 @@ export default function CoalitionPage() {
           },
           {
             anchor: "roles",
-            text: "What a partner would carry. Partners own any steel. Open People stays catalyst, not buyer.",
+            text: "Open People leads the proposed campus. Partners: NL Hydro, Indigenous nations (consent first), and capital.",
           },
         ],
       }}
@@ -840,12 +841,12 @@ export default function CoalitionPage() {
             <p>
               The coalition is assembled around keeping firm power in Newfoundland and Labrador: for
               operating mines, towns, Indigenous partners, and other industrial load that lives here.
-              It is not assembled around an Open People offtake, a reserved Labrador data-centre
-              block, or a FID path we do not have.
+              Open People also leads a proposed Labrador campus; mines remain a real constraint. No
+              signed offtake, reserved block, or FID.
             </p>
             <p className="mt-4">
-              Compute is optional context for leftover firm hydro, not a queue position, and not why
-              this coalition exists. No firm MW, price, or policy preference for Labrador compute is
+              Compute is a named use if the paper writes it, not a queue position, and not why this
+              coalition exists. No firm MW, price, or policy preference for Labrador compute is
               confirmed. Detail on the{" "}
               <Link href="/compute" className="desk-link">
                 separate page
@@ -896,7 +897,7 @@ export default function CoalitionPage() {
                 <span className="n">01</span>
                 <span className="text-[15px] text-[var(--ink-2)]">
                   Remote hydro has precedents elsewhere. That is a partnership shape partners could
-                  copy if NL writes compute eligible. It is not a Labrador offtake we hold.
+                  copy if NL writes compute eligible. It is not a signed Labrador offtake.
                 </span>
               </li>
               <li>
@@ -935,7 +936,7 @@ export default function CoalitionPage() {
       <DeskSection
         id="roles"
         num="04 — Coalition roles"
-        title="Partners would own the steel. Open People is a catalyst, not a buyer."
+        title="Open People leads the proposed campus. Partners are proposed, not signed."
         intro={
           <p>
             Useful if a partner is asking who would carry what, if leftover firm power is written
@@ -979,9 +980,9 @@ export default function CoalitionPage() {
         <h3 className="desk-h3 mt-12">Two vehicles, still hypothetical</h3>
         <p className="desk-body mt-4">
           <strong className="font-semibold text-[var(--ink)]">Open People</strong> is the operating
-          company and the public voice: government relations, evidence, and, only if partners build
-          capacity, a software layer. It is not an anchor tenant today and it is not a demand
-          aggregator with contracts in hand.
+          company and the proponent: government relations, evidence, and the proposed campus. NL
+          Hydro, Indigenous nations (consent first), and capital are proposed partners. Nothing is
+          signed. No contracts in hand.
         </p>
         <p className="desk-body mt-4">
           <strong className="font-semibold text-[var(--ink)]">LabradorCo</strong>, a separate
@@ -1053,7 +1054,7 @@ export default function CoalitionPage() {
               {
                 k: "Open People",
                 v: "$1.5M · 2 lines",
-                d: "Catalyst GR / public campaign plus software sketch, Y0–Y2. Not offtake assembly.",
+                d: "Proponent GR / public campaign plus software sketch, Y0–Y2. Campus in feasibility.",
               },
               { k: "LabradorCo", v: "$750K · 1 line", d: "Developer promote / origination." },
               {
@@ -1075,7 +1076,7 @@ export default function CoalitionPage() {
               {
                 k: "GPU block alone, mid scenario",
                 v: "~$1.93B",
-                d: "Which is exactly why Open People does not want to own it, and why partners would. The higher the all-in numbers go, the stronger the case for a catalyst position, not weaker.",
+                d: "Why the GPU stack sits with capital partners. Open People leads as proponent, not as the GPU buyer. The higher the all-in numbers go, the more the partnership with capital matters.",
               },
             ]}
           />
@@ -1131,8 +1132,7 @@ export default function CoalitionPage() {
           recall and domestic-load definitions are in public contract text a voter can check; an
           Innu Nation partnership exists before any large Labrador build; mines and towns are served
           first; leftover firm power may be eligible for named uses including compute if written;
-          Open People is cited as a serious provincial voice on value kept in-province, not as a DCIA
-          party or a demand seat we never held.
+          Open People is the proponent of a Labrador campus still in feasibility, not a DCIA party.
         </p>
       </DeskSection>
 
@@ -1273,13 +1273,13 @@ export default function CoalitionPage() {
       <DeskSection
         id="you"
         num="08 — Where you fit"
-        title="A coalition to keep the power here, not to join a campus we do not have."
+        title="A coalition to keep the power here. Open People leads the proposed campus."
         intro={
           <p>
             We are not raising from you in this conversation. The coalition is mines, towns,
             Indigenous partners, infrastructure, and whoever would actually use in-province power. A
-            partner list makes the provincial ask credible. It is not a substitute for offtake Open
-            People does not hold.
+            partner list makes the provincial ask credible. Open People leads the proposed campus as
+            proponent; nothing is signed.
           </p>
         }
       >
@@ -1366,7 +1366,7 @@ export default function CoalitionPage() {
         <div className="desk-fact mt-10 leading-relaxed text-[var(--ink-2)]">
           <div>Tom Lane · Founder, Open People</div>
           <div className="mt-1 text-[var(--ink-3)]">
-            Constituent / catalyst — not a DCIA party, offtake seat, or demand seat
+            Proponent — leads the proposed campus. Not a DCIA party.
           </div>
           <div className="mt-1">
             <Link href="/engage" className="desk-link">
