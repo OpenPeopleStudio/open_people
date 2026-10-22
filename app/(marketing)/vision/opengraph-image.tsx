@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
+import { VISION_OG_ALT } from "@/lib/marketing/vision";
 
-export const alt =
-  "Vision — Open People. People who care for this land should prosper from it.";
+export const alt = VISION_OG_ALT;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -56,8 +56,8 @@ export default function Image() {
               maxWidth: 980,
             }}
           >
-            <span>People who care for this land should&nbsp;</span>
-            <span style={{ color: "#e8893c" }}>prosper from it</span>
+            <span>Firm hydro here.&nbsp;</span>
+            <span style={{ color: "#e8893c" }}>Canada’s sovereign AI</span>
             <span>.</span>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function Image() {
               fontFamily: "-apple-system, BlinkMacSystemFont, Inter, 'Segoe UI', sans-serif",
             }}
           >
-            Tom Lane
+            Open People leads. Proposed. In feasibility.
           </div>
           <div
             style={{

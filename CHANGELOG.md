@@ -2,6 +2,14 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.7 — 2026-10-22 — Open People leads the proposed campus
+
+Tom: Open People is the proponent. `/brief`, `/compute`, `/about` (plus home/approach/footer/engage meta) no longer say catalyst, leftover optionality, or “wrong page”. 500 MW Labrador campus + research campus, proposed / in feasibility. Mines are a real constraint. No dollar figures, funding asks, or named customers. `/letter` untouched. Same PR, no merge.
+
+## 0.5.6 — 2026-10-22 — Public vision thesis (first slice)
+
+`/vision` is the public thesis, not the four-sentence-only page. Dual (Plain / Technical). Proposed 500 MW Labrador campus, in feasibility. Research campus in the spirit of Perimeter and Banff. Near-term: feasibility on costs and impact. No funding ask, no dollar figures, no named customers. `/letter` untouched. Home, brief, compute, about left for later slices.
+
 ## 0.5.5 — 2026-10-14 — Desk facts pass: tracker, costs, brief
 
 Sourced update from 22 Sep–14 Oct 2026 on `/tracker`, `/costs`, and `/brief`. Hogan-calm, cite-honest. `DESK_VERIFIED` is 2026-10-14. No new claims.

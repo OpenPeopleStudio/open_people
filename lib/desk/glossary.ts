@@ -200,8 +200,8 @@ const GLOSSARY_DATA = {
   compute: {
     term: "compute",
     what: "Data-centre load for AI training or hosting.",
-    why: "Not a named use in the DCIA. On this site it is a separate page and never the front door. Mining is first.",
-    where: { href: "/compute", label: "Compute plan (separate page)" },
+    why: "Not a named use in the DCIA. Open People leads a proposed 500 MW Labrador campus, in feasibility. Mines are a real constraint on the same power.",
+    where: { href: "/compute", label: "Proposed campus (Open People leads)" },
   },
 } as const satisfies Record<string, GlossaryEntry>;
 

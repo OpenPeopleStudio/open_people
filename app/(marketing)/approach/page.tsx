@@ -5,18 +5,18 @@ import { DeskPage, DeskSection } from "@/components/marketing/shell";
 export const metadata: Metadata = {
   title: "Approach",
   description:
-    "Capital model, evidence rules, and operating doctrine for Open People’s in-province power campaign. Mining first; compute as a named use.",
+    "How Open People works: we lead a proposed 500 MW Labrador campus and a research campus, in feasibility. Consent first. Mines are a real constraint.",
 };
 
 const SECTIONS = [
   {
     id: "capital",
     num: "01",
-    title: "Capital model: partners own the steel",
+    title: "Capital model: Open People leads",
     body: [
-      "Partners own hyperscale construction, interconnect, and GPU fleets.",
-      "Open People is a constituent and catalyst voice: narrative, government relations, and, if partners build capacity, a sovereignty and AI software layer plus optional promote or a small financeable micro-node floor. We are not a party to the agreement, an offtake seat, or a demand seat.",
-      "We do not lead with balance-sheet steel. We lead with in-province use of firm power, then bankable demand if the architecture allows it.",
+      "Open People is the proponent of a proposed 500 MW Labrador AI campus and a research campus.",
+      "Proposed partners: NL Hydro, Indigenous nations (consent first), and capital. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
+      "We are not a party to the Churchill Falls / Gull Island framework. We lead the campus. Proposed. In feasibility. Not approved, not funded, not under construction.",
     ],
   },
   {
@@ -35,7 +35,7 @@ const SECTIONS = [
     title: "What we will not do",
     body: [
       "No crypto mining as the product story, permanently. Newfoundland’s last data-centre memory is a cautionary tale; we do not revive it.",
-      "Never lead with “cheap power.” We lead with firm in-province power for industry, jobs, and federal co-investment. Arbitrage framing loses this argument.",
+      "Never lead with “cheap power.” We lead with firm in-province power for industry, jobs, and a campus that has to live with mines as a real constraint. Arbitrage framing loses this argument.",
       "Mining and resources first. Compute alongside critical minerals, not against them. Shared transmission and shared community benefits.",
       "Indigenous engagement is first-class: an equity conversation from day one, not a consultation footnote at the end.",
     ],
@@ -68,10 +68,9 @@ export default function ApproachPage() {
       title="How we work, and how we ask others to work with us."
       lede={
         <p>
-          Open People runs a multi-year campaign, not a one-deck fundraise. The public face of that
-          campaign is keeping firm Churchill Falls / Gull Island power in Newfoundland and Labrador
-          for industry. Compute is a use of that power, not the opener. These rules are public so
-          partners and officials can hold us to them.
+          Open People leads a proposed 500 MW Labrador campus and a research campus. The Churchill
+          River desk is the public evidence on the power. These rules are public so Hydro, nations,
+          and capital can hold us to them.
         </p>
       }
       verified={false}

@@ -68,10 +68,10 @@ export const SCALE_ANCHORS = {
   },
   computeOptional: {
     technical:
-      "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Compute is leftover-firm-power optionality if the province writes it eligible. Open People holds none of those megawatts.",
+      "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Open People leads a proposed 500 MW campus; that is not a reserved block. Mines remain a real constraint on the same power.",
     plain:
-      "Compute is a named use of leftover firm power only if the paper writes it. It is not a reserved block, and it is not the front door of this site.",
-    source: "DCIA Material Terms (no named compute class) · Open People Path C",
+      "Open People leads a proposed 500 MW Labrador campus, in feasibility. It is not a reserved block. Mines and existing industry are real constraints on the same power.",
+    source: "DCIA Material Terms (no named compute class) · Open People proposal",
   },
 } as const;
 
@@ -116,9 +116,9 @@ export const ENGAGE_QUEBEC_GATE = {
 
 export const ENGAGE_HERO_LEDE = {
   technical:
-    "The Churchill Falls / Gull Island DCIA is a framework. The House endorsed it. Binding contracts are not signed. There is still time to insist that firm power this province keeps is used here — mines and Labrador industry first. Compute is one named use of that power, not the opener, and not a reserved block.",
+    "The Churchill Falls / Gull Island DCIA is a framework. The House endorsed it. Binding contracts are not signed. There is still time to insist that firm power this province keeps is used here — mines and Labrador industry first. Open People leads a proposed 500 MW campus on that power; it is not a reserved block.",
   plain:
-    "August’s paper and the September House vote are a framework and a political yes — not signed contracts. There is still time to insist that firm power this province keeps is used here — mines and Labrador industry first. Compute is one named use of leftover firm power, not the opener, and not a reserved block.",
+    "August’s paper and the September House vote are a framework and a political yes — not signed contracts. There is still time to insist that firm power this province keeps is used here — mines and Labrador industry first. Open People leads a proposed 500 MW campus; mines are a real constraint.",
 } as const;
 
 export const ENGAGE_CHECKS = [

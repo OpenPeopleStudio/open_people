@@ -1,13 +1,13 @@
 /**
  * Desk v2 Open Graph / Twitter card copy.
- * No deal numbers on the image (no ¢/kWh, no MW). Mining first. Compute quiet.
+ * No ¢/kWh on the image. Compute may name the proposed 500 MW. Mining remains a constraint.
  *
  * Locked home card (do not soften):
  *   Kicker:    OPEN PEOPLE · CHURCHILL RIVER DESK
  *   Dominant:  Keep the power here.
  *   Secondary: Watch the gates.
  *   Footer:    OPEN PEOPLE · NL / OPENPEOPLE.AI
- * Compute stays quiet (steel): A compute plan, / not a campus landing.
+ * Compute: A 500 MW Labrador campus. / Open People leads.
  */
 
 export type DeskOgCard = {
@@ -63,7 +63,7 @@ export const DESK_OG = {
     headline: "Mining first.",
     accent: "Then the wire.",
     footer: "openpeople.ai/industries",
-    alt: "Open People industries — mining first, then the wire. Compute last, and short.",
+    alt: "Open People industries — mining first, then the wire. A campus has to live with that.",
   },
   engage: {
     kicker: "Engage",
@@ -77,7 +77,7 @@ export const DESK_OG = {
     kicker: "Brief",
     kickerAccent: "Churchill River desk",
     headline: "Keep the power here.",
-    accent: "Mining first. Compute last.",
+    accent: "Mining first. Then the wire.",
     footer: "openpeople.ai/brief",
     alt: "Open People brief — Labrador power and industry case. Mining first. Compute is not the opener.",
   },
@@ -91,11 +91,11 @@ export const DESK_OG = {
   },
   compute: {
     kicker: "Compute",
-    kickerAccent: "Named use · not the front door",
-    headline: "A compute plan,",
-    accent: "not a campus landing.",
+    kickerAccent: "Proposed · in feasibility",
+    headline: "A 500 MW Labrador campus.",
+    accent: "Open People leads.",
     footer: "openpeople.ai/compute",
-    alt: "Open People compute plan — a named use, not a data-centre pitch, not a seat at the deal table.",
+    alt: "Open People — a proposed 500 MW Labrador AI campus, in feasibility. Open People leads.",
     quiet: true,
   },
 } as const satisfies Record<string, DeskOgCard>;

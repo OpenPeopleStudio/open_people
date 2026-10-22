@@ -6,6 +6,7 @@ const DESK = [
   { href: "/industries", label: "Industries" },
   { href: "/costs", label: "Costs" },
   { href: "/brief", label: "Brief" },
+  { href: "/vision", label: "Vision" },
   { href: "/engage", label: "Engage" },
   { href: "/letter", label: "Letter" },
 ];
@@ -27,8 +28,8 @@ export default function SiteFooter() {
           </div>
           <p className="mt-4 text-sm leading-relaxed text-[var(--ink-2)]">
             What is signed, what is open, and what the public text still does not say about
-            Churchill Falls / Gull Island firm power. Mining first. Open People is a constituent
-            and catalyst voice, not a party to the agreement.
+            Churchill Falls / Gull Island firm power. Open People leads a proposed 500 MW Labrador
+            campus, in feasibility. Mines and existing industry are real constraints.
           </p>
           <p className="desk-fact mt-4 text-[var(--ink-3)]">
             Last verified {DESK_VERIFIED} · public documents only · UNKNOWN labelled

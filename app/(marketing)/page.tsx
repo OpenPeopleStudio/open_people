@@ -83,7 +83,7 @@ const RULES = [
   "No crypto — permanent",
   "Never lead with “cheap power”",
   "Indigenous engagement first-class",
-  "Partners own the steel",
+  "Open People leads the proposed campus",
 ];
 
 export default function HomePage() {
@@ -116,9 +116,9 @@ export default function HomePage() {
       meta={
         <p className="desk-body">
           Firm in-province power should serve Labrador and island industry,{" "}
-          <strong className="font-semibold text-[var(--ink)]">mining and resources first</strong>.
-          Open People is a constituent and catalyst voice from St. John&apos;s. We are not a party to
-          the agreement, an offtake seat, or a demand seat.
+          <strong className="font-semibold text-[var(--ink)]">mining and resources first</strong> —
+          they are real constraints. Open People leads a proposed 500 MW Labrador campus and a
+          research campus, in feasibility. We are not a party to the Churchill Falls agreement.
         </p>
       }
       actions={
@@ -311,7 +311,7 @@ export default function HomePage() {
         </div>
       </DeskSection>
 
-      <DeskSection id="doors" num="04 — The desk" title="Four doors. None of them is a campus." wide>
+      <DeskSection id="doors" num="04 — The desk" title="Four doors on the power desk." wide>
         <div className="desk-grid-hair sm:grid-cols-2 lg:grid-cols-4" data-rise>
           {DOORS.map((item) => (
             <Link key={item.href} href={item.href} className="p-6 no-underline transition-colors hover:bg-[var(--surface-2)] sm:p-7">
@@ -336,7 +336,7 @@ export default function HomePage() {
           <Link href="/approach" className="desk-link">
             Approach
           </Link>
-          . <Term k="compute">Compute</Term> is a separate page and never the front door:{" "}
+          . Proposed campus, Open People leads:{" "}
           <Link href="/compute" className="desk-link">
             /compute
           </Link>

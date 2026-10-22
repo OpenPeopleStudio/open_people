@@ -74,7 +74,7 @@ export const INDUSTRY_CARDS: IndustryCard[] = [
 
 export const COMPUTE_SECONDARY_LINE: DeskVoice = {
   plain:
-    "Compute is a named use of leftover firm power only if the province writes it eligible. It is not a reserved block. The plan for that optionality lives on a separate page.",
+    "Open People leads a proposed 500 MW AI campus in Labrador, in feasibility. Mines and existing industry are real constraints on the same power. The campus page is /compute.",
   technical:
-    "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Mining and Labrador industry remain first. Open People’s energy-use plan for compute is quarantined at /compute.",
+    "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Mining and Labrador industry remain first as constraints. Open People is the proponent of a proposed 500 MW campus — proposed / in feasibility, not a reserved block. Detail on /compute.",
 };

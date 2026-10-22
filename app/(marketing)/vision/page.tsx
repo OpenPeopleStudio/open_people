@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { DeskPage } from "@/components/marketing/shell";
+import Link from "next/link";
+import { DeskPage, DeskSection } from "@/components/marketing/shell";
+import { Dual } from "@/components/marketing/voice/Dual";
 import {
   VISION_CANONICAL,
+  VISION_CONTACT,
   VISION_DESCRIPTION,
+  VISION_HEADLINE_EMPHASIS,
+  VISION_HEADLINE_LEAD,
+  VISION_LEDE,
+  VISION_SECTIONS,
   VISION_SENTENCES,
   VISION_TITLE,
 } from "@/lib/marketing/vision";
@@ -27,35 +34,67 @@ export const metadata: Metadata = {
 };
 
 function Body({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[16px] leading-[1.62] text-[var(--text-secondary)] sm:text-[17px]">
-      {children}
-    </p>
-  );
+  return <p className="desk-takeaway">{children}</p>;
 }
 
 export default function VisionPage() {
-  const rest = VISION_SENTENCES.slice(1).join(" ");
-
   return (
     <DeskPage
-      kicker="Vision"
+      kicker="Vision · Open People"
       title={
         <>
-          People who care for this land should <em>prosper from it</em>.
+          {VISION_HEADLINE_LEAD} <em>{VISION_HEADLINE_EMPHASIS}</em>.
         </>
       }
+      lede={
+        <Dual
+          plain={<p>{VISION_LEDE.plain}</p>}
+          technical={<p>{VISION_LEDE.technical}</p>}
+        />
+      }
       verified={false}
-      singleVoice
+      actions={
+        <>
+          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+            {VISION_CONTACT}
+          </a>
+          <Link href="/brief" className="btn-secondary">
+            Churchill River desk
+          </Link>
+        </>
+      }
+      sections={VISION_SECTIONS.map((s) => ({ id: s.id, label: s.title }))}
     >
-      <article className="desk-prose pb-16 pt-12 sm:pb-24 sm:pt-16">
-        <div className="space-y-5">
-          <Body>{rest}</Body>
+      {VISION_SECTIONS.map((section) => (
+        <DeskSection key={section.id} id={section.id} num={section.num} title={section.title}>
+          <Dual
+            plain={<Body>{section.plain}</Body>}
+            technical={<Body>{section.technical}</Body>}
+          />
+        </DeskSection>
+      ))}
+
+      <DeskSection id="close">
+        <aside className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
+          <p className="desk-kicker">Status on this page</p>
+          <p className="desk-h3 mt-3">
+            Proposed. In feasibility. Not approved, not funded, not under construction.
+          </p>
+        </aside>
+        <div className="desk-prose mt-12 space-y-5">
+          {VISION_SENTENCES.map((sentence) => (
+            <Body key={sentence}>{sentence}</Body>
+          ))}
         </div>
         <p className="mt-12 font-mono text-[12px] leading-relaxed text-[var(--text-muted)]">
           Tom Lane
         </p>
-      </article>
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+            {VISION_CONTACT}
+          </a>
+        </div>
+      </DeskSection>
     </DeskPage>
   );
 }
