@@ -134,7 +134,7 @@ export function AskDesk() {
         <p className="desk-kicker">If we don&apos;t know yet</p>
         <h2 className="desk-h3 mt-3">Email Tom a follow-up</h2>
         <p className="mt-3 text-[15px] leading-relaxed text-[var(--ink-2)]">
-          Name is optional. Email is required. We will find out and reply.
+          Name is optional. Email is required. We&apos;ll find out and email you.
         </p>
         <form onSubmit={onFollowUp} className="mt-6 grid gap-4">
           <label className="ask-hp" aria-hidden="true">
@@ -199,8 +199,8 @@ export function AskDesk() {
         Privacy: the question you type is logged (text + whether it was covered) so we can improve
         the proposal answers. Emails are not written into that question log. The follow-up form
         collects your email (required) and name (optional) so Tom can reply from tom@openpeople.ai.
-        If email cannot be sent, the follow-up is stored in a server log so he can still reach you.
-        We do not sell this. This page has no analytics trackers.
+        Follow-ups are stored privately so we can find out and email you. We do not sell this. This
+        page has no analytics trackers.
       </p>
     </div>
   );

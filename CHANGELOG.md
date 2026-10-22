@@ -4,7 +4,7 @@ Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
 ## 0.5.9 — 2026-10-22 — /ask QR Q&A (first slice)
 
-Public `/ask` for the preliminary proposal (QR dest). Desk style. Chat via Vercel AI SDK + AI Gateway, answers only from `content/ask/proposal-knowledge.md` (placeholder). Follow-up form stores privately for Tom to email. Rate limit + honeypot. No auth, no analytics. `/letter` untouched.
+Public `/ask` for the preliminary proposal (QR dest). Desk style. Chat via Vercel AI SDK + AI Gateway, answers only from `content/ask/proposal-knowledge.md` (placeholder). Follow-up form stores in private Supabase `ask_followups` (RLS on, service-role only). Admin poll: `GET/POST /api/ask/followups` behind `ASK_ADMIN_TOKEN`. No Resend on this path. Public copy still says we'll find out and email you. Rate limit + honeypot. No visitor auth, no analytics. `/letter` untouched.
 
 ## 0.5.8 — 2026-10-22 — Coalition leftovers: Open People leads
 

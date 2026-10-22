@@ -1,8 +1,5 @@
-import { Resend } from "resend";
 import { logAskFollowUp } from "./log";
-
-export const ASK_TO_DEFAULT = "tom@openpeople.ai";
-export const ASK_FROM_DEFAULT = "Open People <tom@openpeople.ai>";
+import { insertAskFollowUp } from "./store";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_QUESTION = 4000;
@@ -44,53 +41,8 @@ export function parseFollowUp(body: unknown): FollowUpParse {
   return { ok: true, spam: false, value: { name, email, question } };
 }
 
-export function askToEmail(): string {
-  return process.env.ASK_TO_EMAIL?.trim() || ASK_TO_DEFAULT;
-}
-
-export function askFromEmail(): string {
-  return process.env.ASK_FROM_EMAIL?.trim() || ASK_FROM_DEFAULT;
-}
-
-export async function deliverFollowUp(input: FollowUpInput): Promise<{ delivered: "email" | "log" }> {
-  const key = process.env.RESEND_API_KEY?.trim();
-  const to = askToEmail();
-  const from = askFromEmail();
-  const who = input.name ? `${input.name} <${input.email}>` : input.email;
-  const text = [
-    `Follow-up from openpeople.ai/ask`,
-    `From: ${who}`,
-    ``,
-    input.question,
-  ].join("\n");
-
-  if (key) {
-    const resend = new Resend(key);
-    const result = await resend.emails.send({
-      from,
-      to,
-      replyTo: input.email,
-      subject: `Ask follow-up: ${input.question.slice(0, 72)}`,
-      text,
-    });
-    if (result.error) {
-      logAskFollowUp({
-        question: input.question,
-        delivered: "log",
-        name: input.name,
-        email: input.email,
-      });
-      throw new Error(result.error.message);
-    }
-    logAskFollowUp({ question: input.question, delivered: "email" });
-    return { delivered: "email" };
-  }
-
-  logAskFollowUp({
-    question: input.question,
-    delivered: "log",
-    name: input.name,
-    email: input.email,
-  });
-  return { delivered: "log" };
+export async function storeFollowUp(input: FollowUpInput): Promise<{ id: string }> {
+  const stored = await insertAskFollowUp(input);
+  logAskFollowUp({ question: input.question, id: stored.id });
+  return stored;
 }

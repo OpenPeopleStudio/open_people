@@ -1,4 +1,4 @@
-import { deliverFollowUp, parseFollowUp } from "@/lib/ask/follow-up";
+import { parseFollowUp, storeFollowUp } from "@/lib/ask/follow-up";
 
 export const runtime = "nodejs";
 
@@ -19,18 +19,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { delivered } = await deliverFollowUp(parsed.value);
+    await storeFollowUp(parsed.value);
     return Response.json({
       ok: true,
-      delivered,
-      message:
-        delivered === "email"
-          ? "Sent to Tom. He will reply from tom@openpeople.ai."
-          : "Saved for Tom. Email is not configured on this environment, so this was stored in the server log.",
+      stored: true,
+      message: "Saved. We'll find out and email you from tom@openpeople.ai.",
     });
   } catch {
     return Response.json(
-      { error: "Could not send just now. Email tom@openpeople.ai directly." },
+      { error: "Could not save just now. Email tom@openpeople.ai directly." },
       { status: 502 },
     );
   }

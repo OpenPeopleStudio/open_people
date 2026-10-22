@@ -2,9 +2,10 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { authorizeAskAdmin } from "@/lib/ask/admin";
 import { parseFollowUp } from "@/lib/ask/follow-up";
 import { knowledgeIsPlaceholder, loadProposalKnowledge } from "@/lib/ask/knowledge";
-import { logAskQuestion } from "@/lib/ask/log";
+import { logAskFollowUp, logAskQuestion } from "@/lib/ask/log";
 import {
   ASK_MODEL_DEFAULT,
   answerLooksCovered,
@@ -12,6 +13,7 @@ import {
   buildAskInstructions,
   lastUserText,
 } from "@/lib/ask/prompt";
+import { parseFollowupsStatus, parseMarkAnswered } from "@/lib/ask/store";
 
 describe("ask prompt", () => {
   it("binds answers to the knowledge file and the honesty rules", () => {
@@ -118,5 +120,75 @@ describe("ask question log", () => {
     expect(row.covered).toBe(false);
     expect(line).not.toMatch(/@/);
     expect(row.email).toBeUndefined();
+  });
+
+  it("logs a stored follow-up without name or email", () => {
+    const dir = mkdtempSync(join(tmpdir(), "ask-log-"));
+    const path = join(dir, "ask.jsonl");
+    process.env.ASK_LOG_PATH = path;
+    logAskFollowUp({
+      question: "What is still unknown?",
+      id: "11111111-1111-4111-8111-111111111111",
+    });
+    const line = readFileSync(path, "utf8");
+    const row = JSON.parse(line) as Record<string, unknown>;
+    expect(row.kind).toBe("followup");
+    expect(row.question).toBe("What is still unknown?");
+    expect(row.covered).toBe(false);
+    expect(row.email).toBeUndefined();
+    expect(row.name).toBeUndefined();
+    expect(line).not.toMatch(/@/);
+  });
+});
+
+describe("ask follow-up has no Resend", () => {
+  it("does not import or mention Resend in the follow-up path", () => {
+    const followUp = readFileSync(join(process.cwd(), "lib/ask/follow-up.ts"), "utf8");
+    const route = readFileSync(join(process.cwd(), "app/api/ask/follow-up/route.ts"), "utf8");
+    expect(followUp).not.toMatch(/resend/i);
+    expect(route).not.toMatch(/resend/i);
+  });
+});
+
+describe("ask admin poll helpers", () => {
+  const previous = process.env.ASK_ADMIN_TOKEN;
+
+  afterEach(() => {
+    if (previous === undefined) delete process.env.ASK_ADMIN_TOKEN;
+    else process.env.ASK_ADMIN_TOKEN = previous;
+  });
+
+  it("rejects missing or wrong bearer tokens", () => {
+    delete process.env.ASK_ADMIN_TOKEN;
+    expect(authorizeAskAdmin(new Request("https://openpeople.ai/api/ask/followups"))).toBe(false);
+
+    process.env.ASK_ADMIN_TOKEN = "secret-token-value";
+    expect(authorizeAskAdmin(new Request("https://openpeople.ai/api/ask/followups"))).toBe(false);
+    expect(
+      authorizeAskAdmin(
+        new Request("https://openpeople.ai/api/ask/followups", {
+          headers: { authorization: "Bearer wrong-token-value" },
+        }),
+      ),
+    ).toBe(false);
+    expect(
+      authorizeAskAdmin(
+        new Request("https://openpeople.ai/api/ask/followups", {
+          headers: { authorization: "Bearer secret-token-value" },
+        }),
+      ),
+    ).toBe(true);
+  });
+
+  it("defaults status to open and parses mark-answered ids", () => {
+    expect(parseFollowupsStatus(null)).toBe("open");
+    expect(parseFollowupsStatus("answered")).toBe("answered");
+    expect(parseFollowupsStatus("all")).toBe("all");
+    expect(parseFollowupsStatus("nope")).toBe("open");
+    expect(parseMarkAnswered({ id: "11111111-1111-4111-8111-111111111111" })).toEqual({
+      ok: true,
+      ids: ["11111111-1111-4111-8111-111111111111"],
+    });
+    expect(parseMarkAnswered({})).toMatchObject({ ok: false });
   });
 });

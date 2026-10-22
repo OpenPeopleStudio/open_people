@@ -14,10 +14,8 @@ type FollowUpEntry = {
   kind: "followup";
   question: string;
   covered: false;
-  delivered: "email" | "log";
+  id?: string;
   at: string;
-  name?: string;
-  email?: string;
 };
 
 function clip(text: string): string {
@@ -45,23 +43,14 @@ export function logAskQuestion(input: { question: string; covered: boolean }) {
   appendAskLog(entry);
 }
 
-export function logAskFollowUp(input: {
-  question: string;
-  delivered: "email" | "log";
-  name?: string;
-  email?: string;
-}) {
+export function logAskFollowUp(input: { question: string; id?: string }) {
   const entry: FollowUpEntry = {
     kind: "followup",
     question: clip(input.question),
     covered: false,
-    delivered: input.delivered,
     at: new Date().toISOString(),
   };
-  if (input.delivered === "log") {
-    entry.name = input.name ?? "";
-    entry.email = input.email ?? "";
-  }
+  if (input.id) entry.id = input.id;
   log.info(entry, "ask.followup");
   appendAskLog(entry);
 }
