@@ -6,6 +6,7 @@ const DESK = [
   { href: "/industries", label: "Industries" },
   { href: "/costs", label: "Costs" },
   { href: "/brief", label: "Brief" },
+  { href: "/vision", label: "Vision" },
   { href: "/engage", label: "Engage" },
   { href: "/letter", label: "Letter" },
 ];

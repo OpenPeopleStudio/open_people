@@ -75,17 +75,26 @@ test("the unknown board counts the tracker's not-published rows", async ({ page 
   expect(slots).toBeGreaterThanOrEqual(3);
 });
 
-test("/vision is a single-voice page with locked copy", async ({ page }) => {
+test("/vision is the public thesis with Dual depth and Tom’s close", async ({ page, isMobile }) => {
   await page.goto("/vision");
   const main = page.locator("main.desk-page");
-  await expect(main).toContainText("People who care for this land should prosper from it.");
+  await expect(main).toContainText("People who care for this land should");
+  await expect(main).toContainText("prosper from it");
+  await expect(main).toContainText("sovereign AI compute");
+  await expect(main).toContainText("500 MW");
+  await expect(main).toContainText("not approved");
+  await expect(main).toContainText("not funded");
+  await expect(main).toContainText("not under construction");
+  await expect(main).toContainText("Perimeter Institute");
+  await expect(main).toContainText("Banff Centre");
   await expect(main).toContainText("People working toward a shared goal should share in what it yields.");
-  await expect(main).toContainText(
-    "Big goals raise hard questions; hard questions lead to discovery, and a better life for everyone who calls Earth home.",
-  );
   await expect(main).toContainText("Explorers bring us together.");
   await expect(main).toContainText("Tom Lane");
-  await expect(page.locator('[aria-label="Reading depth"]')).toHaveCount(0);
+  await expect(main).toContainText("tom@openpeople.ai");
+  const scope = isMobile ? ".desk-strip" : ".desk-rail";
+  await expect(page.locator(`${scope} [aria-label="Reading depth"]`)).toBeVisible();
+  await page.locator(`${scope} [aria-label="Reading depth"] button[data-depth="technical"]`).click();
+  await expect(main).toContainText("proposed / in feasibility");
 });
 
 test("home links to /vision near the letter", async ({ page }) => {
