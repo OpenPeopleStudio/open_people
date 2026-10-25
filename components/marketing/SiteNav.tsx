@@ -36,7 +36,7 @@ export default function SiteNav() {
       <nav className="desk-nav" aria-label="Primary">
         <div className="desk-nav-inner">
           <Link href="/" className="desk-brand">
-            Open People <b>· Churchill River desk</b>
+            Open People <b>· Newfoundland and Labrador</b>
           </Link>
 
           <div className="desk-nav-links">

@@ -25,12 +25,13 @@ export default function SiteFooter() {
       <div className="mx-auto flex max-w-[var(--wide)] flex-col gap-10 px-[var(--gutter)] py-14 sm:py-20 md:flex-row md:items-start md:justify-between">
         <div className="max-w-md">
           <div className="desk-brand">
-            Open People <b>· Churchill River desk</b>
+            Open People <b>· Newfoundland and Labrador</b>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-[var(--ink-2)]">
-            What is signed, what is open, and what the public text still does not say about
-            Churchill Falls / Gull Island firm power. Open People leads a proposed 500 MW Labrador
-            campus, in feasibility. Mines and existing industry are real constraints.
+            Open People is working to keep firm Churchill Falls / Gull Island power in Newfoundland
+            and Labrador. Mining and existing industry come first. We lead a proposed 500 MW Labrador
+            campus, in feasibility — a named use, not the opener. This site says what is signed, what
+            is still open, and what you can do.
           </p>
           <p className="desk-fact mt-4 text-[var(--ink-3)]">
             Last verified {DESK_VERIFIED} · public documents only · UNKNOWN labelled
