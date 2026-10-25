@@ -1,5 +1,7 @@
 export { CANONICAL_ORIGIN, siteOrigin } from "../site";
 export {
+  BRIEF_DESCRIPTION,
+  BRIEF_TITLE,
   DESK_OG,
   DESK_OG_IMAGE,
   DESK_OG_IMAGE_PATH,
@@ -8,6 +10,7 @@ export {
   type DeskOgCard,
   type DeskOgRoute,
 } from "./copy";
+export { siteJsonLd, siteJsonLdScript } from "./jsonld";
 export { deskOgFooterUrl, deskOgKicker } from "./copy";
 export { OG_CONTENT_TYPE, OG_SIZE, deskOgElement, deskOgImage } from "./image";
 export {

@@ -32,6 +32,17 @@ export const HOME_TITLE = "Open People — Churchill River desk · Keep the powe
 export const HOME_DESCRIPTION =
   "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.";
 
+/** Document / og / twitter title for /brief. Template adds " · Open People". */
+export const BRIEF_TITLE = "Keep the power here: the Labrador case";
+/**
+ * Search snippet for /brief. Matched to page body: hydro-dominated / green /
+ * cleanest large power; campus proposed, in feasibility; first facility kept
+ * deliberately small; NL Hydro a proposed partner, not a reserved block.
+ * Does not name a nation, quote 5,428 MW, or imply that plant is for sale.
+ */
+export const BRIEF_DESCRIPTION =
+  "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, with NL Hydro as a proposed partner, not a reserved block.";
+
 export const DESK_OG = {
   home: {
     kicker: "OPEN PEOPLE",

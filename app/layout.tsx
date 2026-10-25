@@ -1,11 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { SiteJsonLd } from "@/components/marketing/SiteJsonLd";
 import { HOME_DESCRIPTION, HOME_TITLE, DESK_OG_IMAGE, DESK_OG_IMAGE_PATH } from "@/lib/og/copy";
 import { siteOrigin } from "@/lib/site";
 
+export const viewport: Viewport = {
+  themeColor: "#040404",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
+  applicationName: "Open People",
   title: {
     default: HOME_TITLE,
     template: "%s · Open People",
@@ -46,16 +52,18 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/manifest.json",
+  other: {
+    "msapplication-TileColor": "#040404",
+  },
 };
 
 export default function RootLayout({
@@ -65,17 +73,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Favicon and icons */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-        {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#040404" />
-        <meta name="msapplication-TileColor" content="#040404" />
-      </head>
       <body className="antialiased">
+        <SiteJsonLd />
         <ErrorBoundary>
           {children}
         </ErrorBoundary>

@@ -1,102 +1,82 @@
 #!/usr/bin/env node
 
 /**
- * Asset Generation Script
+ * Rasterize public/favicon.svg into the PNG/ICO set.
+ * Source of truth is the SVG (void field, plasma chassis).
  *
- * This script helps generate favicon and OG image assets.
- * Run this after creating your SVG designs to generate all required formats.
- *
- * Prerequisites:
- * - ImageMagick (for PNG generation)
- * - Node.js with Canvas API support
- *
- * Usage:
- * npm run generate-assets
+ * Usage: npm run generate-assets
  */
 
-const path = require('path');
-const { execSync } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
 
-const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+const PUBLIC_DIR = path.join(__dirname, "..", "public");
+const SVG_PATH = path.join(PUBLIC_DIR, "favicon.svg");
 
-console.log('🎨 Generating OpenPeople.ai assets...\n');
+const PNG_SIZES = [
+  { file: "favicon-16x16.png", size: 16 },
+  { file: "favicon-32x32.png", size: 32 },
+  { file: "favicon-48x48.png", size: 48 },
+  { file: "apple-touch-icon.png", size: 180 },
+  { file: "android-chrome-192x192.png", size: 192 },
+  { file: "android-chrome-512x512.png", size: 512 },
+];
 
-// Check if ImageMagick is installed
-try {
-  execSync('convert -version', { stdio: 'pipe' });
-  console.log('✅ ImageMagick found');
-} catch {
-  console.log('❌ ImageMagick not found. Please install it to generate PNG assets.');
-  console.log('   macOS: brew install imagemagick');
-  console.log('   Ubuntu: sudo apt-get install imagemagick');
+function encodeIco(images) {
+  const count = images.length;
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(count, 4);
+
+  const entries = [];
+  let offset = 6 + 16 * count;
+  for (const img of images) {
+    const entry = Buffer.alloc(16);
+    entry.writeUInt8(img.width >= 256 ? 0 : img.width, 0);
+    entry.writeUInt8(img.height >= 256 ? 0 : img.height, 1);
+    entry.writeUInt8(0, 2);
+    entry.writeUInt8(0, 3);
+    entry.writeUInt16LE(1, 4);
+    entry.writeUInt16LE(32, 6);
+    entry.writeUInt32LE(img.png.length, 8);
+    entry.writeUInt32LE(offset, 12);
+    entries.push(entry);
+    offset += img.png.length;
+  }
+  return Buffer.concat([header, ...entries, ...images.map((img) => img.png)]);
+}
+
+async function raster(size) {
+  const svg = fs.readFileSync(SVG_PATH);
+  return sharp(svg, { density: Math.max(72, size * 3) })
+    .resize(size, size, { fit: "fill" })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+}
+
+async function main() {
+  if (!fs.existsSync(SVG_PATH)) {
+    throw new Error(`missing ${SVG_PATH}`);
+  }
+  console.log("Generating favicons from public/favicon.svg");
+
+  const icoFrames = [];
+  for (const { file, size } of PNG_SIZES) {
+    const png = await raster(size);
+    fs.writeFileSync(path.join(PUBLIC_DIR, file), png);
+    console.log(`  ${file} (${size}×${size})`);
+    if (size === 16 || size === 32 || size === 48) {
+      icoFrames.push({ width: size, height: size, png });
+    }
+  }
+
+  fs.writeFileSync(path.join(PUBLIC_DIR, "favicon.ico"), encodeIco(icoFrames));
+  console.log("  favicon.ico (16/32/48)");
+}
+
+main().catch((err) => {
+  console.error(err);
   process.exit(1);
-}
-
-// Generate PNG favicons from SVG
-console.log('\n📱 Generating favicons...');
-
-const faviconSizes = ['16', '32', '48'];
-faviconSizes.forEach(size => {
-  const input = path.join(PUBLIC_DIR, 'favicon.svg');
-  const output = path.join(PUBLIC_DIR, `favicon-${size}x${size}.png`);
-
-  try {
-    execSync(`convert ${input} -resize ${size}x${size} ${output}`);
-    console.log(`   ✅ favicon-${size}x${size}.png`);
-  } catch {
-    console.log(`   ❌ Failed to generate favicon-${size}x${size}.png`);
-  }
 });
-
-// Generate Apple touch icon
-const appleIconPath = path.join(PUBLIC_DIR, 'apple-touch-icon.png');
-try {
-  execSync(`convert ${path.join(PUBLIC_DIR, 'favicon.svg')} -resize 180x180 ${appleIconPath}`);
-  console.log('   ✅ apple-touch-icon.png');
-} catch {
-  console.log('   ❌ Failed to generate apple-touch-icon.png');
-}
-
-// Generate Android icons
-const androidSizes = ['192', '512'];
-androidSizes.forEach(size => {
-  const output = path.join(PUBLIC_DIR, `android-chrome-${size}x${size}.png`);
-  try {
-    execSync(`convert ${path.join(PUBLIC_DIR, 'favicon.svg')} -resize ${size}x${size} ${output}`);
-    console.log(`   ✅ android-chrome-${size}x${size}.png`);
-  } catch {
-    console.log(`   ❌ Failed to generate android-chrome-${size}x${size}.png`);
-  }
-});
-
-// Generate traditional favicon.ico
-const icoPath = path.join(PUBLIC_DIR, 'favicon.ico');
-try {
-  execSync(`convert ${path.join(PUBLIC_DIR, 'favicon.svg')} -resize 32x32 ${icoPath}`);
-  console.log('   ✅ favicon.ico');
-} catch {
-  console.log('   ❌ Failed to generate favicon.ico');
-}
-
-console.log('\n🖼️  Generating OG images...');
-
-// Note: OG images would typically be created using a design tool like Figma, Canva, or programmatically
-// For now, we'll create placeholder files with instructions
-
-console.log('   📝 OG images need to be created manually or programmatically:');
-console.log('   - og-image.png (1200x630) for Facebook/LinkedIn');
-console.log('   - twitter-image.png (1200x600) for Twitter');
-console.log('   💡 Use tools like Figma, Canva, or @vercel/og for generation');
-
-console.log('\n🎉 Asset generation complete!');
-console.log('\n📋 Next steps:');
-console.log('1. Create the OG images using your preferred design tool');
-console.log('2. Replace the placeholder PNG files in /public');
-console.log('3. Test favicons in browser dev tools');
-console.log('4. Test OG images using social media debuggers');
-console.log('5. Update manifest.json theme colors if needed');
-
-console.log('\n🔗 Useful links:');
-console.log('- Facebook Sharing Debugger: https://developers.facebook.com/tools/debug/');
-console.log('- Twitter Card Validator: https://cards-dev.twitter.com/validator');
-console.log('- Favicon Generator: https://favicon.io/favicon-converter/');

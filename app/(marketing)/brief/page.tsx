@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
 import { StatusPill } from "@/components/marketing/desk";
+import { BRIEF_DESCRIPTION, BRIEF_TITLE } from "@/lib/og/copy";
 import { deskMetadata } from "@/lib/og/metadata";
 import {
   CorridorSchematic,
@@ -32,13 +33,10 @@ import {
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata = deskMetadata({
-  title: "Labrador power & industry case",
-  description:
-    "Firm in-province power for Labrador and Newfoundland industry first. Open People leads a proposed 500 MW Labrador AI campus, in feasibility. Mines are a real constraint.",
+  title: BRIEF_TITLE,
+  description: BRIEF_DESCRIPTION,
   path: "/brief",
   type: "article",
-  ogDescription:
-    "Keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Open People leads a proposed 500 MW campus. Mines first as a constraint.",
 });
 
 /* ── data lookups: every number on this page is bound to a lib/desk object ── */
