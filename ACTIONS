@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.12 tools=85 commits=1 files=12 note=/brief search title+description, site JSON-LD, favicon dedupe; no merge
 0.5.11 tools=35 commits=1 files=10 note=/ask: skip Gateway OpenAI BYOK; use existing OPENAI_API_KEY or Azure system route
 0.5.10 tools=45 commits=1 files=8 note=/ask: accept Vercel OIDC so prod POST /api/ask is not 503 without a Gateway key
 0.5.9 tools=70 commits=2 files=36 note=First slice: /ask QR Q&A; follow-ups in Supabase ask_followups, no Resend
