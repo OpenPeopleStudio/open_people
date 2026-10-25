@@ -17,7 +17,7 @@ export const COST_INTRO = {
   lastVerified: DESK_VERIFIED,
   body: {
     plain:
-      "This page keeps five price stories apart so they do not mash. The old export lore. The new paper’s dollar-and-inflation structure — not a locked industrial tariff. What Hydro posts for Labrador households. The mine tariff, which is a formula, not one cent. And two public Hydro-Québec export stories — a start and a life average — that are different measurements.",
+      "Open People will not sell this as one cheap-power number. We keep the price stories apart: the old export lore; the new paper’s dollar-and-inflation structure, which is not a locked industrial tariff; what Hydro posts for Labrador households; the mine tariff, which is a formula, not one cent; and two public Hydro-Québec export stories — a start and a life average — that are different measurements.",
     technical:
       "Do not present illustrative MOU ¢/kWh schedules, Annex D target payments, or reported HQ export paths as locked PPAs. Heritage 0.2¢/kWh is the 1969-lineage renewal export price (labeled heritage). DCIA Material Terms (17 Aug 2026): availability / take-or-pay, Annex D target $ + Annex F CPI, HQ purchase options. Rate No. 1.1L is Labrador Interconnected domestic, 3.154¢/kWh (Jul 2026 schedule; Hydro current-rates page). LAB-IND-1 is demand plus a monthly RFIRM formula — not one ¢/kWh. Island Industrial Firm is a different class on the Island grid. None of these is Churchill Falls offtake. Reported 1.8¢/kWh (2027 start) and 7.4¢/kWh (~50-year average) are labeled separately below. Annex D $ → locked ¢ tariff: UNKNOWN.",
   } satisfies DeskVoice,
@@ -62,7 +62,7 @@ export const CONTESTED_EXPORT = {
     note: {
       plain: "The life average on the same graph — not the 2027 starting price.",
       technical:
-        "Canadian Press via CP24, 17 Aug 2026 (corrected): “averaging out to an effective price of 7.4 cents per kilowatt hour over the next 50 years.” Prior 2024 MOU average cited ~5.9¢/kWh. 7.4 is that 50-year average — not the 1.8¢ 2027 start. This desk prefers CP24’s start-plus-average framing over other 7.4 wording. Not a locked industrial PPA ¢ for Labrador mines or compute.",
+        "Canadian Press via CP24, 17 Aug 2026 (corrected): “averaging out to an effective price of 7.4 cents per kilowatt hour over the next 50 years.” Prior 2024 MOU average cited ~5.9¢/kWh. 7.4 is that 50-year average — not the 1.8¢ 2027 start. Open People prefers CP24’s start-plus-average framing over other 7.4 wording. Not a locked industrial PPA ¢ for Labrador mines or compute.",
     } satisfies DeskVoice,
     sources: ["cpChurchillGraph"] as DeskSourceId[],
   },
@@ -195,7 +195,7 @@ export const COST_MARKERS: CostMarker[] = [
     lastVerified: DESK_VERIFIED,
     note: {
       plain:
-        "Mines on the Labrador bulk grid do not pay one posted household-style cent. They pay demand charges plus a monthly mix of a development energy block and a market energy block. Open the July 2026 PDF. Do not flatten that into a single ¢/kWh on this desk.",
+        "Mines on the Labrador bulk grid do not pay one posted household-style cent. They pay demand charges plus a monthly mix of a development energy block and a market energy block. Open the July 2026 PDF. We do not flatten that into a single ¢/kWh.",
       technical:
         "Jul 2026 Schedule, LAB-IND-1 (pp. LAB-IND-1–4). Availability: Labrador Interconnected bulk transmission ≥66 kV under an Industrial Service Agreement — not Rate 1.1L. Structure: (1) Transmission Demand Charge, closed — $1.08/kW-month of billing demand, existing customers only; specifically assigned transmission charges may apply with Board approval. (2) Generation Demand Charge $0.41/kW-month. Billing demand = greater of Power on Order, actual monthly demand, or calendar-year maximum less interruptible. (3) Firm energy is not a single ¢/kWh. RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL, applied to forecast energy (customer forecast by the 19th of the prior month). RD = Development Block Energy Rate, $29.22/MWh for 1 Jan–31 Dec 2026, then CPI All-items Canada annually. RM = Market Block Energy Rate, $78.61/MWh for 1 Jan–31 Dec 2026, set from NYISO Zone A peak/off-peak settlement after 19 November of the prior year, FX-converted, losses and market fees adjusted. Imbalance energy (above forecast) is a monthly NYISO Zone A blend. Schedule A posts monthly Development Energy Block MWh. RD and RM are formula inputs for 2026 — not a collapsed industrial ¢, not a DCIA PPA, not Rate 1.1L. Full schedule: NL Hydro Jul 2026 PDF.",
     },

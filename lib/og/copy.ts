@@ -131,3 +131,4 @@ export const DESK_OG_IMAGE = {
   height: 630,
   alt: DESK_OG.home.alt,
 } as const;
+
