@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "Open People",
     "in-province power",
     "firm power",
-    "Churchill River desk",
+    "Gull Island",
   ],
   openGraph: {
     title: HOME_TITLE,

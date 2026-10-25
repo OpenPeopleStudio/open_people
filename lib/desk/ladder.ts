@@ -211,7 +211,7 @@ export const LADDER_POINTS: LadderPoint[] = [
     label: "New Labrador industrial ¢ under the DCIA",
     status: "unknown",
     href: "/costs#dcia-industrial-alloc",
-    note: "No public, locked cent rate for retained Churchill / Gull Island megawatts. This desk does not invent one.",
+    note: "No public, locked cent rate for retained Churchill / Gull Island megawatts. We do not invent one.",
     sources: ["dciaHq"],
     lastVerified: DESK_VERIFIED,
   },

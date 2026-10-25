@@ -18,10 +18,10 @@ import PrintButton from "./PrintButton";
 export const metadata = deskMetadata({
   title: "Keep firm power in NL",
   description:
-    "The Churchill Falls / Gull Island DCIA is a framework, not binding contracts. Seven checks an MHA can put to the long-form before it hardens. Mining first. Compute is a named use, not a reserved block.",
+    "Open People is asking Newfoundland and Labrador to keep firm power in the province while the contracts are still paper. Seven checks for your MHA. Mining first. Compute is a named use, not a reserved block.",
   path: "/engage",
   ogDescription:
-    "House endorsement is not a contract. Keep Churchill Falls / Gull Island firm power in-province — mines and Labrador industry first.",
+    "Write in while it is paper. Open People is working to keep Churchill Falls / Gull Island firm power in the province — mines and Labrador industry first.",
 });
 
 const OPEN = [
@@ -43,18 +43,20 @@ const OPEN = [
   },
   {
     id: "eng-qc",
-    title: "Québec votes 5 October",
+    title: "Québec’s election is behind us",
     label: "5 Oct",
     plain: (
       <>
-        Next public political gate is <Fig id="a">5 October</Fig> in Québec. It is not an NL door
-        you can walk through. The party that signed is running third; the front-runner says it does
-        not plan to tear the deal up but wants time to study it.
+        Québec&apos;s <Fig id="a">5 October</Fig> election is no longer ahead of us. What it decided,
+        and what it did not decide about Churchill Falls, is on the{" "}
+        <Link href="/tracker#qc-gate" className="desk-link">
+          tracker
+        </Link>
+        . Open People is not treating that result as a change to the contracts.
       </>
     ),
-    technical:
-      "Québec general election 5 October 2026. Léger (21 Sep): PQ 29, PLQ 23, CAQ 20, PCQ 17, QS 10. Fréchette has said a final deal needs CAQ re-election; PSPP says he has no intention of tearing up the agreement if it is good for Québec. Polls are context, not a gate. Outcome UNKNOWN.",
-    sources: [DESK_SOURCES.qcElection, DESK_SOURCES.radioCanadaQcOpposition],
+    technical: TRACKER_ITEMS.find((i) => i.id === "qc-gate")?.body.technical ?? "",
+    sources: [DESK_SOURCES.qcElectionResult, DESK_SOURCES.lactualiteTransition, DESK_SOURCES.assnatReturn],
   },
   {
     id: "eng-inprovince",
@@ -133,46 +135,6 @@ const CHECK_ROWS = ["metering", "domestic-load", "unused-retain", "binding-windo
 
 const DOORS = [
   {
-    when: "Tue 29 Sep 2026",
-    title: "PUB — Newfoundland Power 2027 Capital Budget letters of comment",
-    how: "Written comments to the Board. Not a gallery day. Address: Prince Charles Building, 120 Torbay Road, Suite E210, St. John’s. Board Secretary: board@pub.nl.ca / 709-726-1158.",
-    href: "http://pub.nl.ca/applications/NP2027Capital/index.php",
-    hrefLabel: "PUB application page",
-    paid: false,
-  },
-  {
-    when: "Thu 1 Oct 2026, 3–5 pm NT",
-    title: "Mining Industry NL AGM + fall social",
-    how: "Sláinte, 115 Duckworth Street, St. John’s. Free Eventbrite registration. Framed as members and stakeholders — not labelled members-only. Confirm edge cases with info@miningnl.com.",
-    href: "https://www.eventbrite.ca/e/mining-industry-nl-inc-annual-general-meeting-tickets-1998793590435",
-    hrefLabel: "Free Eventbrite",
-    paid: false,
-  },
-  {
-    when: "Mon 5 Oct 2026",
-    title: "Québec provincial election",
-    how: "Political gate for the DCIA counterparty. Watch the result. Not an NL public door — no NL-side campaign events confirmed.",
-    href: null,
-    hrefLabel: null,
-    paid: false,
-  },
-  {
-    when: "Tue 14 Oct 2026, 5–7 pm NT",
-    title: "ECO Canada — Future Ready SMEs, The Lantern",
-    how: "35 Barnes Road, St. John’s. Free public registration. Workforce / low-carbon networking — not Churchill Falls-specific.",
-    href: "https://eco.ca/event/future-ready-smes-advancing-low-carbon-pathways-st-johns/",
-    hrefLabel: "Free registration",
-    paid: false,
-  },
-  {
-    when: "Thu 15 Oct 2026",
-    title: "econext Conference 2026 — Building Our Green Economy",
-    how: "Delta Hotel, 120 New Gower Street, St. John’s. Paid registration. Closest in-province industry conference on energy, mining, and major projects in this window.",
-    href: "https://econext.ca/2026-conference/",
-    hrefLabel: "Paid registration",
-    paid: true,
-  },
-  {
     when: "From Mon 26 Oct 2026",
     title: "House of Assembly fall sitting",
     how: "Confederation Building East Block. Public galleries (photo ID, visitor card, phones checked) or watch the webcast. Order paper unknown until published — Churchill Falls may recur in Question Period. Calendar sitting days start 26 October.",
@@ -201,7 +163,7 @@ const DOORS = [
 export default function EngagePage() {
   return (
     <DeskPage
-      kicker="Public campaign · Newfoundland and Labrador"
+      kicker="Open People · Get involved"
       title={
         <>
           Keep firm power <em>in Newfoundland and Labrador.</em>
@@ -219,8 +181,8 @@ export default function EngagePage() {
       meta={
         <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
           Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.
-          Tom Lane is not a party to the Churchill Falls agreement. Mines and existing industry are
-          real constraints. This page is for people who want in-province use kept in writing.
+          We are not a party to the Churchill Falls agreement. Mines and existing industry are real
+          constraints. If you want in-province use kept in writing, this is the page.
         </p>
       }
       actions={
@@ -239,7 +201,7 @@ export default function EngagePage() {
         { id: "open", label: "Still open" },
         { id: "checks", label: "Seven checks" },
         { id: "default", label: "The default path" },
-        { id: "doors", label: "This month's doors" },
+        { id: "doors", label: "Doors ahead" },
         { id: "write", label: "Write in" },
         { id: "mha", label: "Write your MHA" },
       ]}
@@ -250,9 +212,8 @@ export default function EngagePage() {
         title="The vote did not lock the contracts."
         intro={
           <p>
-            Public voice still matters because the long-form paper can still say who gets the power,
-            on what notice, and whether unused megawatts slide west by default. This is a stress-test,
-            not a campaign to scrap the deal.
+            We are not campaigning to scrap the deal. We are asking that the long-form paper say who
+            gets the power, on what notice, and whether unused megawatts slide west by default.
           </p>
         }
       >
@@ -292,9 +253,9 @@ export default function EngagePage() {
         title="Seven checks before the paper hardens."
         intro={
           <p>
-            No invented megawatts or prices. These are questions the long-form should answer in
-            public, or admit it does not. Each one carries the live status of the tracker row it maps
-            to. Print this page and hand it to your MHA.
+            No invented megawatts or prices. These are the questions we want the long-form to answer
+            in public, or admit it does not. Each one carries the live status of the tracker row it
+            maps to. Print this page and hand it to your MHA.
           </p>
         }
       >
@@ -341,6 +302,12 @@ export default function EngagePage() {
         id="default"
         num="03 — The default path"
         title="If nobody writes anything else, the paper already decides."
+        intro={
+          <p>
+            We publish the default so it is not a surprise. Leftover megawatts already have a buyer
+            in the Material Terms.
+          </p>
+        }
         wide
       >
         <div data-rise>
@@ -350,12 +317,13 @@ export default function EngagePage() {
 
       <DeskSection
         id="doors"
-        num="04 — This month"
-        title="Concrete doors while the paper is still paper."
+        num="04 — Still ahead"
+        title="Doors you can still walk through."
         intro={
           <p>
-            Only confirmed public items, with how to get in. The EngageNL Churchill Falls
-            questionnaire closed 10 September. No successor energy portal is open.
+            Only confirmed public items, with how to get in. Dates before 25 October 2026 from the
+            22 September check are off this list. The EngageNL Churchill Falls questionnaire closed
+            10 September. No successor energy portal is open.
           </p>
         }
       >
@@ -383,19 +351,19 @@ export default function EngagePage() {
           <a href="https://www.assembly.nl.ca/VisitLearn/" className="desk-link" rel="noopener noreferrer">
             assembly.nl.ca/VisitLearn
           </a>
-          . Dates re-checked 22 September 2026. Contingent PUB oral hearings are not listed until
-          the Board orders them.
+          . The list is what remained, on 25 October 2026, of the doors checked on 22 September.
+          Contingent PUB oral hearings are not listed until the Board orders them.
         </p>
       </DeskSection>
 
       <DeskSection
         id="write"
         num="05 — Write in"
-        title="Tell Tom you want the power kept here."
+        title="Tell us you want the power kept here."
         intro={
           <p>
-            Name, email, optional organisation, optional note. This is a mailing list for people who
-            want firm in-province power used in NL, not a join-our-AI-company form.
+            Name, email, optional organisation, optional note. Tom reads it. This is a list for
+            people who want firm in-province power used in NL, not a join-our-AI-company form.
           </p>
         }
       >
@@ -428,8 +396,8 @@ export default function EngagePage() {
         <p className="desk-h2">Keep what we can still keep. Use it on loads that live here.</p>
         <p className="desk-body mt-5">
           Mining and Labrador industry first — they are real constraints. Open People leads a
-          proposed 500 MW <Term k="compute">campus</Term>, in feasibility. The public owns the
-          window until the contracts lock.
+          proposed 500 MW <Term k="compute">campus</Term>, in feasibility. The window is open until
+          the contracts lock. Write in before it closes.
         </p>
         <div className="desk-fact mt-8 leading-relaxed text-[var(--ink-2)]">
           <div>Tom Lane · Open People</div>

@@ -72,10 +72,10 @@ const OPEN = [
 ];
 
 const DOORS = [
-  { href: "/tracker", label: "Tracker", k: "What is signed, what is open, what is still blank" },
+  { href: "/tracker", label: "Tracker", k: "What we can show is signed, what is open, and what is still blank" },
   { href: "/industries", label: "Industries", k: "Mining and Labrador industry first — and the wire they need" },
-  { href: "/costs", label: "Costs", k: "Seven price families on one ladder, labelled, not merged" },
-  { href: "/brief", label: "Brief", k: "The public evidence case, end to end" },
+  { href: "/costs", label: "Costs", k: "Seven price families. We keep them labelled, not merged" },
+  { href: "/brief", label: "Brief", k: "The case we are making, end to end" },
 ];
 
 const RULES = [
@@ -89,10 +89,10 @@ const RULES = [
 export default function HomePage() {
   return (
     <DeskPage
-      kicker="Churchill River desk · Newfoundland and Labrador"
+      kicker="Open People · Newfoundland and Labrador"
       title={
         <>
-          Keep the power here. <em>Watch the gates.</em>
+          Keep the power here. <em>Open People is on it.</em>
         </>
       }
       lede={
@@ -101,12 +101,13 @@ export default function HomePage() {
           label="43 TWh"
           plain={
             <p>
-              We make a huge amount of clean electricity — about <Fig id="a">43 TWh</Fig> a year —
-              and ship most of it out. What matters is what we keep for industry here: mining and
-              resources first, so Labrador and the island can build on firm power that stays.
-              August&apos;s paper and the September House vote (<Fig id="b">21–18</Fig>) are a{" "}
-              <Term k="framework">framework</Term> and a political yes. The contracts that lock the
-              power are still ahead.
+              Open People is working to keep firm Churchill Falls and Gull Island power in
+              Newfoundland and Labrador. The province generates about <Fig id="a">43 TWh</Fig> of
+              clean electricity a year and ships most of it out. Mining and resources come first on
+              what stays. August&apos;s paper and the September House vote (<Fig id="b">21–18</Fig>)
+              are a <Term k="framework">framework</Term> and a political yes. The contracts that lock
+              the power are still ahead. That is why this is public now — and why you can still
+              write in.
             </p>
           }
           technical={SCALE_ANCHORS.exportScale.technical}
@@ -115,10 +116,11 @@ export default function HomePage() {
       }
       meta={
         <p className="desk-body">
-          Firm in-province power should serve Labrador and island industry,{" "}
-          <strong className="font-semibold text-[var(--ink)]">mining and resources first</strong> —
-          they are real constraints. Open People leads a proposed 500 MW Labrador campus and a
-          research campus, in feasibility. We are not a party to the Churchill Falls agreement.
+          We publish the file, and we lead a proposed use. Firm in-province power should serve
+          Labrador and island industry,{" "}
+          <strong className="font-semibold text-[var(--ink)]">mining and resources first</strong>.
+          Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.
+          We are not a party to the Churchill Falls agreement.
         </p>
       }
       actions={
@@ -127,17 +129,17 @@ export default function HomePage() {
             Get involved — keep firm power here
           </Link>
           <Link href="/tracker" className="btn-secondary">
-            Living tracker
+            What is still open
           </Link>
           <WalkLaunch className="sm:ml-3" />
         </>
       }
       hero={<GateClock />}
       sections={[
-        { id: "hold", label: "What we hold" },
+        { id: "hold", label: "The power" },
         { id: "blank", label: "What is still blank" },
         { id: "default", label: "The default path" },
-        { id: "doors", label: "Four doors" },
+        { id: "doors", label: "Where to go" },
         { id: "rules", label: "How we work" },
       ]}
       walkthrough={{
@@ -145,33 +147,33 @@ export default function HomePage() {
         steps: [
           {
             anchor: "gate-clock",
-            text: "Start with the clock. Two dates behind us, two targets ahead, one preliminary year a decade out. Nothing on this rail is a forecast by us.",
+            text: "Start with the dates. Two are behind us, two are targets, and one preliminary year is a decade out. We do not forecast these.",
             unfold: "hero-scale",
           },
           {
             anchor: "hold",
-            text: "This is the asset. Enough clean firm power for the mines, the towns and other industry, and most of it leaves the province today.",
+            text: "This is the power we are working to keep in play: clean firm power for the mines, the towns, and other industry. Most of it leaves the province today.",
             unfold: "hold-unfold",
           },
           {
             anchor: "blank",
-            text: "This is the problem. The public paper still does not say who gets retained power, year by year, or what “used here” means.",
+            text: "This is the gap. The public paper still does not say who gets retained power, year by year, or what “used here” means.",
             unfold: "open-inprovince",
           },
           {
             anchor: "default",
-            text: "This is what happens if nobody writes anything else: the west branch is already in the Material Terms; the home branch is not defined.",
+            text: "If nobody writes anything else, the west branch is already in the Material Terms. The home branch is not defined. We want the contracts to say what “used here” means.",
           },
           {
             anchor: "doors",
-            text: "Four doors go deeper. Or go to Engage and put a question to your MHA before the paper hardens.",
+            text: "Four ways into the work. Or go to Engage and put a question to your MHA before the paper hardens.",
           },
         ],
       }}
     >
       <DeskSection
         id="hold"
-        num="01 — What we hold"
+        num="01 — What the province holds"
         title="One of the cleanest large power systems in North America. Most of it leaves."
         wide
       >
@@ -229,7 +231,7 @@ export default function HomePage() {
                 <Fig id="a">two <Term k="mill">mills</Term></Fig>, two tenths of a cent, until 2041.
                 That is lore about what left the border, not a rate anyone here can buy power at
                 today. The question now is not the export price. It is whether the province writes
-                down what it keeps.
+                down what it keeps. That is the work Open People is in.
               </p>
             }
             technical={SCALE_ANCHORS.heritagePrice.technical}
@@ -244,11 +246,11 @@ export default function HomePage() {
         title="Endorsement is not a contract."
         intro={
           <p>
-            Next public political gate: Québec, 5 October. Binding target around year-end. The
-            Premier says the deal comes back to the House before then, but has not promised MHAs a
-            vote. This is the stretch where public voice can still insist on transparency and
-            in-province use, without pretending the deal is finished, and without a sermon against
-            it.
+            Open People is in this stretch on purpose. Québec&apos;s election is behind us: a Parti
+            Québécois minority, and no decision on this paper. Binding contracts are still the target
+            around year-end. The Premier says the deal comes back to the House before then, but has
+            not promised MHAs a vote. You can still insist on transparency and in-province use,
+            without pretending the deal is finished, and without a sermon against it.
           </p>
         }
         wide
@@ -273,7 +275,7 @@ export default function HomePage() {
             </div>
           ))}
           <Link href="/tracker" className="desk-kicker mt-6 inline-flex items-center gap-2 no-underline hover:underline">
-            Full living board →
+            The full board →
           </Link>
         </div>
       </DeskSection>
@@ -284,8 +286,9 @@ export default function HomePage() {
         title="If nobody writes anything else, the paper already decides."
         intro={
           <p>
-            The Material Terms describe what happens to retained power that is not used at home. It
-            has a buyer. Leftover megawatts do not sit still by magic.
+            We publish the default because it is already written. The Material Terms describe what
+            happens to retained power that is not used at home. It has a buyer. Leftover megawatts
+            do not sit still.
           </p>
         }
         wide
@@ -311,7 +314,7 @@ export default function HomePage() {
         </div>
       </DeskSection>
 
-      <DeskSection id="doors" num="04 — The desk" title="Four doors on the power desk." wide>
+      <DeskSection id="doors" num="04 — Where to go" title="Four ways into the work." wide>
         <div className="desk-grid-hair sm:grid-cols-2 lg:grid-cols-4" data-rise>
           {DOORS.map((item) => (
             <Link key={item.href} href={item.href} className="p-6 no-underline transition-colors hover:bg-[var(--surface-2)] sm:p-7">
@@ -346,8 +349,7 @@ export default function HomePage() {
 
       <DeskSection id="close">
         <p className="desk-h2">
-          If the next generation&apos;s firm power is going to be priced while this paper is still
-          paper, we&apos;d rather people were in it, not writing about it afterward.
+          The contracts are still paper. Open People is in that work now. If you are, start here.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link href="/engage" className="btn-primary">

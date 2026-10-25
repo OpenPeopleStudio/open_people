@@ -7,7 +7,7 @@ export const COMPUTE_LAST_VERIFIED = DESK_VERIFIED;
 
 export const COMPUTE_HERO: DeskVoice = {
   plain:
-    "Open People leads a proposed 500 MW AI data campus in Labrador, and a research campus beside it. It is proposed, and it is in feasibility. It is not approved, not funded, and not under construction. Mines and existing industry are real constraints on the same power.",
+    "Open People leads a proposed 500 MW AI data campus in Labrador, and a research campus beside it. It is proposed, and it is in feasibility. It is not approved, not funded, and not under construction. Mines and existing industry are real constraints on the same power. The public work right now is keeping firm power in the province. This page is the campus, and only that.",
   technical:
     "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. Proposed partners: NL Hydro, Indigenous nations (consent first), and capital. None of those are named as signed. The DCIA Material Terms still do not name AI as a reserved industrial class.",
 };

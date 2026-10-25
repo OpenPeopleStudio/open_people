@@ -33,9 +33,9 @@ describe("desk Open Graph", () => {
   });
 
   it("keeps the live home title and description", () => {
-    expect(HOME_TITLE).toBe("Open People — Churchill River desk · Keep the power here");
+    expect(HOME_TITLE).toBe("Open People — Keep the power here");
     expect(HOME_DESCRIPTION).toBe(
-      "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.",
+      "Open People is working to keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. We publish what is signed and what is still blank. Compute is a separate page.",
     );
     expect(HOME_DESCRIPTION).toMatch(/Mining first/);
     expect(HOME_DESCRIPTION).toMatch(/Compute is a separate page/);
@@ -86,14 +86,14 @@ describe("desk Open Graph", () => {
       expect(blob.toLowerCase()).not.toMatch(/horizon desk|hyperscale/);
     }
     expect(DESK_OG.home.headline).toBe("Keep the power here.");
-    expect(DESK_OG.home.accent).toBe("Watch the gates.");
+    expect(DESK_OG.home.accent).toBe("Open People is on it.");
     expect(`${DESK_OG.home.kicker} · ${DESK_OG.home.kickerAccent}`.toUpperCase()).toBe(
-      "OPEN PEOPLE · CHURCHILL RIVER DESK",
+      "OPEN PEOPLE · NEWFOUNDLAND AND LABRADOR",
     );
     expect(DESK_OG.home.alt).toBe(
-      "Open People — Churchill River desk. Keep the power here. Watch the gates.",
+      "Open People. Keep firm Churchill Falls and Gull Island power in Newfoundland and Labrador. Mining first.",
     );
-    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · CHURCHILL RIVER DESK");
+    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · NEWFOUNDLAND AND LABRADOR");
     expect(deskOgFooterUrl(DESK_OG.home)).toBe("OPENPEOPLE.AI");
     expect(DESK_OG.compute.headline).toBe("A 500 MW Labrador campus.");
     expect(DESK_OG.compute.accent).toBe("Open People leads.");
@@ -116,7 +116,7 @@ describe("desk Open Graph", () => {
     expect(home).toContain(`width="${OG_RAIL}" height="${OG_SIZE.height}"`);
     expect(home).toContain(`width="${OG_SIZE.width}" height="${OG_RAIL}"`);
     expect(home).toContain("OPEN PEOPLE");
-    expect(home).toContain("CHURCHILL RIVER DESK");
+    expect(home).toContain("NEWFOUNDLAND AND LABRADOR");
     expect(home).toContain("OPENPEOPLE.AI");
     expect(home).toContain(">NL<");
 
@@ -158,9 +158,9 @@ describe("desk Open Graph", () => {
     expect(svg).toContain("#040404");
     expect(svg).toContain("#e8893c");
     expect(svg).toContain("Keep the power here.");
-    expect(svg).toContain("Watch the gates.");
+    expect(svg).toContain("Open People is on it.");
     expect(svg).toContain("OPEN PEOPLE");
-    expect(svg).toContain("CHURCHILL RIVER DESK");
+    expect(svg).toContain("NEWFOUNDLAND AND LABRADOR");
     expect(svg).not.toMatch(/¢/);
   });
 });

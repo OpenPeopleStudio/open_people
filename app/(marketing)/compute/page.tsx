@@ -37,13 +37,13 @@ export default function ComputePage() {
       }
       meta={
         <p className="text-sm text-[var(--ink-3)]">
-          Not approved. Not funded. Not under construction. The Churchill River evidence desk is{" "}
+          Not approved. Not funded. Not under construction. Mining comes first. The public case is{" "}
           <Link href="/brief" className="desk-link">
-            /brief
+            the brief
           </Link>
-          . The thesis is{" "}
-          <Link href="/vision" className="desk-link">
-            /vision
+          . If you want the power kept in the province, start at{" "}
+          <Link href="/engage" className="desk-link">
+            Engage
           </Link>
           .
         </p>
@@ -103,15 +103,16 @@ export default function ComputePage() {
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
           Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
-          Consent first.
+          Consent first. This page does not jump the line: mines and existing industry remain the
+          constraint, and the public ask is to keep firm power in the province.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+          <Link href="/engage" className="btn-primary">
+            Keep firm power here
+          </Link>
+          <a href={`mailto:${VISION_CONTACT}`} className="btn-secondary">
             {VISION_CONTACT}
           </a>
-          <Link href="/vision" className="btn-secondary">
-            Vision
-          </Link>
         </div>
       </DeskSection>
     </DeskPage>

@@ -15,17 +15,17 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Costs",
   description:
-    "Seven price families on one ladder, labelled, not merged. Starts about 1.8¢/kWh in 2027; averages about 7.4¢/kWh over 50 years; heritage 0.2¢; Labrador household 3.154¢; the mine rate is a formula; the signed industrial rate is not published.",
+    "Open People keeps seven price families apart. Starts about 1.8¢/kWh in 2027; averages about 7.4¢/kWh over 50 years; heritage 0.2¢; Labrador household 3.154¢; the mine rate is a formula; the signed industrial rate is not published.",
   path: "/costs",
 });
 
 export default function CostsPage() {
   return (
     <DeskPage
-      kicker="Churchill River desk · Costs"
+      kicker="Open People · Costs"
       title={
         <>
-          Seven price stories. <em>One ladder. Nothing merged.</em>
+          Seven price stories. <em>We will not merge them.</em>
         </>
       }
       lede={
@@ -52,7 +52,7 @@ export default function CostsPage() {
         steps: [
           {
             anchor: "contested",
-            text: "Two numbers get quoted for the new export price. One is the 2027 start, one is the fifty-year average. They are not a contradiction.",
+            text: "We keep two numbers apart. One is the 2027 start, one is the fifty-year average. They are not a contradiction.",
             unfold: "contested-start",
           },
           {
@@ -131,8 +131,7 @@ export default function CostsPage() {
             <p className="desk-takeaway">
               Hydro posts <Fig id="a">3.154¢/kWh</Fig> for households on the Labrador
               interconnected grid. Mines are on <Term k="lab-ind-1">LAB-IND-1</Term>: demand
-              charges plus a monthly firm-energy formula. This desk does not collapse that into one
-              cent.
+              charges plus a monthly firm-energy formula. We do not collapse that into one cent.
             </p>
           }
           technical={
@@ -156,7 +155,7 @@ export default function CostsPage() {
         />
       </DeskSection>
 
-      <DeskSection id="markers" num="04 — All markers" title="Every price on this desk, with its status." wide>
+      <DeskSection id="markers" num="04 — All markers" title="Every price we will publish, with its status." wide>
         <div className="grid gap-3">
           {COST_MARKERS.map((row) => (
             <section key={row.id} id={row.id} className="desk-surface p-6 sm:p-7" data-rise
