@@ -6,6 +6,8 @@ import {
   type LadderFamily,
 } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
+import { staggerByX } from "./layout";
+import { SvgLines } from "./svg";
 
 /**
  * I3 — the Price Ladder. One ¢/kWh axis, each price family on its own row.
@@ -13,12 +15,13 @@ import { Figure } from "@/components/marketing/depth";
  * mine rate is a formula badge, not a rung. The signed industrial ¢ is a
  * dashed empty slot.
  */
-const W = 1000;
-const LEFT = 250;
+const W = 1100;
+const LEFT = 300;
 const RIGHT = 40;
-const ROW_H = 44;
-const TOP = 34;
+const ROW_H = 58;
+const TOP = 28;
 const MAX_C = 18;
+const AXIS_W = W - LEFT - RIGHT;
 
 function toneClass(tone: LadderFamily["tone"]): string {
   switch (tone) {
@@ -40,17 +43,16 @@ function toneClass(tone: LadderFamily["tone"]): string {
 }
 
 function cx(cents: number): number {
-  const w = W - LEFT - RIGHT;
-  return LEFT + (Math.min(cents, MAX_C) / MAX_C) * w;
+  return LEFT + (Math.min(cents, MAX_C) / MAX_C) * AXIS_W;
 }
 
 export function PriceLadder() {
-  const H = TOP + LADDER_FAMILIES.length * ROW_H + 40;
+  const H = TOP + LADDER_FAMILIES.length * ROW_H + 36;
   const reported = LADDER_POINTS.filter(
     (p) => p.family === "reported" && p.cents !== null,
   ).sort((a, b) => (a.cents ?? 0) - (b.cents ?? 0));
-  const reportedRow = LADDER_FAMILIES.findIndex((f) => f.id === "reported");
   const ticks = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
+  const minSep = (2 / MAX_C) * AXIS_W;
 
   return (
     <div className="inst price-ladder">
@@ -69,11 +71,10 @@ export function PriceLadder() {
             industrial rate for retained power, which is not published.
           </desc>
 
-          {/* axis */}
           {ticks.map((t) => (
             <g key={t} transform={`translate(${cx(t)} 0)`}>
-              <line y1={TOP - 10} y2={H - 30} className="hair-soft" />
-              <text y={H - 14} textAnchor="middle" className="lbl">
+              <line y1={TOP - 6} y2={H - 28} className="hair-soft" />
+              <text y={H - 12} textAnchor="middle" className="lbl">
                 {t}¢
               </text>
             </g>
@@ -82,18 +83,24 @@ export function PriceLadder() {
           {LADDER_FAMILIES.map((fam, i) => {
             const y = TOP + i * ROW_H + ROW_H / 2;
             const pts = LADDER_POINTS.filter((p) => p.family === fam.id);
+            const placed = pts.filter((p) => p.cents !== null);
+            const sides = staggerByX(
+              placed.map((p) => cx(p.cents!)),
+              minSep,
+            );
             const tone = toneClass(fam.tone);
             return (
               <g key={fam.id}>
                 <line x1={LEFT} x2={W - RIGHT} y1={y} y2={y} className="hair" />
-                <text
-                  x={LEFT - 14}
-                  y={y + 4}
+                <SvgLines
+                  text={fam.label}
+                  x={LEFT - 16}
+                  y={y + 1}
+                  maxChars={20}
+                  lineHeight={12}
                   textAnchor="end"
                   className="lbl lbl-strong"
-                >
-                  {fam.label}
-                </text>
+                />
                 {fam.id === "reported" && reported.length > 1 ? (
                   <path
                     d={reported
@@ -102,19 +109,18 @@ export function PriceLadder() {
                       )
                       .join(" ")}
                     fill="none"
-                    className="stroke-amber draw"
+                    className="stroke-amber"
                     strokeWidth={1.5}
-                    strokeDasharray="3 4"
-                    pathLength={1}
+                    strokeDasharray="4 5"
                   />
                 ) : null}
                 {fam.id === "signed" ? (
                   <g>
                     <rect
                       x={cx(2)}
-                      y={y - 12}
+                      y={y - 14}
                       width={cx(12) - cx(2)}
-                      height={24}
+                      height={28}
                       fill="none"
                       className="stroke-alert"
                       strokeDasharray="4 4"
@@ -130,13 +136,13 @@ export function PriceLadder() {
                     </text>
                   </g>
                 ) : null}
-                {pts
-                  .filter((p) => p.cents !== null)
-                  .map((p, k) => (
+                {placed.map((p, k) => {
+                  const above = sides[k] === "above";
+                  return (
                     <g key={p.id} transform={`translate(${cx(p.cents!)} ${y})`}>
                       <circle r={5} className={tone} />
                       <text
-                        y={k % 2 === 0 ? -11 : 19}
+                        y={above ? -14 : 22}
                         textAnchor="middle"
                         className="num"
                         style={{ fontSize: 12 }}
@@ -144,23 +150,11 @@ export function PriceLadder() {
                         {p.value}¢
                       </text>
                     </g>
-                  ))}
+                  );
+                })}
               </g>
             );
           })}
-
-          {/* divider note under the reported row */}
-          {reportedRow >= 0 ? (
-            <text
-              x={W - RIGHT}
-              y={TOP + reportedRow * ROW_H + ROW_H - 4}
-              textAnchor="end"
-              className="lbl"
-              style={{ fontSize: 9.5, fill: "var(--amber)" }}
-            >
-              different measurements · labelled, not merged
-            </text>
-          ) : null}
         </svg>
         <span className="inst-scroll-hint" aria-hidden>
           scroll sideways →

@@ -26,14 +26,12 @@ function useToday(): Date | null {
 export function TodayMarker({
   pad,
   width,
-  y1,
-  y2,
+  railY,
   compact = false,
 }: {
   pad: number;
   width: number;
-  y1: number;
-  y2: number;
+  railY: number;
   compact?: boolean;
 }) {
   const today = useToday();
@@ -42,13 +40,20 @@ export function TodayMarker({
     today.getDate(),
   ).padStart(2, "0")}`;
   const px = pad + railPosition(iso, GATES) * width;
+  const tick = compact ? 14 : 18;
   return (
     <g transform={`translate(${px} 0)`} aria-hidden>
-      <line y1={y1} y2={y2} className="stroke-plasma" strokeWidth={1.5} />
+      <line
+        y1={railY - tick}
+        y2={railY + tick}
+        className="stroke-plasma"
+        strokeWidth={1.5}
+      />
       {!compact ? (
         <text
-          y={y2 + 14}
-          textAnchor="middle"
+          x={10}
+          y={railY - tick - 8}
+          textAnchor="start"
           className="lbl"
           style={{ fill: "var(--plasma)" }}
         >

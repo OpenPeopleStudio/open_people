@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.14 — 2026-10-25 — Desk instrument polish
+
+SVG graphs were hard to read: gate labels stacked on each other, family names clipped off the price ladder, and `.draw` (pathLength 1 + dasharray 1) painted intended dashes solid after the animation. Labels now wrap and stagger; compact clock shows dates only; reported/proposed/unused strokes stay dashed. No lib/desk figures changed.
+
 ## 0.5.13 — 2026-10-25 — Desk favicon (void + plasma chassis)
 
 Replace the leftover SaaS lime blob (stick figures that read as two dots at 16px) with the Churchill River desk mark: void field, plasma L-rail and foot, same grammar as the OG card. Regenerated svg/ico/16/32/48/apple/192/512. Manifest theme is `#040404`. JSON-LD Organization logo still points at the 192 square.

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
+import { SvgLines } from "./svg";
 
 /**
  * I7 — Default Path. What the Material Terms already decide if nobody writes
@@ -8,11 +9,11 @@ import { Figure } from "@/components/marketing/depth";
  * Hydro-Québec, at a discount when there is no three-year notice.
  */
 export function DefaultPath() {
-  const W = 1000;
-  const H = 330;
-  const src = { x: 130, y: 165 };
-  const home = { x: 560, y: 70 };
-  const west = { x: 560, y: 235 };
+  const W = 1100;
+  const H = 430;
+  const src = { x: 150, y: 200 };
+  const home = { x: 540, y: 80 };
+  const west = { x: 540, y: 300 };
 
   const options = [
     { label: "Synthetic export", cap: "up to 280 MW", note: "3-yr notice" },
@@ -24,6 +25,11 @@ export function DefaultPath() {
       note: "no notice · HQ must buy",
     },
   ];
+  const optionX = 850;
+  const optionW = 230;
+  const optionH = 50;
+  const optionGap = 56;
+  const optionTop = west.y - ((options.length - 1) * optionGap) / 2;
 
   return (
     <div className="inst default-path">
@@ -45,13 +51,12 @@ export function DefaultPath() {
             notice, which Hydro-Québec must buy.
           </desc>
 
-          {/* source node */}
           <g transform={`translate(${src.x} ${src.y})`}>
             <rect
-              x={-100}
-              y={-34}
-              width={200}
-              height={68}
+              x={-108}
+              y={-36}
+              width={216}
+              height={72}
               fill="var(--surface-2)"
               stroke="var(--ink)"
               strokeWidth={1}
@@ -59,130 +64,135 @@ export function DefaultPath() {
             <text y={-6} textAnchor="middle" className="lbl lbl-strong">
               Retained power
             </text>
-            <text
-              y={14}
-              textAnchor="middle"
-              className="num"
-              style={{ fontSize: 12 }}
-            >
+            <text y={14} textAnchor="middle" className="num" style={{ fontSize: 12 }}>
               up to 2,350 MW · framing
             </text>
           </g>
 
-          {/* branches */}
           <path
-            d={`M ${src.x + 100} ${src.y - 10} C 300 ${src.y - 10}, 300 ${home.y}, ${home.x - 130} ${home.y}`}
+            d={`M ${src.x + 108} ${src.y - 12} C 310 ${src.y - 12}, 310 ${home.y}, ${home.x - 150} ${home.y}`}
             fill="none"
             className="stroke-plasma draw"
             strokeWidth={2}
             pathLength={1}
           />
           <path
-            d={`M ${src.x + 100} ${src.y + 10} C 300 ${src.y + 10}, 300 ${west.y}, ${west.x - 130} ${west.y}`}
+            d={`M ${src.x + 108} ${src.y + 12} C 310 ${src.y + 12}, 310 ${west.y}, ${west.x - 150} ${west.y}`}
             fill="none"
-            className="stroke-amber draw"
+            className="stroke-amber"
             strokeWidth={2}
-            strokeDasharray="6 5"
-            pathLength={1}
+            strokeDasharray="7 5"
           />
 
           <text
-            x={300}
-            y={home.y - 26}
+            x={280}
+            y={home.y - 28}
             textAnchor="middle"
             className="lbl plasma"
           >
             used here · “domestic load”
           </text>
-          <text
-            x={300}
-            y={west.y + 34}
-            textAnchor="middle"
-            className="lbl amber"
-          >
+          <text x={300} y={west.y + 40} textAnchor="middle" className="lbl amber">
             not used · §4 options
           </text>
 
-          {/* home node */}
           <g transform={`translate(${home.x} ${home.y})`}>
             <rect
-              x={-130}
-              y={-30}
-              width={260}
-              height={60}
+              x={-150}
+              y={-36}
+              width={300}
+              height={72}
               fill="none"
               stroke="var(--plasma)"
               strokeWidth={1}
             />
-            <text y={-6} textAnchor="middle" className="lbl lbl-strong">
-              Mines · towns · Labrador industry
-            </text>
-            <text
-              y={14}
+            <SvgLines
+              text="Mines · towns · Labrador industry"
+              x={0}
+              y={-10}
+              maxChars={36}
+              lineHeight={12}
+              textAnchor="middle"
+              className="lbl lbl-strong"
+            />
+            <SvgLines
+              text="definition of “domestic load”: not published"
+              x={0}
+              y={16}
+              maxChars={32}
+              lineHeight={11}
               textAnchor="middle"
               className="lbl alert"
               style={{ fontSize: 9.5 }}
-            >
-              definition of “domestic load”: not published
-            </text>
+            />
           </g>
 
-          {/* west node + options */}
           <g transform={`translate(${west.x} ${west.y})`}>
             <rect
-              x={-130}
-              y={-30}
-              width={260}
-              height={60}
+              x={-150}
+              y={-36}
+              width={300}
+              height={72}
               fill="none"
               stroke="var(--amber)"
               strokeWidth={1}
               strokeDasharray="4 4"
             />
-            <text y={-6} textAnchor="middle" className="lbl lbl-strong">
+            <text y={-8} textAnchor="middle" className="lbl lbl-strong">
               Hydro-Québec buys it
             </text>
-            <text
+            <SvgLines
+              text="already written in the Material Terms"
+              x={0}
               y={14}
+              maxChars={28}
+              lineHeight={11}
               textAnchor="middle"
               className="lbl"
               style={{ fontSize: 9.5 }}
-            >
-              already written in the Material Terms
-            </text>
+            />
           </g>
 
           {options.map((o, i) => {
-            const y = 40 + i * 62;
+            const oy = optionTop + i * optionGap;
+            const joinX = west.x + 150;
+            const midX = (joinX + optionX) / 2;
             return (
-              <g key={o.label} transform={`translate(760 ${y})`}>
-                <line
-                  x1={-70}
-                  x2={-8}
-                  y1={west.y - y + 0}
-                  y2={20}
+              <g key={o.label}>
+                <path
+                  d={`M ${joinX} ${west.y} L ${midX} ${west.y} L ${midX} ${oy} L ${optionX} ${oy}`}
+                  fill="none"
                   className="hair"
                 />
-                <rect
-                  x={0}
-                  y={0}
-                  width={210}
-                  height={40}
-                  fill="var(--surface-1)"
-                  stroke="var(--hairline-strong)"
-                  strokeWidth={1}
-                />
-                <text
-                  x={10}
-                  y={16}
-                  className="lbl lbl-strong"
-                  style={{ fontSize: 10 }}
-                >
-                  {o.label}
-                </text>
-                <text x={10} y={31} className="lbl" style={{ fontSize: 9.5 }}>
-                  {o.cap} · {o.note}
-                </text>
+                <g transform={`translate(${optionX} ${oy - optionH / 2})`}>
+                  <rect
+                    x={0}
+                    y={0}
+                    width={optionW}
+                    height={optionH}
+                    fill="var(--surface-1)"
+                    stroke="var(--hairline-strong)"
+                    strokeWidth={1}
+                  />
+                  <text
+                    x={10}
+                    y={16}
+                    className="lbl lbl-strong"
+                    style={{ fontSize: 10 }}
+                  >
+                    {o.label}
+                  </text>
+                  <SvgLines
+                    text={`${o.cap} · ${o.note}`}
+                    x={10}
+                    y={34}
+                    maxChars={28}
+                    lineHeight={11}
+                    textAnchor="start"
+                    className="lbl"
+                    style={{ fontSize: 9.5 }}
+                  />
+                </g>
               </g>
             );
           })}

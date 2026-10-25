@@ -1,18 +1,20 @@
 import Link from "next/link";
 import { DESK_SOURCES, FLOW_BARS, type FlowFill } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
+import { SvgLines } from "./svg";
 
 /**
  * I4 — Flow Bars. Proportional megawatt bars. Fill encodes how hard the
  * number is: solid published, outlined announced, hatched preliminary,
  * dashed not published.
  */
-const W = 1000;
-const LEFT = 300;
-const RIGHT = 120;
-const ROW_H = 46;
-const TOP = 16;
+const W = 1100;
+const LEFT = 340;
+const RIGHT = 150;
+const ROW_H = 54;
+const TOP = 10;
 const MAX_MW = 5500;
+const BAR_H = 22;
 
 function bw(mw: number): number {
   return ((W - LEFT - RIGHT) * Math.min(mw, MAX_MW)) / MAX_MW;
@@ -83,34 +85,38 @@ export function FlowBars() {
           {FLOW_BARS.map((b, i) => {
             const y = TOP + i * ROW_H;
             const attrs = fillAttrs(b.fill);
+            const indent = b.id === "mining-now" ? 16 : 0;
             const width = b.mw === null ? bw(2350) : bw(b.mw);
             const lowWidth = b.mwLow ? bw(b.mwLow) : null;
+            const barX = LEFT + indent;
+            const valueX = barX + width + 10;
             return (
               <g key={b.id} transform={`translate(0 ${y})`}>
-                <text
+                <SvgLines
+                  text={b.label}
                   x={LEFT - 14}
-                  y={20}
+                  y={24}
+                  maxChars={22}
+                  lineHeight={12}
                   textAnchor="end"
                   className="lbl lbl-strong"
-                >
-                  {b.label}
-                </text>
+                />
                 {b.fill === "hatch" && lowWidth !== null ? (
                   <>
                     <rect
-                      x={LEFT}
-                      y={8}
+                      x={barX}
+                      y={12}
                       width={lowWidth}
-                      height={22}
+                      height={BAR_H}
                       fill="url(#fb-hatch)"
                       stroke="var(--steel)"
                       strokeWidth={1}
                     />
                     <rect
-                      x={LEFT + lowWidth}
-                      y={8}
-                      width={width - lowWidth}
-                      height={22}
+                      x={barX + lowWidth}
+                      y={12}
+                      width={Math.max(0, width - lowWidth)}
+                      height={BAR_H}
                       fill="none"
                       stroke="var(--steel)"
                       strokeWidth={1}
@@ -119,17 +125,17 @@ export function FlowBars() {
                   </>
                 ) : (
                   <rect
-                    x={LEFT}
-                    y={8}
+                    x={barX}
+                    y={12}
                     width={width}
-                    height={22}
+                    height={BAR_H}
                     {...attrs}
                     strokeWidth={1}
                   />
                 )}
                 <text
-                  x={LEFT + width + 10}
-                  y={23}
+                  x={valueX}
+                  y={28}
                   className="num"
                   style={{ fontSize: 12.5 }}
                 >

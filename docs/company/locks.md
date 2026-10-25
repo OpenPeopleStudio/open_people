@@ -16,6 +16,7 @@ Source of truth for active edit locks. See `docs/company/lock-policy.md` for rul
 
 | Owner | Date | Scope | Type | Expires | Status | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
+| Cursor | 2026-10-25 | components/marketing/instruments/*, app/(marketing)/desk.css, __tests__/unit/components/instruments-layout.test.ts, VERSION, CHANGELOG.md, ACTIONS, docs/company/locks.md | exclusive | 2026-10-26 | active | Polish desk SVG instruments: label collisions, dashed-stroke draw bug; no lib/desk number changes |
 | Cursor | 2026-10-25 | public/favicon.svg, public/favicon.ico, public/favicon-*.png, public/apple-touch-icon.png, public/android-chrome-*.png, public/manifest.json, scripts/generate-assets.js, __tests__/unit/lib/og/search-head.test.ts, VERSION, CHANGELOG.md, ACTIONS, docs/company/locks.md | exclusive | 2026-10-26 | active | Desk favicon artwork: void + plasma chassis |
 | Cursor | 2026-10-25 | app/layout.tsx, app/favicon.ico, app/(marketing)/brief/page.tsx, lib/og/copy.ts, lib/og/jsonld.ts, lib/og/index.ts, components/marketing/SiteJsonLd.tsx, __tests__/unit/lib/og/search-head.test.ts, VERSION, CHANGELOG.md, ACTIONS, docs/company/locks.md | exclusive | 2026-10-26 | active | /brief search snippet + site JSON-LD + favicon dedupe |
 | Cursor | 2026-10-14 | docs/api/README.md | exclusive | 2026-10-15 | active | Unblock CI check:api-docs on the API index |

@@ -1,5 +1,6 @@
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
 import { Figure } from "@/components/marketing/depth";
+import { SvgLines } from "./svg";
 
 /**
  * I5 — Corridor Schematic. Not a map. Churchill Falls in the centre; the
@@ -8,12 +9,14 @@ import { Figure } from "@/components/marketing/depth";
  * to Québec; the towns that already sit on the system.
  */
 export function CorridorSchematic() {
-  const W = 1000;
-  const H = 360;
-  const cf = { x: 520, y: 180 };
-  const lw = { x: 150, y: 180 };
-  const qc = { x: 900, y: 180 };
-  const hvgb = { x: 700, y: 300 };
+  const W = 1100;
+  const H = 400;
+  const cf = { x: 540, y: 168 };
+  const lw = { x: 168, y: 168 };
+  const qc = { x: 960, y: 168 };
+  const hvgb = { x: 730, y: 328 };
+  const nodeW = 72;
+  const nodeH = 56;
 
   return (
     <div className="inst corridor">
@@ -33,26 +36,25 @@ export function CorridorSchematic() {
             system.
           </desc>
 
-          {/* existing 230 kV west, two lines */}
           <line
-            x1={cf.x - 30}
+            x1={cf.x - nodeW / 2}
             y1={cf.y - 8}
-            x2={lw.x + 30}
+            x2={lw.x + nodeW / 2}
             y2={lw.y - 8}
             className="hair"
             strokeWidth={1.5}
           />
           <line
-            x1={cf.x - 30}
+            x1={cf.x - nodeW / 2}
             y1={cf.y + 8}
-            x2={lw.x + 30}
+            x2={lw.x + nodeW / 2}
             y2={lw.y + 8}
             className="hair"
             strokeWidth={1.5}
           />
           <text
             x={(cf.x + lw.x) / 2}
-            y={cf.y - 22}
+            y={cf.y - 48}
             textAnchor="middle"
             className="lbl"
           >
@@ -60,109 +62,96 @@ export function CorridorSchematic() {
           </text>
           <text
             x={(cf.x + lw.x) / 2}
-            y={cf.y + 30}
+            y={cf.y + 44}
             textAnchor="middle"
             className="lbl amber"
           >
             at operational limit
           </text>
 
-          {/* proposed 735 kV */}
           <line
-            x1={cf.x - 30}
-            y1={cf.y + 60}
-            x2={lw.x + 30}
-            y2={lw.y + 60}
-            className="stroke-steel draw"
-            strokeWidth={2.5}
+            x1={cf.x - nodeW / 2}
+            y1={cf.y + 92}
+            x2={lw.x + nodeW / 2}
+            y2={lw.y + 92}
+            className="stroke-steel"
+            strokeWidth={2}
             strokeDasharray="8 6"
-            pathLength={1}
           />
-          <text
+          <SvgLines
+            text="735 kV proposed · ~1,500 MW · funded · in-service date not published"
             x={(cf.x + lw.x) / 2}
-            y={cf.y + 84}
+            y={cf.y + 116}
+            maxChars={36}
+            lineHeight={12}
             textAnchor="middle"
             className="lbl steel"
-          >
-            735 kV proposed · ~1,500 MW · funded · in-service date not published
-          </text>
+          />
 
-          {/* export east to Québec */}
           <line
-            x1={cf.x + 30}
+            x1={cf.x + nodeW / 2}
             y1={cf.y - 10}
-            x2={qc.x - 40}
+            x2={qc.x - 44}
             y2={qc.y - 10}
             className="stroke-plasma"
             strokeWidth={1.5}
           />
           <line
-            x1={cf.x + 30}
+            x1={cf.x + nodeW / 2}
             y1={cf.y}
-            x2={qc.x - 40}
+            x2={qc.x - 44}
             y2={qc.y}
             className="stroke-plasma"
             strokeWidth={1.5}
           />
           <line
-            x1={cf.x + 30}
+            x1={cf.x + nodeW / 2}
             y1={cf.y + 10}
-            x2={qc.x - 40}
+            x2={qc.x - 44}
             y2={qc.y + 10}
             className="stroke-plasma"
             strokeWidth={1.5}
           />
-          <text
-            x={(cf.x + qc.x) / 2}
-            y={cf.y - 24}
+          <SvgLines
+            text="735 kV export · ~90% of output flows to Québec"
+            x={(cf.x + qc.x) / 2 + 24}
+            y={cf.y - 52}
+            maxChars={26}
+            lineHeight={12}
             textAnchor="middle"
             className="lbl plasma"
-          >
-            735 kV export · ~90% of output flows to Québec
-          </text>
+          />
 
-          {/* HVGB spur */}
           <line
-            x1={cf.x + 20}
-            y1={cf.y + 20}
-            x2={hvgb.x - 20}
-            y2={hvgb.y - 10}
+            x1={cf.x + 16}
+            y1={cf.y + nodeH / 2}
+            x2={hvgb.x - 14}
+            y2={hvgb.y - 8}
             className="hair"
             strokeWidth={1.5}
           />
 
-          {/* nodes */}
           <g transform={`translate(${cf.x} ${cf.y})`}>
             <rect
-              x={-30}
-              y={-30}
-              width={60}
-              height={60}
+              x={-nodeW / 2}
+              y={-nodeH / 2}
+              width={nodeW}
+              height={nodeH}
               fill="var(--surface-2)"
               stroke="var(--ink)"
               strokeWidth={1}
             />
-            <text y={-38} textAnchor="middle" className="lbl lbl-strong">
+            <text y={-nodeH / 2 - 12} textAnchor="middle" className="lbl lbl-strong">
               Churchill Falls
             </text>
-            <text
-              y={5}
-              textAnchor="middle"
-              className="num"
-              style={{ fontSize: 12 }}
-            >
+            <text y={2} textAnchor="middle" className="num" style={{ fontSize: 13 }}>
               5,428
             </text>
-            <text
-              y={18}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 8.5 }}
-            >
+            <text y={16} textAnchor="middle" className="lbl" style={{ fontSize: 8.5 }}>
               MW
             </text>
             <text
-              y={48}
+              y={nodeH / 2 + 16}
               textAnchor="middle"
               className="lbl"
               style={{ fontSize: 9.5 }}
@@ -173,35 +162,25 @@ export function CorridorSchematic() {
 
           <g transform={`translate(${lw.x} ${lw.y})`}>
             <rect
-              x={-30}
-              y={-30}
-              width={60}
-              height={60}
+              x={-nodeW / 2}
+              y={-nodeH / 2}
+              width={nodeW}
+              height={nodeH}
               fill="var(--surface-2)"
               stroke="var(--plasma)"
               strokeWidth={1}
             />
-            <text y={-38} textAnchor="middle" className="lbl lbl-strong">
+            <text y={-nodeH / 2 - 12} textAnchor="middle" className="lbl lbl-strong">
               Labrador West
             </text>
-            <text
-              y={-2}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 9 }}
-            >
+            <text y={-2} textAnchor="middle" className="lbl" style={{ fontSize: 9 }}>
               IOC · Tacora
             </text>
-            <text
-              y={12}
-              textAnchor="middle"
-              className="num"
-              style={{ fontSize: 12 }}
-            >
+            <text y={14} textAnchor="middle" className="num" style={{ fontSize: 12 }}>
               ~312 MW
             </text>
             <text
-              y={48}
+              y={nodeH / 2 + 16}
               textAnchor="middle"
               className="lbl"
               style={{ fontSize: 9.5 }}
@@ -209,7 +188,7 @@ export function CorridorSchematic() {
               Labrador City · Wabush
             </text>
             <text
-              y={62}
+              y={nodeH / 2 + 30}
               textAnchor="middle"
               className="lbl plasma"
               style={{ fontSize: 9.5 }}
@@ -220,20 +199,20 @@ export function CorridorSchematic() {
 
           <g transform={`translate(${qc.x} ${qc.y})`}>
             <rect
-              x={-40}
-              y={-30}
-              width={80}
-              height={60}
+              x={-44}
+              y={-nodeH / 2}
+              width={88}
+              height={nodeH}
               fill="none"
               stroke="var(--plasma)"
               strokeWidth={1}
               strokeDasharray="3 3"
             />
-            <text y={5} textAnchor="middle" className="lbl lbl-strong">
+            <text y={4} textAnchor="middle" className="lbl lbl-strong">
               Québec
             </text>
             <text
-              y={48}
+              y={nodeH / 2 + 16}
               textAnchor="middle"
               className="lbl"
               style={{ fontSize: 9.5 }}
