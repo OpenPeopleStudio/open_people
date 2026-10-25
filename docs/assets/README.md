@@ -6,23 +6,23 @@ This directory contains the favicon and Open Graph image assets for OpenPeople.a
 
 ## Favicon
 
-The favicon uses a clean, modern design with interconnected human figures representing "Open People" - the concept of connecting and collaborating openly.
+The favicon is the Churchill River desk chassis: void field (`#040404`) with a plasma (`#e8893c`) L-rail and short foot, the same grammar as the OG share card. Source of truth is `public/favicon.svg`; raster sizes come from `npm run generate-assets`.
 
 ### Files
-- `favicon.ico` - Traditional favicon (16x16, 32x32)
-- `favicon.svg` - Modern SVG favicon with electric lime (#00FF88) background
+- `favicon.ico` - Traditional favicon (16x16, 32x32, 48x48)
+- `favicon.svg` - Desk chassis on void
 - `favicon-16x16.png` - 16x16 PNG
 - `favicon-32x32.png` - 32x32 PNG
 - `favicon-48x48.png` - 48x48 PNG
 - `apple-touch-icon.png` - 180x180 Apple touch icon
-- `android-chrome-192x192.png` - Android PWA icon
+- `android-chrome-192x192.png` - Android PWA icon (also JSON-LD Organization logo)
 - `android-chrome-512x512.png` - Android PWA icon
 - `manifest.json` - Web App Manifest for PWA support
 
 ### Design
-- **Color**: Electric lime (#00FF88) background
-- **Icon**: Stylized interconnected human figures
-- **Style**: Clean, modern, geometric
+- **Field**: Void (`#040404`)
+- **Accent**: Plasma (`#e8893c`)
+- **Mark**: OG chassis — top bar, left rail, short foot. No lime, no figures.
 
 ## Open Graph Images
 

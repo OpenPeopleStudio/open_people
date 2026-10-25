@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.13 — 2026-10-25 — Desk favicon (void + plasma chassis)
+
+Replace the leftover SaaS lime blob (stick figures that read as two dots at 16px) with the Churchill River desk mark: void field, plasma L-rail and foot, same grammar as the OG card. Regenerated svg/ico/16/32/48/apple/192/512. Manifest theme is `#040404`. JSON-LD Organization logo still points at the 192 square.
+
 ## 0.5.12 — 2026-10-25 — /brief search snippet + site JSON-LD
 
 Google still shows a stale `/brief` title and a body-text snippet. Metadata now uses title `Keep the power here: the Labrador case · Open People` and a description matched to the page body (clean hydro, proposed campus starts small / in feasibility, NL Hydro a proposed partner — not 5,428 MW for sale). One WebSite + Organization JSON-LD block in the root layout so the site name can be “Open People”. Favicon links consolidated: svg, ico, 16/32/48 png, apple-touch-icon; `app/favicon.ico` removed so Next does not inject a hashed duplicate. Artwork unchanged. `/letter` and page body copy untouched.
