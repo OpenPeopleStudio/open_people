@@ -10,17 +10,17 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Industries",
   description:
-    "Mining and Labrador industry first — they are real constraints on the same power. Open People leads a proposed 500 MW campus, in feasibility.",
+    "Open People puts mining and Labrador industry first. They are real constraints on the same power. We lead a proposed 500 MW campus, in feasibility.",
   path: "/industries",
 });
 
 export default function IndustriesPage() {
   return (
     <DeskPage
-      kicker="Churchill River desk · Industries"
+      kicker="Open People · Industries"
       title={
         <>
-          Mining first. <em>Then the wire.</em> A campus has to live with that.
+          Mining first. <em>Then the wire.</em> Our campus has to live with that.
         </>
       }
       lede={
@@ -29,11 +29,12 @@ export default function IndustriesPage() {
           label="~312 MW"
           plain={
             <p>
+              Open People puts mines and existing Labrador industry first.{" "}
               <Term k="firm-power">Firm power</Term> this province keeps should serve loads that
-              already live in Labrador: mines, towns, the corridor between Churchill Falls and
-              Labrador West. The mines already use about <Fig id="a">312 MW</Fig> of the roughly{" "}
+              already live here: mines, towns, the corridor between Churchill Falls and Labrador
+              West. The mines already use about <Fig id="a">312 MW</Fig> of the roughly{" "}
               <Fig id="b">525 MW</Fig> Hydro has for Labrador today. They are a real constraint on
-              any campus.
+              the campus we propose to lead.
             </p>
           }
           technical={SCALE_ANCHORS.miningLoad.technical}
@@ -53,8 +54,9 @@ export default function IndustriesPage() {
         title="Hydro's own study says the west lines are at their limit."
         intro={
           <p>
-            A bigger line is the mining-first piece of steel. August&apos;s announcement attaches
-            money. Engineering and permits are under way this fall. In-service date: not published.
+            We treat a bigger line as the mining-first piece of steel. August&apos;s announcement
+            attaches money. Engineering and permits are under way this fall. In-service date: not
+            published.
           </p>
         }
         wide
@@ -64,7 +66,7 @@ export default function IndustriesPage() {
         </div>
       </DeskSection>
 
-      <DeskSection id="cards" num="02 — Mining first" title="Sourced cards. Nothing uncited." wide>
+      <DeskSection id="cards" num="02 — Mining first" title="What we will count. Nothing uncited." wide>
         <div className="grid gap-4">
           {INDUSTRY_CARDS.map((card) => (
             <section key={card.id} id={card.id} className="desk-surface p-6 sm:p-7" data-rise>
