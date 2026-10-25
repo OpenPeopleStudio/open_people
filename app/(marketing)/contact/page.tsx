@@ -5,20 +5,22 @@ import { DeskPage, DeskSection } from "@/components/marketing/shell";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Tom Lane at Open People — tom@openpeople.ai — St. John’s, Newfoundland and Labrador.",
+    "Write Tom Lane at Open People — tom@openpeople.ai — about keeping firm power in Newfoundland and Labrador, or about the proposed Labrador campus.",
 };
 
 export default function ContactPage() {
   return (
     <DeskPage
-      kicker="Contact"
+      kicker="Open People · Contact"
       title="Start with a conversation, not a funnel."
       lede={
         <p>
-          Government relations, in-province power, infrastructure partnership, or a careful
-          introduction: write directly. If you want firm power kept in NL, start at{" "}
+          Open People is working to keep firm power in Newfoundland and Labrador, mining first, and
+          we lead a proposed Labrador campus in feasibility. Government relations, infrastructure
+          partnership, or a careful introduction: write Tom directly. If you want in-province use
+          kept in the paper, start at{" "}
           <Link href="/engage" className="desk-link">
-            /engage
+            Engage
           </Link>
           .
         </p>
@@ -55,8 +57,8 @@ export default function ContactPage() {
           <div className="p-5">
             <div className="desk-kicker">Sequencing</div>
             <p className="mt-2 text-sm text-[var(--ink-2)]">
-              Information before advocacy. Partners before politicians. Never an ask before the brief
-              has been read.
+              Read the brief before you ask us for anything. Partners before politicians. We will not
+              put an ask in front of the evidence.
             </p>
           </div>
         </div>
