@@ -1,11 +1,11 @@
 /**
- * Desk v2 Open Graph / Twitter card copy.
- * No ¢/kWh on the image. Compute may name the proposed 500 MW. Mining remains a constraint.
+ * Public share-card copy. Open People is the company; the file is what we publish.
+ * No ¢/kWh on the image. Compute may name the proposed 500 MW. Mining remains first.
  *
- * Locked home card (do not soften):
- *   Kicker:    OPEN PEOPLE · CHURCHILL RIVER DESK
+ * Home card:
+ *   Kicker:    OPEN PEOPLE · NEWFOUNDLAND AND LABRADOR
  *   Dominant:  Keep the power here.
- *   Secondary: Watch the gates.
+ *   Secondary: Open People is on it.
  *   Footer:    OPEN PEOPLE · NL / OPENPEOPLE.AI
  * Compute: A 500 MW Labrador campus. / Open People leads.
  */
@@ -28,9 +28,9 @@ export function deskOgFooterUrl(card: DeskOgCard): string {
   return card.footer.toUpperCase();
 }
 
-export const HOME_TITLE = "Open People — Churchill River desk · Keep the power here";
+export const HOME_TITLE = "Open People — Keep the power here";
 export const HOME_DESCRIPTION =
-  "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.";
+  "Open People is working to keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. We publish what is signed and what is still blank. Compute is a separate page.";
 
 /** Document / og / twitter title for /brief. Template adds " · Open People". */
 export const BRIEF_TITLE = "Keep the power here: the Labrador case";
@@ -46,51 +46,51 @@ export const BRIEF_DESCRIPTION =
 export const DESK_OG = {
   home: {
     kicker: "OPEN PEOPLE",
-    kickerAccent: "CHURCHILL RIVER DESK",
+    kickerAccent: "NEWFOUNDLAND AND LABRADOR",
     headline: "Keep the power here.",
-    accent: "Watch the gates.",
+    accent: "Open People is on it.",
     footer: "OPENPEOPLE.AI",
-    alt: "Open People — Churchill River desk. Keep the power here. Watch the gates.",
+    alt: "Open People. Keep firm Churchill Falls and Gull Island power in Newfoundland and Labrador. Mining first.",
   },
   tracker: {
     kicker: "Tracker",
-    kickerAccent: "Churchill River desk",
+    kickerAccent: "Open People",
     headline: "What’s signed. What’s open.",
-    accent: "What we still mark unknown.",
+    accent: "We publish the blanks.",
     footer: "openpeople.ai/tracker",
-    alt: "Open People tracker — what’s signed, what’s open, and what the public text still does not say.",
+    alt: "Open People tracker — what is signed, what is open, and what we still cannot say from the public text.",
   },
   costs: {
     kicker: "Costs",
-    kickerAccent: "Churchill River desk",
+    kickerAccent: "Open People",
     headline: "Seven price stories.",
-    accent: "One ladder. Nothing merged.",
+    accent: "We will not merge them.",
     footer: "openpeople.ai/costs",
-    alt: "Open People costs — seven price stories on one ladder, labelled, not merged.",
+    alt: "Open People costs — seven price stories. We keep them labelled and do not merge them.",
   },
   industries: {
     kicker: "Industries",
-    kickerAccent: "Churchill River desk",
+    kickerAccent: "Open People",
     headline: "Mining first.",
     accent: "Then the wire.",
     footer: "openpeople.ai/industries",
-    alt: "Open People industries — mining first, then the wire. A campus has to live with that.",
+    alt: "Open People — mining and Labrador industry first, then the wire. A campus has to live with that.",
   },
   engage: {
     kicker: "Engage",
-    kickerAccent: "Churchill River desk",
+    kickerAccent: "Open People",
     headline: "Keep firm power here.",
-    accent: "In Newfoundland and Labrador.",
+    accent: "Write in while it is paper.",
     footer: "openpeople.ai/engage",
-    alt: "Open People — keep firm power in Newfoundland and Labrador. House endorsement is not a contract.",
+    alt: "Open People — keep firm power in Newfoundland and Labrador. Write in while the contracts are still paper.",
   },
   brief: {
     kicker: "Brief",
-    kickerAccent: "Churchill River desk",
+    kickerAccent: "Open People",
     headline: "Keep the power here.",
     accent: "Mining first. Then the wire.",
     footer: "openpeople.ai/brief",
-    alt: "Open People brief — Labrador power and industry case. Mining first. Compute is not the opener.",
+    alt: "Open People’s public case for Labrador power and industry. Mining first. Compute is not the opener.",
   },
   coalition: {
     kicker: "Coalition",
@@ -131,4 +131,3 @@ export const DESK_OG_IMAGE = {
   height: 630,
   alt: DESK_OG.home.alt,
 } as const;
-
