@@ -1,26 +1,27 @@
-# PLAN — Desk IA fixes on the current board
+# PLAN — First slice: take OpenAI off live /ask
 
 ## Goal
 
-Close the remaining information-architecture holes on current main (`e1daf6f` and after). Home already leads with the company and the campus, and the header is already About, Build, Capital, Consent, Power. This slice takes the campus-only sentence off the build track, lets a record page return to its track, puts Privacy and Terms on the desk shell, and makes the sitemap agree with the board.
+Tom Lane decided openpeople.ai should avoid OpenAI wherever an alternative exists. This slice removes OpenAI from the live `/ask` path and from provider defaults, without touching parked SaaS, brand, or board work.
 
 ## In
 
-- Item 1: `COMPUTE_HERO.plain` stops at the mines sentence. The two campus-only sentences stay on `/compute` only, as a compute-page plain string next to `COMPUTE_PAGE_TECHNICAL`. Home and the build row still render `COMPUTE_HERO.technical`.
-- Item 2: Optional parent link on `DeskPage` (kicker row). Power records pass Power → `/power`. `/compute` passes Build → `/build`. Existing cross-links stay.
-- Item 3: `/privacy` and `/terms` render through `DeskPage` / `SiteNav`. NavBar comes off those pages. Legal text unchanged.
-- Item 4: Sitemap priorities only. Tracks `/build` `/capital` `/consent` `/power` at 0.9. Record pages `/brief` `/tracker` `/engage` `/industries` `/costs` `/letter` at 0.8. `/compute` stays 0.4. `/about` stays 0.8. Same set of routes.
-- Checks from the spec: unit (build seed vs compute-page plain), e2e (parent links + privacy desk nav). Lint, typecheck, build, `npm test`. Public-PII test stays green.
-- Brand: sentence case, paper `#f3f3ef`, ink `#0e1014`, orange `#f2501f`, orange text on paper `#c23a12`, Schibsted Grotesk and DM Mono. Consent-first: claim no partnerships. No new figures or copy beyond what this spec moves.
+- `app/api/ask/route.ts`, `lib/ask/prompt.ts`, `lib/ask/openai-direct.ts`: drop the OpenAI-direct path and `OPENAI_API_KEY` as a way to configure `/ask`. Chat stays on the Vercel AI SDK (`streamText`) through AI Gateway.
+- Default model: current Gateway Grok id `spacexai/grok-4.7` (provider `xai`). Override with `ASK_MODEL`. Do not read `AI_GATEWAY_MODEL` (that Vercel var is still an OpenAI id).
+- Gateway fallback, if any: Anthropic Claude via the gateway (`anthropic/claude-sonnet-5.5`). Provider options must not list `openai` or `azure`.
+- If Gateway is not configured, keep the current 503 “not configured” response. An OpenAI key alone is not enough.
+- `types/ai-providers.ts`: `defaultProvider` is not `openai`; no `gpt-*` in the default settings; `fallbackToOpenAI` and `useOpenAIForEmbeddings` are false. Types still compile. Parked readers stay as they are.
+- Public marketing copy that names OpenAI or Azure OpenAI as a provider. Live pages only. `_retired` pages stay; list them in the PR.
+- A unit test that the `/ask` path has no OpenAI model and no `openai-direct` import.
+- Lint, typecheck, build, and the test suite. Known main failures stay: `__tests__/unit/lib/email/sync.test.ts`, and any sitemap `/compute` 0.4 vs 0.85 test.
 
 ## Out
 
-- Header: About, Build, Capital, Consent, Power.
-- Power’s job line in `lib/board/tracks.ts`. Record labels: Tracker, Industries, Costs, Brief, Letter, Engage.
-- `/coalition` unlisted, noindex, unlinked.
-- Retired product routes and their redirects. No new interstitial. Do not move or edit retired pages. Do not touch `notes/repo-map.ts` or `PARKED.md`.
-- Home copy in `lib/marketing/home.ts`.
-- `__tests__/unit/lib/email/sync.test.ts` (known failure on main).
+- The `openai` npm package, if anything outside this slice still imports it.
+- Parked platform: `v1/chat/completions`, chat conversations/actions, mlf/knowledge embeddings, `ai/plan/week`, `ops/propose`, semantic-cache, workflows/search, demo/scenario-packs, admin model lists, the super-admin OpenAI fallback toggle.
+- `.codex/`, `AGENTS.md` title.
+- Brand, board, home, nav, `/letter`. Cursor is building the project board; do not touch it.
+- Changing Vercel env vars. List what Tom must add or can remove after merge.
 - Merge to `main`, force-push, or production promote. Tom merges.
 
 ## Dest
@@ -30,12 +31,14 @@ Close the remaining information-architecture holes on current main (`e1daf6f` an
 
 ## First slice (this PR)
 
-This spec. All four items and the checks, starting from current `origin/main` at or after `e1daf6f`.
+Live `/ask` off OpenAI (Grok default, Claude fallback, no direct key). Provider-type defaults off OpenAI. Live public copy only if it names OpenAI as a provider. Inventory of remaining OpenAI references in the PR body.
 
 ## Done when
 
-- The build seed does not contain “This page is the campus”. The compute page plain string does. `/compute` still shows that sentence.
-- A power-record page links to `/power`. `/compute` links to `/build`. `/privacy` and `/terms` show Build / Capital / Consent / Power and do not show Sign in or Pricing.
-- Sitemap tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Route set unchanged.
-- Lint, typecheck, and build pass. Public-PII test passes. Known email-sync unit failure unchanged.
-- PR is open. CI is green. Vercel preview READY. Screenshots of home, `/power`, `/brief`, `/compute`, `/privacy` at desktop and with the mobile nav sheet open.
+- `/ask` has no OpenAI-direct path, no `OPENAI_API_KEY` dependency, and no OpenAI model in the default or gateway fallback order.
+- Default model is a current non-OpenAI Gateway id; `ASK_MODEL` can override it.
+- Unconfigured Gateway still returns 503.
+- `DEFAULT_AI_SETTINGS` does not default to OpenAI or `gpt-*`.
+- Live public pages do not name OpenAI or Azure OpenAI as a provider. `_retired` hits are listed, not edited.
+- Unit test covers the `/ask` ban. Lint, typecheck, and build pass. Known main test failures are unchanged.
+- PR is open with the remaining-OpenAI inventory and the env-var list. CI is green.
