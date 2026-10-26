@@ -94,4 +94,17 @@ describe("repo map", () => {
     expect(readme).not.toMatch(/commerce infrastructure/i);
     expect(readme).not.toMatch(/retail brands/i);
   });
+
+  it("marks parked roots and spec roots", () => {
+    for (const root of PARKED_ROOTS) {
+      const body = readFileSync(resolve(ROOT, root, "PARKED.md"), "utf8");
+      expect(body, root).toContain("Parked. Not the public site.");
+      expect(body, root).toContain("notes/repo-map.ts");
+    }
+    for (const root of SPEC_ROOTS) {
+      const body = readFileSync(resolve(ROOT, root, "SPEC.md"), "utf8");
+      expect(body, root).toContain("Spec. Not the public site.");
+      expect(body, root).toContain("docs/spec/");
+    }
+  });
 });
