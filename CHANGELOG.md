@@ -2,9 +2,13 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
-## 0.5.16 — 2026-10-26 — Desk instrument polish (onto the board)
+## 0.5.17 — 2026-10-26 — Desk instrument polish (onto the board)
 
 SVG graphs were hard to read: gate labels stacked on each other, family names clipped off the price ladder, and `.draw` (pathLength 1 + dasharray 1) painted intended dashes solid after the animation. Labels wrap and stagger on the current board drawings; compact clock shows dates only; reported HQ path stays dashed. No lib/desk figures changed. Main’s InstDetail / click-to-select board, copy, and nav stay.
+
+## 0.5.16 — 2026-10-26 — /letter: remove home street address
+
+Tom Lane’s home street address is off the public `/letter` page (From block, opening line, signature). City stays. Intro note says the letter is unchanged except that the home street address has been removed. A unit test fails if public marketing copy ships “Water Street”, “281 Water”, “685-8584”, “6858584”, or “auth@”. Preview only; Tom merges.
 
 ## 0.5.15 — 2026-10-26 — Google favicon: never-crawled 48px PNG first
 
