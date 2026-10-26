@@ -8,6 +8,8 @@ import {
   type LadderFamily,
 } from "@/lib/desk";
 import { InstDetail, instHit } from "./InstDetail";
+import { staggerByX } from "./layout";
+import { SvgLines } from "./svg";
 
 /**
  * I3 — the Price Ladder. One ¢/kWh axis, each price family on its own row.
@@ -18,9 +20,10 @@ import { InstDetail, instHit } from "./InstDetail";
 const W = 1000;
 const LEFT = 168;
 const RIGHT = 28;
-const ROW_H = 48;
+const ROW_H = 56;
 const TOP = 28;
 const MAX_C = 18;
+const AXIS_W = W - LEFT - RIGHT;
 
 function toneClass(tone: LadderFamily["tone"]): string {
   switch (tone) {
@@ -42,8 +45,7 @@ function toneClass(tone: LadderFamily["tone"]): string {
 }
 
 function cx(cents: number): number {
-  const w = W - LEFT - RIGHT;
-  return LEFT + (Math.min(cents, MAX_C) / MAX_C) * w;
+  return LEFT + (Math.min(cents, MAX_C) / MAX_C) * AXIS_W;
 }
 
 export function PriceLadder() {
@@ -54,6 +56,7 @@ export function PriceLadder() {
     (p) => p.family === "reported" && p.cents !== null,
   ).sort((a, b) => (a.cents ?? 0) - (b.cents ?? 0));
   const ticks = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
+  const minSep = (2 / MAX_C) * AXIS_W;
 
   return (
     <div className="inst price-ladder">
@@ -68,7 +71,6 @@ export function PriceLadder() {
             industrial rate for retained power, which is not published.
           </desc>
 
-          {/* axis */}
           {ticks.map((t) => (
             <g key={t} transform={`translate(${cx(t)} 0)`}>
               <line y1={TOP - 10} y2={H - 30} className="hair-soft" />
@@ -81,20 +83,26 @@ export function PriceLadder() {
           {LADDER_FAMILIES.map((fam, i) => {
             const y = TOP + i * ROW_H + ROW_H / 2;
             const pts = LADDER_POINTS.filter((p) => p.family === fam.id);
+            const placed = pts.filter((p) => p.cents !== null);
+            const sides = staggerByX(
+              placed.map((p) => cx(p.cents!)),
+              minSep,
+            );
             const tone = toneClass(fam.tone);
             return (
               <g key={fam.id}>
                 <line x1={LEFT} x2={W - RIGHT} y1={y} y2={y} className="hair" />
-                <text
+                <SvgLines
+                  text={fam.short}
                   x={LEFT - 14}
-                  y={y + 4}
+                  y={y + 1}
+                  maxChars={14}
+                  lineHeight={12}
                   textAnchor="end"
                   className={
                     pts.some((p) => p.id === active) ? "lbl lbl-strong" : "lbl"
                   }
-                >
-                  {fam.short}
-                </text>
+                />
                 {fam.id === "reported" && reported.length > 1 ? (
                   <path
                     d={reported
@@ -103,10 +111,9 @@ export function PriceLadder() {
                       )
                       .join(" ")}
                     fill="none"
-                    className="stroke-amber draw"
+                    className="stroke-amber"
                     strokeWidth={1.5}
-                    strokeDasharray="3 4"
-                    pathLength={1}
+                    strokeDasharray="4 5"
                   />
                 ) : null}
                 {fam.id === "signed" ? (
@@ -130,9 +137,9 @@ export function PriceLadder() {
                     />
                   </g>
                 ) : null}
-                {pts
-                  .filter((p) => p.cents !== null)
-                  .map((p) => (
+                {placed.map((p, k) => {
+                  const above = sides[k] === "above";
+                  return (
                     <g
                       key={p.id}
                       transform={`translate(${cx(p.cents!)} ${y})`}
@@ -141,28 +148,24 @@ export function PriceLadder() {
                       <circle r={12} fill="transparent" />
                       <circle r={active === p.id ? 6 : 4} className={tone} />
                       {active === p.id ? (
-                        <>
-                          <circle
-                            r={9}
-                            fill="none"
-                            stroke="var(--ink)"
-                            strokeWidth={1.5}
-                          />
-                          <text
-                            x={p.cents! < 2 ? 10 : p.cents! > 16 ? -10 : 0}
-                            y={-16}
-                            textAnchor={
-                              p.cents! < 2 ? "start" : p.cents! > 16 ? "end" : "middle"
-                            }
-                            className="num"
-                            style={{ fontSize: 13 }}
-                          >
-                            {p.value}¢
-                          </text>
-                        </>
+                        <circle
+                          r={9}
+                          fill="none"
+                          stroke="var(--ink)"
+                          strokeWidth={1.5}
+                        />
                       ) : null}
+                      <text
+                        y={above ? -16 : 22}
+                        textAnchor="middle"
+                        className="num"
+                        style={{ fontSize: 12 }}
+                      >
+                        {p.value}¢
+                      </text>
                     </g>
-                  ))}
+                  );
+                })}
               </g>
             );
           })}
