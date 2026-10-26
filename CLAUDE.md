@@ -13,6 +13,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - **Package format**: `.opkg` — signed, content-addressed JSON containers
 
 ## Key Paths
+- `notes/repo-map.ts` — every tracked top-level path is `site`, `parked`, `spec`, `shared`, `record`, or `tooling`. A `PARKED.md` file means that tree is not the public site. Read the map before editing outside `app/(marketing)`, `components/marketing`, and `lib/desk`.
 - `docs/spec/` — The spec (identity, data package, agent portability)
 - `docs/reference/` — Migration guides, schema catalog
 - `docs/MANIFESTO.md` — The canonical manifesto

@@ -1,41 +1,31 @@
-# OpenPeople.ai
+# openpeople.ai
 
-AI-powered commerce infrastructure for ambitious retail brands.
+Public site for Open People. Production host: `www.openpeople.ai`. Vercel project: `open-people`.
 
-Built on the [open-people](https://github.com/OpenPeopleStudio/open-people) identity standard — every customer, agent, and storefront gets a portable, cryptographically verifiable identity.
+The live story is the Churchill River desk and a proposed Labrador campus, in feasibility. Open People leads that proposal. It is not a signed allocation.
 
----
+## Where to work
 
-## What it is
+The map is [`notes/repo-map.ts`](notes/repo-map.ts). It classifies every tracked top-level path as `site`, `parked`, `spec`, `shared`, `record`, or `tooling`.
 
-OpenPeople.ai is a multi-tenant platform that gives retail brands AI capabilities without giving up ownership of their data.
+Public pages live in `app/(marketing)/`. Shared chrome is `components/marketing/`. Numbers on the desk come from `lib/desk/`.
 
-**Core platform**
-- Multi-tenant storefronts with isolated data and custom domains
-- Encrypted vault — zero-knowledge file storage per tenant
-- AI assistant with persistent memory and context
-- Knowledge base, notes, and workflow management
+`PLAN.md` is the current public-copy slice. It is not a map of this repo.
 
-**AI operations layer**
-- Cost analytics — token usage, budgets, optimization
-- Drift detection — automated baseline comparison when model behavior shifts
-- Quality scoring — evaluate AI output across configurable dimensions
-- HITL queues — human review for high-risk decisions
-- Policy engine — rule-based content controls with preview tooling
+## What else is in this repo
 
-**Infrastructure add-ons**
-- Storage (Cloudflare R2) — zero-egress, CDN-backed
-- Email (Resend) — transactional with domain management
-- Notifications (Twilio) — SMS, in-app, push
+Trees marked `PARKED.md` are not the public site: `templates/`, `app/(platform)/`, `app/super-admin/`, `context/`, `infra/`, `.codex/`, `types/`.
 
-## Stack
+Trees marked `SPEC.md` are the identity standard, not the site: `packages/`, `sdk/`. The spec text is `docs/spec/`.
 
-Next.js 16 · Supabase · Cloudflare R2 · Resend · Tailwind · Vercel
+Do not delete parked or spec trees.
 
-## Identity
+## Commands
 
-Customer and agent identity is built on the [open-people spec](https://github.com/OpenPeopleStudio/open-people) — Ed25519 keypairs, `did:key:` DIDs, and signed portable data packages. Data belongs to the person, not the platform.
+```bash
+npm run lint
+npm run typecheck
+npm test
+```
 
----
-
-[openpeople.ai](https://openpeople.ai) · [marsbot.dev](https://marsbot.dev)
+Do not merge to `main` or promote a Vercel preview unless Tom says "ship it".

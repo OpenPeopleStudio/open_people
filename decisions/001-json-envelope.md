@@ -14,4 +14,4 @@ Use JSON as the envelope format for `.opkg` packages.
 - **Binary blobs**: Large binary data (images, model weights) is referenced by content hash, not embedded inline. This sidesteps JSON's base64 overhead problem.
 - **Canonical serialization**: We define canonical JSON as sorted keys + no whitespace + UTF-8 NFC normalization. This is well-understood and implementable in every language.
 
-See DEBATES.md "JSON vs binary for .opkg format" for the full deliberation.
+See notes/archive/debates.md "JSON vs binary for .opkg format" for the full deliberation.
