@@ -32,7 +32,7 @@ export default function SiteFooter() {
         <div>
           <div className="desk-brand">Open People</div>
           <p className="mt-4 text-sm leading-relaxed text-[var(--ink-2)]">
-            Open People is building a proposed 500 MW Labrador campus and a research campus, in
+            Open People is building a proposed 500 MW Labrador AI campus and a research campus, in
             feasibility. Mines and existing industry are real constraints.
           </p>
           <p className="desk-fact mt-4 text-[var(--ink-3)]">

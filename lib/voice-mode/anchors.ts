@@ -116,9 +116,9 @@ export const ENGAGE_QUEBEC_GATE = {
 
 export const ENGAGE_HERO_LEDE = {
   technical:
-    "Open People is asking that firm power this province keeps be used here, while the Churchill Falls / Gull Island DCIA is still a framework. The House endorsed it. Binding contracts are not signed. Mines and Labrador industry first. Open People leads a proposed 500 MW campus on that power; it is not a reserved block. Open People is not a DCIA party.",
+    "Open People is asking that firm power this province keeps be used here, while the Churchill Falls / Gull Island DCIA is still a framework. The House endorsed it. Binding contracts are not signed. Mines and Labrador industry first. Open People leads a proposed 500 MW AI campus on that power; it is not a reserved block. Open People is not a DCIA party.",
   plain:
-    "Open People is asking Newfoundland and Labrador to keep firm power in the province while the paper is still a framework. August’s paper and the September House vote are a political yes — not signed contracts. Mines and Labrador industry come first. We lead a proposed 500 MW campus; mines are a real constraint. Write your MHA, or write us.",
+    "Open People is asking Newfoundland and Labrador to keep firm power in the province while the paper is still a framework. August’s paper and the September House vote are a political yes — not signed contracts. Mines and Labrador industry come first. We lead a proposed 500 MW AI campus; mines are a real constraint. Write your MHA, or write us.",
 } as const;
 
 export const ENGAGE_CHECKS = [
