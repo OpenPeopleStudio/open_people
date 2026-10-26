@@ -929,7 +929,15 @@ export default function BriefPage() {
                     <Term k="innu-nation">Innu Nation</Term> wrote MHAs on 17 September urging a no
                     vote, and says the paper cuts its benefits by more than half. On 21 September the
                     Grand Chief said the Innu are ready to meet. No meeting is scheduled. They were
-                    never invited to the table. Partnership, royalty and Gull Island tariff path remain
+                    never invited to the table.{" "}
+                    <a
+                      href={DESK_SOURCES.vocmInnuContact.href}
+                      className="desk-link"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      — Grand Chief Ashini, Innu Nation (VOCM, 21 Sep 2026)
+                    </a>. Partnership, royalty and Gull Island tariff path remain
                     open.
                   </p>
                 }
@@ -1149,7 +1157,7 @@ export default function BriefPage() {
                 <p className="desk-takeaway">
                   Canada&apos;s Sovereign AI Compute Strategy seeks Canadian-owned, Canadian-controlled
                   projects with Indigenous participation. Open People leading a Labrador campus, with
-                  NL Hydro and Indigenous nations as proposed partners, fits that description. The
+                  NL Hydro, and partnership, if any, on terms each nation sets, fits that description. The
                   first intake closed in 2026. We found no Newfoundland and Labrador entry in the
                   public record, because there was no NL project to enter.
                 </p>
