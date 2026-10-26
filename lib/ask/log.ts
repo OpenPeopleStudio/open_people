@@ -7,6 +7,9 @@ type QuestionEntry = {
   kind: "question";
   question: string;
   covered: boolean;
+  provider?: string;
+  model?: string;
+  fallbackFired?: boolean;
   at: string;
 };
 
@@ -32,13 +35,22 @@ function appendAskLog(entry: QuestionEntry | FollowUpEntry) {
   }
 }
 
-export function logAskQuestion(input: { question: string; covered: boolean }) {
+export function logAskQuestion(input: {
+  question: string;
+  covered: boolean;
+  provider?: string;
+  model?: string;
+  fallbackFired?: boolean;
+}) {
   const entry: QuestionEntry = {
     kind: "question",
     question: clip(input.question),
     covered: input.covered,
     at: new Date().toISOString(),
   };
+  if (input.provider) entry.provider = input.provider;
+  if (input.model) entry.model = input.model;
+  if (input.fallbackFired !== undefined) entry.fallbackFired = input.fallbackFired;
   log.info(entry, "ask.question");
   appendAskLog(entry);
 }

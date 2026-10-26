@@ -1,41 +1,41 @@
-# PLAN — Desk IA fixes on the current board
+# PLAN — /ask: Gemini primary, OpenRouter Nemotron fallback
 
 ## Goal
 
-Close the remaining information-architecture holes on current main (`e1daf6f` and after). Home already leads with the company and the campus, and the header is already About, Build, Capital, Consent, Power. This slice takes the campus-only sentence off the build track, lets a record page return to its track, puts Privacy and Terms on the desk shell, and makes the sitemap agree with the board.
+Tom approved shipping PR #35 on Gemini with OpenRouter Nemotron as backup. This slice adds a one-shot cross-provider fallback when the primary fails before any text streams. Stay on `cursor/avoid-openai-ask-00d0`. No force-push. Never touch `main`.
 
 ## In
 
-- Item 1: `COMPUTE_HERO.plain` stops at the mines sentence. The two campus-only sentences stay on `/compute` only, as a compute-page plain string next to `COMPUTE_PAGE_TECHNICAL`. Home and the build row still render `COMPUTE_HERO.technical`.
-- Item 2: Optional parent link on `DeskPage` (kicker row). Power records pass Power → `/power`. `/compute` passes Build → `/build`. Existing cross-links stay.
-- Item 3: `/privacy` and `/terms` render through `DeskPage` / `SiteNav`. NavBar comes off those pages. Legal text unchanged.
-- Item 4: Sitemap priorities only. Tracks `/build` `/capital` `/consent` `/power` at 0.9. Record pages `/brief` `/tracker` `/engage` `/industries` `/costs` `/letter` at 0.8. `/compute` stays 0.4. `/about` stays 0.8. Same set of routes.
-- Checks from the spec: unit (build seed vs compute-page plain), e2e (parent links + privacy desk nav). Lint, typecheck, build, `npm test`. Public-PII test stays green.
-- Brand: sentence case, paper `#f3f3ef`, ink `#0e1014`, orange `#f2501f`, orange text on paper `#c23a12`, Schibsted Grotesk and DM Mono. Consent-first: claim no partnerships. No new figures or copy beyond what this spec moves.
+- `ASK_FALLBACK_PROVIDER` (`google` | `openrouter` | `gateway`) and `ASK_FALLBACK_MODEL`.
+- Production values Tom will set: `ASK_PROVIDER=google`, `ASK_MODEL=gemini-flash-lite-latest`, `ASK_FALLBACK_PROVIDER=openrouter`, `ASK_FALLBACK_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free`.
+- If the primary errors before any text (503, 429, auth/missing key, ~12s to first token), retry once on the fallback. If both fail, the existing snag copy plus the follow-up form.
+- When neither `ASK_FALLBACK_*` is set, keep current behavior.
+- Reject any `openai/` model id on every slot.
+- Log which provider/model answered and whether fallback fired. No keys. Question text stays as `log.ts` already does.
+- System prompt: do not introduce as an AI assistant; answer directly.
+- Unit tests for fallback selection and primary-fails-then-fallback (mock providers).
+- Stamp `0.5.21`. Known main failures stay: email sync, sitemap `/compute`.
 
 ## Out
 
-- Header: About, Build, Capital, Consent, Power.
-- Power’s job line in `lib/board/tracks.ts`. Record labels: Tracker, Industries, Costs, Brief, Letter, Engage.
-- `/coalition` unlisted, noindex, unlinked.
-- Retired product routes and their redirects. No new interstitial. Do not move or edit retired pages. Do not touch `notes/repo-map.ts` or `PARKED.md`.
-- Home copy in `lib/marketing/home.ts`.
-- `__tests__/unit/lib/email/sync.test.ts` (known failure on main).
-- Merge to `main`, force-push, or production promote. Tom merges.
+- Changing Vercel env vars from this agent. List what Tom must set.
+- OpenAI models, parked SaaS OpenAI clients, brand, board, home, nav, `/letter`.
+- Merge to `main`, force-push, or production promote.
 
 ## Dest
 
-- This repo’s marketing site. Vercel project `open-people`. Production host `www.openpeople.ai`.
-- Ship path: feature branch → PR → Vercel preview. Do not promote the preview.
+- Live `/ask` on this repo. Vercel project `open-people`. Preview on PR #35.
 
-## First slice (this PR)
+## First slice (this PR add-on)
 
-This spec. All four items and the checks, starting from current `origin/main` at or after `e1daf6f`.
+Cross-provider fallback for `/ask`. Gemini first, Nemotron if the primary never emits text. Prompt no longer opens as an AI assistant.
 
 ## Done when
 
-- The build seed does not contain “This page is the campus”. The compute page plain string does. `/compute` still shows that sentence.
-- A power-record page links to `/power`. `/compute` links to `/build`. `/privacy` and `/terms` show Build / Capital / Consent / Power and do not show Sign in or Pricing.
-- Sitemap tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Route set unchanged.
-- Lint, typecheck, and build pass. Public-PII test passes. Known email-sync unit failure unchanged.
-- PR is open. CI is green. Vercel preview READY. Screenshots of home, `/power`, `/brief`, `/compute`, `/privacy` at desktop and with the mobile nav sheet open.
+- Fallback is env-gated and off when unset.
+- Primary pre-text failure retries once on the fallback. Double failure snags.
+- `openai/` is rejected on primary and fallback.
+- Logs name provider, model, and `fallbackFired`.
+- Unit tests cover selection and the mock fallback path.
+- Lint, typecheck, and build pass. Known main test failures unchanged.
+- Head commit is on this branch. CI status reported.

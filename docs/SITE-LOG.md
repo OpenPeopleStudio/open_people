@@ -2,6 +2,18 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — /ask Gemini with OpenRouter Nemotron backup
+
+Tom approved shipping `/ask` on Gemini, with OpenRouter Nemotron as the backup. If Gemini errors or sits silent before any text (~12s), one retry goes to Nemotron. Both fail: same snag copy and the follow-up form. The model is told not to introduce itself as an AI assistant. Preview only; Tom sets the four `ASK_*` env vars and merges.
+
+## 2026-10-26 — /ask provider picker for $0 tests
+
+Tom wants to try free non-OpenAI backends on `/ask`. `ASK_PROVIDER` selects Gateway (default), Google Gemini flash, or OpenRouter `:free`. Missing keys do not leak; the page still offers the follow-up form. A one-line note says questions may be processed by a third-party AI provider. Preview only; Tom merges.
+
+## 2026-10-26 — /ask leaves OpenAI
+
+Tom: avoid OpenAI wherever an alternative exists. First slice is live `/ask` only. The OpenAI-direct path is gone. Chat goes through AI Gateway on Grok (`spacexai/grok-4.7`), with Claude as the Gateway fallback. An OpenAI key alone no longer counts as configured. Live public pages did not name OpenAI as a provider; retired marketing pages still do and were left. Brand and board copy untouched. Preview only; Tom merges.
+
 ## 2026-10-26 — Desk IA fixes
 
 Four remaining holes on current main. The build seed no longer says “This page is the campus, and only that”; that sentence stays on `/compute`. Record pages (tracker, industries, costs, brief, letter, engage) carry a Power parent link to `/power`. `/compute` carries a Build parent link to `/build`. Privacy and Terms use DeskPage / SiteNav instead of the parked SaaS NavBar. Sitemap: tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Header, home copy, `/coalition`, and retired routes unchanged. Preview only; Tom merges.

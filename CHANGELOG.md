@@ -2,6 +2,18 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.21 — 2026-10-26 — /ask: Gemini primary, OpenRouter Nemotron fallback
+
+Cross-provider fallback for live `/ask`. `ASK_FALLBACK_PROVIDER` (`google` | `openrouter` | `gateway`) and `ASK_FALLBACK_MODEL` retry once when the primary errors before any text (503, 429, missing key, ~12s to first token). Unset keeps current single-provider behavior. OpenAI model ids stay rejected on every slot. Logs name the answering provider/model and `fallbackFired`. The system prompt answers directly and does not introduce itself as an AI assistant. Production values Tom will set: Gemini flash-lite with OpenRouter Nemotron `:free` as backup. Preview only; Tom merges.
+
+## 0.5.20 — 2026-10-26 — /ask: env-selectable $0 providers
+
+`ASK_PROVIDER` selects the live `/ask` backend: unset stays AI Gateway (Grok, Claude fallback). `google` uses Gemini flash via `GOOGLE_GENERATIVE_AI_API_KEY`. `openrouter` uses a `:free` non-OpenAI model via `OPENROUTER_API_KEY`. `ASK_MODEL` still overrides. OpenAI model ids are rejected. Missing Google/OpenRouter keys fail closed to the snag copy. `/ask` notes that questions may be processed by a third-party AI provider. Preview only; Tom merges.
+
+## 0.5.19 — 2026-10-26 — /ask: Grok via Gateway, no OpenAI-direct
+
+Live `/ask` no longer calls OpenAI directly and no longer treats `OPENAI_API_KEY` as configured. Default model is `spacexai/grok-4.7` (xAI on AI Gateway), override with `ASK_MODEL`. Fallback is `anthropic/claude-sonnet-5.5`. Gateway options list xAI then Anthropic only. Unconfigured Gateway still 503s. Provider-type defaults no longer start on OpenAI. Live public copy did not name OpenAI as a provider. Preview only; Tom merges.
+
 ## 0.5.18 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
 
 Campus-only sentence leaves the build seed and stays on `/compute`. Power records link back to `/power`; `/compute` links back to `/build`. Privacy and Terms render through DeskPage / SiteNav. Sitemap ranks tracks at 0.9 and record pages at 0.8; `/compute` stays 0.4. Preview only; Tom merges.

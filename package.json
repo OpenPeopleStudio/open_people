@@ -33,12 +33,14 @@
     "jobs:worker": "tsx scripts/jobs-worker.ts"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.106",
     "@ai-sdk/react": "^4.0.152",
     "@aws-sdk/client-kms": "^3.972.0",
     "@aws-sdk/client-s3": "^3.971.0",
     "@aws-sdk/s3-request-presigner": "^3.971.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/microsoft-graph-types": "^2.43.1",
+    "@openrouter/ai-sdk-provider": "^3.1.0",
     "@sentry/nextjs": "^10.36.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.90.1",
