@@ -40,7 +40,8 @@ describe("search and agent visibility", () => {
     expect(robots).toMatch(/ClaudeBot/);
     expect(robots).not.toMatch(/disallow/i);
     const sitemap = source("app/sitemap.ts");
-    expect(sitemap).toMatch(/path: "\/compute", priority: 0\.85/);
+    expect(sitemap).toMatch(/path: "\/compute", priority: 0\.4/);
+    expect(sitemap).toMatch(/path: "\/privacy", priority: 0\.3/);
     expect(sitemap).toMatch(/path: "\/", priority: 1/);
   });
 });

@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.19 — 2026-10-26 — Sitemap: /compute stays at 0.4
+
+Search commit raised `/compute` to 0.85. The board rank puts it back at 0.4, under the four tracks (0.9) and the record pages (0.8). Home stays 1. `/about` stays 0.8. Route set unchanged. Agents may still crawl. Preview only; Tom merges.
+
 ## 0.5.18 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
 
 Campus-only sentence leaves the build seed and stays on `/compute`. Power records link back to `/power`; `/compute` links back to `/build`. Privacy and Terms render through DeskPage / SiteNav. Sitemap ranks tracks at 0.9 and record pages at 0.8; `/compute` stays 0.4. Preview only; Tom merges.

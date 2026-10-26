@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — Sitemap: /compute stays at 0.4
+
+The desk IA slice ranked `/compute` at 0.4. A later search commit raised that priority to 0.85 and left the sitemap unit test expecting 0.4. This note puts the rank back: tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8, home 1. The campus-only sentence stays on `/compute`. Record parent links, Privacy, Terms, the header, and home copy are unchanged. Preview only; Tom merges.
+
 ## 2026-10-26 — Desk IA fixes
 
 Four remaining holes on current main. The build seed no longer says “This page is the campus, and only that”; that sentence stays on `/compute`. Record pages (tracker, industries, costs, brief, letter, engage) carry a Power parent link to `/power`. `/compute` carries a Build parent link to `/build`. Privacy and Terms use DeskPage / SiteNav instead of the parked SaaS NavBar. Sitemap: tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Header, home copy, `/coalition`, and retired routes unchanged. Preview only; Tom merges.
