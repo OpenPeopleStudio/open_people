@@ -165,6 +165,16 @@ Use the repo’s standard commands:
 - `npm run dev` starts the app.
 - After seeding, the internal workspace is available at `mars.localhost:3000/admin`.
 
+## Cursor Cloud specific instructions
+
+- Install with `npm ci`. CI pins Node 20; Node 22 on the default image is fine. There is no `engines` field.
+- The public Churchill River desk (`npm run dev`) is the app to boot. Middleware always constructs a Supabase client, so `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` must be set or every page returns 500. The published Supabase local demo URL `http://127.0.0.1:54321` and its public anon key are enough for the marketing pages: auth calls fail closed and the desk still renders. Hosted Supabase, R2, Resend, and Twilio are only needed for tenant admin, storage, and messaging.
+- `npm run build` also needs non-empty `OPENAI_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` placeholders. Several API modules construct OpenAI and Supabase admin clients at import time, and page-data collection throws if those variables are empty. The local demo service-role JWT is enough to compile; it does not provide a database.
+- `npm run typecheck` needs `NODE_OPTIONS=--max-old-space-size=8192`. The default V8 heap (about 2 GB) runs out of memory on this repo.
+- Desk browser checks, with the dev server already up: `PW_CHROMIUM=/usr/local/bin/google-chrome npx playwright test __tests__/e2e/desk.spec.ts --project=chromium`.
+- `npm run doctor`, `db:migrate`, and `db:seed` expect a linked Supabase project. They are not part of booting the public desk.
+- `npm test` currently has one pre-existing failure in `__tests__/unit/lib/email/sync.test.ts` (UID fallback expects `imap-202` and gets `imap-undefined-202`). That failure is in product code, not the environment.
+
 ## Review guidelines (for Codex review + PRs)
 
 - Verify tenant isolation assumptions in every change.
