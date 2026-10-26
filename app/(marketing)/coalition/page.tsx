@@ -28,7 +28,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Coalition brief — keep firm power in NL",
   description:
-    "Partner-confidential coalition for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador: mines, towns, Indigenous partners, infrastructure. Open People leads the proposed Labrador campus as proponent.",
+    "Partner-confidential coalition for keeping Churchill Falls / Gull Island firm power in Newfoundland and Labrador: mines, towns, infrastructure. Open People leads the proposed Labrador campus as proponent.",
   path: "/coalition",
   type: "article",
   robots: { index: false, follow: false },
@@ -243,7 +243,7 @@ const SEQUENCE = [
   "Innu partnership before large Labrador builds.",
   "Mines and towns served first.",
   "Leftover firm power eligible for named uses, including compute if written.",
-  "Open People leads the proposed campus. Consent first. Capital as partner.",
+  "Open People leads the proposed campus. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital as partner.",
 ];
 
 const PHASES = [
@@ -297,9 +297,9 @@ const IN_FLIGHT: { pill: string; tone: "plasma" | "steel" | "amber"; text: strin
 
 const ASKS = [
   {
-    who: "Indigenous partner",
-    lead: "Equity from day one, not consultation at the end.",
-    body: "Nothing large in Labrador proceeds without Innu Nation. Partnership, royalty, and the Gull Island tariff path are unresolved after the vote. Innu Nation says the paper cuts its benefits by more than half. As of 21 September no meeting with the Premier is scheduled. We want the conversation with the commercial arm first, structured as partnership, and we take direction on sequencing from you. We do not speak for Innu Nation.",
+    who: "Indigenous nations",
+    lead: "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.",
+    body: "ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. Innu Nation's partnership, royalty, and the Gull Island tariff path on the DCIA file are unresolved after the vote. Innu Nation says the paper cuts its benefits by more than half. As of 21 September no meeting with the Premier is scheduled. We do not speak for any nation.",
   },
   {
     who: "Mining / resources / towns",
@@ -351,8 +351,8 @@ const RULES = [
     d: "Critical minerals are first in line and we are not trying to displace them. Shared transmission, shared community benefits.",
   },
   {
-    t: "Indigenous engagement is first-class.",
-    d: "Not a consultation footnote appended to a finished plan.",
+    t: "Partnership, if any, will be on terms each nation sets.",
+    d: "No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide.",
   },
   {
     t: "Hospitality for the coalition, not for officials.",
@@ -410,9 +410,9 @@ export default function CoalitionPage() {
       meta={
         <div className="grid gap-4">
           <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
-            Open People leads the proposed Labrador campus from St. John&apos;s as proponent. NL
-            Hydro, Indigenous nations (consent first), and capital are proposed partners. Not a DCIA
-            party. Proposed, in feasibility.
+            Open People leads the proposed Labrador campus from St. John&apos;s as proponent.
+            Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.
+            Capital is unnamed here. Not a DCIA party. Proposed, in feasibility.
           </p>
           <p className="desk-verified">
             <span>
@@ -479,7 +479,7 @@ export default function CoalitionPage() {
           },
           {
             anchor: "roles",
-            text: "Open People leads the proposed campus. Partners: NL Hydro, Indigenous nations (consent first), and capital.",
+            text: "Open People leads the proposed campus. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here.",
           },
         ],
       }}
@@ -840,7 +840,7 @@ export default function CoalitionPage() {
           <>
             <p>
               The coalition is assembled around keeping firm power in Newfoundland and Labrador: for
-              operating mines, towns, Indigenous partners, and other industrial load that lives here.
+              operating mines, towns, Indigenous nations, and other industrial load that lives here.
               Open People also leads a proposed Labrador campus; mines remain a real constraint. No
               signed offtake, reserved block, or FID.
             </p>
@@ -980,14 +980,14 @@ export default function CoalitionPage() {
         <h3 className="desk-h3 mt-12">Two vehicles, still hypothetical</h3>
         <p className="desk-body mt-4">
           <strong className="font-semibold text-[var(--ink)]">Open People</strong> is the operating
-          company and the proponent: government relations, evidence, and the proposed campus. NL
-          Hydro, Indigenous nations (consent first), and capital are proposed partners. Nothing is
-          signed. No contracts in hand.
+          company and the proponent: government relations, evidence, and the proposed campus.
+          Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.
+          Capital is unnamed here. Nothing is signed. No contracts in hand.
         </p>
         <p className="desk-body mt-4">
           <strong className="font-semibold text-[var(--ink)]">LabradorCo</strong>, a separate
-          development vehicle with incorporation pending, would be a clean legal surface for Crown,
-          Innu, and infrastructure partners to take equity in, without entangling the operating
+          development vehicle with incorporation pending, would be a clean legal surface for Crown
+          and infrastructure partners to take equity in, without entangling the operating
           company. It is not formed, has no offtake, and has no reserved megawatts. If it is ever
           used, incentives on a facility would be promote and carry, not construction margin.
         </p>
@@ -1277,9 +1277,9 @@ export default function CoalitionPage() {
         intro={
           <p>
             We are not raising from you in this conversation. The coalition is mines, towns,
-            Indigenous partners, infrastructure, and whoever would actually use in-province power. A
-            partner list makes the provincial ask credible. Open People leads the proposed campus as
-            proponent; nothing is signed.
+            infrastructure, and whoever would actually use in-province power. Partnership, if any,
+            will be on terms each nation sets. No nation has been asked about this project. Open People leads the
+            proposed campus as proponent; nothing is signed.
           </p>
         }
       >

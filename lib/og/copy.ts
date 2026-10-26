@@ -41,13 +41,14 @@ export const HOME_DESCRIPTION = HOME_META_DESCRIPTION;
 /** Document / og / twitter title for /brief. Template adds " · Open People". */
 export const BRIEF_TITLE = "Keep the power here: the Labrador case";
 /**
- * Search snippet for /brief. Matched to page body: hydro-dominated / green /
+ * Search snippet for /brief. Matched to page body: hydro-dominated /
  * cleanest large power; campus proposed, in feasibility; first facility kept
- * deliberately small; NL Hydro a proposed partner, not a reserved block.
- * Does not name a nation, quote 5,428 MW, or imply that plant is for sale.
+ * deliberately small; not a reserved block. Does not name a nation, quote
+ * 5,428 MW, or imply that plant is for sale. Phase 1 (written request /
+ * non-firm pilot) stays on the page, not in this snippet.
  */
 export const BRIEF_DESCRIPTION =
-  "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, with NL Hydro as a proposed partner, not a reserved block.";
+  "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, not a reserved block.";
 
 export const DESK_OG = {
   home: {

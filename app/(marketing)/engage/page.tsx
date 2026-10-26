@@ -180,7 +180,7 @@ export default function EngagePage() {
       }
       meta={
         <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
-          Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.
+          Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility.
           We are not a party to the Churchill Falls agreement. Mines and existing industry are real
           constraints. If you want in-province use kept in writing, this is the page.
         </p>

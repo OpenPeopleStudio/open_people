@@ -21,7 +21,7 @@ describe("/brief search metadata", () => {
   it("uses the locked title and a description that does not name a nation or 5,428 MW", () => {
     expect(BRIEF_TITLE).toBe("Keep the power here: the Labrador case");
     expect(BRIEF_DESCRIPTION).toBe(
-      "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, with NL Hydro as a proposed partner, not a reserved block.",
+      "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, not a reserved block.",
     );
     expect(BRIEF_TITLE).not.toMatch(NATION);
     expect(BRIEF_DESCRIPTION).not.toMatch(NATION);
@@ -53,10 +53,9 @@ describe("/brief search metadata", () => {
     expect(brief).not.toMatch(/ogDescription/);
     expect(brief).toMatch(/hydro-dominated/);
     expect(brief).toMatch(/cleanest large power systems/);
-    expect(brief).toMatch(/firm green power/);
     expect(brief).toMatch(/in feasibility/);
     expect(brief).toMatch(/deliberately small/);
-    expect(brief).toMatch(/NL Hydro, as a proposed partner/);
+    expect(brief).toMatch(/No megawatts are reserved/);
     expect(brief).toMatch(/not a reserved block/);
   });
 });
