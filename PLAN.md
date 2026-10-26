@@ -1,41 +1,45 @@
-# PLAN — Desk IA fixes on the current board
+# PLAN — Vercel Web Analytics on the public site
 
 ## Goal
 
-Close the remaining information-architecture holes on current main (`e1daf6f` and after). Home already leads with the company and the campus, and the header is already About, Build, Capital, Consent, Power. This slice takes the campus-only sentence off the build track, lets a record page return to its track, puts Privacy and Terms on the desk shell, and makes the sitemap agree with the board.
+Add Vercel Web Analytics to openpeople.ai so we can see aggregate traffic. No Speed Insights. No extra trackers. No keys. No PII in custom events.
 
 ## In
 
-- Item 1: `COMPUTE_HERO.plain` stops at the mines sentence. The two campus-only sentences stay on `/compute` only, as a compute-page plain string next to `COMPUTE_PAGE_TECHNICAL`. Home and the build row still render `COMPUTE_HERO.technical`.
-- Item 2: Optional parent link on `DeskPage` (kicker row). Power records pass Power → `/power`. `/compute` passes Build → `/build`. Existing cross-links stay.
-- Item 3: `/privacy` and `/terms` render through `DeskPage` / `SiteNav`. NavBar comes off those pages. Legal text unchanged.
-- Item 4: Sitemap priorities only. Tracks `/build` `/capital` `/consent` `/power` at 0.9. Record pages `/brief` `/tracker` `/engage` `/industries` `/costs` `/letter` at 0.8. `/compute` stays 0.4. `/about` stays 0.8. Same set of routes.
-- Checks from the spec: unit (build seed vs compute-page plain), e2e (parent links + privacy desk nav). Lint, typecheck, build, `npm test`. Public-PII test stays green.
-- Brand: sentence case, paper `#f3f3ef`, ink `#0e1014`, orange `#f2501f`, orange text on paper `#c23a12`, Schibsted Grotesk and DM Mono. Consent-first: claim no partnerships. No new figures or copy beyond what this spec moves.
+- Install `@vercel/analytics`. Render `<Analytics />` from `@vercel/analytics/next` once in `app/layout.tsx`.
+- Custom `track()` events, event name only, no free text or PII:
+  - `/ask` question submitted
+  - `/ask` follow-up form submitted (after a successful send)
+  - contact form submitted (mailto send on `/contact` and the leftover contact form)
+- `/privacy` states, in short sentence-case words, that the site uses Vercel Web Analytics, which is cookieless and collects aggregate page views, referrers, country and device, not personal identity. Stay inside Vercel’s published privacy page. Do not claim cookies we do not set, and do not claim we collect nothing.
+- Drop the `/ask` line “this page has no analytics trackers.”
+- Bump `VERSION` to 0.5.19 (next patch after main’s 0.5.18). Trio: VERSION + CHANGELOG.md + ACTIONS.
+- Checks: layout mounts Analytics once and not Speed Insights; custom events carry no question text, email, or name; public-PII test stays green; e2e `/ask` privacy copy. Lint, typecheck, build, `npm test` except the two known failures on main.
 
 ## Out
 
-- Header: About, Build, Capital, Consent, Power.
-- Power’s job line in `lib/board/tracks.ts`. Record labels: Tracker, Industries, Costs, Brief, Letter, Engage.
-- `/coalition` unlisted, noindex, unlinked.
-- Retired product routes and their redirects. No new interstitial. Do not move or edit retired pages. Do not touch `notes/repo-map.ts` or `PARKED.md`.
-- Home copy in `lib/marketing/home.ts`.
+- `@vercel/speed-insights`, ads pixels, and any other tracker.
+- Env vars and API keys. Web Analytics does not need them in the app.
+- `/ask` provider code (`lib/ask/*`, `app/api/ask/*`, PR #35).
+- Project-board pages (`/build`, `/capital`, `/consent`, `/power`) and `lib/board/*`.
+- Sitemap ranks (`__tests__/unit/app/sitemap.test.ts` `/compute` priority stays a known failure).
 - `__tests__/unit/lib/email/sync.test.ts` (known failure on main).
 - Merge to `main`, force-push, or production promote. Tom merges.
 
 ## Dest
 
 - This repo’s marketing site. Vercel project `open-people`. Production host `www.openpeople.ai`.
-- Ship path: feature branch → PR → Vercel preview. Do not promote the preview.
+- Ship path: feature branch → PR → Vercel preview. Enable Web Analytics in the Vercel project dashboard if it is not already on. Do not promote the preview.
 
 ## First slice (this PR)
 
-This spec. All four items and the checks, starting from current `origin/main` at or after `e1daf6f`.
+This spec. Package, root layout, three named events, privacy copy, version bump. Start from current `origin/main` at `4521c97` (0.5.18).
 
 ## Done when
 
-- The build seed does not contain “This page is the campus”. The compute page plain string does. `/compute` still shows that sentence.
-- A power-record page links to `/power`. `/compute` links to `/build`. `/privacy` and `/terms` show Build / Capital / Consent / Power and do not show Sign in or Pricing.
-- Sitemap tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Route set unchanged.
-- Lint, typecheck, and build pass. Public-PII test passes. Known email-sync unit failure unchanged.
-- PR is open. CI is green. Vercel preview READY. Screenshots of home, `/power`, `/brief`, `/compute`, `/privacy` at desktop and with the mobile nav sheet open.
+- Root layout renders `<Analytics />` from `@vercel/analytics/next` once. No Speed Insights.
+- `/ask` question submit fires an event name only. Follow-up success fires an event name only. Contact mailto / form fires an event name only. No question text, email, name, or message in props.
+- `/privacy` says the site uses Vercel Web Analytics, cookieless, aggregate page views, referrers, country and device, not personal identity.
+- `/ask` no longer claims it has no analytics trackers.
+- VERSION is 0.5.19. Lint and typecheck pass. Public-PII test passes. Known email-sync and sitemap `/compute` failures unchanged.
+- PR is open. CI is green except those two known unit failures. Vercel preview builds.
