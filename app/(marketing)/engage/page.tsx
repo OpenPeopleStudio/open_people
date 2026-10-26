@@ -163,6 +163,7 @@ const DOORS = [
 export default function EngagePage() {
   return (
     <DeskPage
+      parent={{ label: "Power", href: "/power" }}
       kicker="Open People · Get involved"
       title={
         <>

@@ -202,6 +202,65 @@
   letter-spacing: 0.7px;
 }
 
+.desk-parent {
+  color: var(--orange-text);
+  text-decoration: none;
+}
+
+.desk-parent:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.desk-legal {
+  max-width: 64ch;
+}
+
+.desk-legal h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  line-height: 1.272;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+  margin: 2rem 0 0.75rem;
+}
+
+.desk-legal h2:first-child {
+  margin-top: 0;
+}
+
+.desk-legal p,
+.desk-legal li {
+  font-size: 17px;
+  line-height: 27px;
+  color: var(--ink-2);
+}
+
+.desk-legal ul {
+  margin: 0.75rem 0 1.25rem 1.25rem;
+  list-style: disc;
+}
+
+.desk-legal li + li {
+  margin-top: 0.4rem;
+}
+
+.desk-legal a {
+  color: var(--orange-text);
+  text-decoration: none;
+}
+
+.desk-legal a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.desk-legal strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 .desk-fact {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;

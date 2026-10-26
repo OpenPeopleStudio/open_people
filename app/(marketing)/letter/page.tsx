@@ -83,6 +83,7 @@ function Pull({ children }: { children: React.ReactNode }) {
 export default function LetterPage() {
   return (
     <DeskPage
+      parent={{ label: "Power", href: "/power" }}
       kicker="Open People · Letter · 15 September 2026"
       title={
         <>
