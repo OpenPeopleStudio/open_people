@@ -59,6 +59,17 @@ export function layoutGateLabels(
   return slots;
 }
 
+/** Keep a centred label inside the viewBox. */
+export function clampLabelX(
+  x: number,
+  width: number,
+  pad = 36,
+): { x: number; anchor: LabelAnchor } {
+  if (x < pad) return { x: 8, anchor: "start" };
+  if (x > width - pad) return { x: width - 8, anchor: "end" };
+  return { x, anchor: "middle" };
+}
+
 /**
  * Place rung labels on a shared axis. Close neighbours take opposite
  * sides of the row so 6¢ and 7.4¢ do not sit on top of each other.

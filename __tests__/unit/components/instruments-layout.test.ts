@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { layoutGateLabels, staggerByX, wrapLabel } from "@/components/marketing/instruments/layout";
+import { clampLabelX, layoutGateLabels, staggerByX, wrapLabel } from "@/components/marketing/instruments/layout";
 
 describe("wrapLabel", () => {
   it("keeps a short phrase on one line", () => {
@@ -37,6 +37,14 @@ describe("layoutGateLabels", () => {
     expect(slots[6]).toMatchObject({ side: "above", anchor: "end" });
     const closeBelow = slots.filter((s, i) => s.side === "below" && s.tier === 0 && i < 4);
     expect(closeBelow.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe("clampLabelX", () => {
+  it("pins an edge label so it stays inside the viewBox", () => {
+    expect(clampLabelX(12, 400)).toEqual({ x: 8, anchor: "start" });
+    expect(clampLabelX(380, 400)).toEqual({ x: 392, anchor: "end" });
+    expect(clampLabelX(200, 400)).toEqual({ x: 200, anchor: "middle" });
   });
 });
 

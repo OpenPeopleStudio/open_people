@@ -72,10 +72,11 @@ export default function ComputePage() {
       ]}
     >
       <DeskSection id="rules" wide>
-        <div className="grid gap-4">
-          {COMPUTE_RULES.map((rule) => (
+        <div className="compute-rules">
+          {COMPUTE_RULES.map((rule, index) => (
             <section key={rule.title} className="desk-surface p-5 sm:p-6" data-rise>
-              <h2 className="desk-h3">{rule.title}</h2>
+              <p className="desk-kicker">{String(index + 1).padStart(2, "0")}</p>
+              <h2 className="desk-h3 mt-3">{rule.title}</h2>
               <Unfold
                 id={`rule-${rule.title.toLowerCase().replace(/[^a-z]+/g, "-")}`}
                 className="mt-3"

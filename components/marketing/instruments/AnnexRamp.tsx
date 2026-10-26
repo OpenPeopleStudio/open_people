@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import {
   ANNEX_B_NOTE,
   CF_UPGRADES_RAMP,
   DESK_SOURCES,
   GULL_RAMP,
 } from "@/lib/desk";
-import { InstDetail } from "./InstDetail";
+import { InstDetail, useInstSelect } from "./InstDetail";
 import { Figure } from "@/components/marketing/depth";
+import { InstFit } from "./svg";
 
 function yearLine(yr: number): string {
   const cf = CF_UPGRADES_RAMP.find((row) => row.year === yr);
@@ -27,7 +27,8 @@ function yearLine(yr: number): string {
  */
 export function AnnexRamp() {
   const years = Array.from({ length: 2043 - 2034 }, (_, i) => 2034 + i);
-  const [year, setYear] = useState(2036);
+  const { active, hit } = useInstSelect<string>("2036");
+  const year = Number(active);
   const W = 1000;
   const H = 260;
   const LEFT = 70;
@@ -40,7 +41,8 @@ export function AnnexRamp() {
 
   return (
     <div className="inst annex-ramp">
-      <div className="inst-scroll">
+      <InstFit
+        wide={
         <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Annex B preliminary ramp">
           <title id="ar-title">Annex B preliminary ramp</title>
           <desc id="ar-desc">
@@ -113,25 +115,17 @@ export function AnnexRamp() {
               GULL_RAMP.find((r) => r.year === yr) ??
               (yr > 2037 ? { year: yr, mw: 2700 } : null);
             return (
-              <g
-                key={yr}
-                role="button"
-                tabIndex={0}
-                aria-pressed={year === yr}
-                aria-label={String(yr)}
-                data-on={year === yr ? "true" : "false"}
-                className="inst-hit"
-                onClick={() => setYear(yr)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    setYear(yr);
-                  }
-                }}
-              >
-                <rect x={x} y={TOP} width={xw} height={H - TOP - 28} fill="transparent" />
+              <g key={yr} {...hit(String(yr), yearLine(yr))}>
+                <rect
+                  x={x}
+                  y={TOP}
+                  width={xw}
+                  height={H - TOP - 28}
+                  fill={year === yr ? "var(--surface-2)" : "transparent"}
+                />
                 {gi ? (
                   <rect
+                    className="bar-rise"
                     x={x + 4}
                     y={yy(gi.mw)}
                     width={xw / 2 - 6}
@@ -143,6 +137,7 @@ export function AnnexRamp() {
                 ) : null}
                 {cf ? (
                   <rect
+                    className="bar-rise"
                     x={x + xw / 2 + 2}
                     y={yy(cf.mw)}
                     width={xw / 2 - 6}
@@ -172,10 +167,9 @@ export function AnnexRamp() {
             preliminary · Annex B · subject to studies
           </text>
         </svg>
-        <span className="inst-scroll-hint" aria-hidden>
-          scroll sideways →
-        </span>
-      </div>
+        }
+        narrow={<NarrowAnnex active={active} hit={hit} />}
+      />
 
       <InstDetail kicker={String(year)} body={yearLine(year)} />
 
@@ -211,5 +205,43 @@ export function AnnexRamp() {
       </ul>
       <p className="inst-caption">{ANNEX_B_NOTE.plain}</p>
     </div>
+  );
+}
+
+function NarrowAnnex({
+  active,
+  hit,
+}: {
+  active: string;
+  hit: ReturnType<typeof useInstSelect<string>>["hit"];
+}) {
+  const years = Array.from({ length: 2043 - 2034 }, (_, i) => 2034 + i);
+  const row = 64;
+  const width = 400;
+  return (
+    <svg viewBox={`0 0 ${width} ${years.length * row + 8}`} role="group" aria-label="Annex B preliminary ramp">
+      <title>Annex B, one year per row</title>
+      {years.map((yr, index) => {
+        const y = 4 + index * row;
+        const cf = CF_UPGRADES_RAMP.find((item) => item.year === yr);
+        const listed = GULL_RAMP.find((item) => item.year === yr);
+        const gull = listed ?? (yr > 2037 ? { year: yr, mw: 2700 } : null);
+        const on = active === String(yr);
+        return (
+          <g key={yr} {...hit(String(yr), yearLine(yr))}>
+            <rect x={4} y={y} width={width - 8} height={row - 6} fill={on ? "var(--surface-2)" : "transparent"} />
+            <text x={16} y={y + 24} className="num" style={{ fontSize: 15 }}>
+              {yr}
+            </text>
+            <text x={84} y={y + 18} className="lbl-read">
+              {gull ? `Gull ${gull.mw.toLocaleString("en-CA")} MW` : "Gull not started"}
+            </text>
+            <text x={84} y={y + 40} className="lbl">
+              {cf ? `Upgrades ${cf.mw.toLocaleString("en-CA")} MW` : "Upgrades not started"}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }

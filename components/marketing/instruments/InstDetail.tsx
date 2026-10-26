@@ -1,6 +1,6 @@
 "use client";
 
-import type { KeyboardEvent } from "react";
+import { useState, type KeyboardEvent, type PointerEvent } from "react";
 import Link from "next/link";
 import { Figure } from "@/components/marketing/depth";
 import type { DeskSource } from "@/lib/desk";
@@ -39,6 +39,25 @@ export function instHit<T extends string>(
 }
 
 /**
+ * The part under the pointer, the keyboard, or the last tap stays selected.
+ * Mouse enter selects so the value updates without a second click, and it
+ * stays put when the pointer leaves — the sentence does not snap back.
+ */
+export function useInstSelect<T extends string>(initial: T) {
+  const [active, setActive] = useState(initial);
+  function hit(id: T, label: string) {
+    return {
+      ...instHit(id, label, active, setActive),
+      onPointerEnter: (event: PointerEvent) => {
+        if (event.pointerType === "mouse") setActive(id);
+      },
+      onFocus: () => setActive(id),
+    };
+  }
+  return { active, select: setActive, hit };
+}
+
+/**
  * The one sentence for the part of a diagram that is selected.
  * The number opens the source. The rest of the diagram stays a picture.
  */
@@ -57,11 +76,12 @@ export function InstDetail({
 }) {
   return (
     <div className="inst-detail" aria-live="polite">
+      <div key={kicker} className="inst-detail-live">
       <p className="inst-detail-kicker">{kicker}</p>
       <p className="inst-detail-body">{body}</p>
       {figure ? (
         <p className="inst-detail-fig">
-          <Figure {...figure} size="sm" />
+          <Figure {...figure} size="md" />
         </p>
       ) : null}
       {href ? (
@@ -71,6 +91,7 @@ export function InstDetail({
           </Link>
         </p>
       ) : null}
+      </div>
     </div>
   );
 }
