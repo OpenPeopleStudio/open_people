@@ -107,4 +107,20 @@ describe("repo map", () => {
       expect(body, root).toContain("docs/spec/");
     }
   });
+
+  it("files root notes under notes/", () => {
+    expect(existsSync(resolve(ROOT, "PLAN-ask-2026-10-22.md"))).toBe(false);
+    expect(existsSync(resolve(ROOT, "VISION.md"))).toBe(false);
+    expect(existsSync(resolve(ROOT, "DEBATES.md"))).toBe(false);
+    expect(existsSync(resolve(ROOT, "notes/2026-10-22-plan-ask.md"))).toBe(true);
+    expect(existsSync(resolve(ROOT, "notes/archive/vision.md"))).toBe(true);
+    expect(existsSync(resolve(ROOT, "notes/archive/debates.md"))).toBe(true);
+    expect(existsSync(resolve(ROOT, "notes/archive/personal-data-capture.plan.md"))).toBe(true);
+    const locks = readFileSync(resolve(ROOT, "docs/company/locks.md"), "utf8");
+    expect(locks).not.toContain("PLAN-ask-2026-10-22.md");
+    expect(locks).toContain("notes/2026-10-22-plan-ask.md");
+    const decision = readFileSync(resolve(ROOT, "decisions/001-json-envelope.md"), "utf8");
+    expect(decision).toContain("notes/archive/debates.md");
+    expect(decision).not.toContain("DEBATES.md");
+  });
 });

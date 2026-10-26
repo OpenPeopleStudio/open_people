@@ -84,7 +84,6 @@ export const SITE_PREFIXES = [
 
 export const REPO_MAP: readonly RepoEntry[] = [
   { path: ".codex", role: "parked", note: "Old org-run skills for the multi-tenant shell." },
-  { path: ".cursor", role: "tooling", note: "One tracked Cursor plan. Not site source." },
   { path: ".cspell.json", role: "tooling", note: "Spellcheck config." },
   { path: ".github", role: "tooling", note: "GitHub workflows and templates." },
   { path: ".gitignore", role: "tooling", note: "Ignore rules. Build output stays untracked." },
@@ -94,12 +93,9 @@ export const REPO_MAP: readonly RepoEntry[] = [
   { path: "AGENTS.md", role: "record", note: "Agent instructions. Stays at the repo root." },
   { path: "CHANGELOG.md", role: "record", note: "Version notes. Stays at the repo root with VERSION and ACTIONS." },
   { path: "CLAUDE.md", role: "record", note: "Project orientation. Stays at the repo root." },
-  { path: "DEBATES.md", role: "spec", note: "Resolved debates for the .opkg standard." },
-  { path: "PLAN-ask-2026-10-22.md", role: "record", note: "Landed /ask slice plan. Date is not first in the filename yet." },
   { path: "PLAN.md", role: "record", note: "Current public-copy slice. Not a map of the repo." },
   { path: "README.md", role: "record", note: "Repo front door." },
   { path: "VERSION", role: "record", note: "Public site version stamp. Currently 0.5.16." },
-  { path: "VISION.md", role: "spec", note: "Identity-standard vision. The public thesis is PLAN.md and lib/marketing/vision.ts." },
   { path: "__tests__", role: "tooling", note: "Vitest and Playwright tests." },
   { path: "app", role: "shared", note: "Public routes in app/(marketing), except retired SaaS pages. app/(platform), app/super-admin, app/notes, and most of app/api are the parked shell. Live API routes are app/api/ask and app/api/og." },
   { path: "components", role: "shared", note: "components/marketing is the public site. Other component folders are the parked shell. components/NavBar.tsx still serves /privacy and /terms." },
