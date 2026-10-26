@@ -10,10 +10,10 @@ export const VISION_HEADLINE_LEAD = "People who care for this land should";
 export const VISION_HEADLINE_EMPHASIS = "prosper from it";
 
 export const VISION_DESCRIPTION =
-  "Newfoundland and Labrador hydro as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.";
+  "Newfoundland and Labrador hydro as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility.";
 
 export const VISION_OG_ALT =
-  "Vision — Open People. Firm hydro in Newfoundland and Labrador as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador campus, in feasibility.";
+  "Vision — Open People. Firm hydro in Newfoundland and Labrador as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador AI campus, in feasibility.";
 
 /** Tom Lane’s four-sentence statement. Keep verbatim as the close. */
 export const VISION_SENTENCES = [
@@ -47,9 +47,9 @@ export const VISION_SECTIONS = [
     num: "02 — A proposed campus",
     title: "500 MW in Labrador. Proposed. In feasibility.",
     plain:
-      "Open People leads a proposed 500 MW AI data campus in Labrador. We lead it, in proposed partnership with NL Hydro, Indigenous nations — consent first — and capital. It is proposed, and it is in feasibility. It is not approved. It is not funded. It is not under construction. Mines and existing industry are real constraints on the same power.",
+      "Open People leads a proposed 500 MW AI data campus in Labrador. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. It is proposed, and it is in feasibility. It is not approved. It is not funded. It is not under construction. Mines and existing industry are real constraints on the same power.",
     technical:
-      "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador. Treat that figure as a proposal, not a reserved block and not a utility queue position. Proposed partners are categories, not signed names: NL Hydro, Indigenous nations (consent first), and capital. No customers are named. Status is only proposed / in feasibility. Mines remain a live constraint on Labrador firm power.",
+      "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador. Treat that figure as a proposal, not a reserved block and not a utility queue position. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. No customers are named. Status is only proposed / in feasibility. Mines remain a live constraint on Labrador firm power.",
   },
   {
     id: "research",

@@ -2,60 +2,50 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Dual } from "@/components/marketing/voice/Dual";
-import { VISION_CONTACT } from "@/lib/marketing/vision";
+import { TRACKS } from "@/lib/board";
+import { APPROACH_LEDE, APPROACH_SECTIONS } from "@/lib/marketing/approach";
+import { VISION_CONTACT, VISION_SECTIONS, VISION_SENTENCES } from "@/lib/marketing/vision";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility. Mines and existing industry are real constraints on the same power.",
+    "Open People is building a proposed 500 MW Labrador AI campus and a research campus, in feasibility. Tom Lane, St. John’s.",
 };
+
+const COMPANY_SECTIONS = VISION_SECTIONS.filter(
+  (section) => section.id === "thesis" || section.id === "near-term",
+);
 
 export default function AboutPage() {
   return (
     <DeskPage
-      kicker="About"
-      title="Open People leads a proposed Labrador campus."
-      lede={
-        <Dual
-          plain={
-            <p>
-              Open People is a Newfoundland and Labrador company. We lead a proposed 500 MW AI data
-              campus in Labrador, and a research campus beside it. Proposed. In feasibility. Not
-              approved, not funded, not under construction.
-            </p>
-          }
-          technical={
-            <p>
-              Open People is the proponent. Proposed partners are NL Hydro, Indigenous nations —
-              consent first — and capital. That structure is proposed, not signed. No customers are
-              named. Mines and existing industry are real constraints on Labrador firm power. The
-              public evidence on the Churchill Falls / Gull Island framework lives on the{" "}
-              <Link href="/brief" className="desk-link">
-                brief
-              </Link>
-              .
-            </p>
-          }
-        />
+      kicker="About · Open People"
+      title={
+        <>
+          People who care for this land should <em>prosper from it</em>.
+        </>
       }
+      lede={<p>{APPROACH_LEDE}</p>}
       verified={false}
       sections={[
-        { id: "stance", label: "The stance" },
-        { id: "facts", label: "Public facts only" },
+        { id: "who", label: "Who" },
+        ...COMPANY_SECTIONS.map((section) => ({ id: section.id, label: section.title })),
+        { id: "tracks", label: "Tracks" },
+        ...APPROACH_SECTIONS.map((section) => ({ id: section.id, label: section.title })),
+        { id: "close", label: "Close" },
       ]}
     >
-      <DeskSection id="stance">
+      <DeskSection id="who" num="01 — Who" title="Open People leads the proposed campus.">
         <div className="space-y-5 desk-body">
           <p>
-            We are not a party to the Churchill Falls / Gull Island framework. We are the
-            organisation proposing to <strong className="text-[var(--ink)]">lead the campus</strong>
-            : the 500 MW AI data campus and the research campus. Consent with Indigenous nations
-            comes first. Capital comes in as a partner, unnamed here. NL Hydro is a proposed
-            partner for power and site — not a signed allocation.
+            Open People is a Newfoundland and Labrador company. Tom Lane is the founder. We lead a
+            proposed 500 MW AI data campus in Labrador, and a research campus beside it. Partnership,
+            if any, will be on terms each nation sets. No nation has been asked about this project. Capital is
+            unnamed here. That structure is proposed, not signed.
           </p>
           <p>
-            Tom Lane is the founder. Write to{" "}
-            <a href={`mailto:${VISION_CONTACT}`} className="desk-link">
+            Write to{" "}
+            <a href={`mailto:${VISION_CONTACT}`} className="board-mail">
               {VISION_CONTACT}
             </a>
             .
@@ -63,24 +53,54 @@ export default function AboutPage() {
         </div>
       </DeskSection>
 
-      <DeskSection id="facts">
-        <div className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
-          <p className="desk-kicker">Proposed. In feasibility.</p>
-          <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
-            Energy figures on this site map to Canada Energy Regulator, NL Hydro, and Independent
-            Review Committee materials. We do not invent rates. The 500 MW figure is an Open People
-            proposal, not a reserved block. Claims that are unproven stay labelled as work, not
-            settled fact.
-          </p>
+      {COMPANY_SECTIONS.map((section) => (
+        <DeskSection key={section.id} id={section.id} num={section.num} title={section.title}>
+          <Dual
+            plain={<p className="desk-body">{section.plain}</p>}
+            technical={<p className="desk-body">{section.technical}</p>}
+          />
+        </DeskSection>
+      ))}
+
+      <DeskSection id="tracks" title="Come in on the work.">
+        <ul className="board-records">
+          {TRACKS.map((track) => (
+            <li key={track.id}>
+              <Link href={`/${track.id}`} className="board-record">
+                {track.label}
+              </Link>
+              <span className="desk-fact text-[var(--ink-3)]"> — {track.job}</span>
+            </li>
+          ))}
+        </ul>
+      </DeskSection>
+
+      {APPROACH_SECTIONS.map((section) => (
+        <DeskSection key={section.id} id={section.id} num={section.num} title={section.title}>
+          <ul className="desk-rule-list">
+            {section.body.map((line) => (
+              <li key={line}>
+                <span className="text-[15px] leading-relaxed text-[var(--ink-2)]">{line}</span>
+              </li>
+            ))}
+          </ul>
+        </DeskSection>
+      ))}
+
+      <DeskSection id="close" title="The close.">
+        <div className="desk-prose space-y-5">
+          {VISION_SENTENCES.map((sentence) => (
+            <p key={sentence} className="desk-body">
+              {sentence}
+            </p>
+          ))}
         </div>
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+        <p className="mt-12 font-mono text-[12px] leading-relaxed text-[var(--ink-3)]">Tom Lane</p>
+        <p className="mt-4">
+          <a href={`mailto:${VISION_CONTACT}`} className="board-mail">
             {VISION_CONTACT}
           </a>
-          <Link href="/vision" className="btn-secondary">
-            Vision
-          </Link>
-        </div>
+        </p>
       </DeskSection>
     </DeskPage>
   );

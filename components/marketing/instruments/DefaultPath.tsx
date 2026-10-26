@@ -1,244 +1,180 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
-import { Figure } from "@/components/marketing/depth";
-import { SvgLines } from "./svg";
+import { InstDetail, instHit } from "./InstDetail";
 
 /**
- * I7 — Default Path. What the Material Terms already decide if nobody writes
- * anything else: retained power used at home, or not used and bought by
- * Hydro-Québec, at a discount when there is no three-year notice.
+ * I7 — Default Path. The drawing is the fork. One branch is selected.
+ * The four Hydro-Québec options open from the unused branch.
  */
-export function DefaultPath() {
-  const W = 1100;
-  const H = 430;
-  const src = { x: 150, y: 200 };
-  const home = { x: 540, y: 80 };
-  const west = { x: 540, y: 300 };
-
-  const options = [
-    { label: "Synthetic export", cap: "up to 280 MW", note: "3-yr notice" },
-    { label: "CHPE-equivalent", cap: "up to 240 MW", note: "3-yr notice" },
-    { label: "NECEC-equivalent", cap: "up to 200 MW", note: "3-yr notice" },
-    {
-      label: "Discounted PPA price",
-      cap: "95% of PPA",
-      note: "no notice · HQ must buy",
+const FACTS = {
+  retain: {
+    kicker: "Retained power",
+    body: "Public framing: up to 2,350 MW from Churchill Falls and Gull Island. Announcement language, not a signed allocation.",
+    figure: {
+      value: "up to 2,350 MW",
+      status: "framework" as const,
+      sources: [DESK_SOURCES.govNlDcia, DESK_SOURCES.dciaHq],
+      lastVerified: DESK_VERIFIED,
+      note: "Gov NL 17 Aug 2026 announcement language. Not a signed industrial allocation, not a queue.",
     },
-  ];
-  const optionX = 850;
-  const optionW = 230;
-  const optionH = 50;
-  const optionGap = 56;
-  const optionTop = west.y - ((options.length - 1) * optionGap) / 2;
+  },
+  home: {
+    kicker: "Used here",
+    body: "Mines, towns, and Labrador industry. The definition of domestic load is not published.",
+  },
+  hq: {
+    kicker: "Not used",
+    body: "If it is not used at home, Hydro-Québec buys it. That branch is already written in the Material Terms. The home branch is not.",
+    href: "/tracker#unused-retain",
+    hrefLabel: "Tracker row →",
+  },
+  synthetic: {
+    kicker: "Synthetic export",
+    body: "Up to 280 MW, on three years' notice. One third New England, one third New York Astoria, one third Ontario PQAT, net of transmission.",
+    figure: {
+      value: "280 MW",
+      status: "framework" as const,
+      sources: [DESK_SOURCES.dciaHq],
+      lastVerified: DESK_VERIFIED,
+      note: "Synthetic export up to 280 MW (⅓ New England, ⅓ New York Astoria, ⅓ Ontario PQAT, net of transmission). Three years' prior notice.",
+    },
+  },
+  chpe: {
+    kicker: "CHPE-equivalent",
+    body: "Up to 240 MW, on three years' notice.",
+    figure: {
+      value: "240 MW",
+      status: "framework" as const,
+      sources: [DESK_SOURCES.dciaHq],
+      lastVerified: DESK_VERIFIED,
+      note: "CHPE-equivalent access up to 240 MW. Three years' prior notice.",
+    },
+  },
+  necec: {
+    kicker: "NECEC-equivalent",
+    body: "Up to 200 MW, on three years' notice.",
+    figure: {
+      value: "200 MW",
+      status: "framework" as const,
+      sources: [DESK_SOURCES.dciaHq],
+      lastVerified: DESK_VERIFIED,
+      note: "NECEC-equivalent access up to 200 MW. Three years' prior notice.",
+    },
+  },
+  discount: {
+    kicker: "Discounted PPA price",
+    body: "Unplanned unused energy at 95% of the PPA price. No notice. Hydro-Québec must buy it.",
+    figure: {
+      value: "95%",
+      status: "framework" as const,
+      sources: [DESK_SOURCES.dciaHq, DESK_SOURCES.dciaNl],
+      lastVerified: DESK_VERIFIED,
+      note: "Schedule B §4(b)(iv): unplanned unused energy to serve domestic load may be sold to HQ at the Discounted PPA Price, 95% of the applicable PPA price. HQ is obligated to purchase.",
+    },
+  },
+};
+
+const OPTIONS = [
+  { id: "synthetic", label: "Synthetic export", meta: "280 MW · 3-yr notice" },
+  { id: "chpe", label: "CHPE-equivalent", meta: "240 MW · 3-yr notice" },
+  { id: "necec", label: "NECEC-equivalent", meta: "200 MW · 3-yr notice" },
+  { id: "discount", label: "Discounted PPA price", meta: "95% · no notice" },
+] as const;
+
+type FactId = keyof typeof FACTS;
+
+export function DefaultPath() {
+  const [active, setActive] = useState<FactId>("retain");
+  const fact = FACTS[active];
+  const W = 1000;
+  const H = 300;
+  const src = { x: 180, y: 150 };
+  const home = { x: 720, y: 72 };
+  const hq = { x: 720, y: 228 };
 
   return (
     <div className="inst default-path">
       <div className="inst-scroll">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby="dp-title dp-desc"
-        >
-          <title id="dp-title">
-            The default path for unused retained power
-          </title>
-          <desc id="dp-desc">
-            Retained power either serves domestic load in Newfoundland and
-            Labrador, or, if unused, flows to Hydro-Québec under Section 4
-            options: synthetic export up to 280 MW, CHPE-equivalent up to 240
-            MW, NECEC-equivalent up to 200 MW, each on three years&apos; notice,
-            or unplanned unused energy at 95 percent of the PPA price with no
-            notice, which Hydro-Québec must buy.
-          </desc>
-
-          <g transform={`translate(${src.x} ${src.y})`}>
-            <rect
-              x={-108}
-              y={-36}
-              width={216}
-              height={72}
-              fill="var(--surface-2)"
-              stroke="var(--ink)"
-              strokeWidth={1}
-            />
-            <text y={-6} textAnchor="middle" className="lbl lbl-strong">
-              Retained power
-            </text>
-            <text y={14} textAnchor="middle" className="num" style={{ fontSize: 12 }}>
-              up to 2,350 MW · framing
-            </text>
-          </g>
-
+        <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Default path for retained power">
+          <title>The default path for unused retained power</title>
           <path
-            d={`M ${src.x + 108} ${src.y - 12} C 310 ${src.y - 12}, 310 ${home.y}, ${home.x - 150} ${home.y}`}
+            d={`M ${src.x + 110} ${src.y - 16} C 420 ${src.y - 16}, 420 ${home.y}, ${home.x - 130} ${home.y}`}
             fill="none"
-            className="stroke-plasma draw"
+            className="stroke-plasma"
             strokeWidth={2}
-            pathLength={1}
           />
           <path
-            d={`M ${src.x + 108} ${src.y + 12} C 310 ${src.y + 12}, 310 ${west.y}, ${west.x - 150} ${west.y}`}
+            d={`M ${src.x + 110} ${src.y + 16} C 420 ${src.y + 16}, 420 ${hq.y}, ${hq.x - 130} ${hq.y}`}
             fill="none"
             className="stroke-amber"
             strokeWidth={2}
-            strokeDasharray="7 5"
+            strokeDasharray="6 5"
           />
 
-          <text
-            x={280}
-            y={home.y - 28}
-            textAnchor="middle"
-            className="lbl plasma"
-          >
-            used here · “domestic load”
-          </text>
-          <text x={300} y={west.y + 40} textAnchor="middle" className="lbl amber">
-            not used · §4 options
-          </text>
-
-          <g transform={`translate(${home.x} ${home.y})`}>
-            <rect
-              x={-150}
-              y={-36}
-              width={300}
-              height={72}
-              fill="none"
-              stroke="var(--plasma)"
-              strokeWidth={1}
-            />
-            <SvgLines
-              text="Mines · towns · Labrador industry"
-              x={0}
-              y={-10}
-              maxChars={36}
-              lineHeight={12}
-              textAnchor="middle"
-              className="lbl lbl-strong"
-            />
-            <SvgLines
-              text="definition of “domestic load”: not published"
-              x={0}
-              y={16}
-              maxChars={32}
-              lineHeight={11}
-              textAnchor="middle"
-              className="lbl alert"
-              style={{ fontSize: 9.5 }}
-            />
+          <g transform={`translate(${src.x} ${src.y})`} {...instHit("retain", "Retained power", active, setActive)}>
+            <rect x={-110} y={-32} width={220} height={64} fill="var(--surface-2)" stroke="var(--ink)" strokeWidth={1} />
+            <text y={-4} textAnchor="middle" className="lbl lbl-strong">
+              Retained power
+            </text>
+            <text y={16} textAnchor="middle" className="num" style={{ fontSize: 13 }}>
+              up to 2,350 MW
+            </text>
           </g>
 
-          <g transform={`translate(${west.x} ${west.y})`}>
+          <g transform={`translate(${home.x} ${home.y})`} {...instHit("home", "Used here", active, setActive)}>
+            <rect x={-130} y={-28} width={260} height={56} fill="var(--surface-2)" stroke="var(--plasma)" strokeWidth={1} />
+            <text y={-4} textAnchor="middle" className="lbl plasma">
+              Used here
+            </text>
+            <text y={16} textAnchor="middle" className="lbl lbl-strong">
+              Mines, towns, industry
+            </text>
+          </g>
+
+          <g transform={`translate(${hq.x} ${hq.y})`} {...instHit("hq", "Hydro-Québec buys it", active, setActive)}>
             <rect
-              x={-150}
-              y={-36}
-              width={300}
-              height={72}
-              fill="none"
+              x={-130}
+              y={-28}
+              width={260}
+              height={56}
+              fill="var(--surface-2)"
               stroke="var(--amber)"
               strokeWidth={1}
               strokeDasharray="4 4"
             />
-            <text y={-8} textAnchor="middle" className="lbl lbl-strong">
+            <text y={-4} textAnchor="middle" className="lbl amber">
+              Not used
+            </text>
+            <text y={16} textAnchor="middle" className="lbl lbl-strong">
               Hydro-Québec buys it
             </text>
-            <SvgLines
-              text="already written in the Material Terms"
-              x={0}
-              y={14}
-              maxChars={28}
-              lineHeight={11}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 9.5 }}
-            />
           </g>
-
-          {options.map((o, i) => {
-            const oy = optionTop + i * optionGap;
-            const joinX = west.x + 150;
-            const midX = (joinX + optionX) / 2;
-            return (
-              <g key={o.label}>
-                <path
-                  d={`M ${joinX} ${west.y} L ${midX} ${west.y} L ${midX} ${oy} L ${optionX} ${oy}`}
-                  fill="none"
-                  className="hair"
-                />
-                <g transform={`translate(${optionX} ${oy - optionH / 2})`}>
-                  <rect
-                    x={0}
-                    y={0}
-                    width={optionW}
-                    height={optionH}
-                    fill="var(--surface-1)"
-                    stroke="var(--hairline-strong)"
-                    strokeWidth={1}
-                  />
-                  <text
-                    x={10}
-                    y={16}
-                    className="lbl lbl-strong"
-                    style={{ fontSize: 10 }}
-                  >
-                    {o.label}
-                  </text>
-                  <SvgLines
-                    text={`${o.cap} · ${o.note}`}
-                    x={10}
-                    y={34}
-                    maxChars={28}
-                    lineHeight={11}
-                    textAnchor="start"
-                    className="lbl"
-                    style={{ fontSize: 9.5 }}
-                  />
-                </g>
-              </g>
-            );
-          })}
         </svg>
         <span className="inst-scroll-hint" aria-hidden>
           scroll sideways →
         </span>
       </div>
 
-      <ul className="inst-legend" aria-label="Default path figures">
-        <li className="inst-legend-item">
-          <span className="inst-swatch" data-fill="dashed" />
-          <span>
-            <Figure
-              value="95%"
-              unit="of PPA price · no notice"
-              status="framework"
-              size="sm"
-              sources={[DESK_SOURCES.dciaHq, DESK_SOURCES.dciaNl]}
-              lastVerified={DESK_VERIFIED}
-              note="Schedule B §4(b)(iv): unplanned unused energy to serve domestic load may be sold to HQ at the Discounted PPA Price, 95% of the applicable PPA price. HQ is obligated to purchase."
-            />
-          </span>
-        </li>
-        <li className="inst-legend-item">
-          <span className="inst-swatch" data-fill="outline" />
-          <span>
-            <Figure
-              value="280 / 240 / 200 MW"
-              unit="§4 caps · three years' notice"
-              status="framework"
-              size="sm"
-              sources={[DESK_SOURCES.dciaHq]}
-              lastVerified={DESK_VERIFIED}
-              note="Synthetic export up to 280 MW (⅓ New England, ⅓ New York Astoria, ⅓ Ontario PQAT, net of transmission); CHPE-equivalent up to 240 MW; NECEC-equivalent up to 200 MW. Three years' prior notice."
-            />
-          </span>
-        </li>
-      </ul>
+      <div className="inst-choices" role="group" aria-label="Section 4 options">
+        {OPTIONS.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            className="inst-choice"
+            aria-pressed={active === option.id}
+            onClick={() => setActive(option.id)}
+          >
+            {option.label}
+            <span>{option.meta}</span>
+          </button>
+        ))}
+      </div>
+
+      <InstDetail {...fact} />
       <p className="inst-caption">
         Framework, not executed. These are Material Terms for later contracts.
-        The point is that the west branch is already written and the home branch
-        is not.{" "}
-        <Link href="/tracker#unused-retain" className="desk-link">
-          Tracker row →
-        </Link>
       </p>
     </div>
   );

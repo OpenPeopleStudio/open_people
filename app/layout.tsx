@@ -6,7 +6,7 @@ import { HOME_DESCRIPTION, HOME_TITLE, DESK_OG_IMAGE, DESK_OG_IMAGE_PATH } from 
 import { siteOrigin } from "@/lib/site";
 
 export const viewport: Viewport = {
-  themeColor: "#040404",
+  themeColor: "#000000",
 };
 
 export const metadata: Metadata = {
@@ -27,7 +27,8 @@ export const metadata: Metadata = {
     "Open People",
     "in-province power",
     "firm power",
-    "Churchill River desk",
+    "Gull Island",
+    "Labrador campus",
   ],
   openGraph: {
     title: HOME_TITLE,
@@ -52,17 +53,20 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      // Google Search wants a 48×48 PNG at a URL it has not cached.
+      // The lime blob on the SERP is gstatic's copy of an old /favicon.ico.
+      { url: "/brand/op-icon-48.png?v=h20261026", sizes: "48x48", type: "image/png" },
+      { url: "/favicon.svg?v=h20261026", type: "image/svg+xml" },
+      { url: "/favicon.ico?v=h20261026", sizes: "any" },
+      { url: "/favicon-16x16.png?v=h20261026", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png?v=h20261026", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48x48.png?v=h20261026", sizes: "48x48", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png?v=h20261026", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/manifest.json",
   other: {
-    "msapplication-TileColor": "#040404",
+    "msapplication-TileColor": "#000000",
   },
 };
 

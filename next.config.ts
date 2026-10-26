@@ -55,6 +55,16 @@ const nextConfig: NextConfig = {
         destination: "/compute",
         permanent: false,
       },
+      {
+        source: "/vision",
+        destination: "/about",
+        permanent: true,
+      },
+      {
+        source: "/approach",
+        destination: "/about",
+        permanent: true,
+      },
 
       // Redirect super admin root to /super-admin
       {

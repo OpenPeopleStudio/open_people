@@ -42,9 +42,9 @@ describe("layoutGateLabels", () => {
 
 describe("staggerByX", () => {
   it("puts 6¢ and 7.4¢ on opposite sides of the reported row", () => {
-    // ¢ positions on a 676-wide 0–18 axis (LEFT=288, RIGHT=36).
-    const cx = (c: number) => 288 + (c / 18) * 676;
-    const sides = staggerByX([1.8, 6, 7.4, 11.5].map(cx), 70);
+    // ¢ positions on the current 804-wide 0–18 axis (LEFT=168, RIGHT=28).
+    const cx = (c: number) => 168 + (c / 18) * 804;
+    const sides = staggerByX([1.8, 6, 7.4, 11.5].map(cx), 89);
     expect(sides[1]).not.toBe(sides[2]);
   });
 });

@@ -180,7 +180,7 @@ const ASKS = [
   },
   {
     title: "Allocation criteria that keep the value home",
-    body: "Score for NL majority ownership, Indigenous equity participation, creditworthy offtake, local employment and balance-sheet substance. Criteria, not a ban, are the durable answer to the Great North Data experience. Consent first.",
+    body: "Score for NL majority ownership, creditworthy offtake, local employment and balance-sheet substance. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. Criteria, not a ban, are the durable answer to the Great North Data experience.",
   },
   {
     title: "An infrastructure audit",
@@ -220,12 +220,12 @@ const STACK = [
   {
     label: "Power and site",
     us: false,
-    body: "NL Hydro, as a proposed partner: capacity allocation, land at the point of generation, transmission. Not a signed block. Mines and existing industry remain on this system.",
+    body: "A written request to NL Hydro: capacity allocation, land at the point of generation, transmission. Phase 1 is a non-firm, interruptible pilot. No megawatts are reserved. Mines and existing industry remain on this system.",
   },
   {
     label: "Indigenous nations",
     us: false,
-    body: "Consent first. Equity from day one, not consultation at the end. Named as a proposed partnership, not as a signed impact-benefit agreement.",
+    body: "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.",
   },
   {
     label: "Capital",
@@ -260,7 +260,7 @@ export default function BriefPage() {
 
   return (
     <DeskPage
-      kicker="Public evidence brief · Churchill River desk · Newfoundland and Labrador"
+      kicker="Open People · Public brief · Newfoundland and Labrador"
       title={
         <>
           Keep the power here. Use it on loads that <em>live here</em>.
@@ -272,19 +272,18 @@ export default function BriefPage() {
           label="43 TWh"
           plain={
             <p>
-              Newfoundland and Labrador generates about{" "}
+              Open People is making this case in public: keep firm Churchill Falls and Gull Island
+              power for loads that live in Newfoundland and Labrador. The province generates about{" "}
               <Fig id="a">
                 43 <Term k="twh">TWh</Term>
               </Fig>{" "}
-              of green electricity a year and sends most of it across the Québec border. The
-              Churchill Falls / Gull Island <Term k="dcia">DCIA</Term>, signed 17 August 2026, is a{" "}
+              of green electricity a year and sends most of it across the Québec border. The{" "}
+              <Term k="dcia">DCIA</Term>, signed 17 August 2026, is a{" "}
               <Term k="framework">framework</Term>, not binding <Term k="ppa">PPAs</Term>. The House
               endorsed that framework <Fig id="b">21–18</Fig> on 17 September. Binding paper is
-              still ahead. The industrial question is whether{" "}
-              <Term k="firm-power">firm power</Term> this province keeps is used here: mines and
-              Labrador industry first. Open People leads a proposed 500 MW Labrador{" "}
-              <Term k="compute">campus</Term> on that power, in feasibility. Mines are a real
-              constraint. Detail on{" "}
+              still ahead. Mining and Labrador industry come first. We lead a proposed 500 MW
+              Labrador <Term k="compute">campus</Term> on that power, in feasibility — a named use,
+              not the opener. Mines are a real constraint. Detail on{" "}
               <Link href="/compute" className="desk-link">
                 /compute
               </Link>
@@ -297,8 +296,8 @@ export default function BriefPage() {
       }
       meta={
         <p className="desk-fact leading-relaxed text-[var(--ink-3)]">
-          Prepared by Open People · St. John&apos;s, NL · Updated {DESK_VERIFIED} · Public briefing ·
-          DCIA framework, not PPAs · Open People is not a party to the agreement.
+          Open People’s public case · St. John&apos;s, NL · Updated {DESK_VERIFIED} · Framework, not
+          signed contracts · We are not a party to the agreement.
         </p>
       }
       actions={
@@ -307,7 +306,7 @@ export default function BriefPage() {
             Get involved — keep firm power here
           </Link>
           <Link href="/tracker" className="btn-secondary">
-            Living tracker
+            What is still open
           </Link>
           <WalkLaunch className="sm:ml-3" />
         </>
@@ -459,10 +458,9 @@ export default function BriefPage() {
         />
         <aside className="mt-10 border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
           <p className="desk-h3">
-            Labrador is not an infinite battery. It is enough firm green power to serve mines, towns
-            and other industry that lives here — and a proposed 500 MW campus Open People leads.
-            Mines and existing industry are real constraints. The campus is proposed, in
-            feasibility, not a reserved block.
+            Labrador is not an infinite battery. The campus is proposed and in feasibility. Phase 1
+            is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are
+            reserved — not a reserved block. Mines and existing industry are real constraints.
           </p>
           <Link href="/compute" className="desk-kicker mt-4 inline-flex no-underline hover:underline">
             Proposed campus (Open People leads) →
@@ -514,7 +512,7 @@ export default function BriefPage() {
                   capacity) and the Island hydro plants also sit inside the provincial total. The
                   older brief carried rough per-plant annual energy splits. Those have been dropped
                   rather than restated without a cited table; the CER provincial totals above are the
-                  figures this desk carries.
+                  figures we carry.
                 </p>
               </>
             }
@@ -595,8 +593,8 @@ export default function BriefPage() {
                 <p>
                   Media have put the cumulative profit split to 2019 at roughly $28 billion to
                   Hydro-Québec against about $2 billion to Newfoundland and Labrador. That is press
-                  arithmetic reported by CBC and the Canadian Press in 2019, not a figure in this
-                  desk&apos;s registry. It is quoted here as reported and used in no instrument.
+                  arithmetic reported by CBC and the Canadian Press in 2019, not a figure in our
+                  source registry. It is quoted here as reported and used in no instrument.
                 </p>
               </>
             }
@@ -624,9 +622,9 @@ export default function BriefPage() {
                   The Government of Newfoundland and Labrador values the new package at $49 billion
                   NPV (2026) and $273 billion nominal, and names 985 MW of transmission toward other
                   markets. Those are the province&apos;s own figures from its 17 August release,
-                  quoted as announcement language. They are not contract prices and this desk does
-                  not carry them on any instrument. The older brief&apos;s comparison to the 2024 MOU
-                  valuation has been dropped: that figure is not in the desk registry.
+                  quoted as announcement language. They are not contract prices and we do not carry
+                  them on any instrument. The older brief&apos;s comparison to the 2024 MOU valuation
+                  has been dropped: that figure is not in our source registry.
                 </p>
               </>
             }
@@ -724,7 +722,7 @@ export default function BriefPage() {
                   not Labrador. Newfoundland Power general-service energy charges, per its published
                   rate book, run roughly 11–15¢ before demand charges and HST; the older brief&apos;s
                   &ldquo;11–13¢ delivered&rdquo; matched tail-block energy charges only. A ballpark,
-                  not a Labrador rate and not a locked PUB figure on this desk.
+                  not a Labrador rate and not a locked PUB figure we will publish.
                 </p>
               }
               sources={sourceList(["nlhCurrentRates", "nlhRates2026"])}
@@ -929,8 +927,17 @@ export default function BriefPage() {
                   <p className="desk-takeaway">
                     <Term k="innu-nation">Innu Nation</Term> wrote MHAs on 17 September urging a no
                     vote, and says the paper cuts its benefits by more than half. On 21 September the
-                    Grand Chief said the Innu are ready to meet. No meeting is scheduled. They were
-                    never invited to the table. Partnership, royalty and Gull Island tariff path remain
+                    Grand Chief said the Innu are ready to meet. No meeting is scheduled. Grand Chief
+                    Ashini of Innu Nation has said Innu were{" "}
+                    <a
+                      href={DESK_SOURCES.vocmInnuContact.href}
+                      className="desk-link"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      &ldquo;never invited to the table&rdquo;
+                    </a>
+                    . Partnership, royalty and Gull Island tariff path remain
                     open.
                   </p>
                 }
@@ -1083,8 +1090,7 @@ export default function BriefPage() {
                   <li>
                     <span className="n">ON</span>
                     <span>
-                      Economic screening introduced for large load connections. No figure carried on
-                      this desk.
+                      Economic screening introduced for large load connections. No figure we carry.
                     </span>
                   </li>
                   <li>
@@ -1125,8 +1131,8 @@ export default function BriefPage() {
                     Stargate Norway, announced August 2025 as a joint venture between Nscale and Aker:
                     230 MW initial capacity scaling to 520 MW and roughly 100,000 GPUs, on hydropower
                     in Narvik, chosen for surplus clean power and cold climate. Those figures come
-                    from the companies&apos; own announcement, not a regulator, and are not in this
-                    desk&apos;s registry.
+                    from the companies&apos; own announcement, not a regulator, and are not in our
+                    source registry.
                   </p>
                   <p>
                     The International Energy Agency&apos;s Energy and AI report (2025) projects global
@@ -1142,31 +1148,43 @@ export default function BriefPage() {
           </div>
 
           <div>
-            <h3 className="desk-h3">Ottawa is already paying for this</h3>
+            <h3 className="desk-h3">Ottawa is looking for projects like this</h3>
             <Unfold
               id="buyer-ottawa"
               className="mt-3"
-              label="the federal strategy"
+              label="two federal programs"
               plain={
                 <p className="desk-takeaway">
-                  Canada&apos;s Sovereign AI Compute Strategy seeks Canadian-owned, Canadian-controlled
-                  projects with Indigenous participation. Open People leading a Labrador campus, with
-                  NL Hydro and Indigenous nations as proposed partners, fits that description. The
-                  first intake closed in 2026. We found no Newfoundland and Labrador entry in the
-                  public record, because there was no NL project to enter.
+                  ISED ran a call for 100 MW-plus data-centre projects from 15 January to 15 February
+                  2026. That intake is closed. It can lead to a non-binding MOU, not a contract and
+                  not funding. A separate program, the Canadian Sovereign AI Compute Strategy, is a
+                  $2 billion Budget 2024 plan. ISED lists Indigenous participation as one of the 100
+                  MW call&apos;s criteria. Any role is for each nation to decide. Partnership, if any,
+                  will be on terms each nation sets. No nation has been asked about this project. We found no
+                  Newfoundland and Labrador entry in the public record of the closed 100 MW intake,
+                  because there was no NL project to enter.
                 </p>
               }
               technical={
-                <p>
-                  Innovation, Science and Economic Development Canada&apos;s Canadian Sovereign AI
-                  Compute Strategy commits more than $2 billion, with further Budget 2025 funding, and
-                  its programme materials describe eligibility for Canadian-owned projects above 100
-                  MW with Indigenous participation. Programme figures are ISED&apos;s, quoted as
-                  published, and are not in this desk&apos;s registry. Whether an NL entry exists in a
-                  closed intake cannot be confirmed from public records. Treat &ldquo;no NL
-                  entrant&rdquo; as our reading, not a government statement.
-                </p>
+                <>
+                  <p>
+                    Two ISED programs, kept separate. First: Enabling large-scale sovereign AI data
+                    centres. ISED says the proposal submission period is now closed, and that the
+                    call ran from 15 January to 15 February 2026. It sought sovereign AI data centres
+                    greater than 100 MW. The intake form is for consideration of a potential
+                    non-binding memorandum of understanding. ISED lists Indigenous participation
+                    among that call&apos;s criteria.
+                  </p>
+                  <p>
+                    Second: the Canadian Sovereign AI Compute Strategy. Budget 2024 announced $2
+                    billion over five years, starting in 2024–25. That is a different program. We do
+                    not blend the two. Whether an NL entry exists in the closed 100 MW intake cannot
+                    be confirmed from public records. Treat &ldquo;no NL entrant&rdquo; as our
+                    reading, not a government statement.
+                  </p>
+                </>
               }
+              sources={sourceList(["isedLargeScale", "isedLargeScaleIntake", "isedSovereignStrategy"])}
             />
           </div>
         </div>
@@ -1266,9 +1284,9 @@ export default function BriefPage() {
         title="Open People leads. Partners are proposed, not signed."
         intro={
           <p>
-            Open People is the proponent. NL Hydro, Indigenous nations (consent first), and capital
-            are the proposed partnership. None of those lines is a signed allocation, a signed
-            impact-benefit agreement, or a named funder.
+            Open People is the proponent. Partnership, if any, will be on terms each nation sets. No
+            nation has been asked about this project. Capital is unnamed here. None of those lines is a signed
+            allocation, a signed impact-benefit agreement, or a named funder.
           </p>
         }
       >
@@ -1315,7 +1333,7 @@ export default function BriefPage() {
             label="fibre"
             plain="Labrador's terrestrial backbone is essentially a single route, built in 2012. Region-wide outages from single events are on record. Hyperscale campuses want multiple physically diverse paths. Labrador has approximately one."
             requires="An audit of dark-fibre capacity on existing utility routes, a costed diverse-route study, and, the transformative option, anchoring a transatlantic cable landing. Training workloads tolerate thin connectivity in a way no other data-centre segment does. This gates hyperscale, not a first sovereign node."
-            caveat="The older brief's fibre count and the reported 2025 abandonment of a subsidised Labrador broadband build are not in the desk registry. The fibre count is dropped; the abandonment is stated only as reported, without a figure. The 2012 build is the provincial and Bell Aliant Labrador fibre project."
+            caveat="The older brief's fibre count and the reported 2025 abandonment of a subsidised Labrador broadband build are not in our source registry. The fibre count is dropped; the abandonment is stated only as reported, without a figure. The 2012 build is the provincial and Bell Aliant Labrador fibre project."
           />
           <ConstraintCard
             id="con-workforce"
@@ -1330,9 +1348,9 @@ export default function BriefPage() {
             label="consent"
             status={INNU.status}
             plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. The Premier says he looks forward to sitting down; as of 21 September nothing is scheduled. That is a start, not consent, and not a partnership structure."
-            requires="Inverting the standard model. Equity partnership in the compute entity from day one: a structure federal programs reward, that Labrador's impact-benefit culture supports, and that converts the project's largest political risk into its strongest political asset."
+            requires="Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
             technical={INNU.body.technical}
-            caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not a registry item on this desk."
+            caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not an item in our source registry."
             sources={sourceList(INNU.sources)}
           />
           <ConstraintCard
@@ -1340,8 +1358,8 @@ export default function BriefPage() {
             title="The Great North Data precedent"
             label="the precedent"
             plain="The province's one prior data-centre experience was a Labrador crypto operator that went bankrupt in 2019 owing money to the utility and public agencies. Municipal scepticism toward container mining is earned."
-            requires="Naming it rather than dodging it. That operation failed on balance sheet, and it was crypto: a commodity workload with no customers, no jobs and no sovereignty value. An allocation framework that scores creditworthiness, ownership, employment and Indigenous equity is a filter it would have failed on every line."
-            caveat="Great North Data's 2019 bankruptcy was reported by CBC and provincial media. The amounts owed are not carried on this desk."
+            requires="Naming it rather than dodging it. That operation failed on balance sheet, and it was crypto: a commodity workload with no customers, no jobs and no sovereignty value. An allocation framework that scores creditworthiness, ownership, and employment is a filter it would have failed on every line."
+            caveat="Great North Data's 2019 bankruptcy was reported by CBC and provincial media. The amounts owed are not a figure we carry."
           />
           <ConstraintCard
             id="con-correction"
@@ -1362,9 +1380,9 @@ export default function BriefPage() {
           Not approved, not funded, not under construction.
         </p>
         <p className="desk-body mt-5">
-          We are not a party to the DCIA. We are the proponent of the campus. Proposed partners: NL
-          Hydro, Indigenous nations (consent first), and capital. No customers are named. Mines and
-          existing industry are real constraints on the same power.
+          We are not a party to the DCIA. We are the proponent of the campus. Partnership, if any,
+          will be on terms each nation sets. No nation has been asked about this project. No customers are named.
+          Mines and existing industry are real constraints on the same power.
         </p>
         <div className="mt-8 flex gap-5">
           <div
@@ -1423,9 +1441,9 @@ export default function BriefPage() {
       {/* ── 11 ── */}
       <DeskSection id="sources" num="11 — Sources" title="Where the numbers come from.">
         <p className="desk-body">
-          Every source below is in the desk registry and re-checked on the verified date at the top
-          of the page. The same registry feeds the tracker, the ladder and the megawatt bars, so a
-          number here and a number there are the same object.
+          Every source below is in our source registry and re-checked on the verified date at the
+          top of the page. The same registry feeds the tracker, the ladder and the megawatt bars, so
+          a number here and a number there are the same object.
         </p>
         <div className="mt-8 grid gap-8">
           {Object.entries(KIND_LABEL).map(([kind, label]) => {
@@ -1459,7 +1477,6 @@ export default function BriefPage() {
             </p>
             <ul className="mt-3 grid gap-2 text-[14px] leading-relaxed text-[var(--ink-2)]">
               <li>International Energy Agency, Energy and AI (2025): global data-centre demand projection.</li>
-              <li>Innovation, Science and Economic Development Canada: Canadian Sovereign AI Compute Strategy programme materials.</li>
               <li>Nscale and Aker: Stargate Norway announcements, August 2025.</li>
               <li>CBC and Canadian Press, 2019: reported cumulative Churchill Falls profit split.</li>
               <li>Newfoundland Power rate book: general-service energy charge ballpark.</li>
@@ -1479,12 +1496,12 @@ export default function BriefPage() {
 
       <DeskSection id="close">
         <p className="desk-h2">
-          The power has to be allocatable here before anything else can happen.
+          Open People is in this while the power can still be allocated here.
         </p>
         <p className="desk-body mt-5">
           If you want firm power kept in Newfoundland and Labrador — for mines, towns, other
-          industry, and a proposed 500 MW campus Open People leads — there is a public path while
-          this paper is still paper.
+          industry, and the proposed 500 MW campus we lead — there is a public path while this paper
+          is still paper.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link href="/engage" className="btn-primary">

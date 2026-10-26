@@ -33,13 +33,12 @@ describe("desk Open Graph", () => {
   });
 
   it("keeps the live home title and description", () => {
-    expect(HOME_TITLE).toBe("Open People — Churchill River desk · Keep the power here");
-    expect(HOME_DESCRIPTION).toBe(
-      "A living desk on the Churchill Falls / Gull Island framework: what is signed, what is still blank, and the industry Labrador can build if firm power stays here. Mining first. Compute is a separate page.",
-    );
-    expect(HOME_DESCRIPTION).toMatch(/Mining first/);
-    expect(HOME_DESCRIPTION).toMatch(/Compute is a separate page/);
-    expect(HOME_TITLE.toLowerCase()).not.toMatch(/horizon desk|data.?centre|data.?center/);
+    expect(HOME_TITLE).toBe("Open People — An AI company. A proposed Labrador AI campus.");
+    expect(HOME_DESCRIPTION).toMatch(/Newfoundland and Labrador company/);
+    expect(HOME_DESCRIPTION).toMatch(/500 MW Labrador AI campus/);
+    expect(HOME_DESCRIPTION).toMatch(/written request to NL Hydro/);
+    expect(HOME_DESCRIPTION).toMatch(/No megawatts are reserved/);
+    expect(HOME_TITLE.toLowerCase()).not.toMatch(/horizon desk|data.?centre|data.?center|churchill/);
   });
 
   it("sets matching og and twitter titles so child routes do not inherit root OG copy", () => {
@@ -85,15 +84,19 @@ describe("desk Open Graph", () => {
       }
       expect(blob.toLowerCase()).not.toMatch(/horizon desk|hyperscale/);
     }
-    expect(DESK_OG.home.headline).toBe("Keep the power here.");
-    expect(DESK_OG.home.accent).toBe("Watch the gates.");
+    expect(DESK_OG.home.headline).toBe("An AI company. A proposed Labrador AI campus.");
+    expect(DESK_OG.home.accent).toBe("Proposed. In feasibility.");
     expect(`${DESK_OG.home.kicker} · ${DESK_OG.home.kickerAccent}`.toUpperCase()).toBe(
-      "OPEN PEOPLE · CHURCHILL RIVER DESK",
+      "OPEN PEOPLE · COMPANY AND CAMPUS",
     );
     expect(DESK_OG.home.alt).toBe(
-      "Open People — Churchill River desk. Keep the power here. Watch the gates.",
+      "Open People — an AI company, and a proposed Labrador AI campus, in feasibility.",
     );
-    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · CHURCHILL RIVER DESK");
+    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · COMPANY AND CAMPUS");
+    expect(DESK_OG.build.headline).toBe("The campus and the research campus.");
+    expect(DESK_OG.capital.headline).toBe("The money for the project.");
+    expect(DESK_OG.consent.headline).toBe("Indigenous partnership.");
+    expect(DESK_OG.power.headline).toBe("Power for the campus.");
     expect(deskOgFooterUrl(DESK_OG.home)).toBe("OPENPEOPLE.AI");
     expect(DESK_OG.compute.headline).toBe("A 500 MW Labrador campus.");
     expect(DESK_OG.compute.accent).toBe("Open People leads.");
@@ -107,8 +110,8 @@ describe("desk Open Graph", () => {
   it("uses an 8px plasma chassis and steel on quiet compute", () => {
     expect(OG_SIZE).toEqual({ width: 1200, height: 630 });
     expect(OG_RAIL).toBe(8);
-    expect(OG_COLOR.void).toBe("#040404");
-    expect(OG_COLOR.plasma).toBe("#e8893c");
+    expect(OG_COLOR.void).toBe("#000000");
+    expect(OG_COLOR.plasma).toBe("#f2501f");
     expect(ogAccent(false)).toBe(OG_COLOR.plasma);
     expect(ogAccent(true)).toBe(OG_COLOR.steel);
 
@@ -116,7 +119,7 @@ describe("desk Open Graph", () => {
     expect(home).toContain(`width="${OG_RAIL}" height="${OG_SIZE.height}"`);
     expect(home).toContain(`width="${OG_SIZE.width}" height="${OG_RAIL}"`);
     expect(home).toContain("OPEN PEOPLE");
-    expect(home).toContain("CHURCHILL RIVER DESK");
+    expect(home).toContain("COMPANY AND CAMPUS");
     expect(home).toContain("OPENPEOPLE.AI");
     expect(home).toContain(">NL<");
 
@@ -131,7 +134,7 @@ describe("desk Open Graph", () => {
   it("wraps long headlines on the sentence, not a stray last word", () => {
     expect(
       wrapHeadline(DESK_OG.home.headline, OG_LAYOUT.headlineSize, OG_LAYOUT.columnW),
-    ).toEqual(["Keep the power here."]);
+    ).toEqual(["An AI company.", "A proposed Labrador AI campus."]);
     expect(
       wrapHeadline(DESK_OG.tracker.headline, OG_LAYOUT.headlineSize, OG_LAYOUT.columnW),
     ).toEqual(["What’s signed.", "What’s open."]);
@@ -155,12 +158,13 @@ describe("desk Open Graph", () => {
     const svg = deskOgSvg(DESK_OG.home);
     expect(svg).toContain('width="1200"');
     expect(svg).toContain('height="630"');
-    expect(svg).toContain("#040404");
-    expect(svg).toContain("#e8893c");
-    expect(svg).toContain("Keep the power here.");
-    expect(svg).toContain("Watch the gates.");
+    expect(svg).toContain("#000000");
+    expect(svg).toContain("#f2501f");
+    expect(svg).toContain("An AI company.");
+    expect(svg).toContain("A proposed Labrador AI campus.");
+    expect(svg).toContain("Proposed. In feasibility.");
     expect(svg).toContain("OPEN PEOPLE");
-    expect(svg).toContain("CHURCHILL RIVER DESK");
+    expect(svg).toContain("COMPANY AND CAMPUS");
     expect(svg).not.toMatch(/¢/);
   });
 });

@@ -26,24 +26,28 @@ export default function ComputePage() {
       quiet
       verified={COMPUTE_LAST_VERIFIED}
       kicker="Proposed campus · in feasibility"
-      title="Open People leads a 500 MW Labrador campus."
+      title="Open People leads a 500 MW Labrador AI campus."
       lede={
         <Unfold
           id="compute-lede"
           label="500 MW"
           plain={<p>{COMPUTE_HERO.plain}</p>}
-          technical={COMPUTE_HERO.technical}
+          technical="Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class."
         />
       }
       meta={
         <p className="text-sm text-[var(--ink-3)]">
-          Not approved. Not funded. Not under construction. The Churchill River evidence desk is{" "}
+          Not approved. Not funded. Not under construction. Mining comes first. The public case is{" "}
           <Link href="/brief" className="desk-link">
-            /brief
+            the brief
           </Link>
           . The thesis is{" "}
-          <Link href="/vision" className="desk-link">
-            /vision
+          <Link href="/about" className="desk-link">
+            /about
+          </Link>
+          . The track is{" "}
+          <Link href="/build" className="desk-link">
+            /build
           </Link>
           .
         </p>
@@ -77,8 +81,8 @@ export default function ComputePage() {
           People from across Canada, on the problems society will face in the age of AI. In the
           spirit of the Perimeter Institute and the Banff Centre — named as spirit, not as partners.
         </p>
-        <Link href="/vision" className="desk-kicker mt-6 inline-flex no-underline hover:underline">
-          Vision →
+        <Link href="/build" className="desk-kicker mt-6 inline-flex no-underline hover:underline">
+          Build track →
         </Link>
       </DeskSection>
 
@@ -103,14 +107,20 @@ export default function ComputePage() {
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
           Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
-          Consent first.
+          We intend to seek early, respectful engagement with each nation. No partnership or
+          agreement exists. Partnership, if any, is on terms each nation sets. This page does not
+          jump the line: mines and existing industry remain the constraint, and the public ask is to
+          keep firm power in the province.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <a href={`mailto:${VISION_CONTACT}`} className="btn-primary">
+          <Link href="/engage" className="btn-primary">
+            Keep firm power here
+          </Link>
+          <a href={`mailto:${VISION_CONTACT}`} className="btn-secondary">
             {VISION_CONTACT}
           </a>
-          <Link href="/vision" className="btn-secondary">
-            Vision
+          <Link href="/build" className="btn-secondary">
+            Build track
           </Link>
         </div>
       </DeskSection>

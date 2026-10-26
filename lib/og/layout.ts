@@ -8,16 +8,16 @@
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 
 export const OG_COLOR = {
-  void: "#040404",
-  surface: "#0a0a0b",
-  ink: "#f2f4f6",
-  ink2: "rgba(242,244,246,0.74)",
-  ink3: "rgba(242,244,246,0.58)",
-  plasma: "#e8893c",
-  steel: "#8a9bb0",
-  hairline: "rgba(255,255,255,0.08)",
-  hairlineStrong: "rgba(255,255,255,0.16)",
-  field: "rgba(255,255,255,0.028)",
+  void: "#000000",
+  surface: "#000000",
+  ink: "#ffffff",
+  ink2: "rgba(255,255,255,0.72)",
+  ink3: "rgba(255,255,255,0.5)",
+  plasma: "#f2501f",
+  steel: "#8f8f8f",
+  hairline: "rgba(255,255,255,0.12)",
+  hairlineStrong: "rgba(255,255,255,0.2)",
+  field: "rgba(255,255,255,0)",
 } as const;
 
 /** Structural plasma rail / top bar. 6–8px; 8px is the committed weight. */

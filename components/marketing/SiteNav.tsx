@@ -5,12 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
-  { href: "/tracker", label: "Tracker" },
-  { href: "/industries", label: "Industries" },
-  { href: "/costs", label: "Costs" },
-  { href: "/brief", label: "Brief" },
-  { href: "/vision", label: "Vision" },
-  { href: "/letter", label: "Letter" },
+  { href: "/about", label: "About" },
+  { href: "/build", label: "Build" },
+  { href: "/capital", label: "Capital" },
+  { href: "/consent", label: "Consent" },
+  { href: "/power", label: "Power" },
 ];
 
 export default function SiteNav() {
@@ -35,8 +34,14 @@ export default function SiteNav() {
     <>
       <nav className="desk-nav" aria-label="Primary">
         <div className="desk-nav-inner">
-          <Link href="/" className="desk-brand">
-            Open People <b>· Churchill River desk</b>
+          <Link href="/" className="desk-brand" aria-label="Open People">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/op-lockup-horizontal-reversed.svg"
+              alt=""
+              width={200}
+              height={28}
+            />
           </Link>
 
           <div className="desk-nav-links">
@@ -50,9 +55,6 @@ export default function SiteNav() {
                 {l.label}
               </Link>
             ))}
-            <Link href="/engage" className="desk-nav-cta">
-              Keep power here
-            </Link>
           </div>
 
           <button
@@ -74,17 +76,6 @@ export default function SiteNav() {
               {l.label}
             </Link>
           ))}
-          <Link href="/engage" onClick={() => setOpen(false)}>
-            Engage
-          </Link>
-          <Link href="/compute" onClick={() => setOpen(false)} className="text-[var(--ink-3)]">
-            Compute plan
-          </Link>
-          <div className="mt-8">
-            <Link href="/engage" className="btn-primary w-full" onClick={() => setOpen(false)}>
-              Get involved — keep firm power here
-            </Link>
-          </div>
         </div>
       ) : null}
     </>

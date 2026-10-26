@@ -4,7 +4,7 @@ import { DeskPage } from "@/components/marketing/shell";
 
 const TITLE = "Churchill Falls — put the next generations first";
 const DESCRIPTION =
-  "A 15 September 2026 constituent letter from Tom Lane to Premier Tony Wakeham on Churchill Falls.";
+  "Open People publishes Tom Lane’s 15 September 2026 letter to Premier Tony Wakeham on Churchill Falls. The letter text is unchanged.";
 const CANONICAL = "/letter";
 const PUBLISHED = "2026-09-15";
 
@@ -83,7 +83,7 @@ function Pull({ children }: { children: React.ReactNode }) {
 export default function LetterPage() {
   return (
     <DeskPage
-      kicker="Letter · 15 September 2026"
+      kicker="Open People · Letter · 15 September 2026"
       title={
         <>
           Churchill Falls — <em>put the next generations first</em>
@@ -91,8 +91,11 @@ export default function LetterPage() {
       }
       lede={
         <p>
-          A constituent letter from Tom Lane to The Honourable Tony Wakeham, Premier of Newfoundland
-          and Labrador. The text below is the 15 September letter, unchanged.
+          Open People publishes this letter. Tom Lane wrote it on 15 September 2026 as a constituent
+          in St. John&apos;s, before the House vote. The text below is unchanged. He wrote as a
+          citizen, not as a pitch for the company. The asks in it are still ours: keep enough
+          Labrador power to build on, and keep Gull Island a separate decision. Mining and existing
+          industry come first.
         </p>
       }
       verified={false}
@@ -112,15 +115,16 @@ export default function LetterPage() {
               <strong className="font-semibold text-[var(--ink)]">31 December 2026</strong>; the DCIA
               instrument can run to{" "}
               <strong className="font-semibold text-[var(--ink)]">31 March 2027</strong>. The Premier
-              has said the deal returns to the House before then but has not promised a vote. Next
-              public political gate: Québec election{" "}
-              <strong className="font-semibold text-[var(--ink)]">5 October</strong>. Innu Nation
-              partnership and the federal assessment scope remain unresolved.
+              has said the deal returns to the House before then but has not promised a vote. Québec
+              elected a Parti Québécois minority on{" "}
+              <strong className="font-semibold text-[var(--ink)]">5 October</strong>. Churchill Falls
+              came up in the transition. No decision on the contracts. Innu Nation partnership and
+              the federal assessment scope remain unresolved.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
-              Public next steps are at{" "}
+              Open People is still on these asks. The public next step is{" "}
               <Link href="/engage" className="desk-link">
-                openpeople.ai/engage
+                Engage
               </Link>
               .
             </p>

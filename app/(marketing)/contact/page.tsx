@@ -5,20 +5,31 @@ import { DeskPage, DeskSection } from "@/components/marketing/shell";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Tom Lane at Open People — tom@openpeople.ai — St. John’s, Newfoundland and Labrador.",
+    "Write Tom Lane at Open People — tom@openpeople.ai — about keeping firm power in Newfoundland and Labrador, or about the proposed Labrador campus.",
 };
 
 export default function ContactPage() {
   return (
     <DeskPage
-      kicker="Contact"
+      kicker="Open People · Contact"
       title="Start with a conversation, not a funnel."
       lede={
         <p>
-          Government relations, in-province power, infrastructure partnership, or a careful
-          introduction: write directly. If you want firm power kept in NL, start at{" "}
-          <Link href="/engage" className="desk-link">
-            /engage
+          Write directly. To come in on the work, start from a track:{" "}
+          <Link href="/build" className="board-record">
+            Build
+          </Link>
+          ,{" "}
+          <Link href="/capital" className="board-record">
+            Capital
+          </Link>
+          ,{" "}
+          <Link href="/consent" className="board-record">
+            Consent
+          </Link>
+          , or{" "}
+          <Link href="/power" className="board-record">
+            Power
           </Link>
           .
         </p>
@@ -29,9 +40,9 @@ export default function ContactPage() {
         <div className="desk-surface p-6 sm:p-8">
           <div className="desk-h3">Tom Lane</div>
           <div className="mt-1 text-sm text-[var(--ink-3)]">Founder, Open People</div>
-          <a
+            <a
             href="mailto:tom@openpeople.ai?subject=Open%20People"
-            className="desk-link mt-6 inline-block font-mono text-base"
+            className="board-mail mt-6 inline-block"
           >
             tom@openpeople.ai
           </a>
@@ -48,15 +59,14 @@ export default function ContactPage() {
             <p className="mt-2 text-sm text-[var(--ink-2)]">
               Read the Labrador power &amp; industry case before a first meeting when you can.
             </p>
-            <Link href="/brief" className="desk-link desk-fact mt-4 inline-block">
+            <Link href="/brief" className="board-record desk-fact mt-4 inline-block">
               openpeople.ai/brief →
             </Link>
           </div>
           <div className="p-5">
             <div className="desk-kicker">Sequencing</div>
             <p className="mt-2 text-sm text-[var(--ink-2)]">
-              Information before advocacy. Partners before politicians. Never an ask before the brief
-              has been read.
+              Name the track. Say who you are, and what you are offering or asking.
             </p>
           </div>
         </div>

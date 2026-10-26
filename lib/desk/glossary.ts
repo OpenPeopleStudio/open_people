@@ -26,7 +26,7 @@ const GLOSSARY_DATA = {
   ppa: {
     term: "PPA",
     what: "Power-purchase agreement: the binding contract that says who buys how much power, for how long, at what price.",
-    why: "Until the PPAs are executed, every megawatt on this desk is announcement language, not an obligation.",
+    why: "Until the PPAs are executed, every megawatt we publish is announcement language, not an obligation.",
     where: { href: "/tracker#binding-window", label: "Tracker · Binding contracts still unsigned" },
   },
   "definitive-agreements": {
@@ -49,7 +49,7 @@ const GLOSSARY_DATA = {
   mw: {
     term: "MW",
     what: "Megawatt: a rate of power. A large mine draws on the order of a hundred megawatts continuously.",
-    why: "Capacity figures on this desk are in MW. A megawatt on a slide is not a megawatt on a signed contract.",
+    why: "The capacity figures we publish are in MW. A megawatt on a slide is not a megawatt on a signed contract.",
   },
   twh: {
     term: "TWh",
@@ -59,7 +59,7 @@ const GLOSSARY_DATA = {
   "cents-per-kwh": {
     term: "¢/kWh",
     what: "Cents per kilowatt-hour: the unit household and industrial bills are priced in.",
-    why: "Two ¢ figures can measure different things — a starting price versus a fifty-year average. This desk labels which is which.",
+    why: "Two ¢ figures can measure different things — a starting price versus a fifty-year average. We label which is which.",
     where: { href: "/costs#contested", label: "Costs · Two public prices" },
   },
   mill: {
@@ -130,7 +130,7 @@ const GLOSSARY_DATA = {
   spe: {
     term: "SPE",
     what: "Special-purpose entity: a company created to own one project.",
-    why: "The wind project would be owned by an SPE that is not named anywhere in the public paper. This desk does not invent one.",
+    why: "The wind project would be owned by an SPE that is not named anywhere in the public paper. We do not invent one.",
     where: { href: "/tracker#wind-spe", label: "Tracker · Wind company not named" },
   },
   iaac: {
@@ -147,7 +147,7 @@ const GLOSSARY_DATA = {
   "lab-ind-1": {
     term: "LAB-IND-1",
     what: "NL Hydro's Labrador Industrial rate class: demand charges plus a monthly firm-energy formula.",
-    why: "Mines do not pay one posted cent. Quoting a single ¢/kWh for Labrador industry is a mistake this desk refuses to make.",
+    why: "Mines do not pay one posted cent. Quoting a single ¢/kWh for Labrador industry is a mistake we refuse to make.",
     where: { href: "/costs#lab-ind-1", label: "Costs · Labrador Industrial" },
   },
   rfirm: {
@@ -182,7 +182,7 @@ const GLOSSARY_DATA = {
   mou: {
     term: "2024 MOU",
     what: "The December 2024 Memorandum of Understanding between the province and Hydro-Québec, expired 30 April 2026.",
-    why: "Its cheap-front, steep-back price path is history. This desk keeps it on the table only so nobody quotes it as current.",
+    why: "Its cheap-front, steep-back price path is history. We keep it on the page only so nobody quotes it as current.",
     where: { href: "/costs#mou-irc-path", label: "Costs · Rejected 2024 MOU path" },
   },
   gull: {
@@ -200,7 +200,7 @@ const GLOSSARY_DATA = {
   compute: {
     term: "compute",
     what: "Data-centre load for AI training or hosting.",
-    why: "Not a named use in the DCIA. Open People leads a proposed 500 MW Labrador campus, in feasibility. Mines are a real constraint on the same power.",
+    why: "Not a named use in the DCIA. Open People leads a proposed 500 MW Labrador AI campus, in feasibility. Mines are a real constraint on the same power.",
     where: { href: "/compute", label: "Proposed campus (Open People leads)" },
   },
 } as const satisfies Record<string, GlossaryEntry>;

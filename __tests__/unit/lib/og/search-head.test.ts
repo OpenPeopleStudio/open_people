@@ -21,7 +21,7 @@ describe("/brief search metadata", () => {
   it("uses the locked title and a description that does not name a nation or 5,428 MW", () => {
     expect(BRIEF_TITLE).toBe("Keep the power here: the Labrador case");
     expect(BRIEF_DESCRIPTION).toBe(
-      "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, with NL Hydro as a proposed partner, not a reserved block.",
+      "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, not a reserved block.",
     );
     expect(BRIEF_TITLE).not.toMatch(NATION);
     expect(BRIEF_DESCRIPTION).not.toMatch(NATION);
@@ -53,10 +53,9 @@ describe("/brief search metadata", () => {
     expect(brief).not.toMatch(/ogDescription/);
     expect(brief).toMatch(/hydro-dominated/);
     expect(brief).toMatch(/cleanest large power systems/);
-    expect(brief).toMatch(/firm green power/);
     expect(brief).toMatch(/in feasibility/);
     expect(brief).toMatch(/deliberately small/);
-    expect(brief).toMatch(/NL Hydro, as a proposed partner/);
+    expect(brief).toMatch(/No megawatts are reserved/);
     expect(brief).toMatch(/not a reserved block/);
   });
 });
@@ -110,13 +109,21 @@ describe("favicon set", () => {
     const layout = readFileSync(resolve(ROOT, "app/layout.tsx"), "utf8");
     expect(layout).not.toMatch(/<link rel="icon"/);
     expect(layout).not.toMatch(/<link rel="apple-touch-icon"/);
+    expect(layout).toMatch(/\/brand\/op-icon-48\.png/);
     expect(layout).toMatch(/\/favicon\.svg/);
     expect(layout).toMatch(/\/favicon\.ico/);
     expect(layout).toMatch(/\/favicon-16x16\.png/);
     expect(layout).toMatch(/\/favicon-32x32\.png/);
     expect(layout).toMatch(/\/favicon-48x48\.png/);
     expect(layout).toMatch(/\/apple-touch-icon\.png/);
+    // Google's 48×48 PNG must be the first icon URL, at a path it has not cached.
+    const brand48 = layout.indexOf("/brand/op-icon-48.png");
+    const svg = layout.indexOf("/favicon.svg");
+    expect(brand48).toBeGreaterThan(-1);
+    expect(svg).toBeGreaterThan(brand48);
+    expect(layout).toMatch(/op-icon-48\.png\?v=h20261026/);
     for (const file of [
+      "public/brand/op-icon-48.png",
       "public/favicon.svg",
       "public/favicon.ico",
       "public/favicon-16x16.png",
@@ -128,11 +135,32 @@ describe("favicon set", () => {
     }
   });
 
-  it("is the desk chassis (void + plasma), not the leftover lime blob", async () => {
-    const svg = readFileSync(resolve(ROOT, "public/favicon.svg"), "utf8");
-    expect(svg).toContain("#040404");
-    expect(svg).toContain("#e8893c");
-    expect(svg).not.toMatch(/#00FF88/i);
+  it("ships a 48×48 PNG at /brand/op-icon-48.png that is the horizon mark, not lime", async () => {
+    const png48 = resolve(ROOT, "public/brand/op-icon-48.png");
+    const meta = await sharp(png48).metadata();
+    expect(meta.width).toBe(48);
+    expect(meta.height).toBe(48);
+    const { data, info } = await sharp(png48).ensureAlpha().raw().toBuffer({
+      resolveWithObject: true,
+    });
+    let orangeN = 0;
+    let limeN = 0;
+    for (let i = 0; i < data.length; i += info.channels) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      if (r > 180 && g < 140 && b < 100) orangeN += 1;
+      else if (g > 200 && r < 80 && b < 160) limeN += 1;
+    }
+    expect(orangeN).toBeGreaterThan(0);
+    expect(limeN).toBe(0);
+  });
+
+  it("is the brand mark (orange and ink), not the leftover lime blob", async () => {
+    const svg = readFileSync(resolve(ROOT, "public/favicon.svg"), "utf8").toLowerCase();
+    expect(svg).toContain("#000000");
+    expect(svg).toContain("#f2501f");
+    expect(svg).not.toMatch(/#00ff88/i);
     expect(svg).not.toMatch(/human|person/i);
 
     const png16 = resolve(ROOT, "public/favicon-16x16.png");
@@ -149,8 +177,8 @@ describe("favicon set", () => {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
-      if (r < 20 && g < 20 && b < 20) voidN += 1;
-      else if (r > 200 && g > 100 && g < 180 && b < 90) plasmaN += 1;
+      if (r < 40 && g < 40 && b < 50) voidN += 1;
+      else if (r > 180 && g < 140 && b < 100) plasmaN += 1;
       else if (g > 200 && r < 80 && b < 160) limeN += 1;
     }
     expect(voidN).toBeGreaterThan(0);

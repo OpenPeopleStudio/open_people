@@ -1,9 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { DESK_SOURCES, DESK_VERIFIED, GATES, railPosition, type Gate } from "@/lib/desk";
-import { Figure } from "@/components/marketing/depth";
+import { GateLive, TodayMarker } from "./GateClockLive";
+import { InstDetail, instHit } from "./InstDetail";
 import { layoutGateLabels } from "./layout";
 import { SvgLines } from "./svg";
-import { GateLive, TodayMarker } from "./GateClockLive";
 
 /**
  * I1 — the Gate Clock. A horizontal time rail from the framework signing to
@@ -11,12 +14,12 @@ import { GateLive, TodayMarker } from "./GateClockLive";
  * Geometry is static (server); the today marker and the day counters are
  * small client islands so the page can stay static.
  */
-const W = 1100;
+const W = 1000;
 const H = 210;
-const PAD = 56;
+const PAD = 40;
 const RAIL_Y = 108;
-const ON_SCALE_W = 790;
-const OFF_X = PAD + ON_SCALE_W + 96;
+const ON_SCALE_W = 860;
+const OFF_X = PAD + ON_SCALE_W + 80;
 
 function x(gate: Gate): number {
   if (gate.offscale) return OFF_X;
@@ -26,19 +29,38 @@ function x(gate: Gate): number {
 export function GateClock({ compact = false }: { compact?: boolean }) {
   const onScale = GATES.filter((g) => !g.offscale);
   const off = GATES.filter((g) => g.offscale);
-  const compactY = 40;
-  const compactXs = onScale.map((g) => x(g));
-  const compactSlots = layoutGateLabels(compactXs, {
-    minSep: 70,
-    leftEdge: PAD + 40,
-    rightEdge: PAD + ON_SCALE_W - 40,
-  });
+  const [active, setActive] = useState(GATES.find((g) => g.status === "open")?.id ?? GATES[0].id);
+  const gate = GATES.find((g) => g.id === active) ?? GATES[0];
+  const detail = (
+    <InstDetail
+      kicker={`${gate.short} · ${gate.label}`}
+      body={gate.body.plain}
+      href={gate.trackerId ? `/tracker#${gate.trackerId}` : "/tracker"}
+      hrefLabel="Tracker →"
+      figure={{
+        value: gate.short,
+        status: gate.status,
+        sources: gate.sources.map((id) => DESK_SOURCES[id]),
+        lastVerified: DESK_VERIFIED,
+        note: gate.body.technical,
+      }}
+    />
+  );
 
   if (compact) {
+    const compactY = 42;
+    const compactSlots = layoutGateLabels(
+      onScale.map((g) => x(g)),
+      {
+        minSep: 70,
+        leftEdge: PAD + 40,
+        rightEdge: PAD + ON_SCALE_W - 40,
+      },
+    );
     return (
       <div className="gate-clock-compact inst" aria-label="Gate clock">
         <div className="inst-scroll">
-          <svg viewBox={`0 0 ${W} 80`} role="img" aria-labelledby="gc-c-title">
+          <svg viewBox={`0 0 ${W} 84`} role="group" aria-label="Gate clock">
             <title id="gc-c-title">
               Gates on the Churchill Falls framework, with today marked
             </title>
@@ -59,8 +81,12 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
               const slot = compactSlots[i]!;
               const dir = slot.side === "above" ? -1 : 1;
               return (
-                <g key={g.id} transform={`translate(${x(g)} ${compactY})`}>
-                  <line y1={dir * 12} y2={0} className="hair" />
+                <g
+                  key={g.id}
+                  transform={`translate(${x(g)} ${compactY})`}
+                  {...instHit(g.id, g.label, active, setActive)}
+                >
+                  <line y1={dir * 14} y2={0} className="hair" />
                   <circle
                     r={3.5}
                     className={g.status === "open" ? "amber" : "plasma"}
@@ -69,21 +95,17 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
                     y={dir * 26}
                     textAnchor={slot.anchor}
                     className="num"
-                    style={{ fontSize: 12 }}
+                    style={{ fontSize: 11 }}
                   >
                     {g.short}
                   </text>
                 </g>
               );
             })}
-            <TodayMarker
-              pad={PAD}
-              width={ON_SCALE_W}
-              railY={compactY}
-              compact
-            />
+            <TodayMarker pad={PAD} width={ON_SCALE_W} railY={compactY} compact />
           </svg>
         </div>
+        {detail}
       </div>
     );
   }
@@ -103,11 +125,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
       style={{ scrollMarginTop: "calc(var(--desk-nav-offset) + 1rem)" }}
     >
       <div className="inst-scroll">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby="gc-title gc-desc"
-        >
+        <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Gate clock">
           <title id="gc-title">The gate clock</title>
           <desc id="gc-desc">
             A time rail from 17 August 2026, when the framework was signed, to
@@ -150,7 +168,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           />
           <line
             x1={PAD + ON_SCALE_W + 62}
-            x2={OFF_X - 14}
+            x2={OFF_X}
             y1={RAIL_Y}
             y2={RAIL_Y}
             className="hair"
@@ -170,7 +188,11 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             const dateY = dir * 34;
             const labelY = dir * (52 + slot.tier * 28);
             return (
-              <g key={g.id} transform={`translate(${gx} ${RAIL_Y})`}>
+              <g
+                key={g.id}
+                transform={`translate(${gx} ${RAIL_Y})`}
+                {...instHit(g.id, g.label, active, setActive)}
+              >
                 <line y1={dir * 22} y2={0} className="hair" />
                 <circle r={4.5} className={cls} />
                 {g.kind === "target" ? (
@@ -204,7 +226,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           })}
 
           {off.map((g) => (
-            <g key={g.id} transform={`translate(${x(g)} ${RAIL_Y})`}>
+            <g key={g.id} transform={`translate(${x(g)} ${RAIL_Y})`} {...instHit(g.id, g.label, active, setActive)}>
               <rect
                 x={-9}
                 y={-9}
@@ -250,6 +272,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
       </div>
 
       <GateLive />
+      {detail}
 
       <table className="inst-table">
         <caption>Gates on the Churchill Falls framework</caption>
@@ -279,33 +302,6 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           Full tracker →
         </Link>
       </p>
-      <ul className="inst-legend" aria-label="Gate sources">
-        {GATES.map((g) => (
-          <li key={g.id} className="inst-legend-item">
-            <span
-              className="inst-swatch"
-              data-fill={
-                g.kind === "preliminary"
-                  ? "hatch"
-                  : g.kind === "target"
-                    ? "outline"
-                    : "solid"
-              }
-            />
-            <span>
-              <Figure
-                value={g.short}
-                status={g.status}
-                size="sm"
-                sources={g.sources.map((id) => DESK_SOURCES[id])}
-                lastVerified={DESK_VERIFIED}
-                note={g.body.technical}
-              />{" "}
-              <span className="text-[var(--ink-3)]">— {g.body.plain}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

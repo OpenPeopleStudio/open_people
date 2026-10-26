@@ -9,14 +9,19 @@ const PUBLIC_ROLE_FILES = [
   "app/(marketing)/coalition/page.tsx",
   "app/(marketing)/compute/page.tsx",
   "app/(marketing)/about/page.tsx",
-  "app/(marketing)/approach/page.tsx",
   "app/(marketing)/page.tsx",
   "app/(marketing)/engage/page.tsx",
-  "app/(marketing)/vision/page.tsx",
+  "app/(marketing)/build/page.tsx",
+  "app/(marketing)/capital/page.tsx",
+  "app/(marketing)/consent/page.tsx",
+  "app/(marketing)/power/page.tsx",
   "components/marketing/SiteFooter.tsx",
   "lib/og/copy.ts",
   "lib/desk/compute.ts",
   "lib/marketing/vision.ts",
+  "lib/marketing/approach.ts",
+  "lib/marketing/home.ts",
+  "lib/board/entries.ts",
 ];
 
 describe("Open People public role copy", () => {
@@ -35,6 +40,7 @@ describe("Open People public role copy", () => {
     const brief = readFileSync(resolve(ROOT, "app/(marketing)/brief/page.tsx"), "utf8");
     expect(brief).toMatch(/Open People leads/i);
     expect(brief).toMatch(/proponent/i);
-    expect(brief).toMatch(/consent first/i);
+    expect(brief).toMatch(/Partnership, if any, will be on terms each nation sets/);
+    expect(brief).toMatch(/No nation has been asked about this project/);
   });
 });
