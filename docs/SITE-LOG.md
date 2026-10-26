@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — Vercel Web Analytics
+
+The public site now loads Vercel Web Analytics from the root layout (`@vercel/analytics/next`). It is cookieless. Vercel stores aggregate page views, referrers, country, and device — not personal identity. Three named custom events fire without props: ask question submitted, ask follow-up submitted, contact form submitted. Question text and emails stay off the events. Speed Insights is not installed. `/privacy` and the `/ask` privacy line were updated to match. Preview only; Tom merges.
+
 ## 2026-10-26 — /ask knowledge filled from chapter-2 master
 
 The public `/ask` assistant still answers only from `content/ask/proposal-knowledge.md`. That file is no longer the empty placeholder. It is the reviewed chapter-2 proposal master (working draft 24 Oct 2026, figure check 25 Oct 2026). Figures keep CONFIRMED / REPORTED / ESTIMATE / UNKNOWN labels. The file states that no partner, tenant, nation, utility, funder, or government has agreed, and that no power has been allocated. Prompt, providers, nav, and pages unchanged. Preview only; Tom merges.

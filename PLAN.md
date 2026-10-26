@@ -1,41 +1,45 @@
-# PLAN — /ask: Gemini primary, OpenRouter Nemotron fallback
+# PLAN — Vercel Web Analytics on the public site
 
 ## Goal
 
-Tom approved shipping PR #35 on Gemini with OpenRouter Nemotron as backup. This slice adds a one-shot cross-provider fallback when the primary fails before any text streams. Stay on `cursor/avoid-openai-ask-00d0`. No force-push. Never touch `main`.
+Add Vercel Web Analytics to openpeople.ai so we can see aggregate traffic. No Speed Insights. No extra trackers. No keys. No PII in custom events.
 
 ## In
 
-- `ASK_FALLBACK_PROVIDER` (`google` | `openrouter` | `gateway`) and `ASK_FALLBACK_MODEL`.
-- Production values Tom will set: `ASK_PROVIDER=google`, `ASK_MODEL=gemini-flash-lite-latest`, `ASK_FALLBACK_PROVIDER=openrouter`, `ASK_FALLBACK_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free`.
-- If the primary errors before any text (503, 429, auth/missing key, ~12s to first token), retry once on the fallback. If both fail, the existing snag copy plus the follow-up form.
-- When neither `ASK_FALLBACK_*` is set, keep current behavior.
-- Reject any `openai/` model id on every slot.
-- Log which provider/model answered and whether fallback fired. No keys. Question text stays as `log.ts` already does.
-- System prompt: do not introduce as an AI assistant; answer directly.
-- Unit tests for fallback selection and primary-fails-then-fallback (mock providers).
-- Stamp `0.5.21`. Known main failures stay: email sync, sitemap `/compute`.
+- Install `@vercel/analytics`. Render `<Analytics />` from `@vercel/analytics/next` once in `app/layout.tsx`.
+- Custom `track()` events, event name only, no free text or PII:
+  - `/ask` question submitted
+  - `/ask` follow-up form submitted (after a successful send)
+  - contact form submitted (mailto send on `/contact` and the leftover contact form)
+- `/privacy` states, in short sentence-case words, that the site uses Vercel Web Analytics, which is cookieless and collects aggregate page views, referrers, country and device, not personal identity. Stay inside Vercel’s published privacy page. Do not claim cookies we do not set, and do not claim we collect nothing.
+- Drop the `/ask` line “this page has no analytics trackers.”
+- Bump `VERSION` to 0.5.23 (next patch after main’s 0.5.22 from PR #38). Trio: VERSION + CHANGELOG.md + ACTIONS. Keep every 0.5.19–0.5.22 /ask entry.
+- Checks: layout mounts Analytics once and not Speed Insights; custom events carry no question text, email, or name; public-PII test stays green; e2e `/ask` privacy copy. Lint, typecheck, build, `npm test` except the two known failures on main.
 
 ## Out
 
-- Changing Vercel env vars from this agent. List what Tom must set.
-- OpenAI models, parked SaaS OpenAI clients, brand, board, home, nav, `/letter`.
-- Merge to `main`, force-push, or production promote.
+- `@vercel/speed-insights`, ads pixels, and any other tracker.
+- Env vars and API keys. Web Analytics does not need them in the app.
+- `/ask` provider code (`lib/ask/*`, `app/api/ask/*`) and `content/ask/proposal-knowledge.md` (PR #38).
+- Project-board pages (`/build`, `/capital`, `/consent`, `/power`) and `lib/board/*`.
+- Sitemap ranks (`__tests__/unit/app/sitemap.test.ts` `/compute` priority stays a known failure).
+- `__tests__/unit/lib/email/sync.test.ts` (known failure on main).
+- Merge to `main`, force-push, or production promote. Tom merges.
 
 ## Dest
 
-- Live `/ask` on this repo. Vercel project `open-people`. Preview on PR #35.
+- This repo’s marketing site. Vercel project `open-people`. Production host `www.openpeople.ai`.
+- Ship path: feature branch → PR → Vercel preview. Enable Web Analytics in the Vercel project dashboard if it is not already on. Do not promote the preview.
 
-## First slice (this PR add-on)
+## First slice (this PR)
 
-Cross-provider fallback for `/ask`. Gemini first, Nemotron if the primary never emits text. Prompt no longer opens as an AI assistant.
+This spec. Package, root layout, three named events, privacy copy, version bump. Rebased onto current `origin/main` at `9ab06b6` (0.5.22).
 
 ## Done when
 
-- Fallback is env-gated and off when unset.
-- Primary pre-text failure retries once on the fallback. Double failure snags.
-- `openai/` is rejected on primary and fallback.
-- Logs name provider, model, and `fallbackFired`.
-- Unit tests cover selection and the mock fallback path.
-- Lint, typecheck, and build pass. Known main test failures unchanged.
-- Head commit is on this branch. CI status reported.
+- Root layout renders `<Analytics />` from `@vercel/analytics/next` once. No Speed Insights.
+- `/ask` question submit fires an event name only. Follow-up success fires an event name only. Contact mailto / form fires an event name only. No question text, email, name, or message in props.
+- `/privacy` says the site uses Vercel Web Analytics, cookieless, aggregate page views, referrers, country and device, not personal identity.
+- `/ask` no longer claims it has no analytics trackers.
+- VERSION is 0.5.23. 0.5.22–0.5.19 /ask notes stay in CHANGELOG, ACTIONS, SITE-LOG, locks, and repo-map. Lint and typecheck pass. Public-PII test passes. Known email-sync and sitemap `/compute` failures unchanged.
+- PR is open. CI is green except those two known unit failures. Vercel preview builds.

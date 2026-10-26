@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.23 — 2026-10-26 — Vercel Web Analytics
+
+Public site loads Vercel Web Analytics once from the root layout. Cookieless aggregate page views, referrers, country, and device. Custom events are names only: ask question submitted, ask follow-up submitted, contact form submitted. No question text, email, or other PII in event props. No Speed Insights. `/privacy` states this in short sentence-case words. `/ask` no longer claims it has no trackers. Preview only; Tom merges.
+
 ## 0.5.22 — 2026-10-26 — /ask: fill proposal knowledge from chapter-2 master
 
 Replace the empty `content/ask/proposal-knowledge.md` placeholder with the reviewed chapter-2 proposal master (working draft 24 Oct 2026, figure check 25 Oct 2026). `/ask` still answers only from that file. Labels CONFIRMED / REPORTED / ESTIMATE / UNKNOWN stay. Nothing in the file claims an agreement, partner, tenant, nation, utility, funder, government, or power allocation. Prompt, providers, nav, and pages unchanged. Preview only; Tom merges.

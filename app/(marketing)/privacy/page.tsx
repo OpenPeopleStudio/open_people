@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const lastUpdated = "January 20, 2026";
+  const lastUpdated = "October 26, 2026";
 
   return (
     <DeskPage
@@ -87,10 +87,10 @@ export default function PrivacyPage() {
             information in connection with a merger, acquisition, or sale of assets.
           </p>
 
-          <h2>4. Cookies and analytics</h2>
+          <h2>4. Analytics</h2>
           <p>
-            We may use cookies or similar technologies to keep you signed in, remember preferences,
-            and understand product usage. You can control cookies through your browser settings.
+            This site uses Vercel Web Analytics. It is cookieless. It collects aggregate page views,
+            referrers, country, and device. It does not collect personal identity.
           </p>
 
           <h2>5. Data retention</h2>
