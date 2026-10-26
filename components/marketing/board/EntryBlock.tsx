@@ -5,8 +5,6 @@ import {
   TRACKS,
   allEntries,
   entryLabel,
-  statusFor,
-  type BoardEntry,
   type Track,
   type TrackId,
 } from "@/lib/board";
@@ -25,23 +23,10 @@ export function WorkTrack({
   );
 }
 
-function StatusCopy({ entry }: { entry: BoardEntry | null }) {
-  if (!entry) {
-    return <p>{EMPTY_TRACK_LINE}</p>;
-  }
-  return (
-    <Dual
-      plain={<p>{entry.plain}</p>}
-      technical={<p>{entry.technical}</p>}
-    />
-  );
-}
-
 export function TrackRows() {
   return (
     <div className="board-list">
       {TRACKS.map((track) => {
-        const status = statusFor(track.id);
         return (
           <article key={track.id} className="board-row">
             <div>
@@ -51,16 +36,6 @@ export function TrackRows() {
                 </Link>
               </h2>
               <p className="board-job">{track.job}</p>
-            </div>
-            <div className="board-status">
-              <StatusCopy entry={status} />
-              {status ? (
-                <p className="desk-fact mt-3 text-[var(--ink-3)]">
-                  <time dateTime={status.cleared}>{status.cleared}</time>
-                  <span aria-hidden> · </span>
-                  {entryLabel(status)}
-                </p>
-              ) : null}
             </div>
             <WorkTrack track={track} className="board-enter" />
           </article>

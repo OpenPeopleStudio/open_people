@@ -3,14 +3,19 @@
  * No ¢/kWh on the image. Compute may name the proposed 500 MW. Mining remains first.
  *
  * Home card:
- *   Kicker:    OPEN PEOPLE · LABRADOR CAMPUS
- *   Dominant:  Building a Labrador campus.
+ *   Kicker:    OPEN PEOPLE · COMPANY AND CAMPUS
+ *   Dominant:  An AI company. A proposed Labrador AI campus.
  *   Secondary: Proposed. In feasibility.
- *   Footer:    OPEN PEOPLE · NL / OPENPEOPLE.AI
+ *   Footer:    OPENPEOPLE.AI
  * Compute: A 500 MW Labrador campus. / Open People leads.
  */
 
-import { COMPUTE_HERO } from "@/lib/desk";
+import {
+  HOME_DESCRIPTION as HOME_META_DESCRIPTION,
+  HOME_HEADLINE_CAMPUS,
+  HOME_HEADLINE_COMPANY,
+  HOME_TITLE as HOME_META_TITLE,
+} from "@/lib/marketing/home";
 
 export type DeskOgCard = {
   kicker: string;
@@ -30,8 +35,8 @@ export function deskOgFooterUrl(card: DeskOgCard): string {
   return card.footer.toUpperCase();
 }
 
-export const HOME_TITLE = "Open People — Building a Labrador campus";
-export const HOME_DESCRIPTION = COMPUTE_HERO.plain;
+export const HOME_TITLE = HOME_META_TITLE;
+export const HOME_DESCRIPTION = HOME_META_DESCRIPTION;
 
 /** Document / og / twitter title for /brief. Template adds " · Open People". */
 export const BRIEF_TITLE = "Keep the power here: the Labrador case";
@@ -47,11 +52,11 @@ export const BRIEF_DESCRIPTION =
 export const DESK_OG = {
   home: {
     kicker: "OPEN PEOPLE",
-    kickerAccent: "LABRADOR CAMPUS",
-    headline: "Building a Labrador campus.",
+    kickerAccent: "COMPANY AND CAMPUS",
+    headline: `${HOME_HEADLINE_COMPANY} ${HOME_HEADLINE_CAMPUS}`,
     accent: "Proposed. In feasibility.",
     footer: "OPENPEOPLE.AI",
-    alt: "Open People — building a proposed Labrador campus, in feasibility.",
+    alt: "Open People — an AI company, and a proposed Labrador AI campus, in feasibility.",
   },
   build: {
     kicker: "Build",

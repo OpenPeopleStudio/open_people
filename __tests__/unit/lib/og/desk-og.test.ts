@@ -2,7 +2,6 @@ import { readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
-import { COMPUTE_HERO } from "@/lib/desk";
 import {
   DESK_OG,
   HOME_DESCRIPTION,
@@ -34,12 +33,12 @@ describe("desk Open Graph", () => {
   });
 
   it("keeps the live home title and description", () => {
-    expect(HOME_TITLE).toBe("Open People — Building a Labrador campus");
-    expect(HOME_DESCRIPTION).toBe(COMPUTE_HERO.plain);
-    expect(HOME_DESCRIPTION).toMatch(/not approved/i);
-    expect(HOME_DESCRIPTION).toMatch(/not funded/i);
-    expect(HOME_DESCRIPTION).toMatch(/not under construction/i);
-    expect(HOME_TITLE.toLowerCase()).not.toMatch(/horizon desk|data.?centre|data.?center/);
+    expect(HOME_TITLE).toBe("Open People — An AI company. A proposed Labrador AI campus.");
+    expect(HOME_DESCRIPTION).toMatch(/Newfoundland and Labrador company/);
+    expect(HOME_DESCRIPTION).toMatch(/500 MW Labrador AI campus/);
+    expect(HOME_DESCRIPTION).toMatch(/written request to NL Hydro/);
+    expect(HOME_DESCRIPTION).toMatch(/No megawatts are reserved/);
+    expect(HOME_TITLE.toLowerCase()).not.toMatch(/horizon desk|data.?centre|data.?center|churchill/);
   });
 
   it("sets matching og and twitter titles so child routes do not inherit root OG copy", () => {
@@ -85,15 +84,15 @@ describe("desk Open Graph", () => {
       }
       expect(blob.toLowerCase()).not.toMatch(/horizon desk|hyperscale/);
     }
-    expect(DESK_OG.home.headline).toBe("Building a Labrador campus.");
+    expect(DESK_OG.home.headline).toBe("An AI company. A proposed Labrador AI campus.");
     expect(DESK_OG.home.accent).toBe("Proposed. In feasibility.");
     expect(`${DESK_OG.home.kicker} · ${DESK_OG.home.kickerAccent}`.toUpperCase()).toBe(
-      "OPEN PEOPLE · LABRADOR CAMPUS",
+      "OPEN PEOPLE · COMPANY AND CAMPUS",
     );
     expect(DESK_OG.home.alt).toBe(
-      "Open People — building a proposed Labrador campus, in feasibility.",
+      "Open People — an AI company, and a proposed Labrador AI campus, in feasibility.",
     );
-    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · LABRADOR CAMPUS");
+    expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · COMPANY AND CAMPUS");
     expect(DESK_OG.build.headline).toBe("The campus and the research campus.");
     expect(DESK_OG.capital.headline).toBe("The money for the project.");
     expect(DESK_OG.consent.headline).toBe("Indigenous partnership.");
@@ -120,7 +119,7 @@ describe("desk Open Graph", () => {
     expect(home).toContain(`width="${OG_RAIL}" height="${OG_SIZE.height}"`);
     expect(home).toContain(`width="${OG_SIZE.width}" height="${OG_RAIL}"`);
     expect(home).toContain("OPEN PEOPLE");
-    expect(home).toContain("LABRADOR CAMPUS");
+    expect(home).toContain("COMPANY AND CAMPUS");
     expect(home).toContain("OPENPEOPLE.AI");
     expect(home).toContain(">NL<");
 
@@ -135,7 +134,7 @@ describe("desk Open Graph", () => {
   it("wraps long headlines on the sentence, not a stray last word", () => {
     expect(
       wrapHeadline(DESK_OG.home.headline, OG_LAYOUT.headlineSize, OG_LAYOUT.columnW),
-    ).toEqual(["Building a Labrador", "campus."]);
+    ).toEqual(["An AI company.", "A proposed Labrador AI campus."]);
     expect(
       wrapHeadline(DESK_OG.tracker.headline, OG_LAYOUT.headlineSize, OG_LAYOUT.columnW),
     ).toEqual(["What’s signed.", "What’s open."]);
@@ -161,11 +160,11 @@ describe("desk Open Graph", () => {
     expect(svg).toContain('height="630"');
     expect(svg).toContain("#000000");
     expect(svg).toContain("#f2501f");
-    expect(svg).toContain("Building a Labrador");
-    expect(svg).toContain("campus.");
+    expect(svg).toContain("An AI company.");
+    expect(svg).toContain("A proposed Labrador AI campus.");
     expect(svg).toContain("Proposed. In feasibility.");
     expect(svg).toContain("OPEN PEOPLE");
-    expect(svg).toContain("LABRADOR CAMPUS");
+    expect(svg).toContain("COMPANY AND CAMPUS");
     expect(svg).not.toMatch(/¢/);
   });
 });

@@ -6,7 +6,7 @@ Rework the openpeople.ai home page and primary nav so Open People (the AI compan
 
 ## In
 
-- Home (`/`) and primary nav only. Footer chrome that appears on home, plus home OG/meta that describe the front door.
+- Home (`/`) and primary nav only, plus home OG/meta that describe the front door.
 - Equal lead: company story (reuse `/about` and `/approach`) and the proposed campus (canonical line with “AI”).
 - Canonical campus line: “Open People leads a proposed 500 MW Labrador AI campus on that power, in feasibility.”
 - Power line: “The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved.”
@@ -20,6 +20,7 @@ Rework the openpeople.ai home page and primary nav so Open People (the AI compan
 ## Out
 
 - `/brief` (PR #25). Match its consent wording; do not edit that file.
+- `components/marketing/SiteFooter.tsx` (another PR is adding social links there).
 - Board track pages `/power` `/capital` `/build` `/consent` beyond nav links.
 - `/letter` text. `/coalition`. Parked SaaS routes.
 - Merge to `main`, force-push, or production promote. Tom merges.

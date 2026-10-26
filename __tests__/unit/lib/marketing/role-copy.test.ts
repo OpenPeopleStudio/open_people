@@ -20,6 +20,7 @@ const PUBLIC_ROLE_FILES = [
   "lib/desk/compute.ts",
   "lib/marketing/vision.ts",
   "lib/marketing/approach.ts",
+  "lib/marketing/home.ts",
   "lib/board/entries.ts",
 ];
 

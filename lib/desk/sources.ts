@@ -438,6 +438,30 @@ export const DESK_SOURCES = {
     date: "2026-06-01",
     kind: "regulator",
   },
+  isedDataCentreCall: {
+    id: "ised-data-centre-call",
+    label:
+      "ISED — Enabling large-scale sovereign AI data centres (call 15 Jan–15 Feb 2026, now closed; >100 MW; Indigenous participation is a listed criterion)",
+    href: "https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres",
+    date: "2026-02-15",
+    kind: "primary",
+  },
+  isedDataCentreIntake: {
+    id: "ised-data-centre-intake",
+    label:
+      "ISED — Enabling large-scale sovereign AI data centres intake form (potential non-binding MOU)",
+    href: "https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres-intake-form",
+    date: "2026-02-15",
+    kind: "primary",
+  },
+  isedComputeStrategy: {
+    id: "ised-compute-strategy",
+    label:
+      "ISED — Canadian Sovereign AI Compute Strategy (Budget 2024, $2 billion over five years, starting 2024–25)",
+    href: "https://ised-isde.canada.ca/site/ised/en/canadian-sovereign-ai-compute-strategy",
+    date: "2024-12-05",
+    kind: "primary",
+  },
 } as const satisfies Record<string, DeskSource>;
 
 export type DeskSourceId = keyof typeof DESK_SOURCES;
