@@ -135,6 +135,7 @@ test("/ask states the locked intro and the follow-up form", async ({ page }) => 
     "Ask anything about Open People's preliminary proposal. Answers are honest and labelled. If we don't know yet, we'll find out and email you.",
   );
   await expect(main).toContainText("Email Tom a follow-up");
+  await expect(main).toContainText("Questions may be processed by a third-party AI provider.");
   await expect(main).toContainText("Privacy:");
   await expect(main).toContainText("Vercel Web Analytics");
   await expect(main).not.toContainText("no analytics trackers");

@@ -6,6 +6,22 @@ Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
 The public site now loads Vercel Web Analytics from the root layout (`@vercel/analytics/next`). It is cookieless. Vercel stores aggregate page views, referrers, country, and device — not personal identity. Three named custom events fire without props: ask question submitted, ask follow-up submitted, contact form submitted. Question text and emails stay off the events. Speed Insights is not installed. `/privacy` and the `/ask` privacy line were updated to match. Preview only; Tom merges.
 
+## 2026-10-26 — /ask knowledge filled from chapter-2 master
+
+The public `/ask` assistant still answers only from `content/ask/proposal-knowledge.md`. That file is no longer the empty placeholder. It is the reviewed chapter-2 proposal master (working draft 24 Oct 2026, figure check 25 Oct 2026). Figures keep CONFIRMED / REPORTED / ESTIMATE / UNKNOWN labels. The file states that no partner, tenant, nation, utility, funder, or government has agreed, and that no power has been allocated. Prompt, providers, nav, and pages unchanged. Preview only; Tom merges.
+
+## 2026-10-26 — /ask Gemini with OpenRouter Nemotron backup
+
+Tom approved shipping `/ask` on Gemini, with OpenRouter Nemotron as the backup. If Gemini errors or sits silent before any text (~12s), one retry goes to Nemotron. Both fail: same snag copy and the follow-up form. The model is told not to introduce itself as an AI assistant. Preview only; Tom sets the four `ASK_*` env vars and merges.
+
+## 2026-10-26 — /ask provider picker for $0 tests
+
+Tom wants to try free non-OpenAI backends on `/ask`. `ASK_PROVIDER` selects Gateway (default), Google Gemini flash, or OpenRouter `:free`. Missing keys do not leak; the page still offers the follow-up form. A one-line note says questions may be processed by a third-party AI provider. Preview only; Tom merges.
+
+## 2026-10-26 — /ask leaves OpenAI
+
+Tom: avoid OpenAI wherever an alternative exists. First slice is live `/ask` only. The OpenAI-direct path is gone. Chat goes through AI Gateway on Grok (`spacexai/grok-4.7`), with Claude as the Gateway fallback. An OpenAI key alone no longer counts as configured. Live public pages did not name OpenAI as a provider; retired marketing pages still do and were left. Brand and board copy untouched. Preview only; Tom merges.
+
 ## 2026-10-26 — Desk IA fixes
 
 Four remaining holes on current main. The build seed no longer says “This page is the campus, and only that”; that sentence stays on `/compute`. Record pages (tracker, industries, costs, brief, letter, engage) carry a Power parent link to `/power`. `/compute` carries a Build parent link to `/build`. Privacy and Terms use DeskPage / SiteNav instead of the parked SaaS NavBar. Sitemap: tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Header, home copy, `/coalition`, and retired routes unchanged. Preview only; Tom merges.

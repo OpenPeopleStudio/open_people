@@ -1,6 +1,6 @@
 /**
  * AI Provider Types
- * Support for OpenAI, LLM Studio, and other OpenAI-compatible providers
+ * Local and OpenAI-compatible providers. Defaults are non-OpenAI.
  */
 
 export type AIProviderType = "openai" | "llmstudio" | "ollama" | "custom";
@@ -174,26 +174,26 @@ export interface UserAISettings {
   defaultProvider: string;  // Provider ID
   providers: AIProviderConfig[];
   
-  // Fallback behavior
-  fallbackToOpenAI: boolean;  // If local provider fails, use OpenAI
+  // Fallback behavior (kept for parked readers; default is off)
+  fallbackToOpenAI: boolean;
   
   // Usage preferences
   preferLocalForSimpleTasks: boolean;
-  useOpenAIForEmbeddings: boolean;  // Local models often lack embedding support
+  useOpenAIForEmbeddings: boolean;
 }
 
 // Default settings
 export const DEFAULT_AI_SETTINGS: UserAISettings = {
-  defaultProvider: "openai",
+  defaultProvider: "ollama",
   providers: [
     {
-      id: "openai",
-      ...PROVIDER_TEMPLATES.openai,
+      id: "ollama",
+      ...PROVIDER_TEMPLATES.ollama,
       isEnabled: true,
       isDefault: true,
     } as AIProviderConfig,
   ],
-  fallbackToOpenAI: true,
+  fallbackToOpenAI: false,
   preferLocalForSimpleTasks: false,
-  useOpenAIForEmbeddings: true,
+  useOpenAIForEmbeddings: false,
 };

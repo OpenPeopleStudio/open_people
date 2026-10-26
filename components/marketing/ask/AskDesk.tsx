@@ -131,6 +131,9 @@ export function AskDesk() {
             Ask
           </button>
         </form>
+        <p className="desk-fact mt-4 leading-relaxed text-[var(--ink-3)]">
+          Questions may be processed by a third-party AI provider.
+        </p>
       </section>
 
       <section id="follow-up" className="desk-surface p-5 sm:p-6" aria-label="Follow-up form">

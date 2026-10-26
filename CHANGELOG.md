@@ -2,9 +2,25 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
-## 0.5.19 — 2026-10-26 — Vercel Web Analytics
+## 0.5.23 — 2026-10-26 — Vercel Web Analytics
 
 Public site loads Vercel Web Analytics once from the root layout. Cookieless aggregate page views, referrers, country, and device. Custom events are names only: ask question submitted, ask follow-up submitted, contact form submitted. No question text, email, or other PII in event props. No Speed Insights. `/privacy` states this in short sentence-case words. `/ask` no longer claims it has no trackers. Preview only; Tom merges.
+
+## 0.5.22 — 2026-10-26 — /ask: fill proposal knowledge from chapter-2 master
+
+Replace the empty `content/ask/proposal-knowledge.md` placeholder with the reviewed chapter-2 proposal master (working draft 24 Oct 2026, figure check 25 Oct 2026). `/ask` still answers only from that file. Labels CONFIRMED / REPORTED / ESTIMATE / UNKNOWN stay. Nothing in the file claims an agreement, partner, tenant, nation, utility, funder, government, or power allocation. Prompt, providers, nav, and pages unchanged. Preview only; Tom merges.
+
+## 0.5.21 — 2026-10-26 — /ask: Gemini primary, OpenRouter Nemotron fallback
+
+Cross-provider fallback for live `/ask`. `ASK_FALLBACK_PROVIDER` (`google` | `openrouter` | `gateway`) and `ASK_FALLBACK_MODEL` retry once when the primary errors before any text (503, 429, missing key, ~12s to first token). Unset keeps current single-provider behavior. OpenAI model ids stay rejected on every slot. Logs name the answering provider/model and `fallbackFired`. The system prompt answers directly and does not introduce itself as an AI assistant. Production values Tom will set: Gemini flash-lite with OpenRouter Nemotron `:free` as backup. Preview only; Tom merges.
+
+## 0.5.20 — 2026-10-26 — /ask: env-selectable $0 providers
+
+`ASK_PROVIDER` selects the live `/ask` backend: unset stays AI Gateway (Grok, Claude fallback). `google` uses Gemini flash via `GOOGLE_GENERATIVE_AI_API_KEY`. `openrouter` uses a `:free` non-OpenAI model via `OPENROUTER_API_KEY`. `ASK_MODEL` still overrides. OpenAI model ids are rejected. Missing Google/OpenRouter keys fail closed to the snag copy. `/ask` notes that questions may be processed by a third-party AI provider. Preview only; Tom merges.
+
+## 0.5.19 — 2026-10-26 — /ask: Grok via Gateway, no OpenAI-direct
+
+Live `/ask` no longer calls OpenAI directly and no longer treats `OPENAI_API_KEY` as configured. Default model is `spacexai/grok-4.7` (xAI on AI Gateway), override with `ASK_MODEL`. Fallback is `anthropic/claude-sonnet-5.5`. Gateway options list xAI then Anthropic only. Unconfigured Gateway still 503s. Provider-type defaults no longer start on OpenAI. Live public copy did not name OpenAI as a provider. Preview only; Tom merges.
 
 ## 0.5.18 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
 
