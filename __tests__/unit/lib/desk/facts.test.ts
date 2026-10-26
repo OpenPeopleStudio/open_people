@@ -188,7 +188,10 @@ describe("horizon desk facts", () => {
       ...COMPUTE_RULES.flatMap((rule) => [rule.body.plain, rule.body.technical]),
     ].join("\n");
     expect(computeBlob).toMatch(/Open People leads/i);
-    expect(computeBlob).toMatch(/consent first/i);
+    expect(computeBlob).toMatch(/No partnership or agreement exists/);
+    expect(computeBlob).toMatch(/Partnership, if any, is on terms each nation sets/);
+    expect(computeBlob).not.toMatch(/Proposed partners/i);
+    expect(computeBlob).not.toMatch(/consent first/i);
     expect(computeBlob).not.toMatch(/catalyst/i);
     expect(computeBlob).not.toMatch(/wrong page/i);
     expect(computeBlob).not.toMatch(/wrong organisation/i);
