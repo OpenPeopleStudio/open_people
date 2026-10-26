@@ -19,6 +19,8 @@ const PAGES = [
   "/letter",
   "/about",
   "/ask",
+  "/privacy",
+  "/terms",
 ];
 
 for (const path of PAGES) {
@@ -145,3 +147,41 @@ test("power track links into the Churchill record", async ({ page }) => {
   await expect(main.locator('a[href="/engage"]')).toBeVisible();
   await expect(main.getByRole("link", { name: "Work this track" })).toBeVisible();
 });
+
+test("a power-record page links to /power", async ({ page }) => {
+  await page.goto("/brief");
+  const parent = page.locator(".desk-kicker a[href='/power']");
+  await expect(parent).toBeVisible();
+  await expect(parent).toHaveText("Power");
+});
+
+test("/compute links to /build", async ({ page }) => {
+  await page.goto("/compute");
+  const parent = page.locator(".desk-kicker a[href='/build']");
+  await expect(parent).toBeVisible();
+  await expect(parent).toHaveText("Build");
+  await expect(page.locator("main.desk-page")).toContainText("This page is the campus, and only that.");
+});
+
+for (const path of ["/privacy", "/terms"]) {
+  test(`${path} uses the desk nav`, async ({ page, isMobile }) => {
+    await page.goto(path);
+    await expect(page.locator("main.desk-page")).toBeVisible();
+    const labels = ["Build", "Capital", "Consent", "Power"];
+    if (isMobile) {
+      await page.getByRole("button", { name: "Open menu" }).click();
+      const sheet = page.locator(".desk-nav-sheet");
+      for (const label of labels) {
+        await expect(sheet.getByRole("link", { name: label })).toBeVisible();
+      }
+    } else {
+      const nav = page.getByRole("navigation", { name: "Primary" });
+      for (const label of labels) {
+        await expect(nav.getByRole("link", { name: label })).toBeVisible();
+      }
+    }
+    await expect(page.getByRole("link", { name: "Sign in" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Pricing" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Get started" })).toHaveCount(0);
+  });
+}
