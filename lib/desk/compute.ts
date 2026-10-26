@@ -26,9 +26,9 @@ export const COMPUTE_RULES = [
     title: "Open People leads",
     body: {
       plain:
-        "This is a Labrador campus build plan, and this is the organisation. Open People is the proponent: we lead the proposed 500 MW campus and the research campus, in proposed partnership with NL Hydro, Indigenous nations — consent first — and capital.",
+        "This is a Labrador campus build plan, and this is the organisation. Open People is the proponent: we lead the proposed 500 MW campus and the research campus. We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets.",
       technical:
-        "Role: Open People leads. Partnership categories are NL Hydro, Indigenous nations (consent first), and capital. That is a proposed structure, not a signed offtake, not an impact-benefit agreement, and not a named funder. No customers are named on this page.",
+        "Role: Open People leads. We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. That is not a signed offtake, not an impact-benefit agreement, and not a named funder. No customers are named on this page.",
     } satisfies DeskVoice,
   },
   {

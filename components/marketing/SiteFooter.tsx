@@ -62,6 +62,22 @@ export default function SiteFooter() {
           <a href="mailto:tom@openpeople.ai" className="desk-nav-link normal-case tracking-normal">
             tom@openpeople.ai
           </a>
+          <a
+            href="https://x.com/OpenPeopleAI"
+            className="desk-nav-link normal-case tracking-normal"
+            rel="me noopener"
+            target="_blank"
+          >
+            @OpenPeopleAI
+          </a>
+          <a
+            href="https://www.linkedin.com/in/tomlanenl"
+            className="desk-nav-link normal-case tracking-normal"
+            rel="me noopener"
+            target="_blank"
+          >
+            LinkedIn
+          </a>
         </div>
       </div>
 

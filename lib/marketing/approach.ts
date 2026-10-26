@@ -1,7 +1,7 @@
 /** How Open People works. Rendered on /about. Public rules, not a second front door. */
 
 export const APPROACH_LEDE =
-  "Open People leads a proposed 500 MW Labrador campus and a research campus. The power record is the public evidence on the power. These rules are public so Hydro, nations, and capital can hold us to them.";
+  "Open People leads a proposed 500 MW Labrador AI campus and a research campus. The power record is the public evidence on the power. These rules are public so Hydro, nations, and capital can hold us to them.";
 
 export const APPROACH_SECTIONS = [
   {
@@ -10,7 +10,7 @@ export const APPROACH_SECTIONS = [
     title: "Capital model: Open People leads",
     body: [
       "Open People is the proponent of a proposed 500 MW Labrador AI campus and a research campus.",
-      "Proposed partners: NL Hydro, Indigenous nations (consent first), and capital. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
+      "We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
       "We are not a party to the Churchill Falls / Gull Island framework. We lead the campus. Proposed. In feasibility. Not approved, not funded, not under construction.",
     ],
   },

@@ -26,13 +26,13 @@ export default function ComputePage() {
       quiet
       verified={COMPUTE_LAST_VERIFIED}
       kicker="Proposed campus · in feasibility"
-      title="Open People leads a 500 MW Labrador campus."
+      title="Open People leads a 500 MW Labrador AI campus."
       lede={
         <Unfold
           id="compute-lede"
           label="500 MW"
           plain={<p>{COMPUTE_HERO.plain}</p>}
-          technical={COMPUTE_HERO.technical}
+          technical="Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class."
         />
       }
       meta={
@@ -107,8 +107,10 @@ export default function ComputePage() {
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
           Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
-          Consent first. This page does not jump the line: mines and existing industry remain the
-          constraint, and the public ask is to keep firm power in the province.
+          We intend to seek early, respectful engagement with each nation. No partnership or
+          agreement exists. Partnership, if any, is on terms each nation sets. This page does not
+          jump the line: mines and existing industry remain the constraint, and the public ask is to
+          keep firm power in the province.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link href="/engage" className="btn-primary">
