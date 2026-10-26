@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.17 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
+
+Campus-only sentence leaves the build seed and stays on `/compute`. Power records link back to `/power`; `/compute` links back to `/build`. Privacy and Terms render through DeskPage / SiteNav. Sitemap ranks tracks at 0.9 and record pages at 0.8; `/compute` stays 0.4. Preview only; Tom merges.
+
 ## 0.5.16 — 2026-10-26 — /letter: remove home street address
 
 Tom Lane’s home street address is off the public `/letter` page (From block, opening line, signature). City stays. Intro note says the letter is unchanged except that the home street address has been removed. A unit test fails if public marketing copy ships “Water Street”, “281 Water”, “685-8584”, “6858584”, or “auth@”. Preview only; Tom merges.
