@@ -123,4 +123,17 @@ describe("repo map", () => {
     expect(decision).toContain("notes/archive/debates.md");
     expect(decision).not.toContain("DEBATES.md");
   });
+
+  it("does not track build output", () => {
+    const ignore = readFileSync(resolve(ROOT, ".gitignore"), "utf8");
+    expect(ignore).toContain("/dist/");
+    expect(ignore).toContain("/test-results/");
+    expect(ignore).toContain("/playwright-report/");
+    const tracked = execSync("git ls-files dist playwright-report test-results", {
+      cwd: ROOT,
+      encoding: "utf8",
+    });
+    expect(tracked).toBe("");
+    expect(existsSync(resolve(ROOT, "notes/archive/open-source-agent.skill"))).toBe(true);
+  });
 });
