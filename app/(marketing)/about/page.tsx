@@ -7,7 +7,7 @@ import { APPROACH_LEDE, APPROACH_SECTIONS } from "@/lib/marketing/approach";
 import { VISION_CONTACT, VISION_SECTIONS, VISION_SENTENCES } from "@/lib/marketing/vision";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About our Churchill Falls work",
   description:
     "Open People is building a proposed 500 MW Labrador AI campus and a research campus, in feasibility. Tom Lane, St. John’s.",
 };

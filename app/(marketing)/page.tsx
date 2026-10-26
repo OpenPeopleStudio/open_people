@@ -20,13 +20,15 @@ import {
   HOME_POWER_LINE,
   HOME_RESEARCH,
   HOME_STATUS,
-  HOME_TITLE,
 } from "@/lib/marketing/home";
 import { sourceList } from "@/lib/desk";
 import { deskMetadata } from "@/lib/og/metadata";
 
+/** Search title only. The on-page heading stays the company line. */
+const HOME_SEARCH_TITLE = "Churchill Falls power — Open People";
+
 export const metadata = deskMetadata({
-  title: { absolute: HOME_TITLE },
+  title: { absolute: HOME_SEARCH_TITLE },
   description: HOME_DESCRIPTION,
   path: "/",
 });

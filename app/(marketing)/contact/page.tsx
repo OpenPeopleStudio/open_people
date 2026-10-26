@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Open People on Churchill Falls",
   description:
     "Write Tom Lane at Open People — tom@openpeople.ai — about keeping firm power in Newfoundland and Labrador, or about the proposed Labrador campus.",
 };

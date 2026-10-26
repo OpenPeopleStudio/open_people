@@ -12,13 +12,23 @@ import {
 import { deskMetadata } from "@/lib/og/metadata";
 import { VISION_CONTACT } from "@/lib/marketing/vision";
 
-export const metadata = deskMetadata({
-  title: "Proposed Labrador campus",
-  description:
-    "Open People leads a proposed 500 MW AI data campus in Labrador, and a research campus, in feasibility. Mines and existing industry are real constraints on the same power.",
-  path: "/compute",
-  robots: { index: true, follow: true },
-});
+export const metadata = {
+  ...deskMetadata({
+    title: "Churchill Falls data centre",
+    description:
+      "Open People leads a proposed 500 MW Labrador data centre, in feasibility, and a research campus. Mining comes first. Not approved, not funded, and not under construction.",
+    path: "/compute",
+    robots: { index: true, follow: true },
+  }),
+  keywords: [
+    "Churchill Falls",
+    "Churchill Falls data centre",
+    "Labrador data centre",
+    "Newfoundland and Labrador",
+    "Gull Island",
+    "Open People",
+  ],
+};
 
 export default function ComputePage() {
   return (

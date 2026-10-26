@@ -16,7 +16,7 @@ import ShareEngage from "./ShareEngage";
 import PrintButton from "./PrintButton";
 
 export const metadata = deskMetadata({
-  title: "Keep firm power in NL",
+  title: "Churchill Falls — write in",
   description:
     "Open People is asking Newfoundland and Labrador to keep firm power in the province while the contracts are still paper. Seven checks for your MHA. Mining first. Compute is a named use, not a reserved block.",
   path: "/engage",
