@@ -13,6 +13,7 @@ Old → new:
 - `app/(marketing)/compute/page.tsx` title: “500 MW Labrador campus” → “500 MW Labrador AI campus”
 - `lib/voice-mode/anchors.ts` `ENGAGE_HERO_LEDE`: “proposed 500 MW campus on that power” → “proposed 500 MW AI campus on that power” (and the matching plain line)
 - `lib/marketing/approach.ts` partners line: “Proposed partners: NL Hydro, Indigenous nations (consent first), and capital…” → “We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets…”
+- `lib/marketing/approach.ts` “What we will not do”: “Indigenous engagement is first-class: an equity conversation from day one, not a consultation footnote at the end.” → “We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets.”
 - `lib/desk/compute.ts` Open People leads rule: dropped “in proposed partnership with NL Hydro, Indigenous nations”; same process-only sentences
 - `app/(marketing)/compute/page.tsx` lede technical and closing paragraph: same process-only sentences. `COMPUTE_HERO.technical` left unchanged for the home board.
 

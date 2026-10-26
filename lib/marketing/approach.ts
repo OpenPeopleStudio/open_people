@@ -32,7 +32,7 @@ export const APPROACH_SECTIONS = [
       "No crypto mining as the product story, permanently. Newfoundland’s last data-centre memory is a cautionary tale; we do not revive it.",
       "Never lead with “cheap power.” We lead with firm in-province power for industry, jobs, and a campus that has to live with mines as a real constraint. Arbitrage framing loses this argument.",
       "Mining and resources first. Compute alongside critical minerals, not against them. Shared transmission and shared community benefits.",
-      "Indigenous engagement is first-class: an equity conversation from day one, not a consultation footnote at the end.",
+      "We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets.",
     ],
   },
   {
