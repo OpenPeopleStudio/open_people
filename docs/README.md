@@ -1,3 +1,24 @@
+# Docs
+
+Read `notes/repo-map.ts` before adding a folder here.
+
+## Site
+
+- `docs/plans/` — public-site plans (desk v2, brand v3)
+- `docs/superpowers/` — specs and implementation plans for agent workers
+- `docs/assets/` — asset notes for the public site
+
+## Spec
+
+- `docs/spec/` — identity, data package, agent portability
+- `docs/reference/` — schema catalog and migration guides
+
+## Parked platform docs
+
+The rest of `docs/` (architecture, features, company, super-admin, deployment, api, security, personal-data) describes the parked multi-tenant shell. It is not the public site. Do not delete it.
+
+---
+
 # OpenPeople.ai Documentation
 
 Owner: Coder
