@@ -18,6 +18,17 @@ export const BOARD_ENTRIES: readonly BoardEntry[] = [
     sources: [],
   },
   {
+    id: "build-feasibility-record",
+    track: "build",
+    cleared: "2026-10-26",
+    plain:
+      "The Build track now has a feasibility work record. Near-term work is feasibility on costs and impact. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved.",
+    technical:
+      "Public Build record: /feasibility. Restates proposed / in feasibility. Phase 1 written request to NL Hydro; non-firm interruptible pilot; no reserved megawatts. Company kind; empty sources until an external fact is cleared.",
+    kind: "company",
+    sources: [],
+  },
+  {
     id: "capital-partner",
     track: "capital",
     cleared: "2026-10-14",
@@ -28,12 +39,34 @@ export const BOARD_ENTRIES: readonly BoardEntry[] = [
     sources: [],
   },
   {
+    id: "capital-funding-record",
+    track: "capital",
+    cleared: "2026-10-26",
+    plain:
+      "The Capital track now has a funding stance record. Capital stays a proposed partner. No funder is named. Nothing is signed.",
+    technical:
+      "Public Capital record: /funding. Restates the proposed-partner stance. No named funder, no funding ask, no money figures. Company kind; empty sources until an external fact is cleared.",
+    kind: "company",
+    sources: [],
+  },
+  {
     id: "consent-first",
     track: "consent",
     cleared: "2026-10-14",
     plain: "Indigenous partnership comes first. No agreement is claimed.",
     technical:
       "Proposed partners include Indigenous nations, consent first. No impact-benefit agreement is signed. No meeting is claimed on this track.",
+    kind: "company",
+    sources: [],
+  },
+  {
+    id: "consent-partnership-record",
+    track: "consent",
+    cleared: "2026-10-26",
+    plain:
+      "The Consent track now has a partnership stance record. Indigenous partnership comes first. No agreement is claimed.",
+    technical:
+      "Public Consent record: /partnership. Restates consent first. No impact-benefit agreement, no meeting claimed, no nation asked. Company kind; empty sources until an external fact is cleared.",
     kind: "company",
     sources: [],
   },

@@ -15,6 +15,9 @@ const PAGES = [
   "/industries",
   "/engage",
   "/compute",
+  "/funding",
+  "/partnership",
+  "/feasibility",
   "/brief",
   "/letter",
   "/about",
@@ -146,6 +149,61 @@ test("power track links into the Churchill record", async ({ page }) => {
   await expect(main.locator('a[href="/brief"]')).toBeVisible();
   await expect(main.locator('a[href="/engage"]')).toBeVisible();
   await expect(main.getByRole("link", { name: "Work this track" })).toBeVisible();
+});
+
+test("capital track links the funding stance record", async ({ page }) => {
+  await page.goto("/capital");
+  const main = page.locator("main.desk-page");
+  await expect(main.getByRole("link", { name: "Funding stance" })).toHaveAttribute(
+    "href",
+    "/funding",
+  );
+});
+
+test("/funding links to /capital", async ({ page }) => {
+  await page.goto("/funding");
+  const parent = page.locator(".desk-kicker a[href='/capital']");
+  await expect(parent).toBeVisible();
+  await expect(parent).toHaveText("Capital");
+  await expect(page.locator("main.desk-page")).toContainText("No funder is named");
+});
+
+test("consent track links the partnership stance record", async ({ page }) => {
+  await page.goto("/consent");
+  const main = page.locator("main.desk-page");
+  await expect(main.getByRole("link", { name: "Partnership stance" })).toHaveAttribute(
+    "href",
+    "/partnership",
+  );
+});
+
+test("/partnership links to /consent", async ({ page }) => {
+  await page.goto("/partnership");
+  const parent = page.locator(".desk-kicker a[href='/consent']");
+  await expect(parent).toBeVisible();
+  await expect(parent).toHaveText("Consent");
+  await expect(page.locator("main.desk-page")).toContainText("No agreement is claimed");
+});
+
+test("build track links compute and feasibility records", async ({ page }) => {
+  await page.goto("/build");
+  const main = page.locator("main.desk-page");
+  await expect(main.getByRole("link", { name: "Compute plan" })).toHaveAttribute(
+    "href",
+    "/compute",
+  );
+  await expect(main.getByRole("link", { name: "Feasibility work" })).toHaveAttribute(
+    "href",
+    "/feasibility",
+  );
+});
+
+test("/feasibility links to /build", async ({ page }) => {
+  await page.goto("/feasibility");
+  const parent = page.locator(".desk-kicker a[href='/build']");
+  await expect(parent).toBeVisible();
+  await expect(parent).toHaveText("Build");
+  await expect(page.locator("main.desk-page")).toContainText("No megawatts are reserved");
 });
 
 test("a power-record page links to /power", async ({ page }) => {

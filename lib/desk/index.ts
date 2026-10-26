@@ -19,6 +19,21 @@ export {
   COMPUTE_LAST_VERIFIED,
 } from "./compute";
 export {
+  CAPITAL_HERO,
+  CAPITAL_SECTIONS,
+  CAPITAL_LAST_VERIFIED,
+} from "./capital";
+export {
+  CONSENT_HERO,
+  CONSENT_SECTIONS,
+  CONSENT_LAST_VERIFIED,
+} from "./consent";
+export {
+  FEASIBILITY_HERO,
+  FEASIBILITY_SECTIONS,
+  FEASIBILITY_LAST_VERIFIED,
+} from "./feasibility";
+export {
   GATES,
   GATES_VERIFIED,
   daysUntil,

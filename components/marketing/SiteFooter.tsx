@@ -14,7 +14,14 @@ const TRACKS = [
   { href: "/power", label: "Power" },
 ];
 
-const BUILD_RECORD = [{ href: "/compute", label: "Compute plan" }];
+const BUILD_RECORD = [
+  { href: "/compute", label: "Compute plan" },
+  { href: "/feasibility", label: "Feasibility work" },
+];
+
+const CAPITAL_RECORD = [{ href: "/funding", label: "Funding stance" }];
+
+const CONSENT_RECORD = [{ href: "/partnership", label: "Partnership stance" }];
 
 const POWER_RECORD = [
   { href: "/tracker", label: "Tracker" },
@@ -48,6 +55,8 @@ export default function SiteFooter() {
             ["Company", COMPANY],
             ["Tracks", TRACKS],
             ["Build record", BUILD_RECORD],
+            ["Capital record", CAPITAL_RECORD],
+            ["Consent record", CONSENT_RECORD],
             ["Power record", POWER_RECORD],
           ].map(([label, links]) => (
             <div key={label as string} className="flex flex-wrap gap-x-8 gap-y-3">
