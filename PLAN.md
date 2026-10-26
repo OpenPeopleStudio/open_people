@@ -1,44 +1,44 @@
-# PLAN — First slice: take OpenAI off live /ask
+# PLAN — /ask: selectable $0 non-OpenAI providers
 
 ## Goal
 
-Tom Lane decided openpeople.ai should avoid OpenAI wherever an alternative exists. This slice removes OpenAI from the live `/ask` path and from provider defaults, without touching parked SaaS, brand, or board work.
+Tom wants to test $0 non-OpenAI options for live `/ask` and pick the best. This slice makes the provider selectable through env. No OpenAI models. Stay on `cursor/avoid-openai-ask-00d0`. No force-push. Never touch `main`.
 
 ## In
 
-- `app/api/ask/route.ts`, `lib/ask/prompt.ts`, `lib/ask/openai-direct.ts`: drop the OpenAI-direct path and `OPENAI_API_KEY` as a way to configure `/ask`. Chat stays on the Vercel AI SDK (`streamText`) through AI Gateway.
-- Default model: current Gateway Grok id `spacexai/grok-4.7` (provider `xai`). Override with `ASK_MODEL`. Do not read `AI_GATEWAY_MODEL` (that Vercel var is still an OpenAI id).
-- Gateway fallback, if any: Anthropic Claude via the gateway (`anthropic/claude-sonnet-5.5`). Provider options must not list `openai` or `azure`.
-- If Gateway is not configured, keep the current 503 “not configured” response. An OpenAI key alone is not enough.
-- `types/ai-providers.ts`: `defaultProvider` is not `openai`; no `gpt-*` in the default settings; `fallbackToOpenAI` and `useOpenAIForEmbeddings` are false. Types still compile. Parked readers stay as they are.
-- Public marketing copy that names OpenAI or Azure OpenAI as a provider. Live pages only. `_retired` pages stay; list them in the PR.
-- A unit test that the `/ask` path has no OpenAI model and no `openai-direct` import.
-- Lint, typecheck, build, and the test suite. Known main failures stay: `__tests__/unit/lib/email/sync.test.ts`, and any sitemap `/compute` 0.4 vs 0.85 test.
+- `ASK_MODEL` still sets the AI Gateway model string when `ASK_PROVIDER` is unset (default: Gateway, Grok then Claude).
+- `ASK_PROVIDER=google`: `@ai-sdk/google` with `GOOGLE_GENERATIVE_AI_API_KEY`. Model from `ASK_MODEL` or a current Gemini flash default.
+- `ASK_PROVIDER=openrouter`: `@openrouter/ai-sdk-provider` with `OPENROUTER_API_KEY`. Model from `ASK_MODEL` (a `:free` non-OpenAI id). Reject any model id that starts with `openai/`.
+- Missing Google or OpenRouter key: fail closed to the existing snag copy plus the follow-up form. Never leak errors or key names.
+- Unconfigured Gateway (default provider) still returns 503.
+- One-line note on `/ask` under the box, sentence case: “Questions may be processed by a third-party AI provider.”
+- Server log includes provider and model, never keys.
+- Unit tests for the provider picker. Known main failures stay: `__tests__/unit/lib/email/sync.test.ts`, `__tests__/unit/app/sitemap.test.ts` (`/compute` 0.4 vs 0.85).
+- Stamp `0.5.20`. Update this PLAN, locks, CHANGELOG, ACTIONS, SITE-LOG.
 
 ## Out
 
-- The `openai` npm package, if anything outside this slice still imports it.
-- Parked platform: `v1/chat/completions`, chat conversations/actions, mlf/knowledge embeddings, `ai/plan/week`, `ops/propose`, semantic-cache, workflows/search, demo/scenario-packs, admin model lists, the super-admin OpenAI fallback toggle.
-- `.codex/`, `AGENTS.md` title.
-- Brand, board, home, nav, `/letter`. Cursor is building the project board; do not touch it.
-- Changing Vercel env vars. List what Tom must add or can remove after merge.
-- Merge to `main`, force-push, or production promote. Tom merges.
+- OpenAI models, `OPENAI_API_KEY`, and the deleted openai-direct path.
+- Parked SaaS OpenAI clients, the `openai` npm package, admin model lists, super-admin fallback toggle.
+- Brand, board, home, nav, `/letter`.
+- Changing Vercel env vars from this agent. List what Tom must set to try Google or OpenRouter.
+- Merge to `main`, force-push, or production promote.
 
 ## Dest
 
-- This repo’s marketing site. Vercel project `open-people`. Production host `www.openpeople.ai`.
-- Ship path: feature branch → PR → Vercel preview. Do not promote the preview.
+- This repo’s marketing site. Vercel project `open-people`. Preview on PR #35.
+- Ship path: this feature branch → same PR → Vercel preview. Do not promote.
 
-## First slice (this PR)
+## First slice (this PR add-on)
 
-Live `/ask` off OpenAI (Grok default, Claude fallback, no direct key). Provider-type defaults off OpenAI. Live public copy only if it names OpenAI as a provider. Inventory of remaining OpenAI references in the PR body.
+Env-selectable `/ask` providers: Gateway (default), Google Gemini, OpenRouter `:free`. Public one-line third-party note. Logs name the provider and model.
 
 ## Done when
 
-- `/ask` has no OpenAI-direct path, no `OPENAI_API_KEY` dependency, and no OpenAI model in the default or gateway fallback order.
-- Default model is a current non-OpenAI Gateway id; `ASK_MODEL` can override it.
-- Unconfigured Gateway still returns 503.
-- `DEFAULT_AI_SETTINGS` does not default to OpenAI or `gpt-*`.
-- Live public pages do not name OpenAI or Azure OpenAI as a provider. `_retired` hits are listed, not edited.
-- Unit test covers the `/ask` ban. Lint, typecheck, and build pass. Known main test failures are unchanged.
-- PR is open with the remaining-OpenAI inventory and the env-var list. CI is green.
+- Default path is still Gateway with no OpenAI models.
+- `ASK_PROVIDER=google` and `ASK_PROVIDER=openrouter` resolve a non-OpenAI model and require their own keys.
+- Missing keys snag; they do not leak. Gateway still 503s when unconfigured.
+- `/ask` shows the third-party line under the box.
+- Logs include provider and model, no keys.
+- Unit tests cover the picker. Lint, typecheck, and build pass. Known main test failures unchanged.
+- Commit is on `cursor/avoid-openai-ask-00d0`. PR #35 is updated. CI is green. Preview URL reported.
