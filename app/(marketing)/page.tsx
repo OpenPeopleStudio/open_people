@@ -119,7 +119,7 @@ export default function HomePage() {
           We publish the file, and we lead a proposed use. Firm in-province power should serve
           Labrador and island industry,{" "}
           <strong className="font-semibold text-[var(--ink)]">mining and resources first</strong>.
-          Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.
+          Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility.
           We are not a party to the Churchill Falls agreement.
         </p>
       }

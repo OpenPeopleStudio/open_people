@@ -5,7 +5,7 @@ import { DeskPage, DeskSection } from "@/components/marketing/shell";
 export const metadata: Metadata = {
   title: "Approach",
   description:
-    "How Open People works while we keep firm power in Newfoundland and Labrador. We lead a proposed 500 MW Labrador campus, in feasibility. Consent first. Mines first.",
+    "How Open People works while we keep firm power in Newfoundland and Labrador. We lead a proposed 500 MW Labrador AI campus, in feasibility. Consent first. Mines first.",
 };
 
 const SECTIONS = [
@@ -69,7 +69,7 @@ export default function ApproachPage() {
       lede={
         <p>
           Open People is working to keep firm Churchill Falls and Gull Island power in Newfoundland
-          and Labrador, and we lead a proposed 500 MW Labrador campus and a research campus. The
+          and Labrador, and we lead a proposed 500 MW Labrador AI campus and a research campus. The
           public case is the brief. These rules are public so Hydro, nations, capital, and anyone in
           the province can hold us to them.
         </p>

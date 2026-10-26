@@ -70,7 +70,7 @@ export const SCALE_ANCHORS = {
     technical:
       "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Open People leads a proposed 500 MW campus; that is not a reserved block. Mines remain a real constraint on the same power.",
     plain:
-      "Open People leads a proposed 500 MW Labrador campus, in feasibility. It is not a reserved block. Mines and existing industry are real constraints on the same power.",
+      "Open People leads a proposed 500 MW Labrador AI campus, in feasibility. It is not a reserved block. Mines and existing industry are real constraints on the same power.",
     source: "DCIA Material Terms (no named compute class) · Open People proposal",
   },
 } as const;

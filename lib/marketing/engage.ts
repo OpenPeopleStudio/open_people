@@ -44,7 +44,7 @@ export function buildEngageMessage(values: EngageFormValues) {
     values.note?.trim() || "-",
     "",
     "— sent from openpeople.ai/engage",
-    "Open People leads a proposed 500 MW Labrador campus, in feasibility. Not a DCIA party.",
+    "Open People leads a proposed 500 MW Labrador AI campus, in feasibility. Not a DCIA party.",
   ].join("\n");
 }
 

@@ -30,7 +30,7 @@ export default function SiteFooter() {
           <p className="mt-4 text-sm leading-relaxed text-[var(--ink-2)]">
             Open People is working to keep firm Churchill Falls / Gull Island power in Newfoundland
             and Labrador. Mining and existing industry come first. We lead a proposed 500 MW Labrador
-            campus, in feasibility — a named use, not the opener. This site says what is signed, what
+            AI campus, in feasibility — a named use, not the opener. This site says what is signed, what
             is still open, and what you can do.
           </p>
           <p className="desk-fact mt-4 text-[var(--ink-3)]">
