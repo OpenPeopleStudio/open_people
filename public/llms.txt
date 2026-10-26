@@ -9,10 +9,13 @@ Open People is the proponent of that proposed data centre. It is not approved, n
 - [Churchill Falls power](https://www.openpeople.ai/): the company and the proposed campus. Mining first. The data centre is not the opener.
 - [Public case](https://www.openpeople.ai/brief): the Labrador case. Clean hydro. The proposed campus starts small, in feasibility, not a reserved block.
 - [Churchill Falls data centre](https://www.openpeople.ai/compute): the proposed 500 MW Labrador data centre. Use this page for data centre questions. Mining comes first.
+- [Feasibility work](https://www.openpeople.ai/feasibility): Phase 1 written request to NL Hydro; non-firm interruptible pilot; no megawatts reserved.
 - [Power](https://www.openpeople.ai/power): power for the campus. The public Churchill Falls record also lives on the tracker and the brief.
 - [Build](https://www.openpeople.ai/build): the campus and the research campus. Proposed. In feasibility.
 - [Capital](https://www.openpeople.ai/capital): the money for the project. Proposed. In feasibility.
+- [Funding stance](https://www.openpeople.ai/funding): capital unnamed; no funder named; nothing signed.
 - [Consent](https://www.openpeople.ai/consent): Indigenous partnership. Proposed. In feasibility.
+- [Partnership stance](https://www.openpeople.ai/partnership): consent first; no agreement claimed; no nation asked.
 - [Churchill Falls tracker](https://www.openpeople.ai/tracker): what is signed, what is still open, and what the public text does not say.
 - [Mining first](https://www.openpeople.ai/industries): mines and Labrador industry before a campus.
 - [Price record](https://www.openpeople.ai/costs): the price stories, kept apart.

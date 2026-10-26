@@ -101,6 +101,12 @@ describe("desk Open Graph", () => {
     expect(DESK_OG.compute.headline).toBe("A 500 MW Labrador campus.");
     expect(DESK_OG.compute.accent).toBe("Open People leads.");
     expect(DESK_OG.compute.quiet).toBe(true);
+    expect(DESK_OG.funding.headline).toBe("Capital is a proposed partner.");
+    expect(DESK_OG.funding.quiet).toBe(true);
+    expect(DESK_OG.partnership.headline).toBe("Indigenous partnership comes first.");
+    expect(DESK_OG.partnership.quiet).toBe(true);
+    expect(DESK_OG.feasibility.headline).toBe("Feasibility on costs and impact.");
+    expect(DESK_OG.feasibility.quiet).toBe(true);
     expect(DESK_OG.coalition.accent).toBe("Open People leads. Mining first.");
     expect(DESK_OG.coalition.alt).not.toMatch(/catalyst/i);
     expect(DESK_OG.ask.headline).toBe("Ask the proposal.");

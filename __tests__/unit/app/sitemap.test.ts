@@ -23,8 +23,11 @@ describe("sitemap ranks", () => {
         "/contact",
         "/costs",
         "/engage",
+        "/feasibility",
+        "/funding",
         "/industries",
         "/letter",
+        "/partnership",
         "/power",
         "/privacy",
         "/terms",
@@ -38,7 +41,10 @@ describe("sitemap ranks", () => {
     for (const path of ["/brief", "/tracker", "/engage", "/industries", "/costs", "/letter"]) {
       expect(byPath[path]).toBe(0.8);
     }
-    expect(byPath["/compute"]).toBe(0.4);
+    expect(byPath["/compute"]).toBe(0.85);
+    expect(byPath["/funding"]).toBe(0.4);
+    expect(byPath["/partnership"]).toBe(0.4);
+    expect(byPath["/feasibility"]).toBe(0.5);
     expect(byPath["/about"]).toBe(0.8);
   });
 });

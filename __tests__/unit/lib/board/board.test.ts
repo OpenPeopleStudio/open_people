@@ -89,15 +89,38 @@ describe("project board", () => {
   });
 
   it("seeds the build track with the public feasibility line", () => {
-    const build = statusFor("build");
-    expect(build?.kind).toBe("company");
-    expect(build?.plain).toBe(COMPUTE_HERO.plain);
-    expect(build?.plain).toMatch(/proposed/i);
-    expect(build?.plain).toMatch(/feasibility/i);
-    expect(build?.plain).toMatch(/not approved/i);
-    expect(build?.plain).toMatch(/not funded/i);
-    expect(build?.plain).toMatch(/not under construction/i);
-    expect(build?.plain).not.toMatch(/This page is the campus/);
+    const seed = BOARD_ENTRIES.find((row) => row.id === "build-campus");
+    expect(seed?.kind).toBe("company");
+    expect(seed?.plain).toBe(COMPUTE_HERO.plain);
+    expect(seed?.plain).toMatch(/proposed/i);
+    expect(seed?.plain).toMatch(/feasibility/i);
+    expect(seed?.plain).toMatch(/not approved/i);
+    expect(seed?.plain).toMatch(/not funded/i);
+    expect(seed?.plain).toMatch(/not under construction/i);
+    expect(seed?.plain).not.toMatch(/This page is the campus/);
+  });
+
+  it("links Capital to the funding stance record", () => {
+    const capital = TRACKS.find((track) => track.id === "capital");
+    expect(capital?.records).toEqual([{ href: "/funding", label: "Funding stance" }]);
+    expect(statusFor("capital")?.id).toBe("capital-funding-record");
+  });
+
+  it("links Consent to the partnership stance record", () => {
+    const consent = TRACKS.find((track) => track.id === "consent");
+    expect(consent?.records).toEqual([{ href: "/partnership", label: "Partnership stance" }]);
+    expect(statusFor("consent")?.id).toBe("consent-partnership-record");
+  });
+
+  it("links Build to compute and feasibility records", () => {
+    const build = TRACKS.find((track) => track.id === "build");
+    expect(build?.records).toEqual([
+      { href: "/compute", label: "Compute plan" },
+      { href: "/feasibility", label: "Feasibility work" },
+    ]);
+    expect(statusFor("build")?.id).toBe("build-feasibility-record");
+    expect(statusFor("build")?.plain).toMatch(/feasibility/i);
+    expect(statusFor("build")?.plain).toMatch(/No megawatts are reserved/i);
   });
 
   it("keeps seed text inside the vision bans", () => {
@@ -105,12 +128,8 @@ describe("project board", () => {
     for (const pattern of BANNED) {
       expect(blob).not.toMatch(pattern);
     }
-    expect(BOARD_ENTRIES.map((row) => row.cleared)).toEqual([
-      "2026-10-14",
-      "2026-10-14",
-      "2026-10-14",
-      "2026-10-14",
-    ]);
+    expect(BOARD_ENTRIES.every((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.cleared))).toBe(true);
+    expect(BOARD_ENTRIES.some((row) => row.cleared === "2026-10-14")).toBe(true);
   });
 
   it("addresses each track in its own mail subject", () => {

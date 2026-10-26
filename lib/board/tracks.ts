@@ -22,9 +22,14 @@ function defineTrack(
 export const TRACKS: readonly Track[] = [
   defineTrack("build", "Build", "The campus and the research campus.", [
     { href: "/compute", label: "Compute plan" },
+    { href: "/feasibility", label: "Feasibility work" },
   ]),
-  defineTrack("capital", "Capital", "The money for the project.", []),
-  defineTrack("consent", "Consent", "Indigenous partnership.", []),
+  defineTrack("capital", "Capital", "The money for the project.", [
+    { href: "/funding", label: "Funding stance" },
+  ]),
+  defineTrack("consent", "Consent", "Indigenous partnership.", [
+    { href: "/partnership", label: "Partnership stance" },
+  ]),
   defineTrack("power", "Power", "Power for the campus.", [
     { href: "/tracker", label: "Tracker" },
     { href: "/industries", label: "Industries" },
