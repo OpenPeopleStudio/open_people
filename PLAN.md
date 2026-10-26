@@ -1,44 +1,41 @@
-# PLAN — /ask: selectable $0 non-OpenAI providers
+# PLAN — /ask: Gemini primary, OpenRouter Nemotron fallback
 
 ## Goal
 
-Tom wants to test $0 non-OpenAI options for live `/ask` and pick the best. This slice makes the provider selectable through env. No OpenAI models. Stay on `cursor/avoid-openai-ask-00d0`. No force-push. Never touch `main`.
+Tom approved shipping PR #35 on Gemini with OpenRouter Nemotron as backup. This slice adds a one-shot cross-provider fallback when the primary fails before any text streams. Stay on `cursor/avoid-openai-ask-00d0`. No force-push. Never touch `main`.
 
 ## In
 
-- `ASK_MODEL` still sets the AI Gateway model string when `ASK_PROVIDER` is unset (default: Gateway, Grok then Claude).
-- `ASK_PROVIDER=google`: `@ai-sdk/google` with `GOOGLE_GENERATIVE_AI_API_KEY`. Model from `ASK_MODEL` or a current Gemini flash default.
-- `ASK_PROVIDER=openrouter`: `@openrouter/ai-sdk-provider` with `OPENROUTER_API_KEY`. Model from `ASK_MODEL` (a `:free` non-OpenAI id). Reject any model id that starts with `openai/`.
-- Missing Google or OpenRouter key: fail closed to the existing snag copy plus the follow-up form. Never leak errors or key names.
-- Unconfigured Gateway (default provider) still returns 503.
-- One-line note on `/ask` under the box, sentence case: “Questions may be processed by a third-party AI provider.”
-- Server log includes provider and model, never keys.
-- Unit tests for the provider picker. Known main failures stay: `__tests__/unit/lib/email/sync.test.ts`, `__tests__/unit/app/sitemap.test.ts` (`/compute` 0.4 vs 0.85).
-- Stamp `0.5.20`. Update this PLAN, locks, CHANGELOG, ACTIONS, SITE-LOG.
+- `ASK_FALLBACK_PROVIDER` (`google` | `openrouter` | `gateway`) and `ASK_FALLBACK_MODEL`.
+- Production values Tom will set: `ASK_PROVIDER=google`, `ASK_MODEL=gemini-flash-lite-latest`, `ASK_FALLBACK_PROVIDER=openrouter`, `ASK_FALLBACK_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free`.
+- If the primary errors before any text (503, 429, auth/missing key, ~12s to first token), retry once on the fallback. If both fail, the existing snag copy plus the follow-up form.
+- When neither `ASK_FALLBACK_*` is set, keep current behavior.
+- Reject any `openai/` model id on every slot.
+- Log which provider/model answered and whether fallback fired. No keys. Question text stays as `log.ts` already does.
+- System prompt: do not introduce as an AI assistant; answer directly.
+- Unit tests for fallback selection and primary-fails-then-fallback (mock providers).
+- Stamp `0.5.21`. Known main failures stay: email sync, sitemap `/compute`.
 
 ## Out
 
-- OpenAI models, `OPENAI_API_KEY`, and the deleted openai-direct path.
-- Parked SaaS OpenAI clients, the `openai` npm package, admin model lists, super-admin fallback toggle.
-- Brand, board, home, nav, `/letter`.
-- Changing Vercel env vars from this agent. List what Tom must set to try Google or OpenRouter.
+- Changing Vercel env vars from this agent. List what Tom must set.
+- OpenAI models, parked SaaS OpenAI clients, brand, board, home, nav, `/letter`.
 - Merge to `main`, force-push, or production promote.
 
 ## Dest
 
-- This repo’s marketing site. Vercel project `open-people`. Preview on PR #35.
-- Ship path: this feature branch → same PR → Vercel preview. Do not promote.
+- Live `/ask` on this repo. Vercel project `open-people`. Preview on PR #35.
 
 ## First slice (this PR add-on)
 
-Env-selectable `/ask` providers: Gateway (default), Google Gemini, OpenRouter `:free`. Public one-line third-party note. Logs name the provider and model.
+Cross-provider fallback for `/ask`. Gemini first, Nemotron if the primary never emits text. Prompt no longer opens as an AI assistant.
 
 ## Done when
 
-- Default path is still Gateway with no OpenAI models.
-- `ASK_PROVIDER=google` and `ASK_PROVIDER=openrouter` resolve a non-OpenAI model and require their own keys.
-- Missing keys snag; they do not leak. Gateway still 503s when unconfigured.
-- `/ask` shows the third-party line under the box.
-- Logs include provider and model, no keys.
-- Unit tests cover the picker. Lint, typecheck, and build pass. Known main test failures unchanged.
-- Commit is on `cursor/avoid-openai-ask-00d0`. PR #35 is updated. CI is green. Preview URL reported.
+- Fallback is env-gated and off when unset.
+- Primary pre-text failure retries once on the fallback. Double failure snags.
+- `openai/` is rejected on primary and fallback.
+- Logs name provider, model, and `fallbackFired`.
+- Unit tests cover selection and the mock fallback path.
+- Lint, typecheck, and build pass. Known main test failures unchanged.
+- Head commit is on this branch. CI status reported.
