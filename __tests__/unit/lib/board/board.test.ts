@@ -86,6 +86,7 @@ describe("project board", () => {
     expect(build?.plain).toMatch(/not approved/i);
     expect(build?.plain).toMatch(/not funded/i);
     expect(build?.plain).toMatch(/not under construction/i);
+    expect(build?.plain).not.toMatch(/This page is the campus/);
   });
 
   it("keeps seed text inside the vision bans", () => {
