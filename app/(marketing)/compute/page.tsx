@@ -41,9 +41,13 @@ export default function ComputePage() {
           <Link href="/brief" className="desk-link">
             the brief
           </Link>
-          . If you want the power kept in the province, start at{" "}
-          <Link href="/engage" className="desk-link">
-            Engage
+          . The thesis is{" "}
+          <Link href="/about" className="desk-link">
+            /about
+          </Link>
+          . The track is{" "}
+          <Link href="/build" className="desk-link">
+            /build
           </Link>
           .
         </p>
@@ -77,8 +81,8 @@ export default function ComputePage() {
           People from across Canada, on the problems society will face in the age of AI. In the
           spirit of the Perimeter Institute and the Banff Centre — named as spirit, not as partners.
         </p>
-        <Link href="/vision" className="desk-kicker mt-6 inline-flex no-underline hover:underline">
-          Vision →
+        <Link href="/build" className="desk-kicker mt-6 inline-flex no-underline hover:underline">
+          Build track →
         </Link>
       </DeskSection>
 
@@ -113,6 +117,9 @@ export default function ComputePage() {
           <a href={`mailto:${VISION_CONTACT}`} className="btn-secondary">
             {VISION_CONTACT}
           </a>
+          <Link href="/build" className="btn-secondary">
+            Build track
+          </Link>
         </div>
       </DeskSection>
     </DeskPage>

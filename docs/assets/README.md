@@ -6,11 +6,11 @@ This directory contains the favicon and Open Graph image assets for OpenPeople.a
 
 ## Favicon
 
-The favicon is the Churchill River desk chassis: void field (`#040404`) with a plasma (`#e8893c`) L-rail and short foot, the same grammar as the OG share card. Source of truth is `public/favicon.svg`; raster sizes come from `npm run generate-assets`.
+The favicon is the horizon mark: orange field (`#F2501F`), a white ground, and three bodies (two white, one black). Source of truth is `public/favicon.svg`; raster sizes come from `npm run generate-assets`.
 
 ### Files
 - `favicon.ico` - Traditional favicon (16x16, 32x32, 48x48)
-- `favicon.svg` - Desk chassis on void
+- `favicon.svg` - Horizon mark
 - `favicon-16x16.png` - 16x16 PNG
 - `favicon-32x32.png` - 32x32 PNG
 - `favicon-48x48.png` - 48x48 PNG
@@ -20,9 +20,9 @@ The favicon is the Churchill River desk chassis: void field (`#040404`) with a p
 - `manifest.json` - Web App Manifest for PWA support
 
 ### Design
-- **Field**: Void (`#040404`)
-- **Accent**: Plasma (`#e8893c`)
-- **Mark**: OG chassis — top bar, left rail, short foot. No lime, no figures.
+- **Field**: Orange (`#F2501F`)
+- **Ground**: White
+- **Mark**: Horizon — two white bodies and one black body over a white ground. No lime.
 
 ## Open Graph Images
 
@@ -75,11 +75,9 @@ const ogUrl = `/api/og?title=${encodeURIComponent(userName)}&description=${encod
 - Theme colors for mobile browsers
 
 ### OG Image Design
-- **Background**: Pure black (#000000)
-- **Accent Color**: Electric lime (#00FF88)
-- **Typography**: Inter font family
-- **Layout**: Clean, centered design with logo
-- **Content**: Title, description, and branding
+- **Background**: Black (`#000000`)
+- **Accent**: Orange (`#F2501F`)
+- **Content**: Home card — “Building a Labrador campus.” Proposed. In feasibility.
 
 ## Browser Support
 

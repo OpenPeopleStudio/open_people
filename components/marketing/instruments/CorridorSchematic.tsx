@@ -1,255 +1,254 @@
+"use client";
+
+import { useState } from "react";
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
-import { Figure } from "@/components/marketing/depth";
+import { InstDetail, instHit, type InstFigure } from "./InstDetail";
 
 /**
- * I5 — Corridor Schematic. Not a map. Churchill Falls in the centre; the
- * existing 230 kV lines west to Labrador West (at limit); the proposed
- * 735 kV line (funded, no in-service date); the export lines east and south
- * to Québec; the towns that already sit on the system.
+ * I5 — Corridor Schematic. Not a map. The drawing shows the route and one
+ * label per line. The sentences and sources sit in the legend.
  */
+type PartId = "west" | "plant" | "export" | "proposed" | "town";
+
+const PARTS: Record<
+  PartId,
+  { kicker: string; body: string; figure?: InstFigure }
+> = {
+  west: {
+    kicker: "Labrador West",
+    body: "Mining load on the two 230 kV lines. Those lines are at their operational limit. Press cite, not a PUB order.",
+    figure: {
+      value: "~312 MW",
+      status: "reported",
+      sources: [DESK_SOURCES.cbcMining, DESK_SOURCES.nlhLabWest],
+      lastVerified: DESK_VERIFIED,
+      note: "Mining load sold to IOC and Tacora on the two Labrador West lines, per NL Hydro officials (CBC, Jan 2025). Press cite, not a PUB order. Those 230 kV lines are at their operational limit.",
+    },
+  },
+  plant: {
+    kicker: "Churchill Falls",
+    body: "Rated capacity of the existing plant.",
+    figure: {
+      value: "5,428 MW",
+      status: "published-rate",
+      sources: [DESK_SOURCES.cerNl],
+      lastVerified: DESK_VERIFIED,
+      note: "Rated capacity of the existing Churchill Falls plant (CER provincial profile).",
+    },
+  },
+  export: {
+    kicker: "Québec",
+    body: "Roughly 90% of Churchill Falls output flows to Québec.",
+    figure: {
+      value: "~90%",
+      status: "reported",
+      sources: [DESK_SOURCES.cerNl],
+      lastVerified: DESK_VERIFIED,
+      note: "CER provincial profile: roughly 90% of Churchill Falls output flows to Québec.",
+    },
+  },
+  proposed: {
+    kicker: "735 kV proposed",
+    body: "A single 735 kV line, transfer limit about 1,500 MW. Funded in the public framing. No in-service date.",
+    figure: {
+      value: "~1,500 MW",
+      status: "framework",
+      sources: [DESK_SOURCES.nlhContractorOct, DESK_SOURCES.nlhLabWest, DESK_SOURCES.govNlDcia],
+      lastVerified: DESK_VERIFIED,
+      note: "NL Hydro October 2026 contractor notice: a single 735 kV line with a maximum transfer of approximately 1,500 MW — a ceiling, not a reserved block. Funded in the public framing. No in-service date.",
+    },
+  },
+  town: {
+    kicker: "Happy Valley–Goose Bay",
+    body: "Drawn because the town already sits on the system. Not a new industrial allocation.",
+  },
+};
+
 export function CorridorSchematic() {
+  const [active, setActive] = useState<PartId>("west");
   const W = 1000;
-  const H = 360;
-  const cf = { x: 520, y: 180 };
-  const lw = { x: 150, y: 180 };
-  const qc = { x: 900, y: 180 };
-  const hvgb = { x: 700, y: 300 };
+  const H = 400;
+  const lw = { x: 150, y: 128 };
+  const cf = { x: 500, y: 128 };
+  const qc = { x: 860, y: 128 };
+  const hvgb = { x: 730, y: 330 };
+  const west = (lw.x + cf.x) / 2;
+  const east = (cf.x + qc.x) / 2;
 
   return (
     <div className="inst corridor">
       <div className="inst-scroll">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby="cs-title cs-desc"
-        >
+        <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="The corridor the mines need">
           <title id="cs-title">The corridor the mines need</title>
           <desc id="cs-desc">
             Schematic, not a map. Churchill Falls at the centre. Two existing
             230 kV lines run west to Labrador West and are at their operational
             limit. A proposed 735 kV line with about 1,500 MW of transfer is
-            funded but has no in-service date. Export lines run to Québec. Happy
-            Valley–Goose Bay and the Churchill Falls townsite also sit on the
-            system.
+            funded but has no in-service date. Export lines run to Québec, and
+            about 90 percent of Churchill Falls output flows there. Happy
+            Valley–Goose Bay also sits on the system.
           </desc>
 
-          {/* existing 230 kV west, two lines */}
+          {/* Existing 230 kV, west. Two circuits, one label above, status below. */}
           <line
-            x1={cf.x - 30}
-            y1={cf.y - 8}
-            x2={lw.x + 30}
-            y2={lw.y - 8}
+            x1={lw.x + 46}
+            y1={lw.y - 8}
+            x2={cf.x - 46}
+            y2={cf.y - 8}
             className="hair"
-            strokeWidth={1.5}
+            strokeWidth={1.75}
           />
           <line
-            x1={cf.x - 30}
-            y1={cf.y + 8}
-            x2={lw.x + 30}
-            y2={lw.y + 8}
+            x1={lw.x + 46}
+            y1={lw.y + 8}
+            x2={cf.x - 46}
+            y2={cf.y + 8}
             className="hair"
-            strokeWidth={1.5}
+            strokeWidth={1.75}
           />
-          <text
-            x={(cf.x + lw.x) / 2}
-            y={cf.y - 22}
-            textAnchor="middle"
-            className="lbl"
-          >
-            2 × 230 kV · existing
+          <text x={west} y={lw.y - 28} textAnchor="middle" className="lbl">
+            2 × 230 kV
           </text>
-          <text
-            x={(cf.x + lw.x) / 2}
-            y={cf.y + 30}
-            textAnchor="middle"
-            className="lbl amber"
-          >
-            at operational limit
+          <text x={west} y={lw.y + 36} textAnchor="middle" className="lbl amber">
+            at limit
           </text>
 
-          {/* proposed 735 kV */}
+          <g {...instHit("proposed", "735 kV proposed", active, setActive)}>
+            <rect x={lw.x - 20} y={lw.y + 32} width={cf.x - lw.x + 40} height={150} fill="transparent" />
+            <line
+              x1={lw.x}
+              y1={lw.y + 32}
+              x2={lw.x}
+              y2={250}
+              className="stroke-steel"
+              strokeWidth={1.5}
+              strokeDasharray="4 4"
+            />
           <line
-            x1={cf.x - 30}
-            y1={cf.y + 60}
-            x2={lw.x + 30}
-            y2={lw.y + 60}
-            className="stroke-steel draw"
-            strokeWidth={2.5}
-            strokeDasharray="8 6"
-            pathLength={1}
+            x1={cf.x}
+            y1={cf.y + 32}
+            x2={cf.x}
+            y2={250}
+            className="stroke-steel"
+            strokeWidth={1.5}
+            strokeDasharray="4 4"
           />
-          <text
-            x={(cf.x + lw.x) / 2}
-            y={cf.y + 84}
-            textAnchor="middle"
-            className="lbl steel"
-          >
-            735 kV proposed · ~1,500 MW · funded · in-service date not published
-          </text>
-
-          {/* export east to Québec */}
           <line
-            x1={cf.x + 30}
-            y1={cf.y - 10}
-            x2={qc.x - 40}
-            y2={qc.y - 10}
+            x1={lw.x}
+            y1={250}
+            x2={cf.x}
+            y2={250}
+            className="stroke-steel"
+            strokeWidth={2}
+            strokeDasharray="7 6"
+          />
+          <text x={west} y={274} textAnchor="middle" className="lbl steel">
+            735 kV proposed
+          </text>
+          </g>
+
+          {/* Export east. Three circuits, one short label. */}
+          <line
+            x1={cf.x + 46}
+            y1={cf.y - 12}
+            x2={qc.x - 52}
+            y2={qc.y - 12}
             className="stroke-plasma"
             strokeWidth={1.5}
           />
           <line
-            x1={cf.x + 30}
+            x1={cf.x + 46}
             y1={cf.y}
-            x2={qc.x - 40}
+            x2={qc.x - 52}
             y2={qc.y}
             className="stroke-plasma"
             strokeWidth={1.5}
           />
           <line
-            x1={cf.x + 30}
-            y1={cf.y + 10}
-            x2={qc.x - 40}
-            y2={qc.y + 10}
+            x1={cf.x + 46}
+            y1={cf.y + 12}
+            x2={qc.x - 52}
+            y2={qc.y + 12}
             className="stroke-plasma"
             strokeWidth={1.5}
           />
-          <text
-            x={(cf.x + qc.x) / 2}
-            y={cf.y - 24}
-            textAnchor="middle"
-            className="lbl plasma"
-          >
-            735 kV export · ~90% of output flows to Québec
+          <text x={east} y={cf.y - 32} textAnchor="middle" className="lbl plasma">
+            ~90%
           </text>
 
-          {/* HVGB spur */}
+          {/* Spur south-east. Starts under Churchill Falls, clear of the proposed line. */}
           <line
-            x1={cf.x + 20}
-            y1={cf.y + 20}
-            x2={hvgb.x - 20}
-            y2={hvgb.y - 10}
+            x1={cf.x + 44}
+            y1={cf.y + 22}
+            x2={hvgb.x - 12}
+            y2={hvgb.y}
             className="hair"
             strokeWidth={1.5}
           />
 
-          {/* nodes */}
-          <g transform={`translate(${cf.x} ${cf.y})`}>
+          <g transform={`translate(${lw.x} ${lw.y})`} {...instHit("west", "Labrador West", active, setActive)}>
             <rect
-              x={-30}
-              y={-30}
-              width={60}
-              height={60}
-              fill="var(--surface-2)"
-              stroke="var(--ink)"
-              strokeWidth={1}
-            />
-            <text y={-38} textAnchor="middle" className="lbl lbl-strong">
-              Churchill Falls
-            </text>
-            <text
-              y={5}
-              textAnchor="middle"
-              className="num"
-              style={{ fontSize: 12 }}
-            >
-              5,428
-            </text>
-            <text
-              y={18}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 8.5 }}
-            >
-              MW
-            </text>
-            <text
-              y={48}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 9.5 }}
-            >
-              townsite on the system
-            </text>
-          </g>
-
-          <g transform={`translate(${lw.x} ${lw.y})`}>
-            <rect
-              x={-30}
-              y={-30}
-              width={60}
-              height={60}
+              x={-44}
+              y={-32}
+              width={88}
+              height={64}
               fill="var(--surface-2)"
               stroke="var(--plasma)"
               strokeWidth={1}
             />
-            <text y={-38} textAnchor="middle" className="lbl lbl-strong">
+            <text y={-44} textAnchor="middle" className="lbl lbl-strong">
               Labrador West
             </text>
-            <text
-              y={-2}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 9 }}
-            >
-              IOC · Tacora
-            </text>
-            <text
-              y={12}
-              textAnchor="middle"
-              className="num"
-              style={{ fontSize: 12 }}
-            >
+            <text y={6} textAnchor="middle" className="num" style={{ fontSize: 15 }}>
               ~312 MW
-            </text>
-            <text
-              y={48}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 9.5 }}
-            >
-              Labrador City · Wabush
-            </text>
-            <text
-              y={62}
-              textAnchor="middle"
-              className="lbl plasma"
-              style={{ fontSize: 9.5 }}
-            >
-              mining first
             </text>
           </g>
 
-          <g transform={`translate(${qc.x} ${qc.y})`}>
+          <g transform={`translate(${cf.x} ${cf.y})`} {...instHit("plant", "Churchill Falls", active, setActive)}>
             <rect
-              x={-40}
-              y={-30}
-              width={80}
-              height={60}
+              x={-44}
+              y={-32}
+              width={88}
+              height={64}
+              fill="var(--surface-2)"
+              stroke="var(--ink)"
+              strokeWidth={1}
+            />
+            <text y={-44} textAnchor="middle" className="lbl lbl-strong">
+              Churchill Falls
+            </text>
+            <text y={2} textAnchor="middle" className="num" style={{ fontSize: 16 }}>
+              5,428
+            </text>
+            <text y={18} textAnchor="middle" className="lbl" style={{ fontSize: 9 }}>
+              MW
+            </text>
+          </g>
+
+          <g transform={`translate(${qc.x} ${qc.y})`} {...instHit("export", "Québec", active, setActive)}>
+            <rect
+              x={-50}
+              y={-32}
+              width={100}
+              height={64}
               fill="none"
               stroke="var(--plasma)"
               strokeWidth={1}
               strokeDasharray="3 3"
             />
-            <text y={5} textAnchor="middle" className="lbl lbl-strong">
+            <text y={4} textAnchor="middle" className="lbl lbl-strong">
               Québec
-            </text>
-            <text
-              y={48}
-              textAnchor="middle"
-              className="lbl"
-              style={{ fontSize: 9.5 }}
-            >
-              Hydro-Québec
             </text>
           </g>
 
-          <g transform={`translate(${hvgb.x} ${hvgb.y})`}>
+          <g transform={`translate(${hvgb.x} ${hvgb.y})`} {...instHit("town", "Happy Valley–Goose Bay", active, setActive)}>
             <circle
-              r={6}
+              r={5}
               fill="var(--surface-2)"
               stroke="var(--ink-3)"
               strokeWidth={1}
             />
-            <text x={12} y={4} className="lbl">
+            <text x={14} y={4} className="lbl">
               Happy Valley–Goose Bay
             </text>
           </g>
@@ -259,44 +258,9 @@ export function CorridorSchematic() {
         </span>
       </div>
 
-      <ul className="inst-legend" aria-label="Corridor figures">
-        <li className="inst-legend-item">
-          <span className="inst-swatch" data-fill="solid" />
-          <span>
-            <Figure
-              value="~1,500 MW"
-              status="framework"
-              size="sm"
-              sources={[DESK_SOURCES.nlhContractorOct, DESK_SOURCES.nlhLabWest, DESK_SOURCES.govNlDcia]}
-              lastVerified={DESK_VERIFIED}
-              note="NL Hydro October 2026 contractor notice: a single 735 kV line with a maximum transfer of approximately 1,500 MW — a ceiling, not a reserved block. FEED targeted December 2026. Construction contracts expected Q1 2028. No in-service date."
-            />{" "}
-            <span className="text-[var(--ink-3)]">
-              — proposed 735 kV transfer limit, a planning figure
-            </span>
-          </span>
-        </li>
-        <li className="inst-legend-item">
-          <span className="inst-swatch" data-fill="solid" />
-          <span>
-            <Figure
-              value="~312 MW"
-              status="reported"
-              size="sm"
-              sources={[DESK_SOURCES.cbcMining]}
-              lastVerified={DESK_VERIFIED}
-              note="Mining load sold to IOC and Tacora on the two Labrador West lines, per NL Hydro officials (CBC, Jan 2025). Press cite."
-            />{" "}
-            <span className="text-[var(--ink-3)]">
-              — on the two 230 kV lines today
-            </span>
-          </span>
-        </li>
-      </ul>
+      <InstDetail {...PARTS[active]} />
       <p className="inst-caption">
-        Schematic only. Line lengths and positions carry no geographic meaning.
-        Export share from the CER provincial profile. Corridor status from NL
-        Hydro&apos;s Labrador West study page.
+        Schematic only. Line lengths and positions are not a map. Select a part. Open the number for its source.
       </p>
     </div>
   );

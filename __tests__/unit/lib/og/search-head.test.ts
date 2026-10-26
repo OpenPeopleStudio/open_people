@@ -128,11 +128,11 @@ describe("favicon set", () => {
     }
   });
 
-  it("is the desk chassis (void + plasma), not the leftover lime blob", async () => {
-    const svg = readFileSync(resolve(ROOT, "public/favicon.svg"), "utf8");
-    expect(svg).toContain("#040404");
-    expect(svg).toContain("#e8893c");
-    expect(svg).not.toMatch(/#00FF88/i);
+  it("is the brand mark (orange and ink), not the leftover lime blob", async () => {
+    const svg = readFileSync(resolve(ROOT, "public/favicon.svg"), "utf8").toLowerCase();
+    expect(svg).toContain("#000000");
+    expect(svg).toContain("#f2501f");
+    expect(svg).not.toMatch(/#00ff88/i);
     expect(svg).not.toMatch(/human|person/i);
 
     const png16 = resolve(ROOT, "public/favicon-16x16.png");
@@ -149,8 +149,8 @@ describe("favicon set", () => {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
-      if (r < 20 && g < 20 && b < 20) voidN += 1;
-      else if (r > 200 && g > 100 && g < 180 && b < 90) plasmaN += 1;
+      if (r < 40 && g < 40 && b < 50) voidN += 1;
+      else if (r > 180 && g < 140 && b < 100) plasmaN += 1;
       else if (g > 200 && r < 80 && b < 160) limeN += 1;
     }
     expect(voidN).toBeGreaterThan(0);

@@ -1,41 +1,66 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Churchill River desk — design system v2
-   "Instrument, not spectacle." Black field, one warm accent for the human
-   layer, one cool accent for the technical layer, hairlines, sharp geometry,
-   numerals as the image. No glows, scanlines, particles, grids, gradients
-   on text, loops, or HUD brackets — ever.
-   Scoped under .desk-root so the parked SaaS shell is untouched.
+   Open People brand book — void (night).
+   Paper by day, black by night. The night field is #000, not charcoal.
+   Orange is the person: one highlight a view.
+   Schibsted Grotesk for words, DM Mono for labels. No gradients, glows,
+   particles, or starfields. Scoped under .desk-root.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .desk-root {
-  /* Field */
-  --void: #040404;
-  --surface-1: #0a0a0b;
-  --surface-2: #101012;
-  --surface-3: #16161a;
+  /* Ground. Active theme is void black. Paper values are the day pair. */
+  --paper: #f3f3ef;
+  --ink-ground: #000000;
+  --void: var(--ink-ground);
+  --surface-1: #050505;
+  --surface-2: #0a0a0a;
+  --surface-3: #111111;
+  --surface-paper: #e8e8e3;
+  --planet: #ffffff;
 
-  /* Ink (muted raised for AA at small sizes) */
-  --ink: #f2f4f6;
-  --ink-2: rgba(242, 244, 246, 0.74);
-  --ink-3: rgba(242, 244, 246, 0.58);
-  --ink-4: rgba(242, 244, 246, 0.36);
+  /* Text on black. On paper, ink is #000 and ink-muted is #5a5f68. */
+  --ink: #ffffff;
+  --ink-2: rgba(255, 255, 255, 0.72);
+  --ink-muted: #8a8a8a;
+  --ink-3: var(--ink-muted);
+  --ink-4: rgba(255, 255, 255, 0.38);
 
-  /* Depth encoding: warm = plain, cool = technical */
-  --plasma: #e8893c;
-  --plasma-bright: #f0a060;
-  --plasma-soft: rgba(232, 137, 60, 0.09);
-  --steel: #8a9bb0;
-  --steel-bright: #aebccd;
-  --steel-soft: rgba(138, 155, 176, 0.12);
+  /* The person. On paper, small orange text is #c23a12, not #f2501f. */
+  --orange: #f2501f;
+  --orange-text: #f2501f;
+  --orange-text-paper: #c23a12;
+  --on-orange: var(--ink-ground);
+  --plasma: var(--orange);
+  --plasma-bright: var(--orange);
+  --plasma-soft: rgba(242, 80, 31, 0.1);
+  --steel: #8f8f8f;
+  --steel-bright: #c8c8c8;
+  --steel-soft: rgba(255, 255, 255, 0.08);
 
   /* Status */
   --ok: #5fa87c;
   --amber: #d4a84b;
   --alert: #e07a5f;
 
-  /* Lines */
-  --hairline: rgba(255, 255, 255, 0.08);
-  --hairline-strong: rgba(255, 255, 255, 0.16);
+  /* Lines. Paper hairline is #d3d3cd. Night lines are neutral, close to the void. */
+  --hairline: #1a1a1a;
+  --hairline-strong: #2a2a2a;
+
+  /* Space: 4, 8, 12, 16, 24, 32, 48, 64 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius. Icons use 23%. Circles use --radius-round. */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-icon: 23%;
+  --radius-round: 9999px;
 
   /* Legacy aliases used by existing marketing markup */
   --text-primary: var(--ink);
@@ -47,12 +72,14 @@
   --warning: var(--amber);
   --error: var(--alert);
   --desk-hairline: var(--hairline);
-  --desk-radius: 2px;
+  --desk-radius: var(--radius-sm);
 
-  /* Type (font variables are set by next/font on the same element) */
-  --fs-hero: clamp(2.6rem, 6.4vw, 5rem);
-  --fs-h2: clamp(1.6rem, 2.8vw, 2.4rem);
-  --fs-h3: 1.25rem;
+  /* Type. next/font sets --font-grotesk and --font-mono on this element. */
+  --font-display: var(--font-grotesk), "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: var(--font-grotesk), "Avenir Next", "Segoe UI", sans-serif;
+  --fs-hero: clamp(2.15rem, 5vw, 4.5rem); /* display, scales from phone to desktop */
+  --fs-h2: clamp(1.5rem, 2.2vw, 2rem); /* h2 32/38 */
+  --fs-h3: 1.375rem; /* h3 22/28 */
   --fs-num-xl: clamp(3.4rem, 9vw, 7rem);
   --fs-num-lg: clamp(2rem, 4vw, 3rem);
 
@@ -66,10 +93,11 @@
   --wide: 75rem;
 
   font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.588;
   color: var(--ink);
   background: var(--void);
   -webkit-font-smoothing: antialiased;
-  font-feature-settings: "ss01", "cv11";
 }
 
 @media (min-width: 640px) {
@@ -103,10 +131,10 @@
 
 .desk-h1 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--fs-hero);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.045em;
   text-wrap: balance;
 }
 
@@ -117,54 +145,65 @@
 
 .desk-h2 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--fs-h2);
-  line-height: 1.1;
-  letter-spacing: -0.022em;
+  line-height: 1.1875;
+  letter-spacing: -0.6px;
   text-wrap: balance;
 }
 
 .desk-h3 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--fs-h3);
-  line-height: 1.2;
-  letter-spacing: -0.016em;
+  line-height: 1.272;
+  letter-spacing: -0.2px;
 }
 
 .desk-lede {
-  font-size: clamp(1.05rem, 1.6vw, 1.22rem);
+  font-size: 17px;
   line-height: 1.55;
   color: var(--ink-2);
   max-width: 62ch;
   text-wrap: pretty;
 }
 
+@media (min-width: 768px) {
+  .desk-lede {
+    font-size: 19px;
+    line-height: 30px;
+  }
+}
+
 .desk-body {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 27px;
   color: var(--ink-2);
   max-width: 64ch;
 }
 
 .desk-kicker {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.7px;
   text-transform: uppercase;
-  color: var(--plasma);
+  color: var(--ink-muted);
 }
 
 .desk-kicker-quiet {
-  color: var(--ink-3);
-  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  letter-spacing: 0.7px;
 }
 
 .desk-fact {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0;
 }
 
 .desk-cite {
@@ -176,7 +215,7 @@
   text-transform: uppercase;
   color: var(--steel);
   border: 1px solid var(--steel-soft);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 0.1rem 0.35rem;
   white-space: nowrap;
   vertical-align: 0.1em;
@@ -235,9 +274,9 @@
   z-index: 50;
   height: var(--nav-h);
   border-bottom: 1px solid var(--hairline);
-  background: rgba(4, 4, 4, 0.9);
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .desk-nav-inner {
@@ -251,64 +290,97 @@
 }
 
 .desk-brand {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
   text-decoration: none;
   color: var(--ink);
   white-space: nowrap;
 }
 
-.desk-brand b {
-  color: var(--plasma);
+.desk-brand img {
+  display: block;
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.desk-brand span {
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 720px) {
+  .desk-brand span {
+    display: none;
+  }
+
+  .desk-brand img {
+    height: 24px;
+  }
 }
 
 .desk-nav-links {
   margin-left: auto;
   display: none;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.15rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .desk-nav-links {
     display: flex;
   }
 }
 
-.desk-nav-link {
+@media (min-width: 1100px) {
+  .desk-nav-links {
+    gap: 1.5rem;
+  }
+}
+
+.desk-root .desk-nav-link {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.7px;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-muted);
   text-decoration: none;
   transition: color 150ms ease;
 }
 
-.desk-nav-link:hover,
-.desk-nav-link[aria-current="page"] {
+.desk-root .desk-nav-link:hover,
+.desk-root .desk-nav-link[aria-current="page"] {
   color: var(--ink);
 }
 
 .desk-nav-cta {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--plasma);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--on-orange);
+  background: var(--orange);
   text-decoration: none;
-  border: 1px solid rgba(232, 137, 60, 0.5);
-  border-radius: 2px;
-  padding: 0.5rem 0.85rem;
-  transition: background 150ms ease, color 150ms ease;
+  border: 1px solid var(--orange);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.85rem;
+  transition: filter 150ms ease;
 }
 
 .desk-nav-cta:hover {
-  background: var(--plasma);
-  color: var(--void);
+  background: var(--orange);
+  color: var(--on-orange);
+  filter: brightness(1.06);
 }
 
 .desk-nav-burger {
@@ -319,14 +391,14 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--hairline);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   color: var(--ink);
   background: transparent;
   font-family: var(--font-mono);
   font-size: 1.1rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .desk-nav-burger {
     display: none;
   }
@@ -346,8 +418,9 @@
   display: block;
   padding: 0.9rem 0;
   font-family: var(--font-display);
+  font-weight: 600;
   font-size: 1.75rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.6px;
   text-decoration: none;
   border-bottom: 1px solid var(--hairline);
 }
@@ -482,12 +555,18 @@
 }
 
 .desk-section {
-  padding: 3.5rem 0;
+  padding: 2.5rem 0;
   border-bottom: 1px solid var(--hairline);
   scroll-margin-top: calc(var(--desk-nav-offset) + 1rem);
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
+  .desk-section {
+    padding: 3.5rem 0;
+  }
+}
+
+@media (min-width: 1100px) {
   .desk-section {
     padding: 5rem 0;
   }
@@ -525,7 +604,7 @@
 .desk-surface {
   background: var(--surface-1);
   border: 1px solid var(--hairline);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
 }
 
 .desk-grid-hair {
@@ -533,7 +612,7 @@
   gap: 1px;
   background: var(--hairline);
   border: 1px solid var(--hairline);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
 }
 
 .desk-grid-hair > * {
@@ -562,9 +641,10 @@
 
 .desk-rule-list .n {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--plasma);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.7px;
+  color: var(--ink-muted);
 }
 
 /* ─── Buttons ────────────────────────────────────────────────────────────── */
@@ -577,12 +657,13 @@
   gap: 0.5rem;
   min-height: 2.75rem;
   padding: 0.7rem 1.25rem;
-  border-radius: 2px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-transform: none;
   text-decoration: none;
   transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
   box-shadow: none;
@@ -590,14 +671,15 @@
 }
 
 .desk-root .btn-primary {
-  background: var(--plasma);
-  color: var(--void);
-  border: 1px solid var(--plasma);
+  background: var(--orange);
+  color: var(--on-orange);
+  border: 1px solid var(--orange);
 }
 
 .desk-root .btn-primary:hover {
-  background: var(--plasma-bright);
-  border-color: var(--plasma-bright);
+  background: var(--orange);
+  border-color: var(--orange);
+  filter: brightness(1.06);
   box-shadow: none;
   transform: none;
 }
@@ -605,17 +687,18 @@
 .desk-root .btn-secondary {
   background: transparent;
   color: var(--ink);
-  border: 1px solid var(--hairline-strong);
+  border: 1px solid var(--hairline);
 }
 
 .desk-root .btn-secondary:hover {
-  border-color: var(--plasma);
-  color: var(--plasma);
+  border-color: var(--ink);
+  color: var(--ink);
   background: transparent;
+  filter: none;
 }
 
 .desk-link {
-  color: var(--plasma);
+  color: var(--orange-text);
   text-decoration: none;
   text-underline-offset: 4px;
 }
@@ -631,7 +714,7 @@
   align-items: center;
   gap: 0.35rem;
   border: 1px solid currentColor;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 0.18rem 0.45rem;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -652,7 +735,7 @@
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   border: 1px solid var(--hairline-strong);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
@@ -862,7 +945,6 @@
   background: var(--surface-2);
   border-top: 1px solid var(--hairline-strong);
   padding: 1.1rem var(--gutter) calc(1.1rem + env(safe-area-inset-bottom, 0px));
-  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
   max-height: 70vh;
   overflow: auto;
 }
@@ -877,9 +959,8 @@
     width: 22rem;
     max-width: calc(100vw - 2rem);
     border: 1px solid var(--hairline-strong);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     padding: 1rem 1.1rem;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
     max-height: none;
   }
   .term-pop[data-align="right"] {
@@ -897,8 +978,9 @@
 
 .term-pop-term {
   font-family: var(--font-display);
+  font-weight: 600;
   font-size: 1.15rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.2px;
   color: var(--ink);
 }
 
@@ -1005,9 +1087,8 @@
   max-width: calc(100vw - 2rem);
   background: var(--surface-2);
   border: 1px solid var(--hairline-strong);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 0.85rem 0.95rem;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
   font-size: 12px;
   line-height: 1.5;
   color: var(--ink-2);
@@ -1085,7 +1166,7 @@
   inset-inline: 0;
   bottom: 0;
   z-index: 55;
-  background: rgba(10, 10, 11, 0.96);
+  background: rgba(0, 0, 0, 0.96);
   border-top: 1px solid var(--hairline-strong);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -1165,7 +1246,7 @@ html:has(.desk-root) {
   appearance: none;
   background: transparent;
   border: 1px solid var(--hairline-strong);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   color: var(--ink);
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1190,11 +1271,13 @@ html:has(.desk-root) {
   background: transparent;
   border: 0;
   padding: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--plasma);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--orange-text);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -1422,7 +1505,7 @@ html:has(.desk-root) {
   gap: 1px;
   background: var(--hairline);
   border: 1px solid var(--hairline);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   margin-top: 1.5rem;
 }
 
@@ -1489,7 +1572,7 @@ html:has(.desk-root) {
   align-items: start;
   padding: 0.85rem 1rem;
   border: 1px dashed rgba(224, 122, 95, 0.6);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;
   transition: border-color 150ms ease, background 150ms ease;
@@ -1515,24 +1598,73 @@ html:has(.desk-root) {
   color: var(--ink);
 }
 
-/* Price ladder rows (HTML legend of Figures) */
+/* Price ladder and flow rows. The figure keeps one column so the
+   names share a start line. A note, when present, sits under both. */
 .ladder-rows {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   border-top: 1px solid var(--hairline);
+  container-type: inline-size;
+}
+
+.ladder-group-name {
+  margin: 0.95rem 0 0;
+  padding-left: 1rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.ladder-group-name[data-on="true"] {
+  color: var(--ink);
+}
+
+.ladder-group-measures {
+  margin: 0.2rem 0 0.15rem;
+  padding-left: 1rem;
+  max-width: 68ch;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-3);
 }
 
 .ladder-row {
   display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 1rem;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--hairline);
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.45rem;
   align-items: baseline;
+  padding: 0.8rem 0 0.8rem 1rem;
+  border-bottom: 1px solid var(--hairline);
 }
 
-@media (min-width: 720px) {
+.ladder-row > :first-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.ladder-row .fam {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: baseline;
+}
+
+.ladder-row .d {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+@container (min-width: 520px) {
   .ladder-row {
-    grid-template-columns: 6.5rem 14rem 1fr;
+    grid-template-columns: 14.5rem minmax(0, 1fr);
+    column-gap: 1.75rem;
+  }
+
+  .ladder-row .v {
+    min-width: 0;
+    max-width: 14.5rem;
   }
 }
 
@@ -1540,22 +1672,138 @@ html:has(.desk-root) {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-size: 1.1rem;
+  line-height: 1.35;
   letter-spacing: -0.03em;
   color: var(--ink);
+  text-wrap: balance;
+  min-width: 0;
+  max-width: 11.5rem;
 }
 
 .ladder-row .fam {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  min-width: 0;
+}
+
+.ladder-row .d {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 68ch;
+}
+
+.ladder-row .d .desk-link {
+  white-space: nowrap;
+  margin-left: 0.35rem;
+}
+
+button.ladder-row {
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+}
+
+button.ladder-row[data-on="true"] {
+  box-shadow: inset 2px 0 0 var(--ink);
+}
+
+button.ladder-row[data-on="true"] .v,
+button.ladder-row[data-on="true"] .fam {
+  color: var(--ink);
+}
+
+/* A diagram keeps one fact open. The picture is the index. */
+.inst-hit {
+  cursor: pointer;
+}
+
+.inst-hit:focus-visible {
+  outline: 2px solid var(--plasma);
+  outline-offset: 3px;
+}
+
+.inst-hit[data-on="true"] > rect {
+  stroke: var(--ink);
+  stroke-width: 1.5px;
+}
+
+.inst-detail {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--hairline);
+  max-width: 68ch;
+}
+
+.inst-detail-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
 
-.ladder-row .d {
-  font-size: 13px;
-  line-height: 1.45;
+.inst-detail-body {
+  margin-top: 0.45rem;
   color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.inst-detail-fig {
+  margin-top: 0.65rem;
+}
+
+.inst-detail-more {
+  margin-top: 0.55rem;
+}
+
+.inst-choices {
+  display: grid;
+  margin-top: 0.25rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.inst-choice {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.8rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.inst-choice[aria-pressed="true"] {
+  color: var(--ink);
+  box-shadow: inset 2px 0 0 var(--ink);
+  padding-left: 0.75rem;
+}
+
+.inst-choice span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  white-space: nowrap;
 }
 
 /* ─── Tracker board & contested strip ────────────────────────────────────── */
@@ -1571,7 +1819,7 @@ html:has(.desk-root) {
     gap: 1px;
     background: var(--hairline);
     border: 1px solid var(--hairline);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
   }
   .desk-board-col {
     background: var(--void);
@@ -1727,7 +1975,7 @@ html:has(.desk-root) {
   background: var(--void);
   color: var(--ink);
   border: 1px solid var(--hairline-strong);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-body, inherit);
   font-size: 15px;
   line-height: 1.5;
@@ -1737,6 +1985,219 @@ html:has(.desk-root) {
 .desk-root .ask-field:focus {
   outline: none;
   border-color: var(--plasma);
+}
+
+/* ─── Project board ──────────────────────────────────────────────────────── */
+/* Ink ground, hairline rows, one orange: the home title em, or the track button. */
+
+.board-list {
+  border-top: 1px solid var(--hairline);
+}
+
+.board-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.board-row > * {
+  min-width: 0;
+}
+
+/* Tablet: name and action share a row, status uses the full width.
+   Placement is explicit so the action stays on the first row. */
+@media (min-width: 768px) {
+  .board-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--space-6);
+    row-gap: var(--space-3);
+    align-items: start;
+  }
+
+  .board-row > :first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .board-row .board-enter {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .board-row .board-status {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Desktop, once the side rail is on screen and the row has room. */
+@media (min-width: 1200px) {
+  .board-row {
+    grid-template-columns: 13rem minmax(0, 1fr) auto;
+    gap: var(--space-8);
+  }
+
+  .board-row > :first-child,
+  .board-row .board-enter,
+  .board-row .board-status {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+.board-job {
+  margin-top: var(--space-2);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.board-name {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.board-name:hover {
+  color: var(--orange-text);
+}
+
+.board-status {
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+
+.board-enter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 16px;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  justify-self: start;
+}
+
+@media (min-width: 768px) {
+  .board-enter {
+    justify-self: end;
+    align-self: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .board-enter-block .btn-primary {
+    width: 100%;
+  }
+}
+
+.board-enter:hover {
+  color: var(--orange-text);
+}
+
+.board-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.board-records {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.board-record {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.board-record:hover {
+  color: var(--orange-text);
+  border-bottom-color: var(--orange-text);
+}
+
+.board-enter-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.board-mail {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.board-mail:hover {
+  color: var(--ink);
+}
+
+/* Footer. Stacked on a phone, two link columns on a tablet, brand beside links on desktop. */
+.desk-footer-main {
+  margin: 0 auto;
+  max-width: var(--wide);
+  display: grid;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--gutter);
+}
+
+.desk-footer-links {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .desk-footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-8);
+  }
+}
+
+@media (min-width: 1100px) {
+  .desk-footer-main {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-12);
+  }
+}
+
+.desk-footer .desk-nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+@media (min-width: 1100px) {
+  .desk-footer .desk-nav-link {
+    min-height: 2rem;
+  }
 }
 
 .desk-root .ask-hp {

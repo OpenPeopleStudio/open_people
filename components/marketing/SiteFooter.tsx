@@ -1,37 +1,39 @@
 import Link from "next/link";
 import { DESK_VERIFIED } from "@/lib/desk";
 
-const DESK = [
+const COMPANY = [
+  { href: "/about", label: "About" },
+  { href: "/ask", label: "Ask" },
+  { href: "/contact", label: "Contact" },
+];
+
+const TRACKS = [
+  { href: "/build", label: "Build" },
+  { href: "/capital", label: "Capital" },
+  { href: "/consent", label: "Consent" },
+  { href: "/power", label: "Power" },
+];
+
+const BUILD_RECORD = [{ href: "/compute", label: "Compute plan" }];
+
+const POWER_RECORD = [
   { href: "/tracker", label: "Tracker" },
   { href: "/industries", label: "Industries" },
   { href: "/costs", label: "Costs" },
   { href: "/brief", label: "Brief" },
-  { href: "/vision", label: "Vision" },
-  { href: "/engage", label: "Engage" },
   { href: "/letter", label: "Letter" },
-];
-
-const SECONDARY = [
-  { href: "/compute", label: "Compute plan" },
-  { href: "/approach", label: "Approach" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/ask", label: "Ask" },
+  { href: "/engage", label: "Engage" },
 ];
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--hairline)]">
-      <div className="mx-auto flex max-w-[var(--wide)] flex-col gap-10 px-[var(--gutter)] py-14 sm:py-20 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-md">
-          <div className="desk-brand">
-            Open People <b>· Newfoundland and Labrador</b>
-          </div>
+    <footer className="desk-footer border-t border-[var(--hairline)]">
+      <div className="desk-footer-main">
+        <div>
+          <div className="desk-brand">Open People</div>
           <p className="mt-4 text-sm leading-relaxed text-[var(--ink-2)]">
-            Open People is working to keep firm Churchill Falls / Gull Island power in Newfoundland
-            and Labrador. Mining and existing industry come first. We lead a proposed 500 MW Labrador
-            AI campus, in feasibility — a named use, not the opener. This site says what is signed, what
-            is still open, and what you can do.
+            Open People is building a proposed 500 MW Labrador campus and a research campus, in
+            feasibility. Mines and existing industry are real constraints.
           </p>
           <p className="desk-fact mt-4 text-[var(--ink-3)]">
             Last verified {DESK_VERIFIED} · public documents only · UNKNOWN labelled
@@ -41,24 +43,25 @@ export default function SiteFooter() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-wrap gap-x-8 gap-y-3">
-            {DESK.map((link) => (
-              <Link key={link.href} href={link.href} className="desk-nav-link">
-                {link.label}
-              </Link>
-            ))}
-          </div>
-          <div className="flex flex-wrap gap-x-8 gap-y-3">
-            {SECONDARY.map((link) => (
-              <Link key={link.href} href={link.href} className="desk-nav-link">
-                {link.label}
-              </Link>
-            ))}
-            <a href="mailto:tom@openpeople.ai" className="desk-nav-link normal-case tracking-normal">
-              tom@openpeople.ai
-            </a>
-          </div>
+        <div className="desk-footer-links">
+          {[
+            ["Company", COMPANY],
+            ["Tracks", TRACKS],
+            ["Build record", BUILD_RECORD],
+            ["Power record", POWER_RECORD],
+          ].map(([label, links]) => (
+            <div key={label as string} className="flex flex-wrap gap-x-8 gap-y-3">
+              <span className="desk-kicker w-full">{label as string}</span>
+              {(links as { href: string; label: string }[]).map((link) => (
+                <Link key={link.href} href={link.href} className="desk-nav-link">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+          <a href="mailto:tom@openpeople.ai" className="desk-nav-link normal-case tracking-normal">
+            tom@openpeople.ai
+          </a>
         </div>
       </div>
 

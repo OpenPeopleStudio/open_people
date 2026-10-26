@@ -3,12 +3,14 @@
  * No ¢/kWh on the image. Compute may name the proposed 500 MW. Mining remains first.
  *
  * Home card:
- *   Kicker:    OPEN PEOPLE · NEWFOUNDLAND AND LABRADOR
- *   Dominant:  Keep the power here.
- *   Secondary: Open People is on it.
+ *   Kicker:    OPEN PEOPLE · LABRADOR CAMPUS
+ *   Dominant:  Building a Labrador campus.
+ *   Secondary: Proposed. In feasibility.
  *   Footer:    OPEN PEOPLE · NL / OPENPEOPLE.AI
  * Compute: A 500 MW Labrador campus. / Open People leads.
  */
+
+import { COMPUTE_HERO } from "@/lib/desk";
 
 export type DeskOgCard = {
   kicker: string;
@@ -28,9 +30,8 @@ export function deskOgFooterUrl(card: DeskOgCard): string {
   return card.footer.toUpperCase();
 }
 
-export const HOME_TITLE = "Open People — Keep the power here";
-export const HOME_DESCRIPTION =
-  "Open People is working to keep firm Churchill Falls / Gull Island power in Newfoundland and Labrador. Mining first. We publish what is signed and what is still blank. Compute is a separate page.";
+export const HOME_TITLE = "Open People — Building a Labrador campus";
+export const HOME_DESCRIPTION = COMPUTE_HERO.plain;
 
 /** Document / og / twitter title for /brief. Template adds " · Open People". */
 export const BRIEF_TITLE = "Keep the power here: the Labrador case";
@@ -46,11 +47,43 @@ export const BRIEF_DESCRIPTION =
 export const DESK_OG = {
   home: {
     kicker: "OPEN PEOPLE",
-    kickerAccent: "NEWFOUNDLAND AND LABRADOR",
-    headline: "Keep the power here.",
-    accent: "Open People is on it.",
+    kickerAccent: "LABRADOR CAMPUS",
+    headline: "Building a Labrador campus.",
+    accent: "Proposed. In feasibility.",
     footer: "OPENPEOPLE.AI",
-    alt: "Open People. Keep firm Churchill Falls and Gull Island power in Newfoundland and Labrador. Mining first.",
+    alt: "Open People — building a proposed Labrador campus, in feasibility.",
+  },
+  build: {
+    kicker: "Build",
+    kickerAccent: "Open People",
+    headline: "The campus and the research campus.",
+    accent: "Proposed. In feasibility.",
+    footer: "openpeople.ai/build",
+    alt: "Open People build — the campus and the research campus. Proposed. In feasibility.",
+  },
+  capital: {
+    kicker: "Capital",
+    kickerAccent: "Open People",
+    headline: "The money for the project.",
+    accent: "Proposed. In feasibility.",
+    footer: "openpeople.ai/capital",
+    alt: "Open People capital — the money for the project. Proposed. In feasibility.",
+  },
+  consent: {
+    kicker: "Consent",
+    kickerAccent: "Open People",
+    headline: "Indigenous partnership.",
+    accent: "Proposed. In feasibility.",
+    footer: "openpeople.ai/consent",
+    alt: "Open People consent — Indigenous partnership. Proposed. In feasibility.",
+  },
+  power: {
+    kicker: "Power",
+    kickerAccent: "Open People",
+    headline: "Power for the campus.",
+    accent: "Proposed. In feasibility.",
+    footer: "openpeople.ai/power",
+    alt: "Open People power — power for the campus. Proposed. In feasibility.",
   },
   tracker: {
     kicker: "Tracker",

@@ -1,14 +1,9 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { DeskPage, DeskSection } from "@/components/marketing/shell";
+/** How Open People works. Rendered on /about. Public rules, not a second front door. */
 
-export const metadata: Metadata = {
-  title: "Approach",
-  description:
-    "How Open People works while we keep firm power in Newfoundland and Labrador. We lead a proposed 500 MW Labrador AI campus, in feasibility. Consent first. Mines first.",
-};
+export const APPROACH_LEDE =
+  "Open People leads a proposed 500 MW Labrador campus and a research campus. The power record is the public evidence on the power. These rules are public so Hydro, nations, and capital can hold us to them.";
 
-const SECTIONS = [
+export const APPROACH_SECTIONS = [
   {
     id: "capital",
     num: "01",
@@ -59,46 +54,4 @@ const SECTIONS = [
       "We do not confuse island retail rates with Labrador industrial reality, and we verify rates with primary sources before any commercial claim.",
     ],
   },
-];
-
-export default function ApproachPage() {
-  return (
-    <DeskPage
-      kicker="Open People · Approach"
-      title="How we work, and how we ask others to work with us."
-      lede={
-        <p>
-          Open People is working to keep firm Churchill Falls and Gull Island power in Newfoundland
-          and Labrador, and we lead a proposed 500 MW Labrador AI campus and a research campus. The
-          public case is the brief. These rules are public so Hydro, nations, capital, and anyone in
-          the province can hold us to them.
-        </p>
-      }
-      verified={false}
-      sections={SECTIONS.map((s) => ({ id: s.id, label: s.title }))}
-    >
-      {SECTIONS.map((s) => (
-        <DeskSection key={s.id} id={s.id} num={s.num} title={s.title}>
-          <ul className="desk-rule-list">
-            {s.body.map((line, i) => (
-              <li key={line}>
-                <span className="n">{String(i + 1).padStart(2, "0")}</span>
-                <span className="text-[15px] leading-relaxed text-[var(--ink-2)]">{line}</span>
-              </li>
-            ))}
-          </ul>
-        </DeskSection>
-      ))}
-      <DeskSection id="cta">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Link href="/engage" className="btn-primary">
-            Get involved — keep firm power here
-          </Link>
-          <Link href="/brief" className="btn-secondary">
-            Public evidence brief
-          </Link>
-        </div>
-      </DeskSection>
-    </DeskPage>
-  );
-}
+] as const;

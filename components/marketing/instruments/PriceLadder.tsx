@@ -1,11 +1,13 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
 import {
   DESK_SOURCES,
   LADDER_FAMILIES,
   LADDER_POINTS,
   type LadderFamily,
 } from "@/lib/desk";
-import { Figure } from "@/components/marketing/depth";
+import { InstDetail, instHit } from "./InstDetail";
 
 /**
  * I3 — the Price Ladder. One ¢/kWh axis, each price family on its own row.
@@ -14,10 +16,10 @@ import { Figure } from "@/components/marketing/depth";
  * dashed empty slot.
  */
 const W = 1000;
-const LEFT = 250;
-const RIGHT = 40;
-const ROW_H = 44;
-const TOP = 34;
+const LEFT = 168;
+const RIGHT = 28;
+const ROW_H = 48;
+const TOP = 28;
 const MAX_C = 18;
 
 function toneClass(tone: LadderFamily["tone"]): string {
@@ -45,21 +47,18 @@ function cx(cents: number): number {
 }
 
 export function PriceLadder() {
-  const H = TOP + LADDER_FAMILIES.length * ROW_H + 40;
+  const [active, setActive] = useState(LADDER_POINTS[0].id);
+  const point = LADDER_POINTS.find((item) => item.id === active);
+  const H = TOP + LADDER_FAMILIES.length * ROW_H + 32;
   const reported = LADDER_POINTS.filter(
     (p) => p.family === "reported" && p.cents !== null,
   ).sort((a, b) => (a.cents ?? 0) - (b.cents ?? 0));
-  const reportedRow = LADDER_FAMILIES.findIndex((f) => f.id === "reported");
   const ticks = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
 
   return (
     <div className="inst price-ladder">
       <div className="inst-scroll">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby="pl-title pl-desc"
-        >
+        <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Price ladder">
           <title id="pl-title">The price ladder</title>
           <desc id="pl-desc">
             Cents per kilowatt-hour on one axis, with each price family on its
@@ -90,9 +89,11 @@ export function PriceLadder() {
                   x={LEFT - 14}
                   y={y + 4}
                   textAnchor="end"
-                  className="lbl lbl-strong"
+                  className={
+                    pts.some((p) => p.id === active) ? "lbl lbl-strong" : "lbl"
+                  }
                 >
-                  {fam.label}
+                  {fam.short}
                 </text>
                 {fam.id === "reported" && reported.length > 1 ? (
                   <path
@@ -109,7 +110,14 @@ export function PriceLadder() {
                   />
                 ) : null}
                 {fam.id === "signed" ? (
-                  <g>
+                  <g {...(pts.find((p) => p.cents === null)
+                    ? instHit(
+                        pts.find((p) => p.cents === null)!.id,
+                        "Signed industrial rate, not published",
+                        active,
+                        setActive,
+                      )
+                    : {})}>
                     <rect
                       x={cx(2)}
                       y={y - 12}
@@ -118,49 +126,46 @@ export function PriceLadder() {
                       fill="none"
                       className="stroke-alert"
                       strokeDasharray="4 4"
-                      strokeWidth={1}
+                      strokeWidth={active === pts.find((p) => p.cents === null)?.id ? 1.5 : 1}
                     />
-                    <text
-                      x={(cx(2) + cx(12)) / 2}
-                      y={y + 4}
-                      textAnchor="middle"
-                      className="lbl alert"
-                    >
-                      not published
-                    </text>
                   </g>
                 ) : null}
                 {pts
                   .filter((p) => p.cents !== null)
-                  .map((p, k) => (
-                    <g key={p.id} transform={`translate(${cx(p.cents!)} ${y})`}>
-                      <circle r={5} className={tone} />
-                      <text
-                        y={k % 2 === 0 ? -11 : 19}
-                        textAnchor="middle"
-                        className="num"
-                        style={{ fontSize: 12 }}
-                      >
-                        {p.value}¢
-                      </text>
+                  .map((p) => (
+                    <g
+                      key={p.id}
+                      transform={`translate(${cx(p.cents!)} ${y})`}
+                      {...instHit(p.id, `${p.value} cents, ${p.label}`, active, setActive)}
+                    >
+                      <circle r={12} fill="transparent" />
+                      <circle r={active === p.id ? 6 : 4} className={tone} />
+                      {active === p.id ? (
+                        <>
+                          <circle
+                            r={9}
+                            fill="none"
+                            stroke="var(--ink)"
+                            strokeWidth={1.5}
+                          />
+                          <text
+                            x={p.cents! < 2 ? 10 : p.cents! > 16 ? -10 : 0}
+                            y={-16}
+                            textAnchor={
+                              p.cents! < 2 ? "start" : p.cents! > 16 ? "end" : "middle"
+                            }
+                            className="num"
+                            style={{ fontSize: 13 }}
+                          >
+                            {p.value}¢
+                          </text>
+                        </>
+                      ) : null}
                     </g>
                   ))}
               </g>
             );
           })}
-
-          {/* divider note under the reported row */}
-          {reportedRow >= 0 ? (
-            <text
-              x={W - RIGHT}
-              y={TOP + reportedRow * ROW_H + ROW_H - 4}
-              textAnchor="end"
-              className="lbl"
-              style={{ fontSize: 9.5, fill: "var(--amber)" }}
-            >
-              different measurements · labelled, not merged
-            </text>
-          ) : null}
         </svg>
         <span className="inst-scroll-hint" aria-hidden>
           scroll sideways →
@@ -170,50 +175,70 @@ export function PriceLadder() {
       <div className="ladder-rows" role="list" aria-label="Price ladder rungs">
         {LADDER_FAMILIES.map((fam) => {
           const pts = LADDER_POINTS.filter((p) => p.family === fam.id);
-          return pts.map((p) => (
-            <div
-              key={p.id}
-              className="ladder-row"
-              role="listitem"
-              id={`ladder-${p.id}`}
-            >
-              <div>
-                <Figure
-                  value={`${p.value}${p.cents === null ? "" : "¢"}`}
-                  status={p.status}
-                  size="sm"
-                  sources={p.sources.map((id) => DESK_SOURCES[id])}
-                  lastVerified={p.lastVerified}
-                  note={p.note}
-                />
-              </div>
-              <div className="fam">{fam.label}</div>
-              <div className="d">
-                {p.label}. {p.note}{" "}
-                {p.href ? (
-                  <Link href={p.href} className="desk-link">
-                    Card →
-                  </Link>
-                ) : null}
-              </div>
+          const groupOn =
+            pts.some((p) => p.id === active) ||
+            (fam.id === "labrador" && active === "lab-ind-1");
+          return (
+            <div key={fam.id} className="ladder-group">
+              <p className="ladder-group-name" data-on={groupOn ? "true" : "false"}>
+                {fam.label}
+              </p>
+              <p className="ladder-group-measures">{fam.measures}</p>
+              {pts.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  className="ladder-row"
+                  id={`ladder-${p.id}`}
+                  aria-pressed={active === p.id}
+                  data-on={active === p.id ? "true" : "false"}
+                  onClick={() => setActive(p.id)}
+                >
+                  <span className="v">
+                    {p.value}
+                    {p.cents === null ? "" : "¢"}
+                  </span>
+                  <span className="fam">{p.label}</span>
+                </button>
+              ))}
+              {fam.id === "labrador" ? (
+                <button
+                  type="button"
+                  className="ladder-row"
+                  aria-pressed={active === "lab-ind-1"}
+                  data-on={active === "lab-ind-1" ? "true" : "false"}
+                  onClick={() => setActive("lab-ind-1")}
+                >
+                  <span className="v">LAB-IND-1</span>
+                  <span className="fam">Mine rate, a formula</span>
+                </button>
+              ) : null}
             </div>
-          ));
+          );
         })}
-        <div className="ladder-row" role="listitem">
-          <div>
-            <span className="desk-cite">LAB-IND-1</span>
-          </div>
-          <div className="fam">Published Labrador tariffs</div>
-          <div className="d">
-            The mine rate is demand charges plus a monthly formula, RFIRM ={" "}
-            {"{"}(ED × RD) + (EM × RM){"}"} / ETOTAL. It is not one cent and is
-            not drawn as a rung.{" "}
-            <Link href="/costs#lab-ind-1" className="desk-link">
-              Card →
-            </Link>
-          </div>
-        </div>
       </div>
+
+      {point ? (
+        <InstDetail
+          kicker={point.label}
+          body={point.note}
+          {...(point.href ? { href: point.href, hrefLabel: "Card →" } : {})}
+          figure={{
+            value: `${point.value}${point.cents === null ? "" : "¢"}`,
+            status: point.status,
+            sources: point.sources.map((id) => DESK_SOURCES[id]),
+            lastVerified: point.lastVerified,
+            note: point.note,
+          }}
+        />
+      ) : (
+        <InstDetail
+          kicker="Mine rate"
+          body="The mine rate is demand charges plus a monthly formula, RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL. It is not one cent and is not drawn as a rung."
+          href="/costs#lab-ind-1"
+          hrefLabel="Card →"
+        />
+      )}
 
       <p className="inst-caption">
         Each row measures something different. A starting price, a fifty-year

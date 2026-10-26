@@ -1,11 +1,11 @@
 {
   "name": "Open People",
   "short_name": "Open People",
-  "description": "Churchill River desk. Keep the power here.",
+  "description": "Building a Labrador campus. Proposed. In feasibility.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#040404",
-  "theme_color": "#040404",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/favicon-16x16.png",
@@ -30,6 +30,11 @@
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ]
