@@ -8,9 +8,14 @@ export const COMPUTE_LAST_VERIFIED = DESK_VERIFIED;
 export const COMPUTE_HERO: DeskVoice = {
   plain:
     "Open People leads a proposed 500 MW AI data campus in Labrador, and a research campus beside it. It is proposed, and it is in feasibility. It is not approved, not funded, and not under construction. Mines and existing industry are real constraints on the same power. The public work right now is keeping firm power in the province. This page is the campus, and only that.",
+  // Home board still renders this technical string. Do not edit until that rewrite lands.
   technical:
     "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. Proposed partners: NL Hydro, Indigenous nations (consent first), and capital. None of those are named as signed. The DCIA Material Terms still do not name AI as a reserved industrial class.",
 };
+
+/** /compute lede only. Not used on home. */
+export const COMPUTE_PAGE_TECHNICAL =
+  "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class.";
 
 export const COMPUTE_RULES = [
   {
@@ -35,7 +40,7 @@ export const COMPUTE_RULES = [
     title: "Proposed. In feasibility.",
     body: {
       plain:
-        "No reserved megawatts, no posted Labrador data-centre rate, no build year. Near-term work is feasibility on costs and impact, in general terms.",
+        "The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Near-term work is feasibility on costs and impact, in general terms.",
       technical:
         "Schedule B §4 still ties NLH entitlements to “domestic load” without defining compute as eligible. House endorsement of the DCIA is not an allocation to this campus. Nothing here is a budget, a dollar figure, or a funding ask.",
     } satisfies DeskVoice,
