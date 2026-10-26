@@ -143,6 +143,11 @@
   color: var(--plasma);
 }
 
+.home-h1-next {
+  display: block;
+  margin-top: 0.12em;
+}
+
 .desk-h2 {
   font-family: var(--font-display);
   font-weight: 600;
@@ -332,9 +337,10 @@
   gap: 1.15rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 880px) {
   .desk-nav-links {
     display: flex;
+    gap: 1rem;
   }
 }
 
@@ -398,7 +404,7 @@
   font-size: 1.1rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 880px) {
   .desk-nav-burger {
     display: none;
   }

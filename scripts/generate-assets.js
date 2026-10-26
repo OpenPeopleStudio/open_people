@@ -67,6 +67,12 @@ async function main() {
     const png = await raster(size);
     fs.writeFileSync(path.join(PUBLIC_DIR, file), png);
     console.log(`  ${file} (${size}×${size})`);
+    if (size === 48) {
+      const brand48 = path.join(PUBLIC_DIR, "brand", "op-icon-48.png");
+      fs.mkdirSync(path.dirname(brand48), { recursive: true });
+      fs.writeFileSync(brand48, png);
+      console.log("  brand/op-icon-48.png (48×48, Google Search)");
+    }
     if (size === 16 || size === 32 || size === 48) {
       icoFrames.push({ width: size, height: size, png });
     }

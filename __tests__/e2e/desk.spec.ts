@@ -60,10 +60,17 @@ test("a term opens an explainer and a figure shows its source", async ({ page })
   await expect(page.locator(".figure-prov .desk-chip")).toBeVisible();
 });
 
-test("home names the company and offers a way into each track", async ({ page }) => {
+test("home names the company and offers a way into each track", async ({ page, isMobile }) => {
   await page.goto("/");
   const main = page.locator("main.desk-page");
-  await expect(page.locator("h1.desk-h1")).toContainText("Building a Labrador campus.");
+  const h1 = page.locator("h1.desk-h1");
+  await expect(h1).toContainText("An AI company.");
+  await expect(h1).toContainText("A proposed Labrador AI campus.");
+  await expect(h1).not.toContainText("Churchill");
+  await expect(main).toContainText("Open People is a Newfoundland and Labrador company.");
+  await expect(main).toContainText("Open People leads a proposed 500 MW Labrador AI campus, in feasibility.");
+  await expect(main).toContainText("Ottawa is looking for projects like this");
+  await expect(main).not.toContainText("Ottawa is already paying");
   for (const job of [
     "The campus and the research campus.",
     "The money for the project.",
@@ -77,9 +84,18 @@ test("home names the company and offers a way into each track", async ({ page })
     const link = page.locator("main").getByRole("link", { name: "Work this track" }).nth(subjects.indexOf(subject));
     await expect(link).toHaveAttribute("href", new RegExp(encodeURIComponent(`Open People — ${subject}`)));
   }
-  const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of subjects) {
-    await expect(nav.getByRole("link", { name: label })).toBeVisible();
+  const navLabels = ["About", ...subjects];
+  if (isMobile) {
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const sheet = page.locator(".desk-nav-sheet");
+    for (const label of navLabels) {
+      await expect(sheet.getByRole("link", { name: label })).toBeVisible();
+    }
+  } else {
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    for (const label of navLabels) {
+      await expect(nav.getByRole("link", { name: label })).toBeVisible();
+    }
   }
   await expect(page.locator('a[href="/coalition"]')).toHaveCount(0);
 });

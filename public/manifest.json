@@ -18,7 +18,12 @@
       "type": "image/png"
     },
     {
-      "src": "/favicon-48x48.png",
+      "src": "/brand/op-icon-48.png?v=h20261026",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-48x48.png?v=h20261026",
       "sizes": "48x48",
       "type": "image/png"
     },
