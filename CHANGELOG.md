@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.22 — 2026-10-26 — /ask: fill proposal knowledge from chapter-2 master
+
+Replace the empty `content/ask/proposal-knowledge.md` placeholder with the reviewed chapter-2 proposal master (working draft 24 Oct 2026, figure check 25 Oct 2026). `/ask` still answers only from that file. Labels CONFIRMED / REPORTED / ESTIMATE / UNKNOWN stay. Nothing in the file claims an agreement, partner, tenant, nation, utility, funder, government, or power allocation. Prompt, providers, nav, and pages unchanged. Preview only; Tom merges.
+
 ## 0.5.21 — 2026-10-26 — /ask: Gemini primary, OpenRouter Nemotron fallback
 
 Cross-provider fallback for live `/ask`. `ASK_FALLBACK_PROVIDER` (`google` | `openrouter` | `gateway`) and `ASK_FALLBACK_MODEL` retry once when the primary errors before any text (503, 429, missing key, ~12s to first token). Unset keeps current single-provider behavior. OpenAI model ids stay rejected on every slot. Logs name the answering provider/model and `fallbackFired`. The system prompt answers directly and does not introduce itself as an AI assistant. Production values Tom will set: Gemini flash-lite with OpenRouter Nemotron `:free` as backup. Preview only; Tom merges.

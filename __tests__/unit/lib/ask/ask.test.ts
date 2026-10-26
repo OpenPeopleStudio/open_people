@@ -522,12 +522,15 @@ describe("ask path has no OpenAI", () => {
   });
 });
 
-describe("ask knowledge placeholder", () => {
-  it("ships an empty knowledge file Tom’s team can replace", () => {
+describe("ask knowledge file", () => {
+  it("ships filled proposal knowledge with honesty labels", () => {
     const text = loadProposalKnowledge();
-    expect(knowledgeIsPlaceholder(text)).toBe(true);
-    expect(text).toMatch(/placeholder/i);
-    expect(text).not.toMatch(/\$\d/);
+    expect(knowledgeIsPlaceholder(text)).toBe(false);
+    expect(text).toMatch(/\*\*Status:\*\*\s*filled/i);
+    expect(text).toMatch(/\bCONFIRMED\b/);
+    expect(text).toMatch(/\bREPORTED\b/);
+    expect(text).toMatch(/\bESTIMATE\b/);
+    expect(text).toMatch(/\bUNKNOWN\b/);
   });
 });
 

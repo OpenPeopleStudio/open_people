@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — /ask knowledge filled from chapter-2 master
+
+The public `/ask` assistant still answers only from `content/ask/proposal-knowledge.md`. That file is no longer the empty placeholder. It is the reviewed chapter-2 proposal master (working draft 24 Oct 2026, figure check 25 Oct 2026). Figures keep CONFIRMED / REPORTED / ESTIMATE / UNKNOWN labels. The file states that no partner, tenant, nation, utility, funder, or government has agreed, and that no power has been allocated. Prompt, providers, nav, and pages unchanged. Preview only; Tom merges.
+
 ## 2026-10-26 — /ask Gemini with OpenRouter Nemotron backup
 
 Tom approved shipping `/ask` on Gemini, with OpenRouter Nemotron as the backup. If Gemini errors or sits silent before any text (~12s), one retry goes to Nemotron. Both fail: same snag copy and the follow-up form. The model is told not to introduce itself as an AI assistant. Preview only; Tom sets the four `ASK_*` env vars and merges.
