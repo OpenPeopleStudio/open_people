@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { DESK_SOURCES, DESK_VERIFIED, GATES, railPosition, type Gate } from "@/lib/desk";
 import { GateLive, TodayMarker } from "./GateClockLive";
-import { InstDetail, instHit } from "./InstDetail";
+import { InstDetail, useInstSelect } from "./InstDetail";
 import { layoutGateLabels } from "./layout";
-import { SvgLines } from "./svg";
+import { InstFit, SvgLines } from "./svg";
 
 /**
  * I1 — the Gate Clock. A horizontal time rail from the framework signing to
@@ -29,7 +28,9 @@ function x(gate: Gate): number {
 export function GateClock({ compact = false }: { compact?: boolean }) {
   const onScale = GATES.filter((g) => !g.offscale);
   const off = GATES.filter((g) => g.offscale);
-  const [active, setActive] = useState(GATES.find((g) => g.status === "open")?.id ?? GATES[0].id);
+  const { active, hit } = useInstSelect(
+    GATES.find((g) => g.status === "open")?.id ?? GATES[0].id,
+  );
   const gate = GATES.find((g) => g.id === active) ?? GATES[0];
   const detail = (
     <InstDetail
@@ -59,7 +60,8 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
     );
     return (
       <div className="gate-clock-compact inst" aria-label="Gate clock">
-        <div className="inst-scroll">
+        <InstFit
+          wide={
           <svg viewBox={`0 0 ${W} 84`} role="group" aria-label="Gate clock">
             <title id="gc-c-title">
               Gates on the Churchill Falls framework, with today marked
@@ -84,11 +86,12 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
                 <g
                   key={g.id}
                   transform={`translate(${x(g)} ${compactY})`}
-                  {...instHit(g.id, g.label, active, setActive)}
+                  {...hit(g.id, g.label)}
                 >
+                  <circle r={20} fill="transparent" />
                   <line y1={dir * 14} y2={0} className="hair" />
                   <circle
-                    r={3.5}
+                    r={active === g.id ? 5 : 3.5}
                     className={g.status === "open" ? "amber" : "plasma"}
                   />
                   <text
@@ -104,7 +107,9 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             })}
             <TodayMarker pad={PAD} width={ON_SCALE_W} railY={compactY} compact />
           </svg>
-        </div>
+          }
+          narrow={<NarrowGates active={active} hit={hit} />}
+        />
         {detail}
       </div>
     );
@@ -124,7 +129,8 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
       aria-label="Gate clock"
       style={{ scrollMarginTop: "calc(var(--desk-nav-offset) + 1rem)" }}
     >
-      <div className="inst-scroll">
+      <InstFit
+        wide={
         <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Gate clock">
           <title id="gc-title">The gate clock</title>
           <desc id="gc-desc">
@@ -191,10 +197,11 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
               <g
                 key={g.id}
                 transform={`translate(${gx} ${RAIL_Y})`}
-                {...instHit(g.id, g.label, active, setActive)}
+                {...hit(g.id, g.label)}
               >
+                <circle r={22} fill="transparent" />
                 <line y1={dir * 22} y2={0} className="hair" />
-                <circle r={4.5} className={cls} />
+                <circle r={active === g.id ? 6.5 : 4.5} className={cls} />
                 {g.kind === "target" ? (
                   <circle
                     r={9}
@@ -226,7 +233,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           })}
 
           {off.map((g) => (
-            <g key={g.id} transform={`translate(${x(g)} ${RAIL_Y})`} {...instHit(g.id, g.label, active, setActive)}>
+            <g key={g.id} transform={`translate(${x(g)} ${RAIL_Y})`} {...hit(g.id, g.label)}>
               <rect
                 x={-9}
                 y={-9}
@@ -246,16 +253,17 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
               </text>
               <SvgLines
                 text="first Gull Island power"
-                x={0}
+                x={12}
                 y={-56}
                 maxChars={14}
                 lineHeight={11}
-                textAnchor="middle"
+                textAnchor="end"
                 className="lbl"
               />
               <text
+                x={12}
                 y={44}
-                textAnchor="middle"
+                textAnchor="end"
                 className="lbl steel"
                 style={{ fontSize: 9.5 }}
               >
@@ -266,10 +274,9 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
 
           <TodayMarker pad={PAD} width={ON_SCALE_W} railY={RAIL_Y} />
         </svg>
-        <span className="inst-scroll-hint" aria-hidden>
-          scroll sideways →
-        </span>
-      </div>
+        }
+        narrow={<NarrowGates active={active} hit={hit} />}
+      />
 
       <GateLive />
       {detail}
@@ -303,5 +310,54 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
         </Link>
       </p>
     </div>
+  );
+}
+
+function NarrowGates({
+  active,
+  hit,
+}: {
+  active: string;
+  hit: ReturnType<typeof useInstSelect<string>>["hit"];
+}) {
+  const row = 58;
+  const width = 400;
+  const height = 12 + GATES.length * row;
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label="Gate clock">
+      <title>Gates, one date per row</title>
+      {GATES.map((g, i) => {
+        const y = 6 + i * row;
+        const on = active === g.id;
+        return (
+          <g key={g.id} {...hit(g.id, `${g.short}, ${g.label}`)}>
+            <rect
+              x={4}
+              y={y}
+              width={width - 8}
+              height={row - 6}
+              fill={on ? "var(--surface-2)" : "transparent"}
+            />
+            <circle
+              cx={24}
+              cy={y + 26}
+              r={on ? 5 : 3.5}
+              className={g.status === "open" ? "amber" : g.kind === "preliminary" ? "steel" : "plasma"}
+            />
+            <text x={44} y={y + 31} className="num" style={{ fontSize: 15 }}>
+              {g.short}
+            </text>
+            <SvgLines
+              text={g.label}
+              x={118}
+              y={y + 28}
+              maxChars={24}
+              lineHeight={15}
+              className="lbl-read"
+            />
+          </g>
+        );
+      })}
+    </svg>
   );
 }

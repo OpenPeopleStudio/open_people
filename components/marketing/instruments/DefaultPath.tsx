@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
-import { InstDetail, instHit } from "./InstDetail";
+import { InstDetail, useInstSelect } from "./InstDetail";
+import { InstFit } from "./svg";
 
 /**
  * I7 — Default Path. The drawing is the fork. One branch is selected.
@@ -86,7 +86,7 @@ const OPTIONS = [
 type FactId = keyof typeof FACTS;
 
 export function DefaultPath() {
-  const [active, setActive] = useState<FactId>("retain");
+  const { active, select, hit } = useInstSelect<FactId>("retain");
   const fact = FACTS[active];
   const W = 1000;
   const H = 300;
@@ -96,7 +96,8 @@ export function DefaultPath() {
 
   return (
     <div className="inst default-path">
-      <div className="inst-scroll">
+      <InstFit
+        wide={
         <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Default path for retained power">
           <title>The default path for unused retained power</title>
           <path
@@ -113,7 +114,7 @@ export function DefaultPath() {
             strokeDasharray="6 5"
           />
 
-          <g transform={`translate(${src.x} ${src.y})`} {...instHit("retain", "Retained power", active, setActive)}>
+          <g transform={`translate(${src.x} ${src.y})`} {...hit("retain", "Retained power")}>
             <rect x={-110} y={-32} width={220} height={64} fill="var(--surface-2)" stroke="var(--ink)" strokeWidth={1} />
             <text y={-4} textAnchor="middle" className="lbl lbl-strong">
               Retained power
@@ -123,7 +124,7 @@ export function DefaultPath() {
             </text>
           </g>
 
-          <g transform={`translate(${home.x} ${home.y})`} {...instHit("home", "Used here", active, setActive)}>
+          <g transform={`translate(${home.x} ${home.y})`} {...hit("home", "Used here")}>
             <rect x={-130} y={-28} width={260} height={56} fill="var(--surface-2)" stroke="var(--plasma)" strokeWidth={1} />
             <text y={-4} textAnchor="middle" className="lbl plasma">
               Used here
@@ -133,7 +134,7 @@ export function DefaultPath() {
             </text>
           </g>
 
-          <g transform={`translate(${hq.x} ${hq.y})`} {...instHit("hq", "Hydro-Québec buys it", active, setActive)}>
+          <g transform={`translate(${hq.x} ${hq.y})`} {...hit("hq", "Hydro-Québec buys it")}>
             <rect
               x={-130}
               y={-28}
@@ -152,10 +153,9 @@ export function DefaultPath() {
             </text>
           </g>
         </svg>
-        <span className="inst-scroll-hint" aria-hidden>
-          scroll sideways →
-        </span>
-      </div>
+        }
+        narrow={<NarrowPath active={active} hit={hit} />}
+      />
 
       <div className="inst-choices" role="group" aria-label="Section 4 options">
         {OPTIONS.map((option) => (
@@ -164,7 +164,7 @@ export function DefaultPath() {
             type="button"
             className="inst-choice"
             aria-pressed={active === option.id}
-            onClick={() => setActive(option.id)}
+            onClick={() => select(option.id)}
           >
             {option.label}
             <span>{option.meta}</span>
@@ -177,5 +177,47 @@ export function DefaultPath() {
         Framework, not executed. These are Material Terms for later contracts.
       </p>
     </div>
+  );
+}
+
+function NarrowPath({
+  active,
+  hit,
+}: {
+  active: FactId;
+  hit: ReturnType<typeof useInstSelect<FactId>>["hit"];
+}) {
+  const cards: { id: FactId; y: number; title: string; value: string }[] = [
+    { id: "retain", y: 16, title: "Retained power", value: FACTS.retain.figure?.value ?? "" },
+    { id: "home", y: 156, title: "Used here", value: "Mines, towns, industry" },
+    { id: "hq", y: 296, title: "Not used", value: "Hydro-Québec buys it" },
+  ];
+  return (
+    <svg viewBox="0 0 400 420" role="group" aria-label="Default path for retained power">
+      <title>Retained power, then the fork</title>
+      <line x1={28} y1={96} x2={28} y2={300} className="hair" />
+      {cards.map((card) => {
+        const on = active === card.id;
+        return (
+          <g key={card.id} {...hit(card.id, `${card.title}, ${card.value}`)}>
+            <rect
+              x={48}
+              y={card.y}
+              width={336}
+              height={84}
+              fill={on ? "var(--surface-2)" : "var(--surface-1)"}
+              stroke={card.id === "hq" ? "var(--amber)" : card.id === "home" ? "var(--plasma)" : "var(--ink)"}
+              strokeDasharray={card.id === "hq" ? "4 4" : undefined}
+            />
+            <text x={68} y={card.y + 32} className="lbl-read">
+              {card.title}
+            </text>
+            <text x={68} y={card.y + 58} className="num" style={{ fontSize: 16 }}>
+              {card.value}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }
