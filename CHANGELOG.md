@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.19 — 2026-10-26 — /ask: Grok via Gateway, no OpenAI-direct
+
+Live `/ask` no longer calls OpenAI directly and no longer treats `OPENAI_API_KEY` as configured. Default model is `spacexai/grok-4.7` (xAI on AI Gateway), override with `ASK_MODEL`. Fallback is `anthropic/claude-sonnet-5.5`. Gateway options list xAI then Anthropic only. Unconfigured Gateway still 503s. Provider-type defaults no longer start on OpenAI. Live public copy did not name OpenAI as a provider. Preview only; Tom merges.
+
 ## 0.5.18 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
 
 Campus-only sentence leaves the build seed and stays on `/compute`. Power records link back to `/power`; `/compute` links back to `/build`. Privacy and Terms render through DeskPage / SiteNav. Sitemap ranks tracks at 0.9 and record pages at 0.8; `/compute` stays 0.4. Preview only; Tom merges.
