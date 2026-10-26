@@ -85,4 +85,13 @@ describe("repo map", () => {
     expect(roleByPath.get("packages")).toBe("spec" satisfies RepoRole);
     expect(roleByPath.get("PLAN.md")).toBe("record" satisfies RepoRole);
   });
+
+  it("describes the public site in the README", () => {
+    const readme = readFileSync(resolve(ROOT, "README.md"), "utf8");
+    expect(readme).toContain("www.openpeople.ai");
+    expect(readme).toContain("notes/repo-map.ts");
+    expect(readme).toContain("PLAN.md");
+    expect(readme).not.toMatch(/commerce infrastructure/i);
+    expect(readme).not.toMatch(/retail brands/i);
+  });
 });

@@ -115,6 +115,7 @@ export const REPO_MAP: readonly RepoEntry[] = [
   { path: "lib", role: "shared", note: "Site code is lib/desk, lib/marketing, lib/og, lib/board, lib/voice-mode, lib/ask, and lib/site.ts. Other lib folders serve the parked shell or shared middleware." },
   { path: "middleware.ts", role: "shared", note: "Session, logging, and rate limit for the whole app. /api/ask is on the public allowlist." },
   { path: "next.config.ts", role: "shared", note: "Redirects for retired SaaS marketing routes, /vision, /approach, and /login." },
+  { path: "notes", role: "record", note: "Filed plans and archive. Date-first names. Not the Next.js app." },
   { path: "package-lock.json", role: "tooling", note: "npm lockfile." },
   { path: "package.json", role: "tooling", note: "npm scripts. Name stays open_people." },
   { path: "packages", role: "spec", note: "Unstarted reference implementation of the identity standard." },
