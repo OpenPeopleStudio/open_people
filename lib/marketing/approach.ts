@@ -1,7 +1,7 @@
 /** How Open People works. Rendered on /about. Public rules, not a second front door. */
 
 export const APPROACH_LEDE =
-  "Open People leads a proposed 500 MW Labrador campus and a research campus. The power record is the public evidence on the power. These rules are public so Hydro, nations, and capital can hold us to them.";
+  "Open People leads a proposed 500 MW Labrador AI campus and a research campus. The power record is the public evidence on the power. These rules are public so Hydro, nations, and capital can hold us to them.";
 
 export const APPROACH_SECTIONS = [
   {
@@ -10,7 +10,7 @@ export const APPROACH_SECTIONS = [
     title: "Capital model: Open People leads",
     body: [
       "Open People is the proponent of a proposed 500 MW Labrador AI campus and a research campus.",
-      "The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
+      "We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
       "We are not a party to the Churchill Falls / Gull Island framework. We lead the campus. Proposed. In feasibility. Not approved, not funded, not under construction.",
     ],
   },
@@ -32,7 +32,7 @@ export const APPROACH_SECTIONS = [
       "No crypto mining as the product story, permanently. Newfoundland’s last data-centre memory is a cautionary tale; we do not revive it.",
       "Never lead with “cheap power.” We lead with firm in-province power for industry, jobs, and a campus that has to live with mines as a real constraint. Arbitrage framing loses this argument.",
       "Mining and resources first. Compute alongside critical minerals, not against them. Shared transmission and shared community benefits.",
-      "ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide.",
+      "We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets.",
     ],
   },
   {

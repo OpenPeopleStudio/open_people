@@ -10,10 +10,10 @@ export const VISION_HEADLINE_LEAD = "People who care for this land should";
 export const VISION_HEADLINE_EMPHASIS = "prosper from it";
 
 export const VISION_DESCRIPTION =
-  "Newfoundland and Labrador hydro as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador campus and a research campus, in feasibility.";
+  "Newfoundland and Labrador hydro as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility.";
 
 export const VISION_OG_ALT =
-  "Vision — Open People. Firm hydro in Newfoundland and Labrador as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador campus, in feasibility.";
+  "Vision — Open People. Firm hydro in Newfoundland and Labrador as Canada’s base for sovereign AI compute. Open People leads a proposed 500 MW Labrador AI campus, in feasibility.";
 
 /** Tom Lane’s four-sentence statement. Keep verbatim as the close. */
 export const VISION_SENTENCES = [

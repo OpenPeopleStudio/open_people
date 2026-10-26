@@ -9,7 +9,7 @@ import { VISION_CONTACT, VISION_SECTIONS, VISION_SENTENCES } from "@/lib/marketi
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Open People is building a proposed 500 MW Labrador campus and a research campus, in feasibility. Tom Lane, St. John’s.",
+    "Open People is building a proposed 500 MW Labrador AI campus and a research campus, in feasibility. Tom Lane, St. John’s.",
 };
 
 const COMPANY_SECTIONS = VISION_SECTIONS.filter(
