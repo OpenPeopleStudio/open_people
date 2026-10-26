@@ -150,4 +150,23 @@ describe("repo map", () => {
     expect(config).toContain('destination: "/"');
     expect(config).toContain('destination: "https://app.openpeople.ai"');
   });
+
+  it("points orientation docs at the map", () => {
+    const claude = readFileSync(resolve(ROOT, "CLAUDE.md"), "utf8");
+    const mapAt = claude.indexOf("notes/repo-map.ts");
+    const specAt = claude.indexOf("`docs/spec/`");
+    expect(mapAt).toBeGreaterThan(-1);
+    expect(specAt).toBeGreaterThan(mapAt);
+    expect(claude).toContain("PARKED.md");
+
+    const docsReadme = readFileSync(resolve(ROOT, "docs/README.md"), "utf8");
+    const parkedAt = docsReadme.indexOf("## Parked platform docs");
+    const saasAt = docsReadme.indexOf("multi-tenant SaaS");
+    expect(docsReadme.startsWith("# Docs\n")).toBe(true);
+    expect(parkedAt).toBeGreaterThan(-1);
+    expect(saasAt).toBeGreaterThan(parkedAt);
+    expect(docsReadme).toContain("docs/plans/");
+    expect(docsReadme).toContain("docs/spec/");
+    expect(docsReadme).toContain("notes/repo-map.ts");
+  });
 });
