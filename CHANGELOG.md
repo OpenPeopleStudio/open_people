@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.16 — 2026-10-26 — /letter: remove home street address
+
+Tom Lane’s home street address is off the public `/letter` page (From block, opening line, signature). City stays. Intro note says the letter is unchanged except that the home street address has been removed. A unit test fails if public marketing copy ships “Water Street”, “281 Water”, “685-8584”, “6858584”, or “auth@”. Preview only; Tom merges.
+
 ## 0.5.15 — 2026-10-26 — Google favicon: never-crawled 48px PNG first
 
 Google's SERP still shows the leftover lime blob. Production HTML listed `/favicon.svg` first; Google caches `/favicon.ico` on gstatic for a long time. Same horizon mark, new path `/brand/op-icon-48.png` as the first icon (48×48 PNG, `?v=h20261026` on the rest). Manifest updated. Artwork unchanged. Title/snippet wait on Tom merging this home PR and a recrawl. Preview only; Tom merges.

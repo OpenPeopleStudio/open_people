@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — /letter: home street address removed
+
+Tom approved taking the home street address off the public site. `/letter` From, opening, and signature now name the city only. The intro note says the 15 September letter is unchanged except that the home street address has been removed. Metadata, OG/Twitter images, JSON-LD, and `public/` text copies did not print the street. A unit test scans public marketing source so the address cannot return. Preview only; Tom merges.
+
 ## 2026-10-26 — Home and nav: company and campus share the lead
 
 The live front door still read as a Churchill Falls desk. Home and primary nav now lead equally with Open People (the AI company) and the proposed Labrador AI campus. Churchill Falls is a supporting section with links into `/power`, `/brief`, and `/tracker`.
