@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — /ask provider picker for $0 tests
+
+Tom wants to try free non-OpenAI backends on `/ask`. `ASK_PROVIDER` selects Gateway (default), Google Gemini flash, or OpenRouter `:free`. Missing keys do not leak; the page still offers the follow-up form. A one-line note says questions may be processed by a third-party AI provider. Preview only; Tom merges.
+
 ## 2026-10-26 — /ask leaves OpenAI
 
 Tom: avoid OpenAI wherever an alternative exists. First slice is live `/ask` only. The OpenAI-direct path is gone. Chat goes through AI Gateway on Grok (`spacexai/grok-4.7`), with Claude as the Gateway fallback. An OpenAI key alone no longer counts as configured. Live public pages did not name OpenAI as a provider; retired marketing pages still do and were left. Brand and board copy untouched. Preview only; Tom merges.

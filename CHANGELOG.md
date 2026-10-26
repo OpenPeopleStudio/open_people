@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.20 — 2026-10-26 — /ask: env-selectable $0 providers
+
+`ASK_PROVIDER` selects the live `/ask` backend: unset stays AI Gateway (Grok, Claude fallback). `google` uses Gemini flash via `GOOGLE_GENERATIVE_AI_API_KEY`. `openrouter` uses a `:free` non-OpenAI model via `OPENROUTER_API_KEY`. `ASK_MODEL` still overrides. OpenAI model ids are rejected. Missing Google/OpenRouter keys fail closed to the snag copy. `/ask` notes that questions may be processed by a third-party AI provider. Preview only; Tom merges.
+
 ## 0.5.19 — 2026-10-26 — /ask: Grok via Gateway, no OpenAI-direct
 
 Live `/ask` no longer calls OpenAI directly and no longer treats `OPENAI_API_KEY` as configured. Default model is `spacexai/grok-4.7` (xAI on AI Gateway), override with `ASK_MODEL`. Fallback is `anthropic/claude-sonnet-5.5`. Gateway options list xAI then Anthropic only. Unconfigured Gateway still 503s. Provider-type defaults no longer start on OpenAI. Live public copy did not name OpenAI as a provider. Preview only; Tom merges.
