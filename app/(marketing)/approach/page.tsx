@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
 
 export const metadata: Metadata = {
-  title: "Approach",
+  title: "How we work on Churchill Falls",
   description:
     "How Open People works while we keep firm power in Newfoundland and Labrador. We lead a proposed 500 MW Labrador campus, in feasibility. Consent first. Mines first.",
 };

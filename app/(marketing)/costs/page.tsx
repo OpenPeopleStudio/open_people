@@ -13,7 +13,7 @@ import { deskMetadata } from "@/lib/og/metadata";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata = deskMetadata({
-  title: "Costs",
+  title: "Churchill Falls price record",
   description:
     "Open People keeps seven price families apart. Starts about 1.8¢/kWh in 2027; averages about 7.4¢/kWh over 50 years; heritage 0.2¢; Labrador household 3.154¢; the mine rate is a formula; the signed industrial rate is not published.",
   path: "/costs",

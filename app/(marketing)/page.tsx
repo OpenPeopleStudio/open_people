@@ -3,12 +3,15 @@ import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { Fig, Figure, Term, Unfold, WalkLaunch } from "@/components/marketing/depth";
 import { DefaultPath, GateClock, UnknownBoard } from "@/components/marketing/instruments";
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
-import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/og/copy";
+import { HOME_DESCRIPTION } from "@/lib/og/copy";
 import { deskMetadata } from "@/lib/og/metadata";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
+/** Search title only. The on-page heading stays the company line. */
+const HOME_SEARCH_TITLE = "Churchill Falls power — Open People";
+
 export const metadata = deskMetadata({
-  title: { absolute: HOME_TITLE },
+  title: { absolute: HOME_SEARCH_TITLE },
   description: HOME_DESCRIPTION,
   path: "/",
 });

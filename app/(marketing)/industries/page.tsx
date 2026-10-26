@@ -8,7 +8,7 @@ import { deskMetadata } from "@/lib/og/metadata";
 import { SCALE_ANCHORS } from "@/lib/voice-mode";
 
 export const metadata = deskMetadata({
-  title: "Industries",
+  title: "Churchill Falls — mining first",
   description:
     "Open People puts mining and Labrador industry first. They are real constraints on the same power. We lead a proposed 500 MW campus, in feasibility.",
   path: "/industries",

@@ -5,7 +5,7 @@ import { Dual } from "@/components/marketing/voice/Dual";
 import { VISION_CONTACT } from "@/lib/marketing/vision";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About our Churchill Falls work",
   description:
     "Open People is a Newfoundland and Labrador company working to keep firm Churchill Falls / Gull Island power in the province. Mining first. We lead a proposed 500 MW Labrador campus, in feasibility.",
 };
