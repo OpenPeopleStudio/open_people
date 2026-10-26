@@ -39,6 +39,7 @@ describe("Open People public role copy", () => {
     const brief = readFileSync(resolve(ROOT, "app/(marketing)/brief/page.tsx"), "utf8");
     expect(brief).toMatch(/Open People leads/i);
     expect(brief).toMatch(/proponent/i);
-    expect(brief).toMatch(/consent first/i);
+    expect(brief).toMatch(/Partnership, if any, will be on terms each nation sets/);
+    expect(brief).toMatch(/No nation has been contacted/);
   });
 });

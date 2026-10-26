@@ -180,7 +180,7 @@ const ASKS = [
   },
   {
     title: "Allocation criteria that keep the value home",
-    body: "Score for NL majority ownership, Indigenous equity participation, creditworthy offtake, local employment and balance-sheet substance. Criteria, not a ban, are the durable answer to the Great North Data experience. Consent first.",
+    body: "Score for NL majority ownership, creditworthy offtake, local employment and balance-sheet substance. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. Criteria, not a ban, are the durable answer to the Great North Data experience.",
   },
   {
     title: "An infrastructure audit",
@@ -220,12 +220,12 @@ const STACK = [
   {
     label: "Power and site",
     us: false,
-    body: "NL Hydro, as a proposed partner: capacity allocation, land at the point of generation, transmission. Not a signed block. Mines and existing industry remain on this system.",
+    body: "A written request to NL Hydro: capacity allocation, land at the point of generation, transmission. Phase 1 is a non-firm, interruptible pilot. No megawatts are reserved. Mines and existing industry remain on this system.",
   },
   {
     label: "Indigenous nations",
     us: false,
-    body: "Consent first. Equity from day one, not consultation at the end. Named as a proposed partnership, not as a signed impact-benefit agreement.",
+    body: "Partnership, if any, will be on terms each nation sets. No nation has been contacted.",
   },
   {
     label: "Capital",
@@ -458,10 +458,9 @@ export default function BriefPage() {
         />
         <aside className="mt-10 border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
           <p className="desk-h3">
-            Labrador is not an infinite battery. It is enough firm green power to serve mines, towns
-            and other industry that lives here — and a proposed 500 MW campus Open People leads.
-            Mines and existing industry are real constraints. The campus is proposed, in
-            feasibility, not a reserved block.
+            Labrador is not an infinite battery. The campus is proposed and in feasibility. Phase 1
+            is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are
+            reserved — not a reserved block. Mines and existing industry are real constraints.
           </p>
           <Link href="/compute" className="desk-kicker mt-4 inline-flex no-underline hover:underline">
             Proposed campus (Open People leads) →
@@ -928,16 +927,17 @@ export default function BriefPage() {
                   <p className="desk-takeaway">
                     <Term k="innu-nation">Innu Nation</Term> wrote MHAs on 17 September urging a no
                     vote, and says the paper cuts its benefits by more than half. On 21 September the
-                    Grand Chief said the Innu are ready to meet. No meeting is scheduled. They were
-                    never invited to the table.{" "}
+                    Grand Chief said the Innu are ready to meet. No meeting is scheduled. Grand Chief
+                    Ashini of Innu Nation has said Innu were{" "}
                     <a
                       href={DESK_SOURCES.vocmInnuContact.href}
                       className="desk-link"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      — Grand Chief Ashini, Innu Nation (VOCM, 21 Sep 2026)
-                    </a>. Partnership, royalty and Gull Island tariff path remain
+                      &ldquo;never invited to the table&rdquo;
+                    </a>
+                    . Partnership, royalty and Gull Island tariff path remain
                     open.
                   </p>
                 }
@@ -1156,10 +1156,11 @@ export default function BriefPage() {
               plain={
                 <p className="desk-takeaway">
                   Canada&apos;s Sovereign AI Compute Strategy seeks Canadian-owned, Canadian-controlled
-                  projects with Indigenous participation. Open People leading a Labrador campus, with
-                  NL Hydro, and partnership, if any, on terms each nation sets, fits that description. The
-                  first intake closed in 2026. We found no Newfoundland and Labrador entry in the
-                  public record, because there was no NL project to enter.
+                  projects. ISED lists Indigenous participation as one of its criteria. Any role is
+                  for each nation to decide. Partnership, if any, will be on terms each nation sets.
+                  No nation has been contacted. The first intake closed in 2026. We found no
+                  Newfoundland and Labrador entry in the public record, because there was no NL
+                  project to enter.
                 </p>
               }
               technical={
@@ -1272,9 +1273,9 @@ export default function BriefPage() {
         title="Open People leads. Partners are proposed, not signed."
         intro={
           <p>
-            Open People is the proponent. NL Hydro, Indigenous nations (consent first), and capital
-            are the proposed partnership. None of those lines is a signed allocation, a signed
-            impact-benefit agreement, or a named funder.
+            Open People is the proponent. Partnership, if any, will be on terms each nation sets. No
+            nation has been contacted. Capital is unnamed here. None of those lines is a signed
+            allocation, a signed impact-benefit agreement, or a named funder.
           </p>
         }
       >
@@ -1336,7 +1337,7 @@ export default function BriefPage() {
             label="consent"
             status={INNU.status}
             plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. The Premier says he looks forward to sitting down; as of 21 September nothing is scheduled. That is a start, not consent, and not a partnership structure."
-            requires="Inverting the standard model. Equity partnership in the compute entity from day one: a structure federal programs reward, that Labrador's impact-benefit culture supports, and that converts the project's largest political risk into its strongest political asset."
+            requires="Partnership, if any, will be on terms each nation sets. No nation has been contacted. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
             technical={INNU.body.technical}
             caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not an item in our source registry."
             sources={sourceList(INNU.sources)}
@@ -1346,7 +1347,7 @@ export default function BriefPage() {
             title="The Great North Data precedent"
             label="the precedent"
             plain="The province's one prior data-centre experience was a Labrador crypto operator that went bankrupt in 2019 owing money to the utility and public agencies. Municipal scepticism toward container mining is earned."
-            requires="Naming it rather than dodging it. That operation failed on balance sheet, and it was crypto: a commodity workload with no customers, no jobs and no sovereignty value. An allocation framework that scores creditworthiness, ownership, employment and Indigenous equity is a filter it would have failed on every line."
+            requires="Naming it rather than dodging it. That operation failed on balance sheet, and it was crypto: a commodity workload with no customers, no jobs and no sovereignty value. An allocation framework that scores creditworthiness, ownership, and employment is a filter it would have failed on every line."
             caveat="Great North Data's 2019 bankruptcy was reported by CBC and provincial media. The amounts owed are not a figure we carry."
           />
           <ConstraintCard
@@ -1368,9 +1369,9 @@ export default function BriefPage() {
           Not approved, not funded, not under construction.
         </p>
         <p className="desk-body mt-5">
-          We are not a party to the DCIA. We are the proponent of the campus. Proposed partners: NL
-          Hydro, Indigenous nations (consent first), and capital. No customers are named. Mines and
-          existing industry are real constraints on the same power.
+          We are not a party to the DCIA. We are the proponent of the campus. Partnership, if any,
+          will be on terms each nation sets. No nation has been contacted. No customers are named.
+          Mines and existing industry are real constraints on the same power.
         </p>
         <div className="mt-8 flex gap-5">
           <div

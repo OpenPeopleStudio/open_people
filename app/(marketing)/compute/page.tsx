@@ -6,6 +6,7 @@ import {
   COMPUTE_HONESTY,
   COMPUTE_LAST_VERIFIED,
   COMPUTE_NEIGHBOURS,
+  COMPUTE_PAGE_TECHNICAL,
   COMPUTE_RULES,
   DESK_SOURCES,
 } from "@/lib/desk";
@@ -32,7 +33,7 @@ export default function ComputePage() {
           id="compute-lede"
           label="500 MW"
           plain={<p>{COMPUTE_HERO.plain}</p>}
-          technical={COMPUTE_HERO.technical}
+          technical={COMPUTE_PAGE_TECHNICAL}
         />
       }
       meta={
@@ -107,8 +108,9 @@ export default function ComputePage() {
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
           Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
-          Consent first. This page does not jump the line: mines and existing industry remain the
-          constraint, and the public ask is to keep firm power in the province.
+          Partnership, if any, will be on terms each nation sets. No nation has been contacted.
+          This page does not jump the line: mines and existing industry remain the constraint, and
+          the public ask is to keep firm power in the province.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link href="/engage" className="btn-primary">
