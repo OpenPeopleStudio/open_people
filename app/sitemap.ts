@@ -7,12 +7,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes: { path: string; priority: number; changeFrequency: "weekly" | "monthly" }[] = [
     { path: "/", priority: 1, changeFrequency: "weekly" },
-    { path: "/brief", priority: 0.95, changeFrequency: "weekly" },
-    { path: "/tracker", priority: 0.95, changeFrequency: "weekly" },
-    { path: "/industries", priority: 0.9, changeFrequency: "weekly" },
-    { path: "/costs", priority: 0.9, changeFrequency: "weekly" },
-    { path: "/engage", priority: 0.95, changeFrequency: "weekly" },
-    { path: "/letter", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/brief", priority: 0.8, changeFrequency: "weekly" },
+    { path: "/tracker", priority: 0.8, changeFrequency: "weekly" },
+    { path: "/industries", priority: 0.8, changeFrequency: "weekly" },
+    { path: "/costs", priority: 0.8, changeFrequency: "weekly" },
+    { path: "/engage", priority: 0.8, changeFrequency: "weekly" },
+    { path: "/letter", priority: 0.8, changeFrequency: "monthly" },
     { path: "/build", priority: 0.9, changeFrequency: "weekly" },
     { path: "/capital", priority: 0.9, changeFrequency: "weekly" },
     { path: "/consent", priority: 0.9, changeFrequency: "weekly" },
