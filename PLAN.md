@@ -1,60 +1,44 @@
-# PLAN — Public vision update
+# PLAN — Home and nav: company and campus share the lead
 
 ## Goal
 
-Publish Open People’s latest public thesis on openpeople.ai: Newfoundland and Labrador hydro as Canada’s base for sovereign AI compute. Open People **leads** a proposed 500 MW Labrador AI campus and a research campus — proposed, in feasibility, not a built project.
+Rework the openpeople.ai home page and primary nav so Open People (the AI company) and the proposed Labrador AI campus share the lead equally. Churchill Falls drops to background context: a supporting section lower down, with links into the power record. Tom Lane’s direction: the live site looks great, but it is still 100% Churchill Falls based.
 
 ## In
 
-- Thesis: NL hydro as Canada’s base for sovereign AI compute, tied to the national grid and federal sovereign-AI goals; a big-picture proposal for power in Canada, not just one site.
-- A proposed 500 MW AI data campus in Labrador (proposed / in feasibility). Open People is the **proponent leading the build**, in proposed partnership with NL Hydro, Indigenous nations (consent first), and capital. Not a signed allocation or a named customer list.
-- A research campus where people from across Canada come to tackle problems society will face in the age of AI: residencies, fellowships, gatherings, in the spirit of the Perimeter Institute and the Banff Centre. Open People leads this too.
-- Near-term: feasibility work on the costs and impact of the project (general terms only).
-- Honest constraints: mines and existing industry are real constraints on the same power. No reserved megawatts in the public paper.
-- Style: match the existing desk (fonts, colours, voice, `/brief` cadence). Use `components/marketing/voice/Dual.tsx` where it fits. Update OG/meta for any new or rewritten page.
+- Home (`/`) and primary nav only. Footer chrome that appears on home, plus home OG/meta that describe the front door.
+- Equal lead: company story (reuse `/about` and `/approach`) and the proposed campus (canonical line with “AI”).
+- Canonical campus line: “Open People leads a proposed 500 MW Labrador AI campus on that power, in feasibility.”
+- Power line: “The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved.”
+- Consent: “Partnership, if any, will be on terms each nation sets.” No nation named as a partner. No “No nation has been contacted” on home.
+- ISED: “ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide.”
+- Ottawa heading, if present: “Ottawa is looking for projects like this” (not “already paying”). Do not blend ISED’s 100 MW-plus data-centre call (15 Jan–15 Feb 2026, now closed, non-binding MOU) with the C$2B Canadian Sovereign AI Compute Strategy. Cut “a structure federal programs reward”. Cite official ISED / Canada.ca URLs; leave out anything not confirmed.
+- Brand book: paper #f3f3ef, ink #0e1014, orange #f2501f, orange text on paper #c23a12; Schibsted Grotesk + DM Mono; 8px buttons; sentence case; short plain sentences. No glows, no gradients. No conquest language, no hype. Keep the existing void desk chrome; do not restyle the board pages.
+- Figures and claims already on the site, with citations. No new invented numbers. Firm power is never promised. Nothing proposed stated as done.
+- snōw white laundry may appear only from facts already on the site, or a plain line marked NEEDS TOM'S OK. Never mention Brendan or Verafin. Keep the home address out.
 
 ## Out
 
-- Any ACOA or government funding ask
-- Budgets, dollar figures, capex, personal or company finances
-- Named prospective customers (no SpaceX / xAI) or named capital firms
-- Language that Hydro or a nation has **signed** — partnership is proposed; consent is first
-- snōw white laundry, SWL, or Brendan
-- Phone numbers or street addresses (contact is `tom@openpeople.ai` only)
-- Any change to `/letter` text
-- Invented facts or numbers
-- Language that the campus is approved, funded, or under construction
-- The old role: “catalyst, not a deal seat”, “not asking to own the steel”, “does not assemble bankable offtake”, “compute is leftover-firm-power optionality”, “wrong page / wrong organisation”
-- Merge to `main` or production deploy (`www.openpeople.ai`). Tom says “ship it” first.
+- `/brief` (PR #25). Match its consent wording; do not edit that file.
+- Board track pages `/power` `/capital` `/build` `/consent` beyond nav links.
+- `/letter` text. `/coalition`. Parked SaaS routes.
+- Merge to `main`, force-push, or production promote. Tom merges.
+- NL Hydro or a nation as a “proposed partner” on home/nav.
+- “stakeholders”. Any NunatuKavut-standing line. Unsourced “no nation has been contacted”.
+- Invented figures, conquest/hype, glows, gradients.
 
 ## Dest
 
 - This repo’s marketing site. Vercel project `open-people`. Production host `www.openpeople.ai`.
 - Ship path: feature branch → PR → Vercel preview. Do not promote the preview.
 
-## First slice (landed on this PR)
+## First slice (this PR)
 
-Rewrite `/vision` as the public thesis page (Dual, OG, Vision in nav/footer). Tom Lane’s four sentences kept as the close.
+Home + nav rework only, including the Ottawa / ISED wording that appears on home.
 
-## This slice (same PR)
+## Done when
 
-Rewrite public role copy so Open People **leads** the proposed campuses.
-
-- `/brief`, `/compute`, `/about`: kill catalyst / leftover-optionality / “wrong page” copy.
-- Supporting surfaces that repeat the old role on the public site: `/`, `/approach`, footer, `/engage` meta, `lib/desk/compute.ts`, industries compute line, glossary, compute OG.
-- Remove SWL from `/about` and `/brief`.
-- `/letter` still untouched. `/coalition` (noindex partner brief) left for a later slice except where it inherits `COMPUTE_*` data.
-
-## Later slices (not this PR)
-
-- Home as a thesis front door (Churchill desk remains a door).
-- Research campus as its own route.
-- `/coalition` full rewrite; `/contact` Dual; CLAUDE.md current-state line.
-
-## Done when (this slice)
-
-- Named pages no longer say catalyst-not-steel, leftover optionality, or “wrong organisation”.
-- They say Open People leads a proposed 500 MW campus and a research campus, in feasibility, with Hydro / Indigenous nations (consent first) / capital as proposed partners — not signed.
-- Mines and existing industry remain named as real power constraints.
-- No Out topics in files this slice edits. `/letter` unchanged.
-- Tests updated. Same PR, preview only, not merged.
+- Above the fold names the company and the proposed campus with equal weight. Churchill Falls is not the opener.
+- Nav offers a company door (`/about`) beside the four tracks.
+- Home uses the canonical campus line, the Phase 1 power line, the consent sentence, and the ISED criteria sentence. Ottawa, if present, uses the looking-for heading and keeps the two federal programmes separate, with official citations.
+- No Out topics on files this slice edits. Lint and build pass. Preview screenshots (desktop and mobile, above the fold). Tom Lane merges.
