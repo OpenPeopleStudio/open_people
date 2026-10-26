@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — /ask Gemini with OpenRouter Nemotron backup
+
+Tom approved shipping `/ask` on Gemini, with OpenRouter Nemotron as the backup. If Gemini errors or sits silent before any text (~12s), one retry goes to Nemotron. Both fail: same snag copy and the follow-up form. The model is told not to introduce itself as an AI assistant. Preview only; Tom sets the four `ASK_*` env vars and merges.
+
 ## 2026-10-26 — /ask provider picker for $0 tests
 
 Tom wants to try free non-OpenAI backends on `/ask`. `ASK_PROVIDER` selects Gateway (default), Google Gemini flash, or OpenRouter `:free`. Missing keys do not leak; the page still offers the follow-up form. A one-line note says questions may be processed by a third-party AI provider. Preview only; Tom merges.
