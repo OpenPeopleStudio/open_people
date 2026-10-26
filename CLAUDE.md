@@ -20,7 +20,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - `examples/` — Example `.opkg` files
 - `decisions/` — Architecture Decision Records
 - `app/(marketing)/` — public pages on the shared `DeskPage` shell: `/`, `/tracker`, `/industries`, `/costs`, `/brief` (public Labrador power & industry case), `/coalition` (partner brief; noindex via metadata + header; not in sitemap), `/compute`, `/engage`, `/letter`, `/about`, `/approach`, `/contact`
-- `app/(marketing)/desk.css` + `fonts.ts` — design system v2 (void / plasma = plain layer / steel = technical layer; Newsreader, Inter, JetBrains Mono via next/font)
+- `app/(marketing)/desk.css` + `fonts.ts` — brand book on ink (night): paper / orange / ink-muted; Schibsted Grotesk and DM Mono via next/font
 - `components/marketing/shell/` — DeskPage, DeskSection, Rail, MobileStrip
 - `components/marketing/depth/` — Unfold, Fig, Term, Figure, Nudge, Walkthrough (three reading depths: plain · guided · technical, `?v=plain|guided|tech`)
 - `components/marketing/instruments/` — GateClock, UnknownBoard, PriceLadder, FlowBars, CorridorSchematic, AnnexRamp, DefaultPath (pure SVG; every number is a `Figure` bound to `lib/desk`)

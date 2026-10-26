@@ -1,6 +1,8 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
 import { DESK_SOURCES, FLOW_BARS, type FlowFill } from "@/lib/desk";
-import { Figure } from "@/components/marketing/depth";
+import { InstDetail, instHit } from "./InstDetail";
 
 /**
  * I4 — Flow Bars. Proportional megawatt bars. Fill encodes how hard the
@@ -44,15 +46,13 @@ function fillAttrs(fill: FlowFill) {
 }
 
 export function FlowBars() {
+  const [active, setActive] = useState(FLOW_BARS[0].id);
+  const bar = FLOW_BARS.find((item) => item.id === active) ?? FLOW_BARS[0];
   const H = TOP + FLOW_BARS.length * ROW_H + 8;
   return (
     <div className="inst flow-bars">
       <div className="inst-scroll">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby="fb-title fb-desc"
-        >
+        <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Megawatt figures">
           <title id="fb-title">
             Megawatts: published, announced, preliminary, not published
           </title>
@@ -86,7 +86,8 @@ export function FlowBars() {
             const width = b.mw === null ? bw(2350) : bw(b.mw);
             const lowWidth = b.mwLow ? bw(b.mwLow) : null;
             return (
-              <g key={b.id} transform={`translate(0 ${y})`}>
+              <g key={b.id} transform={`translate(0 ${y})`} {...instHit(b.id, b.label, active, setActive)}>
+                <rect x={0} y={0} width={W} height={ROW_H} fill="transparent" />
                 <text
                   x={LEFT - 14}
                   y={20}
@@ -165,29 +166,31 @@ export function FlowBars() {
 
       <div className="ladder-rows" role="list" aria-label="Megawatt figures">
         {FLOW_BARS.map((b) => (
-          <div key={b.id} className="ladder-row" role="listitem">
-            <div>
-              <Figure
-                value={b.value}
-                status={b.status}
-                size="sm"
-                sources={b.sources.map((id) => DESK_SOURCES[id])}
-                lastVerified={b.lastVerified}
-                note={b.note}
-              />
-            </div>
-            <div className="fam">{b.label}</div>
-            <div className="d">
-              {b.note}{" "}
-              {b.href ? (
-                <Link href={b.href} className="desk-link">
-                  More →
-                </Link>
-              ) : null}
-            </div>
-          </div>
+          <button
+            key={b.id}
+            type="button"
+            className="ladder-row"
+            aria-pressed={active === b.id}
+            data-on={active === b.id ? "true" : "false"}
+            onClick={() => setActive(b.id)}
+          >
+            <span className="v">{b.value}</span>
+            <span className="fam">{b.label}</span>
+          </button>
         ))}
       </div>
+      <InstDetail
+        kicker={bar.label}
+        body={bar.note}
+        {...(bar.href ? { href: bar.href, hrefLabel: "Record →" } : {})}
+        figure={{
+          value: bar.value,
+          status: bar.status,
+          sources: bar.sources.map((id) => DESK_SOURCES[id]),
+          lastVerified: bar.lastVerified,
+          note: bar.note,
+        }}
+      />
     </div>
   );
 }

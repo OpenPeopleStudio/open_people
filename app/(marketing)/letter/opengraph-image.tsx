@@ -15,8 +15,8 @@ export default function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: "#040404",
-          color: "#f2f4f6",
+          backgroundColor: "#000000",
+          color: "#ffffff",
           padding: "64px 72px",
           position: "relative",
         }}
@@ -38,7 +38,7 @@ export default function Image() {
               fontSize: 18,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: "#e8893c",
+              color: "#f2501f",
               fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
             }}
           >
@@ -57,7 +57,7 @@ export default function Image() {
             }}
           >
             <span>Churchill Falls — put the&nbsp;</span>
-            <span style={{ color: "#e8893c" }}>next generations first</span>
+            <span style={{ color: "#f2501f" }}>next generations first</span>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
@@ -87,7 +87,7 @@ export default function Image() {
             }}
           >
             <span>
-              Open People <span style={{ color: "#e8893c" }}>· NL</span>
+              Open People <span style={{ color: "#f2501f" }}>· NL</span>
             </span>
             <span>openpeople.ai/letter</span>
           </div>
