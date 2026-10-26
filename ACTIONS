@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.22 tools=90 commits=1 files=8 note=/ask: fill proposal-knowledge.md from chapter-2 master; no merge
 0.5.21 tools=55 commits=3 files=12 note=/ask: Gemini primary + OpenRouter Nemotron fallback; first-token retry; no merge
 0.5.20 tools=40 commits=3 files=14 note=/ask: ASK_PROVIDER google/openrouter for $0 tests; third-party note; no merge
 0.5.19 tools=90 commits=4 files=12 note=/ask: drop OpenAI-direct; Grok via Gateway + Claude fallback; provider defaults off OpenAI; no merge
