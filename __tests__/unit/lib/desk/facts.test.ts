@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   COMPUTE_HERO,
+  COMPUTE_PAGE_PLAIN,
   COMPUTE_RULES,
   CONTESTED_EXPORT,
   COST_ERA_NOTE,
@@ -183,6 +184,7 @@ describe("horizon desk facts", () => {
     const computeBlob = [
       COMPUTE_HERO.plain,
       COMPUTE_HERO.technical,
+      COMPUTE_PAGE_PLAIN,
       ...COMPUTE_RULES.flatMap((rule) => [rule.body.plain, rule.body.technical]),
     ].join("\n");
     expect(computeBlob).toMatch(/Open People leads/i);

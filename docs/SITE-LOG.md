@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — Desk IA fixes
+
+Four remaining holes on current main. The build seed no longer says “This page is the campus, and only that”; that sentence stays on `/compute`. Record pages (tracker, industries, costs, brief, letter, engage) carry a Power parent link to `/power`. `/compute` carries a Build parent link to `/build`. Privacy and Terms use DeskPage / SiteNav instead of the parked SaaS NavBar. Sitemap: tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Header, home copy, `/coalition`, and retired routes unchanged. Preview only; Tom merges.
+
 ## 2026-10-26 — /letter: home street address removed
 
 Tom approved taking the home street address off the public site. `/letter` From, opening, and signature now name the city only. The intro note says the 15 September letter is unchanged except that the home street address has been removed. Metadata, OG/Twitter images, JSON-LD, and `public/` text copies did not print the street. A unit test scans public marketing source so the address cannot return. Preview only; Tom merges.

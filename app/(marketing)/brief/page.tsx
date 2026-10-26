@@ -260,6 +260,7 @@ export default function BriefPage() {
 
   return (
     <DeskPage
+      parent={{ label: "Power", href: "/power" }}
       kicker="Open People · Public brief · Newfoundland and Labrador"
       title={
         <>

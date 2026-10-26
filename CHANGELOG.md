@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.18 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
+
+Campus-only sentence leaves the build seed and stays on `/compute`. Power records link back to `/power`; `/compute` links back to `/build`. Privacy and Terms render through DeskPage / SiteNav. Sitemap ranks tracks at 0.9 and record pages at 0.8; `/compute` stays 0.4. Preview only; Tom merges.
+
 ## 0.5.17 — 2026-10-26 — Desk instrument polish (onto the board)
 
 SVG graphs were hard to read: gate labels stacked on each other, family names clipped off the price ladder, and `.draw` (pathLength 1 + dasharray 1) painted intended dashes solid after the animation. Labels wrap and stagger on the current board drawings; compact clock shows dates only; reported HQ path stays dashed. No lib/desk figures changed. Main’s InstDetail / click-to-select board, copy, and nav stay.

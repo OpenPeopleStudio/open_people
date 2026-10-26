@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import SiteShell from "@/components/marketing/SiteShell";
 import { RevealObserver, WalkSteps, type WalkStep } from "@/components/marketing/depth";
 import { DESK_VERIFIED } from "@/lib/desk";
@@ -11,6 +12,7 @@ import { MobileStrip, Rail, type RailSection } from "./Rail";
  */
 export function DeskPage({
   kicker,
+  parent,
   title,
   lede,
   meta,
@@ -24,6 +26,8 @@ export function DeskPage({
   children,
 }: {
   kicker: ReactNode;
+  /** Track this record belongs to, shown on the kicker row. */
+  parent?: { label: string; href: string };
   title: ReactNode;
   lede?: ReactNode;
   /** below the lede: e.g. a link line */
@@ -51,7 +55,17 @@ export function DeskPage({
           {singleVoice ? null : <Rail sections={sections ?? []} />}
           <div className="desk-content">
             <header className="desk-hero desk-hero-fade">
-              <p className={`desk-kicker ${quiet ? "desk-kicker-quiet" : ""}`.trim()}>{kicker}</p>
+              <p className={`desk-kicker ${quiet ? "desk-kicker-quiet" : ""}`.trim()}>
+                {parent ? (
+                  <>
+                    <Link href={parent.href} className="desk-parent">
+                      {parent.label}
+                    </Link>
+                    <span aria-hidden> · </span>
+                  </>
+                ) : null}
+                {kicker}
+              </p>
               <h1 className="desk-h1 mt-5">{title}</h1>
               {lede ? <div className="desk-lede mt-7">{lede}</div> : null}
               {meta ? <div className="mt-5">{meta}</div> : null}

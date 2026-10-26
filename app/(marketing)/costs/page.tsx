@@ -22,6 +22,7 @@ export const metadata = deskMetadata({
 export default function CostsPage() {
   return (
     <DeskPage
+      parent={{ label: "Power", href: "/power" }}
       kicker="Open People · Costs"
       title={
         <>

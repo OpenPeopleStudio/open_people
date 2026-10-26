@@ -17,6 +17,7 @@ export default function TrackerPage() {
   const unknown = TRACKER_ITEMS.filter((i) => i.status === "unknown");
   return (
     <DeskPage
+      parent={{ label: "Power", href: "/power" }}
       kicker="Open People · Tracker"
       title={
         <>
