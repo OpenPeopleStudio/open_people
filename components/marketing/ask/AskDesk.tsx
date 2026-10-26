@@ -1,6 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { track } from "@vercel/analytics";
 import { DefaultChatTransport } from "ai";
 import { useMemo, useState } from "react";
 
@@ -32,6 +33,7 @@ export function AskDesk() {
     const text = input.trim();
     if (!text || busy) return;
     setInput("");
+    track("Ask question submitted");
     await sendMessage({ text });
   }
 
@@ -57,6 +59,7 @@ export function AskDesk() {
         setFollowNote(data.error || "Could not send.");
         return;
       }
+      track("Ask follow-up submitted");
       setFollowStatus("sent");
       setFollowNote(data.message || "Sent.");
       setFollowQuestion("");
@@ -199,8 +202,9 @@ export function AskDesk() {
         Privacy: the question you type is logged (text + whether it was covered) so we can improve
         the proposal answers. Emails are not written into that question log. The follow-up form
         collects your email (required) and name (optional) so Tom can reply from tom@openpeople.ai.
-        Follow-ups are stored privately so we can find out and email you. We do not sell this. This
-        page has no analytics trackers.
+        Follow-ups are stored privately so we can find out and email you. We do not sell this. The
+        site uses Vercel Web Analytics for aggregate page views. Submitting a question records the
+        event name only, not the question text.
       </p>
     </div>
   );

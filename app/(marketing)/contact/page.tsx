@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DeskPage, DeskSection } from "@/components/marketing/shell";
+import { ContactMailLink } from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Open People on Churchill Falls",
@@ -40,12 +41,12 @@ export default function ContactPage() {
         <div className="desk-surface p-6 sm:p-8">
           <div className="desk-h3">Tom Lane</div>
           <div className="mt-1 text-sm text-[var(--ink-3)]">Founder, Open People</div>
-            <a
+          <ContactMailLink
             href="mailto:tom@openpeople.ai?subject=Open%20People"
             className="board-mail mt-6 inline-block"
           >
             tom@openpeople.ai
-          </a>
+          </ContactMailLink>
           <p className="desk-fact mt-4 leading-relaxed text-[var(--ink-3)]">
             St. John&apos;s, Newfoundland and Labrador
             <br />

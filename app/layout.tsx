@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { SiteJsonLd } from "@/components/marketing/SiteJsonLd";
@@ -82,6 +83,7 @@ export default function RootLayout({
         <ErrorBoundary>
           {children}
         </ErrorBoundary>
+        <Analytics />
       </body>
     </html>
   );

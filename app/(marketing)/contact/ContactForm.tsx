@@ -1,7 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { track } from "@vercel/analytics";
+import { useMemo, useState, type ReactNode } from "react";
+
+function trackContactSubmitted() {
+  track("Contact form submitted");
+}
+
+export function ContactMailLink({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <a href={href} className={className} onClick={() => trackContactSubmitted()}>
+      {children}
+    </a>
+  );
+}
 
 function encodeMailto(value: string) {
   return encodeURIComponent(value).replace(/%20/g, "+");
@@ -73,7 +94,11 @@ export function ContactForm() {
       </label>
 
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        <a href={mailtoHref} className="btn-primary w-full sm:w-auto justify-center">
+        <a
+          href={mailtoHref}
+          className="btn-primary w-full sm:w-auto justify-center"
+          onClick={() => trackContactSubmitted()}
+        >
           Email us
           <svg
             className="w-4 h-4"

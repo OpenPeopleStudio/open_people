@@ -136,7 +136,8 @@ test("/ask states the locked intro and the follow-up form", async ({ page }) => 
   );
   await expect(main).toContainText("Email Tom a follow-up");
   await expect(main).toContainText("Privacy:");
-  await expect(main).toContainText("no analytics trackers");
+  await expect(main).toContainText("Vercel Web Analytics");
+  await expect(main).not.toContainText("no analytics trackers");
 });
 
 test("power track links into the Churchill record", async ({ page }) => {
@@ -183,5 +184,10 @@ for (const path of ["/privacy", "/terms"]) {
     await expect(page.getByRole("link", { name: "Sign in" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Pricing" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Get started" })).toHaveCount(0);
+    if (path === "/privacy") {
+      await expect(page.locator("main.desk-page")).toContainText("Vercel Web Analytics");
+      await expect(page.locator("main.desk-page")).toContainText("cookieless");
+      await expect(page.locator("main.desk-page")).toContainText("not personal identity");
+    }
   });
 }
