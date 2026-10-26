@@ -31,9 +31,10 @@ export const BOARD_ENTRIES: readonly BoardEntry[] = [
     id: "consent-first",
     track: "consent",
     cleared: "2026-10-14",
-    plain: "Indigenous partnership comes first. No agreement is claimed.",
+    plain:
+      "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. No agreement is claimed.",
     technical:
-      "Proposed partners include Indigenous nations, consent first. No impact-benefit agreement is signed. No meeting is claimed on this track.",
+      "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. No impact-benefit agreement is signed. No meeting is claimed on this track.",
     kind: "company",
     sources: [],
   },

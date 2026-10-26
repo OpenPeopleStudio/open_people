@@ -6,6 +6,7 @@ import {
   COMPUTE_LAST_VERIFIED,
   COMPUTE_NEIGHBOURS,
   COMPUTE_PAGE_PLAIN,
+  COMPUTE_PAGE_TECHNICAL,
   COMPUTE_RULES,
   DESK_SOURCES,
 } from "@/lib/desk";
@@ -43,7 +44,7 @@ export default function ComputePage() {
           id="compute-lede"
           label="500 MW"
           plain={<p>{COMPUTE_PAGE_PLAIN}</p>}
-          technical="Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class."
+          technical={COMPUTE_PAGE_TECHNICAL}
         />
       }
       meta={

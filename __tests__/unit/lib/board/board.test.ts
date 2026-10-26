@@ -77,6 +77,17 @@ describe("project board", () => {
     }
   });
 
+  it("states consent without naming a nation as a partner", () => {
+    const consent = statusFor("consent");
+    expect(consent?.plain).toBe(
+      "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. No agreement is claimed.",
+    );
+    expect(consent?.technical).toBe(
+      "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. No impact-benefit agreement is signed. No meeting is claimed on this track.",
+    );
+    expect(`${consent?.plain}\n${consent?.technical}`).not.toMatch(/Proposed partners/i);
+  });
+
   it("seeds the build track with the public feasibility line", () => {
     const build = statusFor("build");
     expect(build?.kind).toBe("company");

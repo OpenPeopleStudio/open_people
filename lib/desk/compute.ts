@@ -5,12 +5,17 @@ import type { DeskVoice } from "./types";
 
 export const COMPUTE_LAST_VERIFIED = DESK_VERIFIED;
 
+/**
+ * Process-only partnership line from PR #26. Shared by the build seed and
+ * the /compute technical lede. Does not name a nation or NL Hydro as a partner.
+ */
+const COMPUTE_TECHNICAL =
+  "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class.";
+
 export const COMPUTE_HERO: DeskVoice = {
   plain:
     "Open People leads a proposed 500 MW AI data campus in Labrador, and a research campus beside it. It is proposed, and it is in feasibility. It is not approved, not funded, and not under construction. Mines and existing industry are real constraints on the same power.",
-  // Home board still renders this technical string. Do not edit until that rewrite lands.
-  technical:
-    "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. Proposed partners: NL Hydro, Indigenous nations (consent first), and capital. None of those are named as signed. The DCIA Material Terms still do not name AI as a reserved industrial class.",
+  technical: COMPUTE_TECHNICAL,
 };
 
 /** /compute lede only. Not used on home or the build seed. */
@@ -18,9 +23,8 @@ export const COMPUTE_PAGE_PLAIN =
   COMPUTE_HERO.plain +
   " The public work right now is keeping firm power in the province. This page is the campus, and only that.";
 
-/** /compute lede only. Not used on home. */
-export const COMPUTE_PAGE_TECHNICAL =
-  "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class.";
+/** /compute lede only. Same technical fact as the build seed. Not used on home. */
+export const COMPUTE_PAGE_TECHNICAL = COMPUTE_TECHNICAL;
 
 export const COMPUTE_RULES = [
   {
