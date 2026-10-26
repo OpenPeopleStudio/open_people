@@ -99,7 +99,7 @@ export const REPO_MAP: readonly RepoEntry[] = [
   { path: "VERSION", role: "record", note: "Public site version stamp. Currently 0.5.16." },
   { path: "__tests__", role: "tooling", note: "Vitest and Playwright tests." },
   { path: "app", role: "shared", note: "Public routes in app/(marketing), except retired SaaS pages. app/(platform), app/super-admin, app/notes, and most of app/api are the parked shell. Live API routes are app/api/ask and app/api/og." },
-  { path: "components", role: "shared", note: "components/marketing is the public site. Other component folders are the parked shell. components/NavBar.tsx still serves /privacy and /terms." },
+  { path: "components", role: "shared", note: "components/marketing is the public site. Other component folders are the parked shell. /privacy and /terms use DeskPage and SiteNav." },
   { path: "content", role: "site", note: "content/ask is the /ask knowledge file." },
   { path: "context", role: "parked", note: "Tenant and vault React context for the parked shell." },
   { path: "decisions", role: "spec", note: "ADRs for the .opkg standard." },
