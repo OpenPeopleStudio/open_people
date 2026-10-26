@@ -26,7 +26,7 @@ describe("vision copy", () => {
     expect(VISION_LEDE.plain).toMatch(/federal sovereign-AI/i);
     expect(text).toMatch(/Open People leads/i);
     expect(text).toMatch(/Partnership, if any, will be on terms each nation sets/);
-    expect(text).toMatch(/No nation has been contacted/);
+    expect(text).toMatch(/No nation has been asked about this project/);
     expect(text).toMatch(/500 MW/);
     expect(text).toMatch(/Labrador/);
     expect(text).toMatch(/proposed/i);

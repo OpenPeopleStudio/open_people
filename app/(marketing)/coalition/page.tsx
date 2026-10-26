@@ -243,7 +243,7 @@ const SEQUENCE = [
   "Innu partnership before large Labrador builds.",
   "Mines and towns served first.",
   "Leftover firm power eligible for named uses, including compute if written.",
-  "Open People leads the proposed campus. Partnership, if any, will be on terms each nation sets. No nation has been contacted. Capital as partner.",
+  "Open People leads the proposed campus. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital as partner.",
 ];
 
 const PHASES = [
@@ -298,7 +298,7 @@ const IN_FLIGHT: { pill: string; tone: "plasma" | "steel" | "amber"; text: strin
 const ASKS = [
   {
     who: "Indigenous nations",
-    lead: "Partnership, if any, will be on terms each nation sets. No nation has been contacted.",
+    lead: "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.",
     body: "ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. Innu Nation's partnership, royalty, and the Gull Island tariff path on the DCIA file are unresolved after the vote. Innu Nation says the paper cuts its benefits by more than half. As of 21 September no meeting with the Premier is scheduled. We do not speak for any nation.",
   },
   {
@@ -352,7 +352,7 @@ const RULES = [
   },
   {
     t: "Partnership, if any, will be on terms each nation sets.",
-    d: "No nation has been contacted. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide.",
+    d: "No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide.",
   },
   {
     t: "Hospitality for the coalition, not for officials.",
@@ -411,7 +411,7 @@ export default function CoalitionPage() {
         <div className="grid gap-4">
           <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
             Open People leads the proposed Labrador campus from St. John&apos;s as proponent.
-            Partnership, if any, will be on terms each nation sets. No nation has been contacted.
+            Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.
             Capital is unnamed here. Not a DCIA party. Proposed, in feasibility.
           </p>
           <p className="desk-verified">
@@ -479,7 +479,7 @@ export default function CoalitionPage() {
           },
           {
             anchor: "roles",
-            text: "Open People leads the proposed campus. Partnership, if any, will be on terms each nation sets. No nation has been contacted. Capital is unnamed here.",
+            text: "Open People leads the proposed campus. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here.",
           },
         ],
       }}
@@ -981,7 +981,7 @@ export default function CoalitionPage() {
         <p className="desk-body mt-4">
           <strong className="font-semibold text-[var(--ink)]">Open People</strong> is the operating
           company and the proponent: government relations, evidence, and the proposed campus.
-          Partnership, if any, will be on terms each nation sets. No nation has been contacted.
+          Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.
           Capital is unnamed here. Nothing is signed. No contracts in hand.
         </p>
         <p className="desk-body mt-4">
@@ -1278,7 +1278,7 @@ export default function CoalitionPage() {
           <p>
             We are not raising from you in this conversation. The coalition is mines, towns,
             infrastructure, and whoever would actually use in-province power. Partnership, if any,
-            will be on terms each nation sets. No nation has been contacted. Open People leads the
+            will be on terms each nation sets. No nation has been asked about this project. Open People leads the
             proposed campus as proponent; nothing is signed.
           </p>
         }

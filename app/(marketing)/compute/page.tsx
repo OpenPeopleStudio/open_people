@@ -108,7 +108,7 @@ export default function ComputePage() {
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
           Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
-          Partnership, if any, will be on terms each nation sets. No nation has been contacted.
+          Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.
           This page does not jump the line: mines and existing industry remain the constraint, and
           the public ask is to keep firm power in the province.
         </p>

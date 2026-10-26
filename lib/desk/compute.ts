@@ -15,7 +15,7 @@ export const COMPUTE_HERO: DeskVoice = {
 
 /** /compute lede only. Not used on home. */
 export const COMPUTE_PAGE_TECHNICAL =
-  "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been contacted. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class.";
+  "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador, plus a research campus (residencies, fellowships, gatherings). Status is only proposed / in feasibility — not a reserved block, not a utility queue position, not a construction programme. The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. The DCIA Material Terms still do not name AI as a reserved industrial class.";
 
 export const COMPUTE_RULES = [
   {
@@ -31,9 +31,9 @@ export const COMPUTE_RULES = [
     title: "Open People leads",
     body: {
       plain:
-        "This is a Labrador campus build plan, and this is the organisation. Open People is the proponent: we lead the proposed 500 MW campus and the research campus. Partnership, if any, will be on terms each nation sets. No nation has been contacted.",
+        "This is a Labrador campus build plan, and this is the organisation. Open People is the proponent: we lead the proposed 500 MW campus and the research campus. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.",
       technical:
-        "Role: Open People leads. Partnership, if any, will be on terms each nation sets. No nation has been contacted. Capital is unnamed here. That is not a signed offtake, not an impact-benefit agreement, and not a named funder. No customers are named on this page.",
+        "Role: Open People leads. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. That is not a signed offtake, not an impact-benefit agreement, and not a named funder. No customers are named on this page.",
     } satisfies DeskVoice,
   },
   {

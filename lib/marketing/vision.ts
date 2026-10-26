@@ -47,9 +47,9 @@ export const VISION_SECTIONS = [
     num: "02 — A proposed campus",
     title: "500 MW in Labrador. Proposed. In feasibility.",
     plain:
-      "Open People leads a proposed 500 MW AI data campus in Labrador. Partnership, if any, will be on terms each nation sets. No nation has been contacted. It is proposed, and it is in feasibility. It is not approved. It is not funded. It is not under construction. Mines and existing industry are real constraints on the same power.",
+      "Open People leads a proposed 500 MW AI data campus in Labrador. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. It is proposed, and it is in feasibility. It is not approved. It is not funded. It is not under construction. Mines and existing industry are real constraints on the same power.",
     technical:
-      "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador. Treat that figure as a proposal, not a reserved block and not a utility queue position. Partnership, if any, will be on terms each nation sets. No nation has been contacted. Capital is unnamed here. No customers are named. Status is only proposed / in feasibility. Mines remain a live constraint on Labrador firm power.",
+      "Open People is the proponent. Proposed scale: 500 MW of AI data-centre load in Labrador. Treat that figure as a proposal, not a reserved block and not a utility queue position. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. No customers are named. Status is only proposed / in feasibility. Mines remain a live constraint on Labrador firm power.",
   },
   {
     id: "research",

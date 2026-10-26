@@ -10,7 +10,7 @@ export const APPROACH_SECTIONS = [
     title: "Capital model: Open People leads",
     body: [
       "Open People is the proponent of a proposed 500 MW Labrador AI campus and a research campus.",
-      "The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been contacted. Capital is unnamed here. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
+      "The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved. Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. Capital is unnamed here. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
       "We are not a party to the Churchill Falls / Gull Island framework. We lead the campus. Proposed. In feasibility. Not approved, not funded, not under construction.",
     ],
   },

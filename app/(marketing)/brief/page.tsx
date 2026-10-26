@@ -225,7 +225,7 @@ const STACK = [
   {
     label: "Indigenous nations",
     us: false,
-    body: "Partnership, if any, will be on terms each nation sets. No nation has been contacted.",
+    body: "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.",
   },
   {
     label: "Capital",
@@ -1160,7 +1160,7 @@ export default function BriefPage() {
                   not funding. A separate program, the Canadian Sovereign AI Compute Strategy, is a
                   $2 billion Budget 2024 plan. ISED lists Indigenous participation as one of the 100
                   MW call&apos;s criteria. Any role is for each nation to decide. Partnership, if any,
-                  will be on terms each nation sets. No nation has been contacted. We found no
+                  will be on terms each nation sets. No nation has been asked about this project. We found no
                   Newfoundland and Labrador entry in the public record of the closed 100 MW intake,
                   because there was no NL project to enter.
                 </p>
@@ -1285,7 +1285,7 @@ export default function BriefPage() {
         intro={
           <p>
             Open People is the proponent. Partnership, if any, will be on terms each nation sets. No
-            nation has been contacted. Capital is unnamed here. None of those lines is a signed
+            nation has been asked about this project. Capital is unnamed here. None of those lines is a signed
             allocation, a signed impact-benefit agreement, or a named funder.
           </p>
         }
@@ -1348,7 +1348,7 @@ export default function BriefPage() {
             label="consent"
             status={INNU.status}
             plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. The Premier says he looks forward to sitting down; as of 21 September nothing is scheduled. That is a start, not consent, and not a partnership structure."
-            requires="Partnership, if any, will be on terms each nation sets. No nation has been contacted. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
+            requires="Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
             technical={INNU.body.technical}
             caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not an item in our source registry."
             sources={sourceList(INNU.sources)}
@@ -1381,7 +1381,7 @@ export default function BriefPage() {
         </p>
         <p className="desk-body mt-5">
           We are not a party to the DCIA. We are the proponent of the campus. Partnership, if any,
-          will be on terms each nation sets. No nation has been contacted. No customers are named.
+          will be on terms each nation sets. No nation has been asked about this project. No customers are named.
           Mines and existing industry are real constraints on the same power.
         </p>
         <div className="mt-8 flex gap-5">

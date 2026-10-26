@@ -40,6 +40,6 @@ describe("Open People public role copy", () => {
     expect(brief).toMatch(/Open People leads/i);
     expect(brief).toMatch(/proponent/i);
     expect(brief).toMatch(/Partnership, if any, will be on terms each nation sets/);
-    expect(brief).toMatch(/No nation has been contacted/);
+    expect(brief).toMatch(/No nation has been asked about this project/);
   });
 });

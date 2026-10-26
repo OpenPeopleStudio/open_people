@@ -40,7 +40,7 @@ export default function AboutPage() {
           <p>
             Open People is a Newfoundland and Labrador company. Tom Lane is the founder. We lead a
             proposed 500 MW AI data campus in Labrador, and a research campus beside it. Partnership,
-            if any, will be on terms each nation sets. No nation has been contacted. Capital is
+            if any, will be on terms each nation sets. No nation has been asked about this project. Capital is
             unnamed here. That structure is proposed, not signed.
           </p>
           <p>

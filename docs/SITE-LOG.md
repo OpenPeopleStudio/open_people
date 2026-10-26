@@ -9,7 +9,7 @@ Public pages were still listing NL Hydro and Indigenous nations as “proposed p
 Applied on this date (PR #25, `cursor/brief-consent-wording-f946`), after merging `aa8c327` from `main`:
 
 - Power (the old “enough firm green power… proposed 500 MW campus” line): replaced with “The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved.” Headline “Get involved — keep firm power here” unchanged. NL Hydro removed from proposed-partner listings.
-- Consent / partners: “Partnership, if any, will be on terms each nation sets. No nation has been contacted.”
+- Consent / partners: “Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.” (was “No nation has been contacted.” — consent desk sourced wording.)
 - Ashini quote kept and attributed, linked to VOCM 21 Sep 2026: https://vocm.com/2026/09/21/premier-has-yet-to-contact-innu-about-hydro-deal-says-grand-chief/
 - Equity / ISED: “ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide.” No “equity earns points.” No “stakeholders” in that passage.
 - NunatuKavut: no standing line existed; nothing cut.
