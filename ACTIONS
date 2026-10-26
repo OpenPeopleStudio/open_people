@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.19 tools=70 commits=3 files=16 note=Vercel Web Analytics on root layout; named events only on /ask and contact; privacy copy; no merge
 0.5.18 tools=80 commits=6 files=24 note=Desk IA: campus-only off build; parent links; privacy/terms on DeskPage; sitemap ranks; no merge
 0.5.17 tools=70 commits=1 files=16 note=Polish desk SVG instruments onto main board: readable labels, dashed-stroke draw bug; no merge
 0.5.16 tools=40 commits=3 files=8 note=/letter: drop home street address; public PII regression test; no merge

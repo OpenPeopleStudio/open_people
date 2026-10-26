@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.19 — 2026-10-26 — Vercel Web Analytics
+
+Public site loads Vercel Web Analytics once from the root layout. Cookieless aggregate page views, referrers, country, and device. Custom events are names only: ask question submitted, ask follow-up submitted, contact form submitted. No question text, email, or other PII in event props. No Speed Insights. `/privacy` states this in short sentence-case words. `/ask` no longer claims it has no trackers. Preview only; Tom merges.
+
 ## 0.5.18 — 2026-10-26 — Desk IA: records return to tracks; Privacy and Terms on the desk
 
 Campus-only sentence leaves the build seed and stays on `/compute`. Power records link back to `/power`; `/compute` links back to `/build`. Privacy and Terms render through DeskPage / SiteNav. Sitemap ranks tracks at 0.9 and record pages at 0.8; `/compute` stays 0.4. Preview only; Tom merges.

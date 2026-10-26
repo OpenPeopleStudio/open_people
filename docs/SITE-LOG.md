@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-26 — Vercel Web Analytics
+
+The public site now loads Vercel Web Analytics from the root layout (`@vercel/analytics/next`). It is cookieless. Vercel stores aggregate page views, referrers, country, and device — not personal identity. Three named custom events fire without props: ask question submitted, ask follow-up submitted, contact form submitted. Question text and emails stay off the events. Speed Insights is not installed. `/privacy` and the `/ask` privacy line were updated to match. Preview only; Tom merges.
+
 ## 2026-10-26 — Desk IA fixes
 
 Four remaining holes on current main. The build seed no longer says “This page is the campus, and only that”; that sentence stays on `/compute`. Record pages (tracker, industries, costs, brief, letter, engage) carry a Power parent link to `/power`. `/compute` carries a Build parent link to `/build`. Privacy and Terms use DeskPage / SiteNav instead of the parked SaaS NavBar. Sitemap: tracks 0.9, record pages 0.8, `/compute` 0.4, `/about` 0.8. Header, home copy, `/coalition`, and retired routes unchanged. Preview only; Tom merges.
