@@ -27,11 +27,18 @@ const GATEWAY_PREFIX = /^(spacexai|xai|anthropic)\//i;
 const DISALLOWED =
   /(?:^|\/)(openai|azure)(?:\/|$)|openai|(?:^|\/)gpt-/i;
 
+export function parseAskProviderId(raw: string | undefined | null): AskProviderId | null {
+  const value = raw?.trim().toLowerCase();
+  if (value === "google" || value === "openrouter" || value === "gateway") return value;
+  return null;
+}
+
 export function askProvider(): AskProviderId {
-  const raw = process.env.ASK_PROVIDER?.trim().toLowerCase();
-  if (raw === "google") return "google";
-  if (raw === "openrouter") return "openrouter";
-  return "gateway";
+  return parseAskProviderId(process.env.ASK_PROVIDER) ?? "gateway";
+}
+
+export function askFallbackProvider(): AskProviderId | null {
+  return parseAskProviderId(process.env.ASK_FALLBACK_PROVIDER);
 }
 
 export function isDisallowedAskModel(id: string): boolean {
@@ -45,6 +52,10 @@ function envAskModel(): string {
   return process.env.ASK_MODEL?.trim() ?? "";
 }
 
+function envAskFallbackModel(): string {
+  return process.env.ASK_FALLBACK_MODEL?.trim() ?? "";
+}
+
 function googleKey(): string {
   return process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ?? "";
 }
@@ -53,8 +64,10 @@ function openrouterKey(): string {
   return process.env.OPENROUTER_API_KEY?.trim() ?? "";
 }
 
-export function askModelFor(provider: AskProviderId = askProvider()): string {
-  const fromEnv = envAskModel();
+export function askModelFor(
+  provider: AskProviderId = askProvider(),
+  fromEnv: string = envAskModel(),
+): string {
   if (provider === "google") {
     if (
       fromEnv &&
@@ -81,9 +94,12 @@ export function askModelFor(provider: AskProviderId = askProvider()): string {
   return ASK_MODEL_DEFAULT;
 }
 
-export function askRuntime(req?: Request): AskRuntime {
-  const provider = askProvider();
-  const model = askModelFor(provider);
+export function runtimeFor(
+  provider: AskProviderId,
+  fromEnv: string,
+  req?: Request,
+): AskRuntime {
+  const model = askModelFor(provider, fromEnv);
   if (provider === "google") {
     return { provider, model, state: googleKey() ? "ready" : "snag" };
   }
@@ -99,6 +115,16 @@ export function askRuntime(req?: Request): AskRuntime {
     };
   }
   return { provider, model, state: "unconfigured" };
+}
+
+export function askRuntime(req?: Request): AskRuntime {
+  return runtimeFor(askProvider(), envAskModel(), req);
+}
+
+export function askFallbackRuntime(req?: Request): AskRuntime | null {
+  const provider = askFallbackProvider();
+  if (!provider) return null;
+  return runtimeFor(provider, envAskFallbackModel(), req);
 }
 
 export function askLanguageModel(runtime: AskRuntime): string | LanguageModel {

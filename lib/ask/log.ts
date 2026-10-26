@@ -9,6 +9,7 @@ type QuestionEntry = {
   covered: boolean;
   provider?: string;
   model?: string;
+  fallbackFired?: boolean;
   at: string;
 };
 
@@ -39,6 +40,7 @@ export function logAskQuestion(input: {
   covered: boolean;
   provider?: string;
   model?: string;
+  fallbackFired?: boolean;
 }) {
   const entry: QuestionEntry = {
     kind: "question",
@@ -48,6 +50,7 @@ export function logAskQuestion(input: {
   };
   if (input.provider) entry.provider = input.provider;
   if (input.model) entry.model = input.model;
+  if (input.fallbackFired !== undefined) entry.fallbackFired = input.fallbackFired;
   log.info(entry, "ask.question");
   appendAskLog(entry);
 }

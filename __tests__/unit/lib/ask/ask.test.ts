@@ -21,11 +21,15 @@ import {
 import {
   ASK_GOOGLE_MODEL_DEFAULT,
   ASK_OPENROUTER_MODEL_DEFAULT,
+  askFallbackProvider,
+  askFallbackRuntime,
   askModelFor,
   askProvider,
   askRuntime,
   isDisallowedAskModel,
+  parseAskProviderId,
 } from "@/lib/ask/provider";
+import { ASK_FIRST_TOKEN_MS, runAskWithFallback } from "@/lib/ask/stream";
 import { parseFollowupsStatus, parseMarkAnswered } from "@/lib/ask/store";
 
 describe("ask prompt", () => {
@@ -40,7 +44,10 @@ describe("ask prompt", () => {
     expect(instructions).toMatch(/Never claim a partner/);
     expect(instructions).toMatch(/SWL/);
     expect(instructions).toMatch(/follow-up form/);
-    expect(instructions).toMatch(/AI assistant for Open People/);
+    expect(instructions).toMatch(/Do not introduce yourself/);
+    expect(instructions).toMatch(/Do not say you are an AI assistant/);
+    expect(instructions).not.toMatch(/You are the public AI assistant/);
+    expect(instructions).not.toMatch(/transparent about being an AI/);
   });
 
   it("treats UNKNOWN answers as not covered", () => {
@@ -84,6 +91,8 @@ describe("ask gateway config", () => {
     askProvider: process.env.ASK_PROVIDER,
     google: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
     openrouter: process.env.OPENROUTER_API_KEY,
+    fallbackProvider: process.env.ASK_FALLBACK_PROVIDER,
+    fallbackModel: process.env.ASK_FALLBACK_MODEL,
   };
 
   afterEach(() => {
@@ -96,6 +105,8 @@ describe("ask gateway config", () => {
       ["ASK_PROVIDER", previous.askProvider],
       ["GOOGLE_GENERATIVE_AI_API_KEY", previous.google],
       ["OPENROUTER_API_KEY", previous.openrouter],
+      ["ASK_FALLBACK_PROVIDER", previous.fallbackProvider],
+      ["ASK_FALLBACK_MODEL", previous.fallbackModel],
     ] as const) {
       if (value === undefined) delete process.env[name];
       else process.env[name] = value;
@@ -162,6 +173,8 @@ describe("ask provider picker", () => {
     gateway: process.env.AI_GATEWAY_API_KEY,
     oidc: process.env.VERCEL_OIDC_TOKEN,
     vercel: process.env.VERCEL,
+    fallbackProvider: process.env.ASK_FALLBACK_PROVIDER,
+    fallbackModel: process.env.ASK_FALLBACK_MODEL,
   };
 
   afterEach(() => {
@@ -173,6 +186,8 @@ describe("ask provider picker", () => {
       ["AI_GATEWAY_API_KEY", previous.gateway],
       ["VERCEL_OIDC_TOKEN", previous.oidc],
       ["VERCEL", previous.vercel],
+      ["ASK_FALLBACK_PROVIDER", previous.fallbackProvider],
+      ["ASK_FALLBACK_MODEL", previous.fallbackModel],
     ] as const) {
       if (value === undefined) delete process.env[name];
       else process.env[name] = value;
@@ -246,6 +261,226 @@ describe("ask provider picker", () => {
     delete process.env.VERCEL_OIDC_TOKEN;
     delete process.env.VERCEL;
     expect(askRuntime().state).toBe("unconfigured");
+  });
+});
+
+describe("ask fallback selection", () => {
+  const previous = {
+    provider: process.env.ASK_PROVIDER,
+    model: process.env.ASK_MODEL,
+    fallbackProvider: process.env.ASK_FALLBACK_PROVIDER,
+    fallbackModel: process.env.ASK_FALLBACK_MODEL,
+    google: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+    openrouter: process.env.OPENROUTER_API_KEY,
+    gateway: process.env.AI_GATEWAY_API_KEY,
+    oidc: process.env.VERCEL_OIDC_TOKEN,
+    vercel: process.env.VERCEL,
+  };
+
+  afterEach(() => {
+    for (const [name, value] of [
+      ["ASK_PROVIDER", previous.provider],
+      ["ASK_MODEL", previous.model],
+      ["ASK_FALLBACK_PROVIDER", previous.fallbackProvider],
+      ["ASK_FALLBACK_MODEL", previous.fallbackModel],
+      ["GOOGLE_GENERATIVE_AI_API_KEY", previous.google],
+      ["OPENROUTER_API_KEY", previous.openrouter],
+      ["AI_GATEWAY_API_KEY", previous.gateway],
+      ["VERCEL_OIDC_TOKEN", previous.oidc],
+      ["VERCEL", previous.vercel],
+    ] as const) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  });
+
+  it("is off when ASK_FALLBACK_PROVIDER is unset", () => {
+    delete process.env.ASK_FALLBACK_PROVIDER;
+    delete process.env.ASK_FALLBACK_MODEL;
+    expect(askFallbackProvider()).toBeNull();
+    expect(askFallbackRuntime()).toBeNull();
+    expect(parseAskProviderId("openai")).toBeNull();
+    expect(parseAskProviderId("google")).toBe("google");
+  });
+
+  it("selects production Gemini primary and OpenRouter Nemotron fallback", () => {
+    process.env.ASK_PROVIDER = "google";
+    process.env.ASK_MODEL = "gemini-flash-lite-latest";
+    process.env.ASK_FALLBACK_PROVIDER = "openrouter";
+    process.env.ASK_FALLBACK_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = "test-google-key-not-real";
+    process.env.OPENROUTER_API_KEY = "test-openrouter-key-not-real";
+    expect(askProvider()).toBe("google");
+    expect(askModelFor()).toBe("gemini-flash-lite-latest");
+    expect(askRuntime().state).toBe("ready");
+    expect(askFallbackProvider()).toBe("openrouter");
+    const fallback = askFallbackRuntime();
+    expect(fallback).not.toBeNull();
+    expect(fallback?.provider).toBe("openrouter");
+    expect(fallback?.model).toBe("nvidia/nemotron-3-ultra-550b-a55b:free");
+    expect(fallback?.state).toBe("ready");
+    expect(isDisallowedAskModel("gemini-flash-lite-latest")).toBe(false);
+    expect(isDisallowedAskModel("nvidia/nemotron-3-ultra-550b-a55b:free")).toBe(false);
+  });
+
+  it("rejects openai/ on the fallback slot", () => {
+    process.env.ASK_FALLBACK_PROVIDER = "openrouter";
+    process.env.ASK_FALLBACK_MODEL = "openai/gpt-4o-mini";
+    const fallback = askFallbackRuntime();
+    expect(fallback?.provider).toBe("openrouter");
+    expect(fallback?.model).toBe(ASK_OPENROUTER_MODEL_DEFAULT);
+    expect(fallback?.model.toLowerCase().startsWith("openai/")).toBe(false);
+    process.env.ASK_FALLBACK_PROVIDER = "google";
+    process.env.ASK_FALLBACK_MODEL = "openai/gpt-4.1-mini";
+    expect(askFallbackRuntime()?.model).toBe(ASK_GOOGLE_MODEL_DEFAULT);
+  });
+
+  it("uses the provider default when ASK_FALLBACK_MODEL is unset", () => {
+    process.env.ASK_FALLBACK_PROVIDER = "openrouter";
+    delete process.env.ASK_FALLBACK_MODEL;
+    expect(askFallbackRuntime()?.model).toBe(ASK_OPENROUTER_MODEL_DEFAULT);
+  });
+
+  it("does not treat ASK_FALLBACK_PROVIDER=openai as a fallback", () => {
+    process.env.ASK_FALLBACK_PROVIDER = "openai";
+    process.env.ASK_FALLBACK_MODEL = "openai/gpt-4o-mini";
+    expect(askFallbackProvider()).toBeNull();
+    expect(askFallbackRuntime()).toBeNull();
+  });
+});
+
+describe("ask fallback stream", () => {
+  const google = {
+    provider: "google" as const,
+    model: "gemini-flash-lite-latest",
+    state: "ready" as const,
+  };
+  const openrouter = {
+    provider: "openrouter" as const,
+    model: "nvidia/nemotron-3-ultra-550b-a55b:free",
+    state: "ready" as const,
+  };
+
+  async function collect(chunks: AsyncIterable<string>): Promise<string> {
+    let text = "";
+    for await (const part of chunks) text += part;
+    return text;
+  }
+
+  it("uses the primary when it streams text", async () => {
+    const calls: string[] = [];
+    const result = await runAskWithFallback({
+      primary: google,
+      fallback: openrouter,
+      start: async (runtime) => {
+        calls.push(runtime.provider);
+        return (async function* () {
+          yield "CONFIRMED: from Gemini.";
+        })();
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.fallbackFired).toBe(false);
+    expect(result.runtime.provider).toBe("google");
+    expect(await collect(result.chunks)).toBe("CONFIRMED: from Gemini.");
+    expect(calls).toEqual(["google"]);
+  });
+
+  it("retries once on the fallback when the primary errors before text", async () => {
+    const calls: string[] = [];
+    const result = await runAskWithFallback({
+      primary: google,
+      fallback: openrouter,
+      start: async (runtime) => {
+        calls.push(runtime.provider);
+        if (runtime.provider === "google") {
+          const error = new Error("overloaded") as Error & { statusCode: number };
+          error.statusCode = 503;
+          throw error;
+        }
+        return (async function* () {
+          yield "CONFIRMED: from Nemotron.";
+        })();
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.fallbackFired).toBe(true);
+    expect(result.runtime).toEqual(openrouter);
+    expect(await collect(result.chunks)).toBe("CONFIRMED: from Nemotron.");
+    expect(calls).toEqual(["google", "openrouter"]);
+  });
+
+  it("retries on fallback after a first-token timeout", async () => {
+    const result = await runAskWithFallback({
+      primary: google,
+      fallback: openrouter,
+      firstTokenMs: 30,
+      start: async (runtime) => {
+        if (runtime.provider === "google") {
+          return (async function* () {
+            await new Promise((resolve) => setTimeout(resolve, 80));
+            yield "too late";
+          })();
+        }
+        return (async function* () {
+          yield "fallback text";
+        })();
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.fallbackFired).toBe(true);
+    expect(await collect(result.chunks)).toBe("fallback text");
+    expect(ASK_FIRST_TOKEN_MS).toBe(12_000);
+  });
+
+  it("snags when both fail before text", async () => {
+    const result = await runAskWithFallback({
+      primary: google,
+      fallback: openrouter,
+      start: async (runtime) => {
+        const error = new Error("rate limited") as Error & { statusCode: number };
+        error.statusCode = 429;
+        error.message = `${runtime.provider} 429`;
+        throw error;
+      },
+    });
+    expect(result).toEqual({ ok: false, fallbackFired: true });
+  });
+
+  it("does not call fallback when none is configured", async () => {
+    const calls: string[] = [];
+    const result = await runAskWithFallback({
+      primary: google,
+      fallback: null,
+      start: async (runtime) => {
+        calls.push(runtime.provider);
+        throw new Error("missing key");
+      },
+    });
+    expect(result).toEqual({ ok: false, fallbackFired: false });
+    expect(calls).toEqual(["google"]);
+  });
+
+  it("treats a missing primary key as a pre-text failure and uses fallback", async () => {
+    const calls: string[] = [];
+    const result = await runAskWithFallback({
+      primary: { ...google, state: "snag" },
+      fallback: openrouter,
+      start: async (runtime) => {
+        calls.push(runtime.provider);
+        return (async function* () {
+          yield "from fallback";
+        })();
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.fallbackFired).toBe(true);
+    expect(await collect(result.chunks)).toBe("from fallback");
+    expect(calls).toEqual(["openrouter"]);
   });
 });
 
@@ -372,6 +607,26 @@ describe("ask question log", () => {
     expect(row.model).toBe("gemini-2.5-flash");
     expect(line).not.toMatch(/AIza|sk-|or-/i);
     expect(row.apiKey).toBeUndefined();
+  });
+
+  it("logs fallbackFired without keys or extra question fields", () => {
+    const dir = mkdtempSync(join(tmpdir(), "ask-log-"));
+    const path = join(dir, "ask.jsonl");
+    process.env.ASK_LOG_PATH = path;
+    logAskQuestion({
+      question: "What is unknown?",
+      covered: false,
+      provider: "openrouter",
+      model: "nvidia/nemotron-3-ultra-550b-a55b:free",
+      fallbackFired: true,
+    });
+    const line = readFileSync(path, "utf8");
+    const row = JSON.parse(line) as Record<string, unknown>;
+    expect(row.provider).toBe("openrouter");
+    expect(row.model).toBe("nvidia/nemotron-3-ultra-550b-a55b:free");
+    expect(row.fallbackFired).toBe(true);
+    expect(row.apiKey).toBeUndefined();
+    expect(line).not.toMatch(/AIza|sk-|or-/i);
   });
 
   it("logs a stored follow-up without name or email", () => {

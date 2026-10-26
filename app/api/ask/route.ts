@@ -3,7 +3,6 @@ import {
   createUIMessageStream,
   createUIMessageStreamResponse,
   streamText,
-  toUIMessageStream,
   type UIMessage,
 } from "ai";
 import { loadProposalKnowledge } from "@/lib/ask/knowledge";
@@ -13,13 +12,15 @@ import {
   buildAskInstructions,
   lastUserText,
 } from "@/lib/ask/prompt";
-import { askLanguageModel, askRuntime } from "@/lib/ask/provider";
+import { askFallbackRuntime, askLanguageModel, askRuntime } from "@/lib/ask/provider";
+import { runAskWithFallback } from "@/lib/ask/stream";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
 const MAX_MESSAGES = 16;
 const SNAG = "The assistant hit a snag. Try once more, or use the follow-up form.";
+const TEXT_ID = "ask-text";
 
 function snagResponse() {
   return createUIMessageStreamResponse({
@@ -33,8 +34,10 @@ function snagResponse() {
 }
 
 export async function POST(req: Request) {
-  const selected = askRuntime(req);
-  if (selected.state === "unconfigured") {
+  const primary = askRuntime(req);
+  const fallback = askFallbackRuntime(req);
+
+  if (primary.state === "unconfigured" && fallback == null) {
     return Response.json(
       {
         error:
@@ -57,42 +60,70 @@ export async function POST(req: Request) {
     return Response.json({ error: "Write a question first." }, { status: 400 });
   }
 
-  const logFields = {
-    question,
-    provider: selected.provider,
-    model: selected.model,
-  };
-
-  if (selected.state === "snag") {
-    logAskQuestion({ ...logFields, covered: false });
-    return snagResponse();
-  }
-
   const knowledge = loadProposalKnowledge();
   const instructions = buildAskInstructions(knowledge);
 
+  let outcome: Awaited<ReturnType<typeof runAskWithFallback>>;
   try {
-    const result = streamText({
-      model: askLanguageModel(selected),
-      instructions,
-      messages: await convertToModelMessages(messages),
-      ...(selected.providerOptions ? { providerOptions: selected.providerOptions } : {}),
-      onFinish: ({ text }) => {
-        logAskQuestion({
-          ...logFields,
-          covered: answerLooksCovered(text),
+    const modelMessages = await convertToModelMessages(messages);
+    outcome = await runAskWithFallback({
+      primary,
+      fallback,
+      start: (selected, abortSignal) => {
+        const result = streamText({
+          model: askLanguageModel(selected),
+          instructions,
+          messages: modelMessages,
+          abortSignal,
+          ...(selected.providerOptions ? { providerOptions: selected.providerOptions } : {}),
         });
+        return result.textStream;
       },
     });
-
-    return createUIMessageStreamResponse({
-      stream: toUIMessageStream({
-        stream: result.stream,
-        onError: () => SNAG,
-      }),
-    });
   } catch {
-    logAskQuestion({ ...logFields, covered: false });
+    logAskQuestion({
+      question,
+      covered: false,
+      provider: primary.provider,
+      model: primary.model,
+      fallbackFired: false,
+    });
     return snagResponse();
   }
+
+  if (!outcome.ok) {
+    logAskQuestion({
+      question,
+      covered: false,
+      provider: primary.provider,
+      model: primary.model,
+      fallbackFired: outcome.fallbackFired,
+    });
+    return snagResponse();
+  }
+
+  return createUIMessageStreamResponse({
+    stream: createUIMessageStream({
+      async execute({ writer }) {
+        writer.write({ type: "text-start", id: TEXT_ID });
+        let text = "";
+        try {
+          for await (const delta of outcome.chunks) {
+            text += delta;
+            writer.write({ type: "text-delta", id: TEXT_ID, delta });
+          }
+        } finally {
+          writer.write({ type: "text-end", id: TEXT_ID });
+          logAskQuestion({
+            question,
+            covered: answerLooksCovered(text),
+            provider: outcome.runtime.provider,
+            model: outcome.runtime.model,
+            fallbackFired: outcome.fallbackFired,
+          });
+        }
+      },
+      onError: () => SNAG,
+    }),
+  });
 }

@@ -76,7 +76,9 @@ export function answerLooksCovered(text: string): boolean {
 }
 
 export function buildAskInstructions(knowledge: string): string {
-  return `You are the public AI assistant for Open People (openpeople.ai), a Newfoundland and Labrador company. You are transparent about being an AI. You answer questions about Open People's preliminary proposal.
+  return `You answer questions about Open People's preliminary proposal. Open People (openpeople.ai) is a Newfoundland and Labrador company.
+
+Do not introduce yourself. Do not say you are an AI assistant. Start with the answer.
 
 You may use ONLY the knowledge file below. If a fact is not in that file, say so. Do not use training data to fill gaps. Do not browse. Do not invent.
 
