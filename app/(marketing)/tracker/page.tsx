@@ -7,7 +7,7 @@ import { DESK_SOURCES, TRACKER_ITEMS } from "@/lib/desk";
 import { deskMetadata } from "@/lib/og/metadata";
 
 export const metadata = deskMetadata({
-  title: "Tracker",
+  title: "Churchill Falls tracker",
   description:
     "Open People publishes what is signed, what is open, and what the public text still does not say on Churchill Falls / Gull Island. Framework, not binding contracts. Mining first.",
   path: "/tracker",
