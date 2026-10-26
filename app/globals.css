@@ -7,26 +7,26 @@
 
 :root {
   /* Core palette — void + plasma (aligned with public briefs) */
-  --void: #040404;
-  --surface-1: #0a0a0a;
-  --surface-2: #0d0d0e;
-  --surface-3: #141416;
-  --surface-elevated: #121214;
+  --void: #000000;
+  --surface-1: #050505;
+  --surface-2: #0a0a0a;
+  --surface-3: #111111;
+  --surface-elevated: #0a0a0a;
 
   /* Text hierarchy */
-  --text-primary: #f2f4f6;
-  --text-secondary: rgba(242, 244, 246, 0.72);
-  --text-muted: rgba(242, 244, 246, 0.46);
-  --text-inverse: #040404;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.72);
+  --text-muted: rgba(255, 255, 255, 0.46);
+  --text-inverse: #000000;
 
   /* Plasma accent (Phase 2 public voice) */
-  --plasma: #e8893c;
+  --plasma: #f2501f;
   --plasma-bright: #f0a060;
-  --plasma-soft: rgba(232, 137, 60, 0.09);
-  --electric-lime: #e8893c;
+  --plasma-soft: rgba(242, 80, 31, 0.09);
+  --electric-lime: #f2501f;
   --electric-lime-dim: #d47830;
   --electric-cyan: #f0a060;
-  --electric-violet: #e8893c;
+  --electric-violet: #f2501f;
   --electric-rose: #d47830;
 
   /* Semantic */
@@ -37,7 +37,7 @@
   /* Borders & effects */
   --border-subtle: rgba(255, 255, 255, 0.075);
   --border-medium: rgba(255, 255, 255, 0.15);
-  --glow-lime: rgba(232, 137, 60, 0.35);
+  --glow-lime: rgba(242, 80, 31, 0.35);
   --glow-cyan: rgba(240, 160, 96, 0.25);
 
   /* Typography */

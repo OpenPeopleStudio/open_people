@@ -1,31 +1,23 @@
-import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
+import { DM_Mono, Schibsted_Grotesk } from "next/font/google";
 
 /**
- * Desk v2 type: Newsreader (editorial serif, optical sizes) for display,
- * Inter for body, JetBrains Mono for numerals, labels and citations.
- * Self-hosted by next/font — no render-blocking Google Fonts <link>.
+ * Open People brand book.
+ * Schibsted Grotesk — display and text (semibold headings, regular body).
+ * DM Mono — labels and identifiers (medium for labels, regular for figures).
+ * Self-hosted by next/font. Alias both roles to --font-grotesk in desk.css.
  */
-export const display = Newsreader({
+export const grotesk = Schibsted_Grotesk({
   subsets: ["latin"],
-  axes: ["opsz"],
-  weight: "variable",
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-display",
+  variable: "--font-grotesk",
 });
 
-export const body = Inter({
+export const mono = DM_Mono({
   subsets: ["latin"],
-  weight: "variable",
-  display: "swap",
-  variable: "--font-body",
-});
-
-export const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: "variable",
+  weight: ["400", "500"],
   display: "swap",
   variable: "--font-mono",
 });
 
-export const fontClassName = `${display.variable} ${body.variable} ${mono.variable}`;
+export const fontClassName = `${grotesk.variable} ${mono.variable}`;

@@ -6,7 +6,7 @@ import { HOME_DESCRIPTION, HOME_TITLE, DESK_OG_IMAGE, DESK_OG_IMAGE_PATH } from 
 import { siteOrigin } from "@/lib/site";
 
 export const viewport: Viewport = {
-  themeColor: "#040404",
+  themeColor: "#000000",
 };
 
 export const metadata: Metadata = {
@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     "in-province power",
     "firm power",
     "Gull Island",
+    "Labrador campus",
   ],
   openGraph: {
     title: HOME_TITLE,
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   other: {
-    "msapplication-TileColor": "#040404",
+    "msapplication-TileColor": "#000000",
   },
 };
 

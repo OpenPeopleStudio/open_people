@@ -9,14 +9,18 @@ const PUBLIC_ROLE_FILES = [
   "app/(marketing)/coalition/page.tsx",
   "app/(marketing)/compute/page.tsx",
   "app/(marketing)/about/page.tsx",
-  "app/(marketing)/approach/page.tsx",
   "app/(marketing)/page.tsx",
   "app/(marketing)/engage/page.tsx",
-  "app/(marketing)/vision/page.tsx",
+  "app/(marketing)/build/page.tsx",
+  "app/(marketing)/capital/page.tsx",
+  "app/(marketing)/consent/page.tsx",
+  "app/(marketing)/power/page.tsx",
   "components/marketing/SiteFooter.tsx",
   "lib/og/copy.ts",
   "lib/desk/compute.ts",
   "lib/marketing/vision.ts",
+  "lib/marketing/approach.ts",
+  "lib/board/entries.ts",
 ];
 
 describe("Open People public role copy", () => {

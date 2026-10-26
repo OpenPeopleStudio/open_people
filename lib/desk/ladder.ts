@@ -8,6 +8,8 @@ import { DESK_VERIFIED, type DeskSourceId } from "./sources";
 export type LadderFamily = {
   id: string;
   label: string;
+  /** short name for the chart row, so the plot stays readable */
+  short: string;
   /** one line on what this family measures */
   measures: string;
   tone: "heritage" | "reported" | "structure" | "published" | "island" | "neighbour" | "unknown";
@@ -32,42 +34,49 @@ export const LADDER_FAMILIES: LadderFamily[] = [
   {
     id: "heritage",
     label: "Heritage export",
+    short: "Heritage",
     measures: "What Hydro-Québec pays under the 1969-lineage renewal, to 2041.",
     tone: "heritage",
   },
   {
     id: "mou",
     label: "Rejected 2024 MOU",
+    short: "2024 MOU",
     measures: "The IRC's decomposition of the expired MOU's average into its two blocks. History.",
     tone: "structure",
   },
   {
     id: "reported",
     label: "Reported new HQ export path",
+    short: "Reported path",
     measures: "Press and utility descriptions of the DCIA export price. Not a signed PPA cent.",
     tone: "reported",
   },
   {
     id: "labrador",
     label: "Published Labrador tariffs",
+    short: "Labrador tariff",
     measures: "What Hydro posts today for Labrador households; the mine rate is a formula, not a rung.",
     tone: "published",
   },
   {
     id: "island",
     label: "Island grid (not Labrador)",
+    short: "Island grid",
     measures: "A different grid and a different tariff. Shown so nobody quotes it as Labrador.",
     tone: "island",
   },
   {
     id: "neighbour",
     label: "Québec data-centre rate (proposed)",
+    short: "Québec compute",
     measures: "What Hydro-Québec wants to charge compute at home. Context, not a Labrador tariff.",
     tone: "neighbour",
   },
   {
     id: "signed",
     label: "Signed industrial ¢ for retained power",
+    short: "Not published",
     measures: "The number that would matter for a new Labrador mine or any new load.",
     tone: "unknown",
   },

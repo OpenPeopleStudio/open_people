@@ -1,23 +1,39 @@
+"use client";
+
+import { useState } from "react";
 import {
   ANNEX_B_NOTE,
   CF_UPGRADES_RAMP,
   DESK_SOURCES,
   GULL_RAMP,
 } from "@/lib/desk";
+import { InstDetail } from "./InstDetail";
 import { Figure } from "@/components/marketing/depth";
+
+function yearLine(yr: number): string {
+  const cf = CF_UPGRADES_RAMP.find((row) => row.year === yr);
+  const listed = GULL_RAMP.find((row) => row.year === yr);
+  const parts: string[] = [];
+  if (listed) parts.push(`Gull Island ${listed.mw.toLocaleString("en-CA")} MW in the 2,700 MW case`);
+  else if (yr > 2037) parts.push("Gull Island is drawn at 2,700 MW, carrying the 2037 case forward");
+  if (cf) parts.push(`Churchill Falls upgrades ${cf.mw.toLocaleString("en-CA")} MW`);
+  if (parts.length === 0) return "The preliminary schedule has not started. Subject to studies.";
+  return `${parts.join(". ")}. Preliminary, subject to studies.`;
+}
 
 /**
  * I6 — Annex Ramp. Preliminary Annex B schedule bands, hatched throughout.
  * Everything here is subject to studies; the badge says so.
  */
 export function AnnexRamp() {
+  const years = Array.from({ length: 2043 - 2034 }, (_, i) => 2034 + i);
+  const [year, setYear] = useState(2036);
   const W = 1000;
   const H = 260;
   const LEFT = 70;
   const RIGHT = 30;
   const TOP = 40;
   const BOTTOM = 40;
-  const years = Array.from({ length: 2043 - 2034 }, (_, i) => 2034 + i);
   const MAX = 2800;
   const xw = (W - LEFT - RIGHT) / years.length;
   const yy = (mw: number) => TOP + (H - TOP - BOTTOM) * (1 - mw / MAX);
@@ -25,11 +41,7 @@ export function AnnexRamp() {
   return (
     <div className="inst annex-ramp">
       <div className="inst-scroll">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby="ar-title ar-desc"
-        >
+        <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Annex B preliminary ramp">
           <title id="ar-title">Annex B preliminary ramp</title>
           <desc id="ar-desc">
             Churchill Falls upgrades ramp from 464 MW in 2035 to 1,275 MW in
@@ -101,7 +113,23 @@ export function AnnexRamp() {
               GULL_RAMP.find((r) => r.year === yr) ??
               (yr > 2037 ? { year: yr, mw: 2700 } : null);
             return (
-              <g key={yr}>
+              <g
+                key={yr}
+                role="button"
+                tabIndex={0}
+                aria-pressed={year === yr}
+                aria-label={String(yr)}
+                data-on={year === yr ? "true" : "false"}
+                className="inst-hit"
+                onClick={() => setYear(yr)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setYear(yr);
+                  }
+                }}
+              >
+                <rect x={x} y={TOP} width={xw} height={H - TOP - 28} fill="transparent" />
                 {gi ? (
                   <rect
                     x={x + 4}
@@ -148,6 +176,8 @@ export function AnnexRamp() {
           scroll sideways →
         </span>
       </div>
+
+      <InstDetail kicker={String(year)} body={yearLine(year)} />
 
       <ul className="inst-legend" aria-label="Ramp key">
         <li className="inst-legend-item">

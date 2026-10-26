@@ -6,6 +6,10 @@ import { test, expect } from "@playwright/test";
  */
 const PAGES = [
   "/",
+  "/build",
+  "/capital",
+  "/consent",
+  "/power",
   "/tracker",
   "/costs",
   "/industries",
@@ -13,7 +17,7 @@ const PAGES = [
   "/compute",
   "/brief",
   "/letter",
-  "/vision",
+  "/about",
   "/ask",
 ];
 
@@ -56,16 +60,28 @@ test("a term opens an explainer and a figure shows its source", async ({ page })
   await expect(page.locator(".figure-prov .desk-chip")).toBeVisible();
 });
 
-test("walkthrough steps through the home page", async ({ page, isMobile }) => {
+test("home names the company and offers a way into each track", async ({ page }) => {
   await page.goto("/");
-  const scope = isMobile ? ".desk-strip" : ".desk-rail";
-  await page.locator(`${scope} button.walk-launch`).click();
-  await expect(page.locator(".walk-bar")).toBeVisible();
-  await expect(page.locator(".walk-step")).toHaveText("Step 1 of 5");
-  await page.locator(".walk-actions button", { hasText: "Next" }).click();
-  await expect(page.locator(".walk-step")).toHaveText("Step 2 of 5");
-  await page.keyboard.press("Escape");
-  await expect(page.locator(".walk-bar")).toHaveCount(0);
+  const main = page.locator("main.desk-page");
+  await expect(page.locator("h1.desk-h1")).toContainText("Building a Labrador campus.");
+  for (const job of [
+    "The campus and the research campus.",
+    "The money for the project.",
+    "Indigenous partnership.",
+    "Power for the campus.",
+  ]) {
+    await expect(main).toContainText(job);
+  }
+  const subjects = ["Build", "Capital", "Consent", "Power"];
+  for (const subject of subjects) {
+    const link = page.locator("main").getByRole("link", { name: "Work this track" }).nth(subjects.indexOf(subject));
+    await expect(link).toHaveAttribute("href", new RegExp(encodeURIComponent(`Open People — ${subject}`)));
+  }
+  const nav = page.getByRole("navigation", { name: "Primary" });
+  for (const label of subjects) {
+    await expect(nav.getByRole("link", { name: label })).toBeVisible();
+  }
+  await expect(page.locator('a[href="/coalition"]')).toHaveCount(0);
 });
 
 test("the unknown board counts the tracker's not-published rows", async ({ page }) => {
@@ -76,26 +92,22 @@ test("the unknown board counts the tracker's not-published rows", async ({ page 
   expect(slots).toBeGreaterThanOrEqual(3);
 });
 
-test("/vision is the public thesis with Dual depth and Tom’s close", async ({ page, isMobile }) => {
+test("/about keeps Tom’s close and /vision and /approach land there", async ({ page, isMobile }) => {
   await page.goto("/vision");
+  await expect(page).toHaveURL(/\/about$/);
+  await page.goto("/approach");
+  await expect(page).toHaveURL(/\/about$/);
   const main = page.locator("main.desk-page");
   await expect(main).toContainText("People who care for this land should");
   await expect(main).toContainText("prosper from it");
-  await expect(main).toContainText("sovereign AI compute");
-  await expect(main).toContainText("500 MW");
-  await expect(main).toContainText("not approved");
-  await expect(main).toContainText("not funded");
-  await expect(main).toContainText("not under construction");
-  await expect(main).toContainText("Perimeter Institute");
-  await expect(main).toContainText("Banff Centre");
   await expect(main).toContainText("People working toward a shared goal should share in what it yields.");
+  await expect(main).toContainText("Big goals raise hard questions");
   await expect(main).toContainText("Explorers bring us together.");
   await expect(main).toContainText("Tom Lane");
   await expect(main).toContainText("tom@openpeople.ai");
+  await expect(main).toContainText("The power record is the public evidence on the power.");
   const scope = isMobile ? ".desk-strip" : ".desk-rail";
   await expect(page.locator(`${scope} [aria-label="Reading depth"]`)).toBeVisible();
-  await page.locator(`${scope} [aria-label="Reading depth"] button[data-depth="technical"]`).click();
-  await expect(main).toContainText("proposed / in feasibility");
 });
 
 test("/ask states the locked intro and the follow-up form", async ({ page }) => {
@@ -109,15 +121,11 @@ test("/ask states the locked intro and the follow-up form", async ({ page }) => 
   await expect(main).toContainText("no analytics trackers");
 });
 
-test("home links to /vision near the letter", async ({ page }) => {
-  await page.goto("/");
-  const letter = page.locator('main a[href="/letter"]');
-  const vision = page.locator('main a[href="/vision"]');
-  await expect(letter).toBeVisible();
-  await expect(vision).toBeVisible();
-  await vision.click();
-  await expect(page).toHaveURL(/\/vision$/);
-  await expect(page.locator("h1.desk-h1")).toContainText(
-    "People who care for this land should prosper from it.",
-  );
+test("power track links into the Churchill record", async ({ page }) => {
+  await page.goto("/power");
+  const main = page.locator("main.desk-page");
+  await expect(main.locator('a[href="/tracker"]')).toBeVisible();
+  await expect(main.locator('a[href="/brief"]')).toBeVisible();
+  await expect(main.locator('a[href="/engage"]')).toBeVisible();
+  await expect(main.getByRole("link", { name: "Work this track" })).toBeVisible();
 });

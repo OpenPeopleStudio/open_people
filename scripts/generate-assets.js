@@ -2,7 +2,7 @@
 
 /**
  * Rasterize public/favicon.svg into the PNG/ICO set.
- * Source of truth is the SVG (void field, plasma chassis).
+ * Source of truth is the SVG (horizon mark: orange field, white ground, three bodies).
  *
  * Usage: npm run generate-assets
  */
