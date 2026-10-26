@@ -1148,32 +1148,43 @@ export default function BriefPage() {
           </div>
 
           <div>
-            <h3 className="desk-h3">Ottawa is already paying for this</h3>
+            <h3 className="desk-h3">Ottawa is looking for projects like this</h3>
             <Unfold
               id="buyer-ottawa"
               className="mt-3"
-              label="the federal strategy"
+              label="two federal programs"
               plain={
                 <p className="desk-takeaway">
-                  Canada&apos;s Sovereign AI Compute Strategy seeks Canadian-owned, Canadian-controlled
-                  projects. ISED lists Indigenous participation as one of its criteria. Any role is
-                  for each nation to decide. Partnership, if any, will be on terms each nation sets.
-                  No nation has been contacted. The first intake closed in 2026. We found no
-                  Newfoundland and Labrador entry in the public record, because there was no NL
-                  project to enter.
+                  ISED ran a call for 100 MW-plus data-centre projects from 15 January to 15 February
+                  2026. That intake is closed. It can lead to a non-binding MOU, not a contract and
+                  not funding. A separate program, the Canadian Sovereign AI Compute Strategy, is a
+                  $2 billion Budget 2024 plan. ISED lists Indigenous participation as one of the 100
+                  MW call&apos;s criteria. Any role is for each nation to decide. Partnership, if any,
+                  will be on terms each nation sets. No nation has been contacted. We found no
+                  Newfoundland and Labrador entry in the public record of the closed 100 MW intake,
+                  because there was no NL project to enter.
                 </p>
               }
               technical={
-                <p>
-                  Innovation, Science and Economic Development Canada&apos;s Canadian Sovereign AI
-                  Compute Strategy commits more than $2 billion, with further Budget 2025 funding, and
-                  its programme materials describe eligibility for Canadian-owned projects above 100
-                  MW with Indigenous participation. Programme figures are ISED&apos;s, quoted as
-                  published, and are not in our source registry. Whether an NL entry exists in a
-                  closed intake cannot be confirmed from public records. Treat &ldquo;no NL
-                  entrant&rdquo; as our reading, not a government statement.
-                </p>
+                <>
+                  <p>
+                    Two ISED programs, kept separate. First: Enabling large-scale sovereign AI data
+                    centres. ISED says the proposal submission period is now closed, and that the
+                    call ran from 15 January to 15 February 2026. It sought sovereign AI data centres
+                    greater than 100 MW. The intake form is for consideration of a potential
+                    non-binding memorandum of understanding. ISED lists Indigenous participation
+                    among that call&apos;s criteria.
+                  </p>
+                  <p>
+                    Second: the Canadian Sovereign AI Compute Strategy. Budget 2024 announced $2
+                    billion over five years, starting in 2024–25. That is a different program. We do
+                    not blend the two. Whether an NL entry exists in the closed 100 MW intake cannot
+                    be confirmed from public records. Treat &ldquo;no NL entrant&rdquo; as our
+                    reading, not a government statement.
+                  </p>
+                </>
               }
+              sources={sourceList(["isedLargeScale", "isedLargeScaleIntake", "isedSovereignStrategy"])}
             />
           </div>
         </div>
@@ -1466,7 +1477,6 @@ export default function BriefPage() {
             </p>
             <ul className="mt-3 grid gap-2 text-[14px] leading-relaxed text-[var(--ink-2)]">
               <li>International Energy Agency, Energy and AI (2025): global data-centre demand projection.</li>
-              <li>Innovation, Science and Economic Development Canada: Canadian Sovereign AI Compute Strategy programme materials.</li>
               <li>Nscale and Aker: Stargate Norway announcements, August 2025.</li>
               <li>CBC and Canadian Press, 2019: reported cumulative Churchill Falls profit split.</li>
               <li>Newfoundland Power rate book: general-service energy charge ballpark.</li>

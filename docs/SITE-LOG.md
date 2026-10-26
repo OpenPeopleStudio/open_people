@@ -16,4 +16,11 @@ Applied on this date (PR #25, `cursor/brief-consent-wording-f946`), after mergin
 
 Home and nav were left alone (another agent is rewriting them). Shared home-board strings in `lib/board/entries.ts`, `lib/board/tracks.ts`, and `COMPUTE_HERO.technical` were also left, so `/`, `/consent`, `/build`, `/capital`, and `/power` still show the older partner listing until that rewrite.
 
+Ottawa / ISED (same date, still PR #25; confirmed against official ISED pages):
+
+- Heading “Ottawa is already paying for this” → “Ottawa is looking for projects like this” (`app/(marketing)/brief/page.tsx`).
+- Unblended two programs: (a) ISED “Enabling large-scale sovereign AI data centres”, 15 Jan–15 Feb 2026, now closed, potential non-binding MOU — https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres and the intake form (non-binding MOU) https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres-intake-form; (b) Canadian Sovereign AI Compute Strategy, Budget 2024 “$2 billion over five years” — https://ised-isde.canada.ca/site/ised/en/canadian-sovereign-ai-compute-strategy. ISED writes “$2 billion”, not “C$2B”.
+- “a structure federal programs reward” was already gone; not found on this branch.
+- Home and nav skipped (in-flight home rewrite). Latest `main` is still `aa8c327` (campus board, 12:37 AM NT). The home agent has not published a branch yet.
+
 The AI-campus wording PR stays separate.
