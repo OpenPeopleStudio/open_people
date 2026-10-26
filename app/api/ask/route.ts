@@ -1,5 +1,6 @@
 import {
   convertToModelMessages,
+  createUIMessageStream,
   createUIMessageStreamResponse,
   streamText,
   toUIMessageStream,
@@ -9,12 +10,10 @@ import { loadProposalKnowledge } from "@/lib/ask/knowledge";
 import { logAskQuestion } from "@/lib/ask/log";
 import {
   answerLooksCovered,
-  askGatewayProviderOptions,
-  askModel,
-  assistantConfigured,
   buildAskInstructions,
   lastUserText,
 } from "@/lib/ask/prompt";
+import { askLanguageModel, askRuntime } from "@/lib/ask/provider";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -22,8 +21,20 @@ export const maxDuration = 30;
 const MAX_MESSAGES = 16;
 const SNAG = "The assistant hit a snag. Try once more, or use the follow-up form.";
 
+function snagResponse() {
+  return createUIMessageStreamResponse({
+    stream: createUIMessageStream({
+      execute() {
+        throw new Error("ask-unconfigured");
+      },
+      onError: () => SNAG,
+    }),
+  });
+}
+
 export async function POST(req: Request) {
-  if (!assistantConfigured(req)) {
+  const selected = askRuntime(req);
+  if (selected.state === "unconfigured") {
     return Response.json(
       {
         error:
@@ -46,23 +57,42 @@ export async function POST(req: Request) {
     return Response.json({ error: "Write a question first." }, { status: 400 });
   }
 
+  const logFields = {
+    question,
+    provider: selected.provider,
+    model: selected.model,
+  };
+
+  if (selected.state === "snag") {
+    logAskQuestion({ ...logFields, covered: false });
+    return snagResponse();
+  }
+
   const knowledge = loadProposalKnowledge();
   const instructions = buildAskInstructions(knowledge);
 
-  const result = streamText({
-    model: askModel(),
-    instructions,
-    messages: await convertToModelMessages(messages),
-    providerOptions: askGatewayProviderOptions(),
-    onFinish: ({ text }) => {
-      logAskQuestion({ question, covered: answerLooksCovered(text) });
-    },
-  });
+  try {
+    const result = streamText({
+      model: askLanguageModel(selected),
+      instructions,
+      messages: await convertToModelMessages(messages),
+      ...(selected.providerOptions ? { providerOptions: selected.providerOptions } : {}),
+      onFinish: ({ text }) => {
+        logAskQuestion({
+          ...logFields,
+          covered: answerLooksCovered(text),
+        });
+      },
+    });
 
-  return createUIMessageStreamResponse({
-    stream: toUIMessageStream({
-      stream: result.stream,
-      onError: () => SNAG,
-    }),
-  });
+    return createUIMessageStreamResponse({
+      stream: toUIMessageStream({
+        stream: result.stream,
+        onError: () => SNAG,
+      }),
+    });
+  } catch {
+    logAskQuestion({ ...logFields, covered: false });
+    return snagResponse();
+  }
 }

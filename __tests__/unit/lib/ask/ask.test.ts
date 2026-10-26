@@ -18,6 +18,14 @@ import {
   isAllowedAskModel,
   lastUserText,
 } from "@/lib/ask/prompt";
+import {
+  ASK_GOOGLE_MODEL_DEFAULT,
+  ASK_OPENROUTER_MODEL_DEFAULT,
+  askModelFor,
+  askProvider,
+  askRuntime,
+  isDisallowedAskModel,
+} from "@/lib/ask/provider";
 import { parseFollowupsStatus, parseMarkAnswered } from "@/lib/ask/store";
 
 describe("ask prompt", () => {
@@ -73,6 +81,9 @@ describe("ask gateway config", () => {
     vercel: process.env.VERCEL,
     askModel: process.env.ASK_MODEL,
     openai: process.env.OPENAI_API_KEY,
+    askProvider: process.env.ASK_PROVIDER,
+    google: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+    openrouter: process.env.OPENROUTER_API_KEY,
   };
 
   afterEach(() => {
@@ -82,6 +93,9 @@ describe("ask gateway config", () => {
       ["VERCEL", previous.vercel],
       ["ASK_MODEL", previous.askModel],
       ["OPENAI_API_KEY", previous.openai],
+      ["ASK_PROVIDER", previous.askProvider],
+      ["GOOGLE_GENERATIVE_AI_API_KEY", previous.google],
+      ["OPENROUTER_API_KEY", previous.openrouter],
     ] as const) {
       if (value === undefined) delete process.env[name];
       else process.env[name] = value;
@@ -136,6 +150,102 @@ describe("ask gateway config", () => {
     expect(listed).not.toMatch(/openai/i);
     expect(listed).not.toMatch(/azure/i);
     expect(listed).not.toMatch(/gpt-/i);
+  });
+});
+
+describe("ask provider picker", () => {
+  const previous = {
+    provider: process.env.ASK_PROVIDER,
+    model: process.env.ASK_MODEL,
+    google: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+    openrouter: process.env.OPENROUTER_API_KEY,
+    gateway: process.env.AI_GATEWAY_API_KEY,
+    oidc: process.env.VERCEL_OIDC_TOKEN,
+    vercel: process.env.VERCEL,
+  };
+
+  afterEach(() => {
+    for (const [name, value] of [
+      ["ASK_PROVIDER", previous.provider],
+      ["ASK_MODEL", previous.model],
+      ["GOOGLE_GENERATIVE_AI_API_KEY", previous.google],
+      ["OPENROUTER_API_KEY", previous.openrouter],
+      ["AI_GATEWAY_API_KEY", previous.gateway],
+      ["VERCEL_OIDC_TOKEN", previous.oidc],
+      ["VERCEL", previous.vercel],
+    ] as const) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  });
+
+  it("defaults to AI Gateway Grok when ASK_PROVIDER is unset", () => {
+    delete process.env.ASK_PROVIDER;
+    delete process.env.ASK_MODEL;
+    expect(askProvider()).toBe("gateway");
+    expect(askModelFor()).toBe(ASK_MODEL_DEFAULT);
+    expect(askModelFor()).not.toMatch(/openai/i);
+  });
+
+  it("selects Gemini flash for ASK_PROVIDER=google", () => {
+    process.env.ASK_PROVIDER = "google";
+    delete process.env.ASK_MODEL;
+    delete process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    expect(askProvider()).toBe("google");
+    expect(askModelFor()).toBe(ASK_GOOGLE_MODEL_DEFAULT);
+    expect(ASK_GOOGLE_MODEL_DEFAULT).toMatch(/gemini/i);
+    expect(ASK_GOOGLE_MODEL_DEFAULT).toMatch(/flash/i);
+    expect(isDisallowedAskModel(ASK_GOOGLE_MODEL_DEFAULT)).toBe(false);
+    expect(askRuntime().state).toBe("snag");
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = "test-google-key-not-real";
+    expect(askRuntime().state).toBe("ready");
+    expect(askRuntime().model).toBe(ASK_GOOGLE_MODEL_DEFAULT);
+  });
+
+  it("uses ASK_MODEL for Google when it is a Gemini id", () => {
+    process.env.ASK_PROVIDER = "google";
+    process.env.ASK_MODEL = "gemini-2.0-flash";
+    expect(askModelFor()).toBe("gemini-2.0-flash");
+    process.env.ASK_MODEL = "openai/gpt-4.1-mini";
+    expect(askModelFor()).toBe(ASK_GOOGLE_MODEL_DEFAULT);
+    process.env.ASK_MODEL = ASK_MODEL_DEFAULT;
+    expect(askModelFor()).toBe(ASK_GOOGLE_MODEL_DEFAULT);
+  });
+
+  it("selects an OpenRouter :free non-OpenAI model", () => {
+    process.env.ASK_PROVIDER = "openrouter";
+    delete process.env.ASK_MODEL;
+    delete process.env.OPENROUTER_API_KEY;
+    expect(askProvider()).toBe("openrouter");
+    expect(askModelFor()).toBe(ASK_OPENROUTER_MODEL_DEFAULT);
+    expect(ASK_OPENROUTER_MODEL_DEFAULT).toMatch(/:free$/);
+    expect(ASK_OPENROUTER_MODEL_DEFAULT.toLowerCase().startsWith("openai/")).toBe(false);
+    expect(isDisallowedAskModel(ASK_OPENROUTER_MODEL_DEFAULT)).toBe(false);
+    expect(askRuntime().state).toBe("snag");
+    process.env.OPENROUTER_API_KEY = "test-openrouter-key-not-real";
+    expect(askRuntime().state).toBe("ready");
+  });
+
+  it("rejects OpenRouter model ids that start with openai/", () => {
+    process.env.ASK_PROVIDER = "openrouter";
+    process.env.ASK_MODEL = "openai/gpt-4o-mini";
+    expect(askModelFor()).toBe(ASK_OPENROUTER_MODEL_DEFAULT);
+    process.env.ASK_MODEL = "google/gemma-4-26b-a4b-it:free";
+    expect(askModelFor()).toBe("google/gemma-4-26b-a4b-it:free");
+  });
+
+  it("does not treat ASK_PROVIDER=openai as a live provider", () => {
+    process.env.ASK_PROVIDER = "openai";
+    expect(askProvider()).toBe("gateway");
+    expect(askModelFor()).toBe(ASK_MODEL_DEFAULT);
+  });
+
+  it("keeps Gateway unconfigured as unconfigured, not snag", () => {
+    delete process.env.ASK_PROVIDER;
+    delete process.env.AI_GATEWAY_API_KEY;
+    delete process.env.VERCEL_OIDC_TOKEN;
+    delete process.env.VERCEL;
+    expect(askRuntime().state).toBe("unconfigured");
   });
 });
 
@@ -246,6 +356,24 @@ describe("ask question log", () => {
     expect(row.email).toBeUndefined();
   });
 
+  it("logs provider and model, never a key", () => {
+    const dir = mkdtempSync(join(tmpdir(), "ask-log-"));
+    const path = join(dir, "ask.jsonl");
+    process.env.ASK_LOG_PATH = path;
+    logAskQuestion({
+      question: "What is unknown?",
+      covered: false,
+      provider: "google",
+      model: "gemini-2.5-flash",
+    });
+    const line = readFileSync(path, "utf8");
+    const row = JSON.parse(line) as Record<string, unknown>;
+    expect(row.provider).toBe("google");
+    expect(row.model).toBe("gemini-2.5-flash");
+    expect(line).not.toMatch(/AIza|sk-|or-/i);
+    expect(row.apiKey).toBeUndefined();
+  });
+
   it("logs a stored follow-up without name or email", () => {
     const dir = mkdtempSync(join(tmpdir(), "ask-log-"));
     const path = join(dir, "ask.jsonl");
@@ -262,6 +390,13 @@ describe("ask question log", () => {
     expect(row.email).toBeUndefined();
     expect(row.name).toBeUndefined();
     expect(line).not.toMatch(/@/);
+  });
+});
+
+describe("ask page third-party note", () => {
+  it("states the third-party line under the ask box", () => {
+    const desk = readFileSync(join(process.cwd(), "components/marketing/ask/AskDesk.tsx"), "utf8");
+    expect(desk).toContain("Questions may be processed by a third-party AI provider.");
   });
 });
 
