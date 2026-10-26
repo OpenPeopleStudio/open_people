@@ -4,7 +4,7 @@ import { DeskPage } from "@/components/marketing/shell";
 
 const TITLE = "Churchill Falls — put the next generations first";
 const DESCRIPTION =
-  "Open People publishes Tom Lane’s 15 September 2026 letter to Premier Tony Wakeham on Churchill Falls. The letter text is unchanged.";
+  "Open People publishes Tom Lane’s 15 September 2026 letter to Premier Tony Wakeham on Churchill Falls. The letter is unchanged except that the home street address has been removed.";
 const CANONICAL = "/letter";
 const PUBLISHED = "2026-09-15";
 
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 const ADDRESS = [
   {
     label: "From",
-    lines: ["Tom Lane", "281 Water Street", "St. John’s, Newfoundland and Labrador"],
+    lines: ["Tom Lane", "St. John’s, Newfoundland and Labrador"],
   },
   {
     label: "Date",
@@ -92,10 +92,10 @@ export default function LetterPage() {
       lede={
         <p>
           Open People publishes this letter. Tom Lane wrote it on 15 September 2026 as a constituent
-          in St. John&apos;s, before the House vote. The text below is unchanged. He wrote as a
-          citizen, not as a pitch for the company. The asks in it are still ours: keep enough
-          Labrador power to build on, and keep Gull Island a separate decision. Mining and existing
-          industry come first.
+          in St. John&apos;s, before the House vote. The letter is unchanged except that the home
+          street address has been removed. He wrote as a citizen, not as a pitch for the company.
+          The asks in it are still ours: keep enough Labrador power to build on, and keep Gull
+          Island a separate decision. Mining and existing industry come first.
         </p>
       }
       verified={false}
@@ -195,7 +195,7 @@ export default function LetterPage() {
               </p>
 
               <Body>
-                I am Tom Lane. I live at 281 Water Street. I own a restaurant here, and an AI
+                I am Tom Lane. I live in St. John’s. I own a restaurant here, and an AI
                 company. I am writing as a citizen, not to advance either one.
               </Body>
               <Body>
@@ -387,8 +387,6 @@ export default function LetterPage() {
                 Tom Lane
               </p>
               <p className="mt-2 font-mono text-[12px] leading-relaxed text-[var(--text-muted)]">
-                281 Water Street
-                <br />
                 St. John’s, NL
               </p>
             </div>
