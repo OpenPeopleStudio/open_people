@@ -60,6 +60,7 @@ export const PARKED_ROOTS = [
   "templates",
   "app/(platform)",
   "app/super-admin",
+  "app/(marketing)/_retired",
   "context",
   "infra",
   ".codex",

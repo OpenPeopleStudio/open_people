@@ -136,4 +136,18 @@ describe("repo map", () => {
     expect(tracked).toBe("");
     expect(existsSync(resolve(ROOT, "notes/archive/open-source-agent.skill"))).toBe(true);
   });
+
+  it("keeps retired SaaS pages out of the route tree", () => {
+    const retired = [...RETIRED_TO_HOME, ...RETIRED_EXTERNAL];
+    for (const route of retired) {
+      const leaf = route.slice(1);
+      expect(existsSync(resolve(ROOT, `app/(marketing)/${leaf}/page.tsx`)), route).toBe(false);
+      expect(existsSync(resolve(ROOT, `app/(marketing)/_retired/${leaf}/page.tsx`)), route).toBe(true);
+    }
+    expect(existsSync(resolve(ROOT, "app/(marketing)/privacy/page.tsx"))).toBe(true);
+    expect(existsSync(resolve(ROOT, "app/(marketing)/terms/page.tsx"))).toBe(true);
+    const config = readFileSync(resolve(ROOT, "next.config.ts"), "utf8");
+    expect(config).toContain('destination: "/"');
+    expect(config).toContain('destination: "https://app.openpeople.ai"');
+  });
 });
