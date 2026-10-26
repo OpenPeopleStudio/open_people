@@ -110,13 +110,21 @@ describe("favicon set", () => {
     const layout = readFileSync(resolve(ROOT, "app/layout.tsx"), "utf8");
     expect(layout).not.toMatch(/<link rel="icon"/);
     expect(layout).not.toMatch(/<link rel="apple-touch-icon"/);
+    expect(layout).toMatch(/\/brand\/op-icon-48\.png/);
     expect(layout).toMatch(/\/favicon\.svg/);
     expect(layout).toMatch(/\/favicon\.ico/);
     expect(layout).toMatch(/\/favicon-16x16\.png/);
     expect(layout).toMatch(/\/favicon-32x32\.png/);
     expect(layout).toMatch(/\/favicon-48x48\.png/);
     expect(layout).toMatch(/\/apple-touch-icon\.png/);
+    // Google's 48×48 PNG must be the first icon URL, at a path it has not cached.
+    const brand48 = layout.indexOf("/brand/op-icon-48.png");
+    const svg = layout.indexOf("/favicon.svg");
+    expect(brand48).toBeGreaterThan(-1);
+    expect(svg).toBeGreaterThan(brand48);
+    expect(layout).toMatch(/op-icon-48\.png\?v=h20261026/);
     for (const file of [
+      "public/brand/op-icon-48.png",
       "public/favicon.svg",
       "public/favicon.ico",
       "public/favicon-16x16.png",
@@ -126,6 +134,27 @@ describe("favicon set", () => {
     ]) {
       expect(existsSync(resolve(ROOT, file)), file).toBe(true);
     }
+  });
+
+  it("ships a 48×48 PNG at /brand/op-icon-48.png that is the horizon mark, not lime", async () => {
+    const png48 = resolve(ROOT, "public/brand/op-icon-48.png");
+    const meta = await sharp(png48).metadata();
+    expect(meta.width).toBe(48);
+    expect(meta.height).toBe(48);
+    const { data, info } = await sharp(png48).ensureAlpha().raw().toBuffer({
+      resolveWithObject: true,
+    });
+    let orangeN = 0;
+    let limeN = 0;
+    for (let i = 0; i < data.length; i += info.channels) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      if (r > 180 && g < 140 && b < 100) orangeN += 1;
+      else if (g > 200 && r < 80 && b < 160) limeN += 1;
+    }
+    expect(orangeN).toBeGreaterThan(0);
+    expect(limeN).toBe(0);
   });
 
   it("is the brand mark (orange and ink), not the leftover lime blob", async () => {

@@ -2,6 +2,7 @@
 # Required field: tools=<n>  (agent tool-call count for the slice)
 # Optional: commits=<n> files=<n> note=...
 
+0.5.15 tools=25 commits=1 files=10 note=Google favicon: /brand/op-icon-48.png first (48×48, never-crawled); no artwork change; no merge
 0.5.14 tools=90 commits=2 files=18 note=Home+nav: company and campus share the lead; Churchill to background; ISED call vs $2B strategy separate; no merge
 0.5.13 tools=25 commits=1 files=14 note=Desk favicon: void + plasma chassis; regenerate png/ico; no merge
 0.5.12 tools=85 commits=1 files=12 note=/brief search title+description, site JSON-LD, favicon dedupe; no merge

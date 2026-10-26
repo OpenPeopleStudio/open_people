@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.15 — 2026-10-26 — Google favicon: never-crawled 48px PNG first
+
+Google's SERP still shows the leftover lime blob. Production HTML listed `/favicon.svg` first; Google caches `/favicon.ico` on gstatic for a long time. Same horizon mark, new path `/brand/op-icon-48.png` as the first icon (48×48 PNG, `?v=h20261026` on the rest). Manifest updated. Artwork unchanged. Title/snippet wait on Tom merging this home PR and a recrawl. Preview only; Tom merges.
+
 ## 0.5.14 — 2026-10-26 — Home and nav: company and campus share the lead
 
 Home and primary nav now lead equally with Open People (the AI company) and the proposed Labrador AI campus. Churchill Falls is a supporting section. Canonical campus line includes “AI”. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot; no megawatts reserved. Partnership, if any, on terms each nation sets. Ottawa heading is “looking for projects like this.” ISED’s closed 100 MW-plus call is cited separately from the Budget 2024 $2 billion Compute Strategy. Nav adds About. Footer not edited. `/brief` untouched. Preview only; Tom merges.

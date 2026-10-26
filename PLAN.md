@@ -37,6 +37,8 @@ Rework the openpeople.ai home page and primary nav so Open People (the AI compan
 
 Home + nav rework only, including the Ottawa / ISED wording that appears on home.
 
+Google's SERP still shows the leftover lime-blob favicon and a Churchill Falls title because production HTML still points at `/favicon.svg` / `/favicon.ico` first. This slice also puts a never-crawled 48×48 PNG (`/brand/op-icon-48.png`) first in the icon list and updates the document title via `HOME_TITLE`. Artwork is unchanged (horizon mark). Do not promote production.
+
 ## Done when
 
 - Above the fold names the company and the proposed campus with equal weight. Churchill Falls is not the opener.
