@@ -5,6 +5,8 @@ import Link from "next/link";
 import { DESK_SOURCES, DESK_VERIFIED, GATES, railPosition, type Gate } from "@/lib/desk";
 import { GateLive, TodayMarker } from "./GateClockLive";
 import { InstDetail, instHit } from "./InstDetail";
+import { layoutGateLabels } from "./layout";
+import { SvgLines } from "./svg";
 
 /**
  * I1 — the Gate Clock. A horizontal time rail from the framework signing to
@@ -13,13 +15,14 @@ import { InstDetail, instHit } from "./InstDetail";
  * small client islands so the page can stay static.
  */
 const W = 1000;
-const H = 150;
+const H = 210;
 const PAD = 40;
-const RAIL_Y = 86;
+const RAIL_Y = 108;
 const ON_SCALE_W = 860;
+const OFF_X = PAD + ON_SCALE_W + 80;
 
 function x(gate: Gate): number {
-  if (gate.offscale) return PAD + ON_SCALE_W + 80;
+  if (gate.offscale) return OFF_X;
   return PAD + railPosition(gate.date, GATES) * ON_SCALE_W;
 }
 
@@ -45,6 +48,15 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
   );
 
   if (compact) {
+    const compactY = 42;
+    const compactSlots = layoutGateLabels(
+      onScale.map((g) => x(g)),
+      {
+        minSep: 70,
+        leftEdge: PAD + 40,
+        rightEdge: PAD + ON_SCALE_W - 40,
+      },
+    );
     return (
       <div className="gate-clock-compact inst" aria-label="Gate clock">
         <div className="inst-scroll">
@@ -52,52 +64,58 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             <title id="gc-c-title">
               Gates on the Churchill Falls framework, with today marked
             </title>
+            <desc>
+              Dates on the rail: 17 August framework signed, 17 September House
+              endorsement, 5 October Québec election, 21 October Québec cabinet,
+              17 November National Assembly returns, 31 December binding target,
+              31 March term end. Full names sit in the tracker.
+            </desc>
             <line
               x1={PAD}
               x2={PAD + ON_SCALE_W}
-              y1={42}
-              y2={42}
+              y1={compactY}
+              y2={compactY}
               className="hair"
             />
             {onScale.map((g, i) => {
-              const above = i % 2 === 0;
+              const slot = compactSlots[i]!;
+              const dir = slot.side === "above" ? -1 : 1;
               return (
-                <g key={g.id} transform={`translate(${x(g)} 42)`} {...instHit(g.id, g.label, active, setActive)}>
-                  <line
-                    y1={above ? -14 : 0}
-                    y2={above ? 0 : 14}
-                    className="hair"
-                  />
+                <g
+                  key={g.id}
+                  transform={`translate(${x(g)} ${compactY})`}
+                  {...instHit(g.id, g.label, active, setActive)}
+                >
+                  <line y1={dir * 14} y2={0} className="hair" />
                   <circle
                     r={3.5}
                     className={g.status === "open" ? "amber" : "plasma"}
                   />
                   <text
-                    y={above ? -20 : 26}
-                    textAnchor="middle"
+                    y={dir * 26}
+                    textAnchor={slot.anchor}
                     className="num"
                     style={{ fontSize: 11 }}
                   >
                     {g.short}
                   </text>
-                  <text
-                    y={above ? -32 : 38}
-                    textAnchor="middle"
-                    className="lbl"
-                    style={{ fontSize: 9 }}
-                  >
-                    {g.label}
-                  </text>
                 </g>
               );
             })}
-            <TodayMarker pad={PAD} width={ON_SCALE_W} y1={26} y2={58} compact />
+            <TodayMarker pad={PAD} width={ON_SCALE_W} railY={compactY} compact />
           </svg>
         </div>
         {detail}
       </div>
     );
   }
+
+  const xs = onScale.map((g) => x(g));
+  const slots = layoutGateLabels(xs, {
+    minSep: 168,
+    leftEdge: PAD + 70,
+    rightEdge: PAD + ON_SCALE_W - 70,
+  });
 
   return (
     <div
@@ -135,7 +153,6 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             </pattern>
           </defs>
 
-          {/* rail */}
           <line
             x1={PAD}
             x2={PAD + ON_SCALE_W}
@@ -144,7 +161,6 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             className="hair draw"
             pathLength={1}
           />
-          {/* break to off-scale */}
           <path
             d={`M ${PAD + ON_SCALE_W + 14} ${RAIL_Y} l 8 -8 l 8 16 l 8 -16 l 8 16 l 8 -8`}
             fill="none"
@@ -152,7 +168,7 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           />
           <line
             x1={PAD + ON_SCALE_W + 62}
-            x2={PAD + ON_SCALE_W + 80}
+            x2={OFF_X}
             y1={RAIL_Y}
             y2={RAIL_Y}
             className="hair"
@@ -161,20 +177,23 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
 
           {onScale.map((g, i) => {
             const gx = x(g);
-            const above = i % 2 === 0;
+            const slot = slots[i]!;
+            const dir = slot.side === "above" ? -1 : 1;
             const cls =
               g.status === "open"
                 ? "amber"
                 : g.status === "endorsed"
                   ? "plasma"
                   : "plasma";
+            const dateY = dir * 34;
+            const labelY = dir * (52 + slot.tier * 28);
             return (
-              <g key={g.id} transform={`translate(${gx} ${RAIL_Y})`} {...instHit(g.id, g.label, active, setActive)}>
-                <line
-                  y1={above ? -26 : 0}
-                  y2={above ? 0 : 26}
-                  className="hair"
-                />
+              <g
+                key={g.id}
+                transform={`translate(${gx} ${RAIL_Y})`}
+                {...instHit(g.id, g.label, active, setActive)}
+              >
+                <line y1={dir * 22} y2={0} className="hair" />
                 <circle r={4.5} className={cls} />
                 {g.kind === "target" ? (
                   <circle
@@ -186,16 +205,22 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
                   />
                 ) : null}
                 <text
-                  y={above ? -36 : 44}
-                  textAnchor="middle"
+                  y={dateY}
+                  textAnchor={slot.anchor}
                   className="num"
                   style={{ fontSize: 14 }}
                 >
                   {g.short}
                 </text>
-                <text y={above ? -52 : 60} textAnchor="middle" className="lbl">
-                  {g.label}
-                </text>
+                <SvgLines
+                  text={g.label}
+                  x={0}
+                  y={labelY}
+                  maxChars={16}
+                  lineHeight={11}
+                  textAnchor={slot.anchor}
+                  className="lbl"
+                />
               </g>
             );
           })}
@@ -219,9 +244,15 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
               >
                 {g.short}
               </text>
-              <text y={-52} textAnchor="middle" className="lbl">
-                first Gull Island power
-              </text>
+              <SvgLines
+                text="first Gull Island power"
+                x={0}
+                y={-56}
+                maxChars={14}
+                lineHeight={11}
+                textAnchor="middle"
+                className="lbl"
+              />
               <text
                 y={44}
                 textAnchor="middle"
@@ -233,19 +264,13 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             </g>
           ))}
 
-          <TodayMarker
-            pad={PAD}
-            width={ON_SCALE_W}
-            y1={RAIL_Y - 70}
-            y2={RAIL_Y + 66}
-          />
+          <TodayMarker pad={PAD} width={ON_SCALE_W} railY={RAIL_Y} />
         </svg>
         <span className="inst-scroll-hint" aria-hidden>
           scroll sideways →
         </span>
       </div>
 
-      {/* live counters */}
       <GateLive />
       {detail}
 

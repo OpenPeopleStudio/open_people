@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { DESK_SOURCES, FLOW_BARS, type FlowFill } from "@/lib/desk";
 import { InstDetail, instHit } from "./InstDetail";
+import { SvgLines } from "./svg";
 
 /**
  * I4 — Flow Bars. Proportional megawatt bars. Fill encodes how hard the
@@ -12,7 +13,7 @@ import { InstDetail, instHit } from "./InstDetail";
 const W = 1000;
 const LEFT = 300;
 const RIGHT = 120;
-const ROW_H = 46;
+const ROW_H = 54;
 const TOP = 16;
 const MAX_MW = 5500;
 
@@ -88,19 +89,20 @@ export function FlowBars() {
             return (
               <g key={b.id} transform={`translate(0 ${y})`} {...instHit(b.id, b.label, active, setActive)}>
                 <rect x={0} y={0} width={W} height={ROW_H} fill="transparent" />
-                <text
+                <SvgLines
+                  text={b.label}
                   x={LEFT - 14}
-                  y={20}
+                  y={27}
+                  maxChars={22}
+                  lineHeight={12}
                   textAnchor="end"
                   className="lbl lbl-strong"
-                >
-                  {b.label}
-                </text>
+                />
                 {b.fill === "hatch" && lowWidth !== null ? (
                   <>
                     <rect
                       x={LEFT}
-                      y={8}
+                      y={12}
                       width={lowWidth}
                       height={22}
                       fill="url(#fb-hatch)"
@@ -109,7 +111,7 @@ export function FlowBars() {
                     />
                     <rect
                       x={LEFT + lowWidth}
-                      y={8}
+                      y={12}
                       width={width - lowWidth}
                       height={22}
                       fill="none"
@@ -121,7 +123,7 @@ export function FlowBars() {
                 ) : (
                   <rect
                     x={LEFT}
-                    y={8}
+                    y={12}
                     width={width}
                     height={22}
                     {...attrs}
@@ -130,7 +132,7 @@ export function FlowBars() {
                 )}
                 <text
                   x={LEFT + width + 10}
-                  y={23}
+                  y={28}
                   className="num"
                   style={{ fontSize: 12.5 }}
                 >

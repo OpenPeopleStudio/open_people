@@ -1380,7 +1380,7 @@ html:has(.desk-root) {
 
 @media (max-width: 719px) {
   .inst-scroll > svg {
-    min-width: 760px;
+    min-width: 880px;
   }
   .inst-scroll {
     margin-inline: calc(-1 * var(--gutter));
@@ -1410,8 +1410,8 @@ html:has(.desk-root) {
 }
 
 .inst .lbl {
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
+  font-size: 10px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   fill: var(--inst-ink-2);
 }
@@ -1434,11 +1434,15 @@ html:has(.desk-root) {
 .inst .hair {
   stroke: var(--hairline-strong);
   stroke-width: 1;
+  fill: none;
+  vector-effect: non-scaling-stroke;
 }
 
 .inst .hair-soft {
   stroke: var(--hairline);
   stroke-width: 1;
+  fill: none;
+  vector-effect: non-scaling-stroke;
 }
 
 .inst .plasma {
@@ -1461,6 +1465,14 @@ html:has(.desk-root) {
   fill: var(--ok);
 }
 
+.inst .stroke-plasma,
+.inst .stroke-steel,
+.inst .stroke-amber,
+.inst .stroke-alert {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
 .inst .stroke-plasma {
   stroke: var(--plasma);
 }
@@ -1477,6 +1489,8 @@ html:has(.desk-root) {
   stroke: var(--alert);
 }
 
+/* Draw-in uses pathLength=1 + dasharray 1. Never combine with a decorative
+   stroke-dasharray — CSS wins and the dash paints solid after the animation. */
 .inst .draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
