@@ -1,17 +1,13 @@
-import { mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { extname, join, relative, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { authorizeAskAdmin } from "@/lib/ask/admin";
 import { parseFollowUp } from "@/lib/ask/follow-up";
 import { knowledgeIsPlaceholder, loadProposalKnowledge } from "@/lib/ask/knowledge";
 import { logAskFollowUp, logAskQuestion } from "@/lib/ask/log";
 import {
-  openaiDirectConfigured,
-  openaiDirectModel,
-  toOpenAIChatMessages,
-} from "@/lib/ask/openai-direct";
-import {
+  ASK_FALLBACK_MODEL_DEFAULT,
   ASK_MODEL_DEFAULT,
   answerLooksCovered,
   askGatewayProviderOptions,
@@ -19,6 +15,7 @@ import {
   assistantConfigured,
   buildAskInstructions,
   gatewayConfigured,
+  isAllowedAskModel,
   lastUserText,
 } from "@/lib/ask/prompt";
 import { parseFollowupsStatus, parseMarkAnswered } from "@/lib/ask/store";
@@ -55,9 +52,17 @@ describe("ask prompt", () => {
     ).toBe("What is still unknown?");
   });
 
-  it("defaults the Gateway model id", () => {
-    expect(ASK_MODEL_DEFAULT).toBe("openai/gpt-4.1-mini");
+  it("defaults the Gateway model id to Grok, not OpenAI", () => {
+    expect(ASK_MODEL_DEFAULT).toBe("spacexai/grok-4.7");
+    expect(ASK_FALLBACK_MODEL_DEFAULT).toBe("anthropic/claude-sonnet-5.5");
+    expect(isAllowedAskModel(ASK_MODEL_DEFAULT)).toBe(true);
+    expect(isAllowedAskModel(ASK_FALLBACK_MODEL_DEFAULT)).toBe(true);
+    expect(isAllowedAskModel("openai/gpt-4.1-mini")).toBe(false);
+    expect(isAllowedAskModel("azure/gpt-4.1-mini")).toBe(false);
+    expect(askModel()).toBe(ASK_MODEL_DEFAULT);
     expect(askModel()).toMatch(/\//);
+    expect(askModel()).not.toMatch(/openai/i);
+    expect(askModel()).not.toMatch(/(^|\/)gpt-/i);
   });
 });
 
@@ -66,6 +71,8 @@ describe("ask gateway config", () => {
     key: process.env.AI_GATEWAY_API_KEY,
     oidc: process.env.VERCEL_OIDC_TOKEN,
     vercel: process.env.VERCEL,
+    askModel: process.env.ASK_MODEL,
+    openai: process.env.OPENAI_API_KEY,
   };
 
   afterEach(() => {
@@ -73,6 +80,8 @@ describe("ask gateway config", () => {
       ["AI_GATEWAY_API_KEY", previous.key],
       ["VERCEL_OIDC_TOKEN", previous.oidc],
       ["VERCEL", previous.vercel],
+      ["ASK_MODEL", previous.askModel],
+      ["OPENAI_API_KEY", previous.openai],
     ] as const) {
       if (value === undefined) delete process.env[name];
       else process.env[name] = value;
@@ -101,29 +110,70 @@ describe("ask gateway config", () => {
     ).toBe(true);
   });
 
-  it("treats an OpenAI key as configured without Gateway", () => {
+  it("does not treat an OpenAI key as configured without Gateway", () => {
     delete process.env.AI_GATEWAY_API_KEY;
     delete process.env.VERCEL_OIDC_TOKEN;
     delete process.env.VERCEL;
-    const previousOpenAI = process.env.OPENAI_API_KEY;
     process.env.OPENAI_API_KEY = "sk-test-not-a-real-key";
-    expect(assistantConfigured()).toBe(true);
-    expect(openaiDirectConfigured()).toBe(true);
-    if (previousOpenAI === undefined) delete process.env.OPENAI_API_KEY;
-    else process.env.OPENAI_API_KEY = previousOpenAI;
+    expect(assistantConfigured()).toBe(false);
   });
 
-  it("routes Gateway gpt-4.1-mini through Azure to skip OpenAI BYOK", () => {
-    expect(askGatewayProviderOptions()).toEqual({ gateway: { only: ["azure"] } });
-    expect(openaiDirectModel("openai/gpt-4.1-mini")).toBe("gpt-4.1-mini");
-    expect(
-      toOpenAIChatMessages("INSTRUCTIONS", [
-        { id: "1", role: "user", parts: [{ type: "text", text: "What is the campus?" }] },
-      ]),
-    ).toEqual([
-      { role: "system", content: "INSTRUCTIONS" },
-      { role: "user", content: "What is the campus?" },
-    ]);
+  it("reads ASK_MODEL when it is a non-OpenAI Gateway id", () => {
+    process.env.ASK_MODEL = "spacexai/grok-4.6";
+    expect(askModel()).toBe("spacexai/grok-4.6");
+    process.env.ASK_MODEL = "openai/gpt-4.1-mini";
+    expect(askModel()).toBe(ASK_MODEL_DEFAULT);
+    process.env.ASK_MODEL = "anthropic/claude-sonnet-5.5";
+    expect(askModel()).toBe("anthropic/claude-sonnet-5.5");
+  });
+
+  it("routes Gateway through xAI then Anthropic, never OpenAI or Azure", () => {
+    const options = askGatewayProviderOptions();
+    expect(options).toEqual({
+      gateway: { only: ["xai", "anthropic"], models: ["anthropic/claude-sonnet-5.5"] },
+    });
+    const listed = JSON.stringify(options);
+    expect(listed).not.toMatch(/openai/i);
+    expect(listed).not.toMatch(/azure/i);
+    expect(listed).not.toMatch(/gpt-/i);
+  });
+});
+
+describe("ask path has no OpenAI", () => {
+  const ROOT = process.cwd();
+  const SCAN = ["lib/ask", "app/api/ask"];
+  const TEXT_EXT = new Set([".ts", ".tsx", ".js"]);
+
+  function walk(dir: string, files: string[] = []): string[] {
+    if (!existsSync(dir)) return files;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full, files);
+        continue;
+      }
+      if (TEXT_EXT.has(extname(entry.name).toLowerCase())) files.push(full);
+    }
+    return files;
+  }
+
+  it("has no openai-direct import and no OpenAI model on the live /ask path", () => {
+    expect(existsSync(resolve(ROOT, "lib/ask/openai-direct.ts"))).toBe(false);
+    const hits: string[] = [];
+    for (const rel of SCAN) {
+      for (const file of walk(resolve(ROOT, rel))) {
+        const text = readFileSync(file, "utf8");
+        const path = relative(ROOT, file);
+        if (/openai-direct/.test(text)) hits.push(`${path}: openai-direct`);
+        if (/OPENAI_API_KEY/.test(text)) hits.push(`${path}: OPENAI_API_KEY`);
+        if (/from ["']openai["']/.test(text)) hits.push(`${path}: openai package`);
+        if (/openai\/gpt/i.test(text)) hits.push(`${path}: openai/gpt model`);
+        if (/(^|[^a-z])azure(?:\/|"|'|,|])/i.test(text) && /providerOptions|only:/.test(text)) {
+          hits.push(`${path}: azure gateway route`);
+        }
+      }
+    }
+    expect(hits).toEqual([]);
   });
 });
 

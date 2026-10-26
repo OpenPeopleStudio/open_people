@@ -1,7 +1,19 @@
-export const ASK_MODEL_DEFAULT = "openai/gpt-4.1-mini";
+export const ASK_MODEL_DEFAULT = "spacexai/grok-4.7";
+export const ASK_FALLBACK_MODEL_DEFAULT = "anthropic/claude-sonnet-5.5";
+
+const DISALLOWED_ASK_MODEL =
+  /(?:^|\/)(openai|azure)(?:\/|$)|openai|(?:^|\/)gpt-/i;
+
+export function isAllowedAskModel(id: string): boolean {
+  const trimmed = id.trim();
+  if (!trimmed || !trimmed.includes("/")) return false;
+  return !DISALLOWED_ASK_MODEL.test(trimmed);
+}
 
 export function askModel(): string {
-  return process.env.AI_GATEWAY_MODEL?.trim() || ASK_MODEL_DEFAULT;
+  const fromEnv = process.env.ASK_MODEL?.trim();
+  if (fromEnv && isAllowedAskModel(fromEnv)) return fromEnv;
+  return ASK_MODEL_DEFAULT;
 }
 
 /**
@@ -17,18 +29,22 @@ export function gatewayConfigured(req?: Request): boolean {
 }
 
 export function assistantConfigured(req?: Request): boolean {
-  return gatewayConfigured(req) || Boolean(process.env.OPENAI_API_KEY?.trim());
+  return gatewayConfigured(req);
 }
 
 /**
- * Team OpenAI BYOK on AI Gateway requires paid Gateway credits and 403s
- * (`byok_requires_paid_credits`). Route gpt-4.1-mini through Azure system
- * credentials instead.
+ * Grok first (xAI). Claude if Grok is unavailable.
+ * Gateway filter is xAI then Anthropic only.
  */
 export function askGatewayProviderOptions(): {
-  gateway: { only: ["azure"] };
+  gateway: { only: ["xai", "anthropic"]; models: [typeof ASK_FALLBACK_MODEL_DEFAULT] };
 } {
-  return { gateway: { only: ["azure"] } };
+  return {
+    gateway: {
+      only: ["xai", "anthropic"],
+      models: [ASK_FALLBACK_MODEL_DEFAULT],
+    },
+  };
 }
 
 export function messageText(
