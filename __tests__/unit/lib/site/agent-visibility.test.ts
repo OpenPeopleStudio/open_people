@@ -9,10 +9,14 @@ function source(path: string): string {
 }
 
 describe("search and agent visibility", () => {
-  it("names Churchill Falls on the home search title and keeps the data centre off that title", () => {
+  it("names the AI company on the home search title and keeps the data centre off that title", () => {
     const home = source("app/(marketing)/page.tsx");
-    expect(home).toMatch(/Churchill Falls power — Open People/);
+    expect(home).toMatch(/HOME_SEARCH_TITLE/);
+    expect(home).not.toMatch(/Churchill Falls power — Open People/);
     expect(home).not.toMatch(/data centre|data center/i);
+    const copy = source("lib/marketing/home.ts");
+    expect(copy).toMatch(/Open People, an AI company in Newfoundland and Labrador/);
+    expect(copy).toMatch(/HOME_SEARCH_TITLE/);
   });
 
   it("gives /compute the data centre search title without calling it built", () => {
@@ -23,13 +27,18 @@ describe("search and agent visibility", () => {
     expect(compute).toMatch(/Not approved, not funded, and not under construction/);
   });
 
-  it("publishes an llms.txt that points agents at the right page", () => {
+  it("publishes an llms.txt that leads with the AI company and lists /ask", () => {
     const llms = source("public/llms.txt");
+    expect(llms).toMatch(/Open People is an AI company/);
+    expect(llms).toMatch(/company's project is a proposed 500 MW Labrador AI campus, in feasibility/);
+    expect(llms).toMatch(/https:\/\/www\.openpeople\.ai\/ask/);
+    expect(llms).toMatch(/Ask the proposal/);
     expect(llms).toMatch(/Churchill Falls/);
     expect(llms).toMatch(/data centre/);
     expect(llms).toMatch(/https:\/\/www\.openpeople\.ai\/compute/);
     expect(llms).toMatch(/Mining comes first/);
-    expect(llms).toMatch(/not the opener/);
+    expect(llms).not.toMatch(/not the opener/);
+    expect(llms).not.toMatch(/Do not describe a parked software product/);
     expect(llms).not.toMatch(/super-admin|multi-tenant|SaaS/i);
   });
 

@@ -9,6 +9,8 @@ import {
   SITE_LOGO_PATH,
   SITE_LOGO_SIZE,
   SITE_NAME,
+  SITE_ORG_DESCRIPTION,
+  SITE_ORG_KNOWS_ABOUT,
   siteJsonLd,
   siteJsonLdScript,
 } from "@/lib/og/jsonld";
@@ -76,6 +78,14 @@ describe("site-wide JSON-LD", () => {
       "@type": "Organization",
       name: "Open People",
       url: `${CANONICAL_ORIGIN}/`,
+      description: SITE_ORG_DESCRIPTION,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "St. John's",
+        addressRegion: "NL",
+        addressCountry: "CA",
+      },
+      knowsAbout: [...SITE_ORG_KNOWS_ABOUT],
       logo: {
         "@type": "ImageObject",
         url: `${CANONICAL_ORIGIN}${SITE_LOGO_PATH}`,
@@ -83,6 +93,9 @@ describe("site-wide JSON-LD", () => {
         height: SITE_LOGO_SIZE,
       },
     });
+    expect(SITE_ORG_DESCRIPTION).toMatch(/AI company in Newfoundland and Labrador/);
+    expect(SITE_ORG_DESCRIPTION).toMatch(/proposed 500 MW Labrador AI campus, in feasibility/);
+    expect(JSON.stringify(org)).not.toMatch(/streetAddress|postalCode|telephone|contactPoint|email/i);
     expect(SITE_NAME).toBe("Open People");
     expect(SITE_ALTERNATE_NAME).toBe("openpeople.ai");
     expect(SITE_LOGO_SIZE).toBeGreaterThanOrEqual(112);

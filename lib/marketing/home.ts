@@ -1,6 +1,7 @@
 /**
- * Home front door. Company and campus share the lead.
- * Churchill Falls is background, not the opener.
+ * Home front door. Open People is an AI company.
+ * The Labrador campus is the company's proposed project, in feasibility.
+ * Churchill Falls is background.
  * Do not name a nation as a partner. Do not invent figures.
  */
 
@@ -8,10 +9,15 @@ export const HOME_HEADLINE_COMPANY = "An AI company.";
 export const HOME_HEADLINE_CAMPUS = "A proposed Labrador AI campus.";
 
 export const HOME_LEDE_COMPANY =
-  "Open People is a Newfoundland and Labrador company. Tom Lane is the founder.";
+  "Open People is an AI company in Newfoundland and Labrador. Tom Lane is the founder.";
 
 export const HOME_LEDE_CAMPUS =
-  "Open People leads a proposed 500 MW Labrador AI campus, in feasibility.";
+  "The company's project is a proposed 500 MW Labrador AI campus, in feasibility.";
+
+export const HOME_ASK_LABEL = "Ask the proposal";
+
+/** Search / document / og title. Sentence case. */
+export const HOME_SEARCH_TITLE = "Open People, an AI company in Newfoundland and Labrador";
 
 /** Canonical campus line. Use after a sentence that names the power. */
 export const HOME_CAMPUS_CANONICAL =
@@ -61,6 +67,8 @@ export function homePublicText() {
   return [
     HOME_HEADLINE_COMPANY,
     HOME_HEADLINE_CAMPUS,
+    HOME_ASK_LABEL,
+    HOME_SEARCH_TITLE,
     HOME_LEDE_COMPANY,
     HOME_LEDE_CAMPUS,
     HOME_POWER_CONTEXT,

@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-27 — AI company first; campus as the project
+
+Tom: lead with the AI company, campus as the project. Home headline still names both; the lede now says Open People is an AI company and the campus is its proposed project, in feasibility. "Ask the proposal" sits under the headline on the first screen. `/ask` has a How this works block: Gemini first, OpenRouter open-weights if that is unavailable, answers only from the written proposal record, questions logged as text without names. Search title is "Open People, an AI company in Newfoundland and Labrador". JSON-LD Organization adds that description, a St. John's NL locality (no street, phone, or email), and knowsAbout. `llms.txt` leads the same way and lists `/ask`. Preview only; Tom merges.
+
 ## 2026-10-26 — Vercel Web Analytics
 
 The public site now loads Vercel Web Analytics from the root layout (`@vercel/analytics/next`). It is cookieless. Vercel stores aggregate page views, referrers, country, and device — not personal identity. Three named custom events fire without props: ask question submitted, ask follow-up submitted, contact form submitted. Question text and emails stay off the events. Speed Insights is not installed. `/privacy` and the `/ask` privacy line were updated to match. Preview only; Tom merges.
