@@ -1,45 +1,77 @@
-# PLAN — Vercel Web Analytics on the public site
+# PLAN: AI company first, campus as the project (slice 1)
+
+Status: in progress. Branch `cursor/ai-company-home-1fef`. Preview only; Tom merges.
+
+Tom, 27 Oct 2026: "Lead with AI company, campus as the project."
 
 ## Goal
 
-Add Vercel Web Analytics to openpeople.ai so we can see aggregate traffic. No Speed Insights. No extra trackers. No keys. No PII in custom events.
+A reader or crawler landing on openpeople.ai can tell in one screen that Open People is an AI company. The proposed Labrador AI campus is the company's project. Use only things that exist: the `/ask` answer engine and the agent-readable surface (`llms.txt`, JSON-LD, home title/meta).
+
+## Decisions (this slice)
+
+- Home hero: keep "An AI company." Add a clear first-screen entry to `/ask` ("Ask the proposal") on mobile and desktop. Light reframe so the campus reads as the company's proposed project, in feasibility.
+- `/ask` "How this works": answers come from a large language model grounded only in `content/ask/proposal-knowledge.md`. If it is not in the record, the model is told to say so. A fallback model takes over if the first is unavailable. Name models at provider/family level only: Google Gemini primary; an open-weights model via OpenRouter as fallback. Do not print exact model ids, env names, or keys. Production `ASK_MODEL` / `ASK_FALLBACK_MODEL` override code defaults in `lib/ask/provider.ts` and differ from those defaults.
+- Privacy: verify against `lib/ask/log.ts`, `lib/ask/follow-up.ts`, `AskDesk`, and `/privacy` before writing any claim. Assistant questions are logged as text (and whether they were covered), without names or emails. The follow-up form is a separate path and does collect email (required) and name (optional).
+- Home `<title>` and meta/OG description: put "AI" in them. Title example: "Open People, an AI company in Newfoundland and Labrador". Sentence case.
+- JSON-LD Organization (the existing site-wide block, keep only one): add description (AI company in Newfoundland and Labrador; proposed Labrador AI campus in feasibility), PostalAddress with `addressLocality` "St. John's", `addressRegion` "NL", `addressCountry` "CA" only, and a `knowsAbout` list. Do not add phone, street, postal code, or email `contactPoint`.
+- `public/llms.txt`: lead with Open People as an AI company and the campus as its proposed project. Remove/replace the lines that say not to describe a software product and that the data centre is not the opener. List `/ask` under Start here and For agents. Do not add claims.
 
 ## In
 
-- Install `@vercel/analytics`. Render `<Analytics />` from `@vercel/analytics/next` once in `app/layout.tsx`.
-- Custom `track()` events, event name only, no free text or PII:
-  - `/ask` question submitted
-  - `/ask` follow-up form submitted (after a successful send)
-  - contact form submitted (mailto send on `/contact` and the leftover contact form)
-- `/privacy` states, in short sentence-case words, that the site uses Vercel Web Analytics, which is cookieless and collects aggregate page views, referrers, country and device, not personal identity. Stay inside Vercel’s published privacy page. Do not claim cookies we do not set, and do not claim we collect nothing.
-- Drop the `/ask` line “this page has no analytics trackers.”
-- Bump `VERSION` to 0.5.23 (next patch after main’s 0.5.22 from PR #38). Trio: VERSION + CHANGELOG.md + ACTIONS. Keep every 0.5.19–0.5.22 /ask entry.
-- Checks: layout mounts Analytics once and not Speed Insights; custom events carry no question text, email, or name; public-PII test stays green; e2e `/ask` privacy copy. Lint, typecheck, build, `npm test` except the two known failures on main.
+- `app/(marketing)/page.tsx`, `lib/marketing/home.ts` — hero entry, lede reframe, title/description.
+- `app/(marketing)/ask/page.tsx` (and a small copy module if needed) — How this works block.
+- `lib/og/jsonld.ts`, `__tests__/unit/lib/og/search-head.test.ts` — Organization fields.
+- `public/llms.txt`, `__tests__/unit/lib/site/agent-visibility.test.ts`.
+- Tests for home title, `/ask` copy (no secrets), privacy/PII ban, existing `/ask` tests.
+- VERSION trio: VERSION + CHANGELOG.md + ACTIONS. Next stamp is 0.5.24.
+- `docs/SITE-LOG.md`, `docs/company/locks.md`, `notes/repo-map.ts` version note.
 
 ## Out
 
-- `@vercel/speed-insights`, ads pixels, and any other tracker.
-- Env vars and API keys. Web Analytics does not need them in the app.
-- `/ask` provider code (`lib/ask/*`, `app/api/ask/*`) and `content/ask/proposal-knowledge.md` (PR #38).
-- Project-board pages (`/build`, `/capital`, `/consent`, `/power`) and `lib/board/*`.
-- Sitemap ranks (`__tests__/unit/app/sitemap.test.ts` `/compute` priority stays a known failure).
-- `__tests__/unit/lib/email/sync.test.ts` (known failure on main).
-- Merge to `main`, force-push, or production promote. Tom merges.
+- Desk board on `/power` `/capital` `/build` `/consent` (separate Cursor work). Open PRs #33, #34, #36.
+- `/coalition` (stays unlisted, noindex, unlinked).
+- New figures, products, customers, partners, agreements.
+- Any OpenAI model, API, or product.
+- Vercel / Supabase settings.
+- Exact model ids, env var names, or keys on any public page.
+- Phone, street, postal code, or `auth@` on any page. Location only as St. John's, NL.
+- Brendan / Verafin.
+- Merge to main. Tom merges.
+
+## Guardrails (code, not new claims)
+
+Read before writing `/ask` copy:
+
+- `lib/ask/prompt.ts` `buildAskInstructions`: answers may use only the knowledge file; if a fact is not there, say so; labels CONFIRMED / REPORTED / ESTIMATE / UNKNOWN; never invent numbers; never claim a partner, tenant, nation, utility, funder, or government has agreed.
+- `lib/ask/stream.ts` `runAskWithFallback`: try primary until first text; if it errors or times out before any token, try the fallback once.
+- `lib/ask/log.ts`: question log is question text, covered, provider/model, fallbackFired. No name. No email.
+- `lib/ask/follow-up.ts`: follow-up stores name (optional) and email (required) so Tom can reply. That path is not the assistant question log.
+- `/privacy` states Vercel Web Analytics (cookieless, aggregate). `/ask` already says questions may be processed by a third-party AI provider, and that submitting records the event name only.
 
 ## Dest
 
-- This repo’s marketing site. Vercel project `open-people`. Production host `www.openpeople.ai`.
-- Ship path: feature branch → PR → Vercel preview. Enable Web Analytics in the Vercel project dashboard if it is not already on. Do not promote the preview.
+Repo OpenPeopleStudio/open_people. One PR from this branch. Ship path: feature branch → PR → Vercel preview. Do not promote.
 
 ## First slice (this PR)
 
-This spec. Package, root layout, three named events, privacy copy, version bump. Rebased onto current `origin/main` at `9ab06b6` (0.5.22).
+1. PLAN.md (this file).
+2. Home hero `/ask` entry + light AI-company-leads copy.
+3. `/ask` How this works.
+4. Home title / meta / OG.
+5. JSON-LD Organization description, address, knowsAbout.
+6. `llms.txt` reframe + `/ask` links.
+7. Version trio, tests, preview.
 
 ## Done when
 
-- Root layout renders `<Analytics />` from `@vercel/analytics/next` once. No Speed Insights.
-- `/ask` question submit fires an event name only. Follow-up success fires an event name only. Contact mailto / form fires an event name only. No question text, email, name, or message in props.
-- `/privacy` says the site uses Vercel Web Analytics, cookieless, aggregate page views, referrers, country and device, not personal identity.
-- `/ask` no longer claims it has no analytics trackers.
-- VERSION is 0.5.23. 0.5.22–0.5.19 /ask notes stay in CHANGELOG, ACTIONS, SITE-LOG, locks, and repo-map. Lint and typecheck pass. Public-PII test passes. Known email-sync and sitemap `/compute` failures unchanged.
-- PR is open. CI is green except those two known unit failures. Vercel preview builds.
+- Home shows a visible `/ask` entry on the first screen; `curl` of `/` shows "AI" in `<title>`.
+- `/ask` shows How this works (model family, fallback family, knowledge source, guardrails that match the code). No secrets, model ids, or env names in HTML.
+- `/llms.txt` lists `/ask`; JSON-LD has no street, phone, or email contactPoint; one Organization only.
+- Every campus sentence keeps proposed / in feasibility. Sentence case. Plain. No conquest language.
+- Build, lint, and existing tests pass, including the public-PII / privacy tests.
+- PR open. Not merged by the agent.
+
+## Report separately (not in this PR)
+
+Which `app/api/*` routes remain from the older app (vault, keys, tenants, hitl, etc.), and for each whether it is reachable unauthenticated in production (`GET https://www.openpeople.ai/api/<route>`, read-only, no payloads) and what it returns. List any that respond 200 with data.
