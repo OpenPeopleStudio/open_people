@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.24 — 2026-10-27 — AI company first; campus as the project
+
+Home, `/ask`, JSON-LD, and `llms.txt` lead with Open People as an AI company. The proposed Labrador AI campus is the company's project, in feasibility. Home first screen has "Ask the proposal". `/ask` states how the assistant works (Gemini family, OpenRouter open-weights fallback, written proposal record, labelled answers) without model ids or env names. Search title is "Open People, an AI company in Newfoundland and Labrador". Organization JSON-LD adds description, St. John's NL address (no street or phone), and knowsAbout. Preview only; Tom merges.
+
 ## 0.5.23 — 2026-10-26 — Vercel Web Analytics
 
 Public site loads Vercel Web Analytics once from the root layout. Cookieless aggregate page views, referrers, country, and device. Custom events are names only: ask question submitted, ask follow-up submitted, contact form submitted. No question text, email, or other PII in event props. No Speed Insights. `/privacy` states this in short sentence-case words. `/ask` no longer claims it has no trackers. Preview only; Tom merges.

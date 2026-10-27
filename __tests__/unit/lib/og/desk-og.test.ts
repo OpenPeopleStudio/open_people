@@ -34,7 +34,7 @@ describe("desk Open Graph", () => {
 
   it("keeps the live home title and description", () => {
     expect(HOME_TITLE).toBe("Open People — An AI company. A proposed Labrador AI campus.");
-    expect(HOME_DESCRIPTION).toMatch(/Newfoundland and Labrador company/);
+    expect(HOME_DESCRIPTION).toMatch(/AI company in Newfoundland and Labrador/);
     expect(HOME_DESCRIPTION).toMatch(/500 MW Labrador AI campus/);
     expect(HOME_DESCRIPTION).toMatch(/written request to NL Hydro/);
     expect(HOME_DESCRIPTION).toMatch(/No megawatts are reserved/);

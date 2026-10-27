@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  HOME_ASK_LABEL,
   HOME_CAMPUS_CANONICAL,
   HOME_CHURCHILL,
   HOME_CONSENT,
@@ -9,10 +10,13 @@ import {
   HOME_HEADLINE_CAMPUS,
   HOME_HEADLINE_COMPANY,
   HOME_ISED_CRITERIA,
+  HOME_LEDE_CAMPUS,
+  HOME_LEDE_COMPANY,
   HOME_OTTAWA_CALL,
   HOME_OTTAWA_HEADING,
   HOME_OTTAWA_STRATEGY,
   HOME_POWER_LINE,
+  HOME_SEARCH_TITLE,
   HOME_TITLE,
   homePublicText,
 } from "@/lib/marketing/home";
@@ -24,19 +28,32 @@ const page = readFileSync(resolve(ROOT, "app/(marketing)/page.tsx"), "utf8");
 const nav = readFileSync(resolve(ROOT, "components/marketing/SiteNav.tsx"), "utf8");
 
 describe("home front door", () => {
-  it("names the company and the campus as equal headlines", () => {
+  it("leads with the AI company and treats the campus as the proposed project", () => {
     expect(HOME_HEADLINE_COMPANY).toBe("An AI company.");
     expect(HOME_HEADLINE_CAMPUS).toBe("A proposed Labrador AI campus.");
+    expect(HOME_LEDE_COMPANY).toMatch(/AI company in Newfoundland and Labrador/);
+    expect(HOME_LEDE_CAMPUS).toMatch(/company's project is a proposed 500 MW Labrador AI campus, in feasibility/);
     expect(HOME_TITLE).toBe("Open People — An AI company. A proposed Labrador AI campus.");
+    expect(HOME_SEARCH_TITLE).toBe("Open People, an AI company in Newfoundland and Labrador");
+    expect(HOME_SEARCH_TITLE).toMatch(/AI/);
     expect(page).toMatch(/HOME_HEADLINE_COMPANY/);
     expect(page).toMatch(/HOME_HEADLINE_CAMPUS/);
     expect(page).toMatch(/HOME_LEDE_COMPANY/);
     expect(page).toMatch(/HOME_LEDE_CAMPUS/);
+    expect(page).toMatch(/HOME_SEARCH_TITLE/);
+  });
+
+  it("puts Ask the proposal on the first screen", () => {
+    expect(HOME_ASK_LABEL).toBe("Ask the proposal");
+    expect(page).toMatch(/leadAction/);
+    expect(page).toMatch(/href="\/ask"/);
+    expect(page).toMatch(/HOME_ASK_LABEL/);
+    expect(page.indexOf("leadAction=")).toBeLessThan(page.indexOf("lede="));
   });
 
   it("keeps Churchill Falls out of the title and lede", () => {
-    expect(`${HOME_TITLE} ${HOME_DESCRIPTION}`).not.toMatch(/Churchill/i);
-    expect(HOME_DESCRIPTION).toMatch(/Newfoundland and Labrador company/);
+    expect(`${HOME_SEARCH_TITLE} ${HOME_TITLE} ${HOME_DESCRIPTION}`).not.toMatch(/Churchill/i);
+    expect(HOME_DESCRIPTION).toMatch(/AI company in Newfoundland and Labrador/);
     expect(HOME_DESCRIPTION).toMatch(/500 MW Labrador AI campus/);
     expect(HOME_DESCRIPTION).toMatch(/written request to NL Hydro/);
   });

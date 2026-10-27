@@ -17,6 +17,7 @@ export function DeskPage({
   lede,
   meta,
   actions,
+  leadAction,
   hero,
   sections,
   walkthrough,
@@ -33,6 +34,8 @@ export function DeskPage({
   /** below the lede: e.g. a link line */
   meta?: ReactNode;
   actions?: ReactNode;
+  /** under the headline, before the lede — a first-screen entry */
+  leadAction?: ReactNode;
   /** full-width content under the hero text, e.g. the Gate Clock */
   hero?: ReactNode;
   sections?: RailSection[];
@@ -67,6 +70,7 @@ export function DeskPage({
                 {kicker}
               </p>
               <h1 className="desk-h1 mt-5">{title}</h1>
+              {leadAction ? <div className="mt-6">{leadAction}</div> : null}
               {lede ? <div className="desk-lede mt-7">{lede}</div> : null}
               {meta ? <div className="mt-5">{meta}</div> : null}
               {verified ? (

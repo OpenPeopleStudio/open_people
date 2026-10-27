@@ -3,6 +3,7 @@ import { DeskPage, DeskSection } from "@/components/marketing/shell";
 import { TrackRows } from "@/components/marketing/board/EntryBlock";
 import { SourceLinks } from "@/components/marketing/desk";
 import {
+  HOME_ASK_LABEL,
   HOME_CAMPUS_CANONICAL,
   HOME_CHURCHILL,
   HOME_COMPANY_CLOSE,
@@ -19,13 +20,11 @@ import {
   HOME_POWER_CONTEXT,
   HOME_POWER_LINE,
   HOME_RESEARCH,
+  HOME_SEARCH_TITLE,
   HOME_STATUS,
 } from "@/lib/marketing/home";
 import { sourceList } from "@/lib/desk";
 import { deskMetadata } from "@/lib/og/metadata";
-
-/** Search title only. The on-page heading stays the company line. */
-const HOME_SEARCH_TITLE = "Churchill Falls power — Open People";
 
 export const metadata = deskMetadata({
   title: { absolute: HOME_SEARCH_TITLE },
@@ -49,6 +48,11 @@ export default function HomePage() {
           <span className="home-h1-next">{HOME_HEADLINE_CAMPUS}</span>
         </>
       }
+      leadAction={
+        <Link href="/ask" className="btn-primary">
+          {HOME_ASK_LABEL}
+        </Link>
+      }
       lede={
         <>
           <p>{HOME_LEDE_COMPANY}</p>
@@ -60,7 +64,7 @@ export default function HomePage() {
           <Link href="/about" className="btn-secondary">
             About the company
           </Link>
-          <Link href="#campus" className="btn-primary">
+          <Link href="#campus" className="btn-secondary">
             The campus
           </Link>
         </>

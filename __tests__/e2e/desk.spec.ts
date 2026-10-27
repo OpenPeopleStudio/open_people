@@ -69,8 +69,15 @@ test("home names the company and offers a way into each track", async ({ page, i
   await expect(h1).toContainText("An AI company.");
   await expect(h1).toContainText("A proposed Labrador AI campus.");
   await expect(h1).not.toContainText("Churchill");
-  await expect(main).toContainText("Open People is a Newfoundland and Labrador company.");
-  await expect(main).toContainText("Open People leads a proposed 500 MW Labrador AI campus, in feasibility.");
+  await expect(page.locator("header.desk-hero").getByRole("link", { name: "Ask the proposal" })).toBeVisible();
+  await expect(page.locator("header.desk-hero").getByRole("link", { name: "Ask the proposal" })).toHaveAttribute(
+    "href",
+    "/ask",
+  );
+  await expect(main).toContainText("Open People is an AI company in Newfoundland and Labrador.");
+  await expect(main).toContainText(
+    "The company's project is a proposed 500 MW Labrador AI campus, in feasibility.",
+  );
   await expect(main).toContainText("Ottawa is looking for projects like this");
   await expect(main).not.toContainText("Ottawa is already paying");
   for (const job of [
@@ -134,6 +141,14 @@ test("/ask states the locked intro and the follow-up form", async ({ page }) => 
   await expect(main).toContainText(
     "Ask anything about Open People's preliminary proposal. Answers are honest and labelled. If we don't know yet, we'll find out and email you.",
   );
+  await expect(main).toContainText("How this works");
+  await expect(main).toContainText("grounded only in our written proposal record");
+  await expect(main).toContainText("Google Gemini answers first");
+  await expect(main).toContainText("open-weights model via OpenRouter");
+  await expect(main).toContainText("logged as text, without names");
+  await expect(main).not.toContainText("ASK_MODEL");
+  await expect(main).not.toContainText("ASK_FALLBACK");
+  await expect(main).not.toContainText("gemini-2.5");
   await expect(main).toContainText("Email Tom a follow-up");
   await expect(main).toContainText("Questions may be processed by a third-party AI provider.");
   await expect(main).toContainText("Privacy:");

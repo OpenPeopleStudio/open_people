@@ -4,6 +4,7 @@ import { extname, join, relative, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { authorizeAskAdmin } from "@/lib/ask/admin";
 import { parseFollowUp } from "@/lib/ask/follow-up";
+import { askHowItWorksText } from "@/lib/ask/how-it-works";
 import { knowledgeIsPlaceholder, loadProposalKnowledge } from "@/lib/ask/knowledge";
 import { logAskFollowUp, logAskQuestion } from "@/lib/ask/log";
 import {
@@ -655,6 +656,28 @@ describe("ask page third-party note", () => {
   it("states the third-party line under the ask box", () => {
     const desk = readFileSync(join(process.cwd(), "components/marketing/ask/AskDesk.tsx"), "utf8");
     expect(desk).toContain("Questions may be processed by a third-party AI provider.");
+  });
+});
+
+describe("ask how this works", () => {
+  it("names families, the knowledge record, and the real guardrails, without secrets", () => {
+    const text = askHowItWorksText();
+    const page = readFileSync(join(process.cwd(), "app/(marketing)/ask/page.tsx"), "utf8");
+    expect(page).toMatch(/ASK_HOW_HEADING/);
+    expect(page).toMatch(/ASK_HOW_GROUNDING/);
+    expect(page).toMatch(/ASK_HOW_MODELS/);
+    expect(page).toMatch(/ASK_HOW_GUARDRAILS/);
+    expect(page).toMatch(/ASK_HOW_PRIVACY/);
+    expect(text).toMatch(/written proposal record/);
+    expect(text).toMatch(/If a fact is not in that record, it says so/);
+    expect(text).toMatch(/Google Gemini answers first/);
+    expect(text).toMatch(/open-weights model via OpenRouter/);
+    expect(text).toMatch(/CONFIRMED/);
+    expect(text).toMatch(/UNKNOWN/);
+    expect(text).toMatch(/logged as text, without names/);
+    expect(text).not.toMatch(/ASK_MODEL|ASK_FALLBACK|ASK_PROVIDER|API_KEY|GOOGLE_GENERATIVE|OPENROUTER_API/i);
+    expect(text).not.toMatch(/gemini-2\.5|grok-|claude-sonnet|gemma-|nemotron|openai/i);
+    expect(text).not.toMatch(/AIza|sk-|or-/i);
   });
 });
 
