@@ -131,7 +131,7 @@ export async function POST(req: Request) {
             provider: outcome.runtime.provider,
             model: outcome.runtime.model,
             fallbackFired: outcome.fallbackFired,
-            error: failed,
+            ...(failed ? { error: failed } : {}),
           });
         }
       },

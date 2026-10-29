@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-10-29 — Durable /ask question log
+
+Questions at `/ask` were only in Vercel runtime logs (`ask.question`) plus a local `ASK_LOG_PATH` file. Those expire. `POST /api/ask` now writes `ask.received` at send, inserts a private `ask_questions` row (`received`), and updates it to `answered` or `failed`. Store misses fail-soft. The SQL file is in the repo; it is not applied in this PR. No IP or user-agent stored. Preview only; Tom merges.
+
 ## 2026-10-27 — AI company first; campus as the project
 
 Tom: lead with the AI company, campus as the project. Home headline still names both; the lede now says Open People is an AI company and the campus is its proposed project, in feasibility. "Ask the proposal" sits under the headline on the first screen. `/ask` has a How this works block: Gemini first, OpenRouter open-weights if that is unavailable, answers only from the written proposal record, questions logged as text without names. Search title is "Open People, an AI company in Newfoundland and Labrador". JSON-LD Organization adds that description, a St. John's NL locality (no street, phone, or email), and knowsAbout. `llms.txt` leads the same way and lists `/ask`. Preview only; Tom merges.

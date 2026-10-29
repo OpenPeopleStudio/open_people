@@ -96,7 +96,7 @@ export const REPO_MAP: readonly RepoEntry[] = [
   { path: "CLAUDE.md", role: "record", note: "Project orientation. Stays at the repo root." },
   { path: "PLAN.md", role: "record", note: "Current public-copy slice. Not a map of the repo." },
   { path: "README.md", role: "record", note: "Repo front door." },
-  { path: "VERSION", role: "record", note: "Public site version stamp. Currently 0.5.24." },
+  { path: "VERSION", role: "record", note: "Public site version stamp. Currently 0.5.25." },
   { path: "__tests__", role: "tooling", note: "Vitest and Playwright tests." },
   { path: "app", role: "shared", note: "Public routes in app/(marketing), except retired SaaS pages. app/(platform), app/super-admin, app/notes, and most of app/api are the parked shell. Live API routes are app/api/ask and app/api/og." },
   { path: "components", role: "shared", note: "components/marketing is the public site. Other component folders are the parked shell. /privacy and /terms use DeskPage and SiteNav." },

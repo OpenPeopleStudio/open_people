@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.25 — 2026-10-29 — Durable /ask question log
+
+`POST /api/ask` writes `ask.received` as soon as the question is parsed, then inserts `ask_questions` with status `received` (service-role, RLS on, no anon). The same row is updated to `answered` or `failed` with provider, model, fallback flag, and error. Writes run through `after()` so they do not delay the first token. Missing env, a missing table, or a write error logs a warning and the assistant still answers. No IP or user-agent; optional coarse device class only. Migration `supabase/migrations/20261029133000_ask_questions.sql` is committed unapplied — Tom's database desk reviews and applies it. Harmless until then. Preview only; Tom merges.
+
 ## 0.5.24 — 2026-10-27 — AI company first; campus as the project
 
 Home, `/ask`, JSON-LD, and `llms.txt` lead with Open People as an AI company. The proposed Labrador AI campus is the company's project, in feasibility. Home first screen has "Ask the proposal". `/ask` states how the assistant works (Gemini family, OpenRouter open-weights fallback, written proposal record, labelled answers) without model ids or env names. Search title is "Open People, an AI company in Newfoundland and Labrador". Organization JSON-LD adds description, St. John's NL address (no street or phone), and knowsAbout. Preview only; Tom merges.

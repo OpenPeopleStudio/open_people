@@ -31,11 +31,11 @@ export type AskQuestionReceived = {
 
 export type AskQuestionOutcome = {
   status: AskQuestionOutcomeStatus;
-  provider?: string;
-  model?: string;
-  fallback_fired?: boolean;
-  covered?: boolean;
-  error?: string | null;
+  provider?: string | undefined;
+  model?: string | undefined;
+  fallback_fired?: boolean | undefined;
+  covered?: boolean | undefined;
+  error?: string | null | undefined;
 };
 
 function clipQuestion(text: string): string {

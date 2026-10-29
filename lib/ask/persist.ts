@@ -69,10 +69,10 @@ export function completeAskQuestionLog(
     question: string;
     status: "answered" | "failed";
     covered: boolean;
-    provider?: string;
-    model?: string;
-    fallbackFired?: boolean;
-    error?: string;
+    provider?: string | undefined;
+    model?: string | undefined;
+    fallbackFired?: boolean | undefined;
+    error?: string | undefined;
   },
   opts?: {
     db?: AskQuestionsDb | null;

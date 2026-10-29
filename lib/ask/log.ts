@@ -65,9 +65,9 @@ export function logAskReceived(input: {
 export function logAskQuestion(input: {
   question: string;
   covered: boolean;
-  provider?: string;
-  model?: string;
-  fallbackFired?: boolean;
+  provider?: string | undefined;
+  model?: string | undefined;
+  fallbackFired?: boolean | undefined;
 }) {
   const entry: QuestionEntry = {
     kind: "question",
