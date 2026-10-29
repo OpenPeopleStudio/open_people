@@ -13,6 +13,15 @@ type QuestionEntry = {
   at: string;
 };
 
+type ReceivedEntry = {
+  kind: "received";
+  question: string;
+  id: string;
+  requestId?: string;
+  deviceClass?: string;
+  at: string;
+};
+
 type FollowUpEntry = {
   kind: "followup";
   question: string;
@@ -25,7 +34,7 @@ function clip(text: string): string {
   return text.trim().slice(0, 4000);
 }
 
-function appendAskLog(entry: QuestionEntry | FollowUpEntry) {
+function appendAskLog(entry: QuestionEntry | ReceivedEntry | FollowUpEntry) {
   const path = process.env.ASK_LOG_PATH?.trim();
   if (!path) return;
   try {
@@ -33,6 +42,24 @@ function appendAskLog(entry: QuestionEntry | FollowUpEntry) {
   } catch (error) {
     log.warn({ err: error }, "ask.log_path_write_failed");
   }
+}
+
+export function logAskReceived(input: {
+  question: string;
+  id: string;
+  requestId?: string;
+  deviceClass?: string;
+}) {
+  const entry: ReceivedEntry = {
+    kind: "received",
+    question: clip(input.question),
+    id: input.id,
+    at: new Date().toISOString(),
+  };
+  if (input.requestId) entry.requestId = input.requestId;
+  if (input.deviceClass) entry.deviceClass = input.deviceClass;
+  log.info(entry, "ask.received");
+  appendAskLog(entry);
 }
 
 export function logAskQuestion(input: {

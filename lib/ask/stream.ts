@@ -24,7 +24,7 @@ export type AskWithFallbackFail = {
 
 export type AskWithFallbackResult = AskWithFallbackOk | AskWithFallbackFail;
 
-function failReason(error: unknown): string {
+export function askFailReason(error: unknown): string {
   if (error instanceof Error) {
     if (error.message === "ask-first-token-timeout") return "first-token-timeout";
     if (error.message === "ask-empty-stream") return "empty-stream";
@@ -117,7 +117,7 @@ function logAttemptFailed(
     {
       provider: runtime.provider,
       model: runtime.model,
-      reason: failReason(error),
+      reason: askFailReason(error),
     },
     event,
   );

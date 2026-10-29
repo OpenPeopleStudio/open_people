@@ -6,14 +6,14 @@ import {
   type UIMessage,
 } from "ai";
 import { loadProposalKnowledge } from "@/lib/ask/knowledge";
-import { logAskQuestion } from "@/lib/ask/log";
+import { beginAskQuestionLog, completeAskQuestionLog } from "@/lib/ask/persist";
 import {
   answerLooksCovered,
   buildAskInstructions,
   lastUserText,
 } from "@/lib/ask/prompt";
 import { askFallbackRuntime, askLanguageModel, askRuntime } from "@/lib/ask/provider";
-import { runAskWithFallback } from "@/lib/ask/stream";
+import { askFailReason, runAskWithFallback } from "@/lib/ask/stream";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -60,6 +60,8 @@ export async function POST(req: Request) {
     return Response.json({ error: "Write a question first." }, { status: 400 });
   }
 
+  const trace = beginAskQuestionLog({ question, request: req });
+
   const knowledge = loadProposalKnowledge();
   const instructions = buildAskInstructions(knowledge);
 
@@ -80,24 +82,28 @@ export async function POST(req: Request) {
         return result.textStream;
       },
     });
-  } catch {
-    logAskQuestion({
+  } catch (error) {
+    completeAskQuestionLog(trace, {
       question,
+      status: "failed",
       covered: false,
       provider: primary.provider,
       model: primary.model,
       fallbackFired: false,
+      error: askFailReason(error),
     });
     return snagResponse();
   }
 
   if (!outcome.ok) {
-    logAskQuestion({
+    completeAskQuestionLog(trace, {
       question,
+      status: "failed",
       covered: false,
       provider: primary.provider,
       model: primary.model,
       fallbackFired: outcome.fallbackFired,
+      error: "no-text",
     });
     return snagResponse();
   }
@@ -107,19 +113,25 @@ export async function POST(req: Request) {
       async execute({ writer }) {
         writer.write({ type: "text-start", id: TEXT_ID });
         let text = "";
+        let failed: string | undefined;
         try {
           for await (const delta of outcome.chunks) {
             text += delta;
             writer.write({ type: "text-delta", id: TEXT_ID, delta });
           }
+        } catch (error) {
+          failed = askFailReason(error);
+          throw error;
         } finally {
           writer.write({ type: "text-end", id: TEXT_ID });
-          logAskQuestion({
+          completeAskQuestionLog(trace, {
             question,
-            covered: answerLooksCovered(text),
+            status: failed ? "failed" : "answered",
+            covered: failed ? false : answerLooksCovered(text),
             provider: outcome.runtime.provider,
             model: outcome.runtime.model,
             fallbackFired: outcome.fallbackFired,
+            error: failed,
           });
         }
       },
