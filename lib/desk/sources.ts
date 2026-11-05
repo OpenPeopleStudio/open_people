@@ -4,7 +4,7 @@
  * locked. Do not invent MW, ¢/kWh, $B, or SPE names here.
  */
 
-export const DESK_VERIFIED = "2026-10-14";
+export const DESK_VERIFIED = "2026-11-05";
 
 export type DeskSourceKind = "primary" | "regulator" | "utility" | "press" | "scholarship";
 
@@ -206,6 +206,48 @@ export const DESK_SOURCES = {
     href: "https://www.assnat.qc.ca/en/travaux-parlementaires/assemblee-nationale/index.html",
     date: "2026-10-14",
     kind: "primary",
+  },
+  cbcQcCabinet: {
+    id: "cbc-qc-cabinet",
+    label: "CBC — Paul St-Pierre Plamondon sworn in with a 23-minister cabinet, 21 Oct 2026",
+    href: "https://www.cbc.ca/news/canada/montreal/livestory/quebec-cabinet-swearing-in-ceremony-live-paul-st-pierre-plamondon-2026-9.7389054",
+    date: "2026-10-21",
+    kind: "press",
+  },
+  govNlSmith: {
+    id: "govnl-1028",
+    label: "Government of NL — Gary Smith lead negotiator; definitive agreements tabled once completed, 28 Oct 2026",
+    href: "https://www.gov.nl.ca/releases/2026/exec/1028n03/",
+    date: "2026-10-28",
+    kind: "primary",
+  },
+  saltwireHouseOct28: {
+    id: "saltwire-house-1028",
+    label: "Saltwire/Telegram — debate after the agreements are finalized; no vote to pass them; March window, 28 Oct 2026",
+    href: "https://www.saltwire.com/newfoundland-labrador/churchill-falls-wont-go-back-to-legislature",
+    date: "2026-10-28",
+    kind: "press",
+  },
+  vocmInnuNov4: {
+    id: "vocm-innu-1104",
+    label: "VOCM — Grand Chief confronts the Premier at the Minerals Resource Review, 4 Nov 2026",
+    href: "https://vocm.com/2026/11/04/315614/",
+    date: "2026-11-04",
+    kind: "press",
+  },
+  vocmInnuMeet: {
+    id: "vocm-innu-meet",
+    label: "VOCM — Wakeham meets Innu Nation; further talks in Sheshatshiu, 4 Nov 2026",
+    href: "https://vocm.com/2026/11/04/315670/",
+    date: "2026-11-04",
+    kind: "press",
+  },
+  ntvInnuNov4: {
+    id: "ntv-innu-1104",
+    label: "NTV — Premier met the Grand Chief at a St. John’s mining conference; no resolution, 4 Nov 2026",
+    href: "https://ntv.ca/news/innu-nation-confronts-premier-about-historical-timelines-churchill-falls-at-mining-conference/",
+    date: "2026-11-04",
+    kind: "press",
   },
   pubTechConf: {
     id: "pub-tech-conf",
