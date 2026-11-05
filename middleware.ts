@@ -3,6 +3,7 @@ import { updateSession } from "@/lib/supabase/middleware";
 import { withRequestContext, logRequest } from "@/lib/observability/edge-logger";
 import { withCorrelationId } from "@/lib/observability/edge-correlation";
 import { checkRateLimit, getRateLimitHeaders } from "@/lib/security/rate-limit";
+import { isProbePath, probePathNotFoundResponse } from "@/lib/security/probe-paths";
 
 const PUBLIC_API_PATHS: RegExp[] = [
   /^\/api\/health$/,
@@ -171,10 +172,30 @@ async function loggingMiddleware(request: NextRequest) {
   }
 }
 
-export async function middleware(request: NextRequest) {
-  return await withRequestContext(
+function trailingSlashRedirect(request: NextRequest): NextResponse | null {
+  const { pathname } = request.nextUrl;
+  if (pathname.length <= 1 || !pathname.endsWith("/")) {
+    return null;
+  }
+
+  const url = new URL(request.url);
+  url.pathname = pathname.replace(/\/+$/, "") || "/";
+  return NextResponse.redirect(url, 308);
+}
+
+export async function middleware(request: NextRequest): Promise<NextResponse> {
+  if (isProbePath(request.nextUrl.pathname)) {
+    return probePathNotFoundResponse();
+  }
+
+  const slashRedirect = trailingSlashRedirect(request);
+  if (slashRedirect) {
+    return slashRedirect;
+  }
+
+  return (await withRequestContext(
     withCorrelationId(loggingMiddleware)
-  )(request);
+  )(request)) as NextResponse;
 }
 
 export const config = {
@@ -185,6 +206,9 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder files (*.svg, *.png, etc.)
+     *
+     * Probe paths (.php, .env, .git, /_next/.env) must keep matching so
+     * middleware can hard-404 them. Do not add those suffixes here.
      */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html)$).*)",
   ],

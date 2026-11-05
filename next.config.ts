@@ -4,6 +4,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 const SUPER_ADMIN_DOMAIN = process.env.SUPER_ADMIN_DOMAIN || "app.openpeople.ai";
 
 const nextConfig: NextConfig = {
+  // Probe paths with a trailing slash (/wp-admin/) must reach middleware
+  // so they can hard-404. Middleware re-applies the default 308 for other routes.
+  skipTrailingSlashRedirect: true,
   // Use Turbopack (Next.js 16 default) even though we also supply webpack plugins (e.g., Sentry)
   // An explicit empty config silences the “webpack config and no turbopack config” error.
   turbopack: {},
