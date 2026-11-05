@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-11-05 — Desk facts through 4 November
+
+The public desk was last checked 14 October. It now records three later public facts. Québec’s cabinet was sworn in on 21 October (23 ministers; election-night seat count left at 59 of 127; no Churchill Falls decision). On 28 October Gary Smith became lead negotiator and the government said finished contracts will be tabled, with briefings and a proposed special debate, not a promised vote before completion. On 4 November the Premier and the Innu Grand Chief met in St. John’s; further talks are to be in Sheshatshiu; that meeting is not consent. Cost figures were not re-opened. Consent lines stay: partnership, if any, on terms each nation sets. Preview only; Tom merges.
+
 ## 2026-10-29 — Durable /ask question log
 
 Questions at `/ask` were only in Vercel runtime logs (`ask.question`) plus a local `ASK_LOG_PATH` file. Those expire. `POST /api/ask` now writes `ask.received` at send, inserts a private `ask_questions` row (`received`), and updates it to `answered` or `failed`. Store misses fail-soft. The SQL file is in the repo; it is not applied in this PR. No IP or user-agent stored. Preview only; Tom merges.

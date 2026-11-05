@@ -2,6 +2,15 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.26 — 2026-11-05 — Desk facts pass: cabinet, negotiator, Innu meeting
+
+Sourced update from 14 Oct–5 Nov 2026, rebased onto 0.5.25. `DESK_VERIFIED` is 2026-11-05. Cost markers, Annex B, and industry MW were not re-opened. No new megawatt or cent claims. Consent wording from the current site stays: partnership, if any, on terms each nation sets.
+
+- **Québec:** Paul St-Pierre Plamondon sworn in 21 Oct with a 23-minister cabinet (CBC). Election-night 59 of 127 stays the seat figure. No public decision on Churchill Falls. In-person meeting with Wakeham not held as of 28 Oct (Saltwire). National Assembly still 17 Nov.
+- **House:** Government of NL, 28 Oct — once completed, definitive agreements will be tabled, with briefings and a proposed special debate. Not a promised vote before completion. Gary Smith (former Fortis EVP; former Newfoundland Power CEO) is lead negotiator. Barry Perry is Special Advisor. Oversight Committee’s three members continue. Province is reviewing PUB chair recommendations on extra oversight members. Saltwire the same day: debate after the agreements are finalized; Hogan’s resolution to bring the final deal back failed; no vote to pass them. Wakeham: will not renegotiate; window runs to March.
+- **Innu:** 4 Nov, St. John’s mining conference. Grand Chief confronted the Premier; they met the same morning (VOCM: nearly two hours); further talks in Sheshatshiu; NTV: no resolution. September “yet to contact” stays as the 21 Sep record. Partnership still open. Not consent.
+- **Pages:** `/brief`, `/engage`, `/coalition` carry the 4 Nov meeting. `/letter` untouched. Preview only; Tom merges.
+
 ## 0.5.25 — 2026-10-29 — Durable /ask question log
 
 `POST /api/ask` writes `ask.received` as soon as the question is parsed, then inserts `ask_questions` with status `received` (service-role, RLS on, no anon). The same row is updated to `answered` or `failed` with provider, model, fallback flag, and error. Writes run through `after()` so they do not delay the first token. Missing env, a missing table, or a write error logs a warning and the assistant still answers. No IP or user-agent; optional coarse device class only. Migration `supabase/migrations/20261029133000_ask_questions.sql` is committed unapplied — Tom's database desk reviews and applies it. Harmless until then. Preview only; Tom merges.

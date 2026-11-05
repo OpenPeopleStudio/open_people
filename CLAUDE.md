@@ -45,7 +45,7 @@ Also hosts the open_people data-standard docs/spec under `docs/`.
 - This project is independent but referenced from mars-hq's VISION.md and TODO.md
 
 ## Current State
-Public site is the Churchill River desk, v2 (2026-09-22, VERSION 0.5.0): home, `/tracker`, `/industries`, `/costs`, `/brief`, `/engage`, `/letter`. Compute is a separate page at `/compute`, never the opener. House 21–18 endorsement of the DCIA framework (not binding PPAs; Québec 5 Oct; binding targets YE 2026; DCIA can run to 31 Mar 2027). Mining first. Open People is the proponent leading the proposed 500 MW Labrador AI campus (in feasibility). Parked SaaS shell remains unpublished as the public story.
+Public site is the Churchill River desk, v2 (facts verified 2026-11-05, VERSION 0.5.26): home, `/tracker`, `/industries`, `/costs`, `/brief`, `/engage`, `/letter`. Compute is a separate page at `/compute`, never the opener. House 21–18 endorsement of the DCIA framework (not binding PPAs). Québec: PQ minority 5 Oct; cabinet sworn 21 Oct; National Assembly 17 Nov; no public Churchill Falls decision. Gary Smith is lead negotiator (28 Oct); definitive agreements to be tabled once completed, no promised vote before that. Binding target YE 2026; DCIA term can run to 31 Mar 2027. Innu Nation met the Premier 4 Nov; partnership still open. Mining first. Open People is the proponent leading the proposed 500 MW Labrador AI campus (in feasibility). Parked SaaS shell remains unpublished as the public story.
 
 ---
 

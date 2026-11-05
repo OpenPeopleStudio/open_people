@@ -299,7 +299,7 @@ const ASKS = [
   {
     who: "Indigenous nations",
     lead: "Partnership, if any, will be on terms each nation sets. No nation has been asked about this project.",
-    body: "ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. Innu Nation's partnership, royalty, and the Gull Island tariff path on the DCIA file are unresolved after the vote. Innu Nation says the paper cuts its benefits by more than half. As of 21 September no meeting with the Premier is scheduled. We do not speak for any nation.",
+    body: "ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide. Innu Nation's partnership, royalty, and the Gull Island tariff path on the DCIA file are unresolved after the vote. Innu Nation says the paper cuts its benefits by more than half. On 4 November the Premier and the Grand Chief met in St. John’s, with further talks to be in Sheshatshiu. That meeting is not consent. We do not speak for any nation.",
   },
   {
     who: "Mining / resources / towns",

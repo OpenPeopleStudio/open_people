@@ -66,12 +66,12 @@ export const GATES: Gate[] = [
     status: "open",
     kind: "fixed",
     body: {
-      plain: "Québec elected a Parti Québécois minority. Churchill Falls came up in the transition meeting. No decision.",
+      plain: "Québec elected a Parti Québécois minority. The new premier is sworn in. No public decision on Churchill Falls.",
       technical:
-        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet 21 Oct; National Assembly 17 Nov.",
+        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC election-night projection). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet sworn in 21 Oct (23 ministers, CBC). National Assembly 17 Nov.",
     },
     trackerId: "qc-gate",
-    sources: ["qcElectionResult", "lactualiteTransition", "assnatReturn"],
+    sources: ["qcElectionResult", "lactualiteTransition", "cbcQcCabinet", "assnatReturn"],
   },
   {
     id: "qc-cabinet",
@@ -81,12 +81,12 @@ export const GATES: Gate[] = [
     status: "open",
     kind: "fixed",
     body: {
-      plain: "The new Québec cabinet is to be sworn in. Until then the deal sits with a government in transition.",
+      plain: "Paul St-Pierre Plamondon and a 23-minister cabinet were sworn in. Churchill Falls still has no public decision from the new government.",
       technical:
-        "Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon is to be sworn in with his cabinet on 21 October. No public decision on Churchill Falls at the 13 October transition meeting.",
+        "CBC, 21 Oct 2026: Paul St-Pierre Plamondon was sworn in as premier with a cabinet of 23 ministers. Canadian Press via L’actualité, 13 Oct 2026: no public decision on Churchill Falls at the transition meeting. Whether a due-diligence review changes the Material Terms: UNKNOWN.",
     },
     trackerId: "qc-gate",
-    sources: ["lactualiteTransition"],
+    sources: ["cbcQcCabinet", "lactualiteTransition"],
   },
   {
     id: "qc-assembly",

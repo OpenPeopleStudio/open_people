@@ -236,7 +236,6 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
   it("does not ship a source URL nobody has opened (SaltWire guess replaced by a loadable mirror)", () => {
     for (const source of Object.values(DESK_SOURCES)) {
       if (source.href) {
-        expect(source.href).not.toMatch(/saltwire\.com/);
         expect(source.href).toMatch(/^https?:\/\//);
       } else {
         expect(source.label.length).toBeGreaterThan(10);
@@ -246,6 +245,9 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
     expect(DESK_SOURCES.cbcMining.date).toBe("2025-01-15");
     expect(DESK_SOURCES.cerNl.href).toMatch(/province-territory-energy-profiles\/newfoundland-labrador/);
     expect(DESK_SOURCES.saltwireParrott.href).toBeUndefined();
+    expect(DESK_SOURCES.saltwireHouseOct28.href).toMatch(
+      /^https:\/\/www\.saltwire\.com\/newfoundland-labrador\/churchill-falls-wont-go-back-to-legislature$/,
+    );
     expect(DESK_SOURCES.pubTechConf.href).toBeUndefined();
   });
 
@@ -257,10 +259,10 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
 });
 
 describe("horizon desk facts — 14 Oct 2026 verification pass", () => {
-  it("bumps the desk verified date to 2026-10-14", () => {
-    expect(DESK_VERIFIED).toBe("2026-10-14");
+  it("bumps the desk verified date to 2026-11-05", () => {
+    expect(DESK_VERIFIED).toBe("2026-11-05");
     for (const item of TRACKER_ITEMS) {
-      expect(item.lastVerified).toBe("2026-10-14");
+      expect(item.lastVerified).toBe("2026-11-05");
     }
   });
 
@@ -287,9 +289,43 @@ describe("horizon desk facts — 14 Oct 2026 verification pass", () => {
     expect(qc?.body.plain).toMatch(/13 October/);
     expect(qc?.body.plain).toMatch(/21 October/);
     expect(qc?.body.plain).toMatch(/17 November/);
+    expect(qc?.body.plain).toMatch(/23-minister cabinet/);
+    expect(qc?.body.plain).toMatch(/was sworn in/);
     expect(qc?.body.technical).toMatch(/no decision/i);
+    expect(qc?.body.technical).toMatch(/59 of 127/);
     expect(qc?.sources).toEqual(
-      expect.arrayContaining(["qcElectionResult", "lactualiteTransition", "assnatReturn"]),
+      expect.arrayContaining([
+        "qcElectionResult",
+        "lactualiteTransition",
+        "assnatReturn",
+        "cbcQcCabinet",
+      ]),
+    );
+  });
+
+  it("records Gary Smith as lead negotiator and a tabled debate without a promised vote", () => {
+    const back = TRACKER_ITEMS.find((item) => item.id === "house-return");
+    expect(back?.when).toBe("28 Oct 2026");
+    expect(back?.body.plain).toMatch(/Gary Smith/);
+    expect(back?.body.plain).toMatch(/has not promised MHAs a vote/);
+    expect(back?.body.technical).toMatch(/once completed/);
+    expect(back?.body.technical).toMatch(/Newfoundland Power/);
+    expect(back?.sources).toEqual(expect.arrayContaining(["govNlSmith", "saltwireHouseOct28"]));
+    const window = TRACKER_ITEMS.find((item) => item.id === "binding-window");
+    expect(window?.body.technical).toMatch(/window up until March/);
+  });
+
+  it("records the 4 Nov Innu meeting as contact, not consent", () => {
+    const innu = TRACKER_ITEMS.find((item) => item.id === "innu");
+    expect(innu?.when).toBe("4 Nov 2026");
+    expect(innu?.body.plain).toMatch(/4 November/);
+    expect(innu?.body.plain).toMatch(/Sheshatshiu/);
+    expect(innu?.body.plain).toMatch(/Partnership remains open/);
+    expect(innu?.body.technical).toMatch(/nearly two hours/);
+    expect(innu?.body.technical).toMatch(/no resolution/);
+    expect(innu?.body.technical).toMatch(/not a ratified Innu Nation partnership/);
+    expect(innu?.sources).toEqual(
+      expect.arrayContaining(["vocmInnuNov4", "vocmInnuMeet", "ntvInnuNov4"]),
     );
   });
 
