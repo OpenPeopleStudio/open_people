@@ -2,6 +2,10 @@
 
 Run notes per `VERSION` stamp. **Trio:** VERSION + CHANGELOG.md + ACTIONS.
 
+## 0.5.26 — 2026-11-05 — Hard-404 scanner probe paths
+
+Middleware returns a plaintext `Not found` 404 (no-store, noindex) for `/wp-admin` and `/wp-admin/*`, `/wp-login.php`, `/xmlrpc.php`, `/.env` and nested `.env*` (including `/_next/.env`), and `/.git` / `/.git/*`. No session refresh on those paths. `/`, `/ask`, `/about`, and `/api/ask` are unchanged. Preview only; Tom merges.
+
 ## 0.5.25 — 2026-10-29 — Durable /ask question log
 
 `POST /api/ask` writes `ask.received` as soon as the question is parsed, then inserts `ask_questions` with status `received` (service-role, RLS on, no anon). The same row is updated to `answered` or `failed` with provider, model, fallback flag, and error. Writes run through `after()` so they do not delay the first token. Missing env, a missing table, or a write error logs a warning and the assistant still answers. No IP or user-agent; optional coarse device class only. Migration `supabase/migrations/20261029133000_ask_questions.sql` is committed unapplied — Tom's database desk reviews and applies it. Harmless until then. Preview only; Tom merges.

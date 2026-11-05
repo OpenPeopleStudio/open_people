@@ -2,6 +2,10 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-11-05 — Hard-404 scanner probe paths
+
+The site is not WordPress. Middleware now returns a plaintext `Not found` 404, with no-store caching and `X-Robots-Tag: noindex`, for `/wp-admin` and `/wp-admin/*`, `/wp-login.php`, `/xmlrpc.php`, `/.env` and nested `.env*` (including `/_next/.env`), and `/.git` / `/.git/*`. Session refresh is skipped on those paths. `/`, `/ask`, `/about`, and `/api/ask` are unchanged. Preview only; Tom merges.
+
 ## 2026-10-29 — Durable /ask question log
 
 Questions at `/ask` were only in Vercel runtime logs (`ask.question`) plus a local `ASK_LOG_PATH` file. Those expire. `POST /api/ask` now writes `ask.received` at send, inserts a private `ask_questions` row (`received`), and updates it to `answered` or `failed`. Store misses fail-soft. The SQL file is in the repo; it is not applied in this PR. No IP or user-agent stored. Preview only; Tom merges.
