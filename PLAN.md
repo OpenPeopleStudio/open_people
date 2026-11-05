@@ -1,6 +1,54 @@
-# PLAN: Durable /ask question log (slice 1)
+# PLAN: Hard-404 common scanner probe paths
 
-Status: in progress. Branch `feat/ask-question-log`. Preview only; Tom merges. Do not apply the migration from this PR.
+Status: in progress. Branch `cursor/fix-probe-paths-404-4bbb`. Preview only; Tom merges.
+
+Tom Lane approved this slice. Scanners hit `/wp-admin/install.php` and the live site does not return a hard app 404.
+
+## Goal
+
+Common WordPress, env, and git probe paths return a plain HTTP 404 with body `Not found`, no session work, and no caching of anything sensitive. The site is not WordPress. `/`, `/ask`, `/about`, `/api/ask`, and analytics must keep working.
+
+## In
+
+- `PLAN.md` (this file).
+- `lib/security/probe-paths.ts` — matcher + plaintext 404 response.
+- `middleware.ts` — short-circuit probe paths before Supabase session refresh. Keep the existing matcher (it already includes `.php`, `.env`, `.git`; do not exclude them). Re-apply the default 308 for other trailing-slash URLs.
+- `next.config.ts` — `skipTrailingSlashRedirect` so `/wp-admin/` reaches middleware instead of 308ing first.
+- Unit tests for the matcher/handler and the middleware short-circuit.
+- VERSION trio: VERSION + CHANGELOG.md + ACTIONS. Next stamp is 0.5.26. Also bump `package.json` patch.
+- `docs/SITE-LOG.md`, `docs/company/locks.md`, `notes/repo-map.ts` version note.
+
+## Out
+
+- WAF / IP blocks, Dependabot, branch protection, security headers, key rotation.
+- Content or copy changes on public pages.
+- Deploying production. No merge.
+- New dependencies.
+- Catch-all 404 redesign for every unknown URL (only the listed probe prefixes).
+
+## Dest
+
+Repo OpenPeopleStudio/open_people. Next.js middleware on Vercel (`openpeople.ai`). Ship path: feature branch → PR → Vercel preview. `curl -I` on preview probe paths must be 404. Do not promote.
+
+## First slice (this PR)
+
+1. PLAN.md (this file).
+2. `isProbePath` for `/wp-admin` and `/wp-admin/*`, `/wp-login.php`, `/xmlrpc.php`, `/.env` and `/.env*` (including nested `/_next/.env`), `/.git` and `/.git/*`.
+3. Middleware returns 404 `Not found` with `Cache-Control: no-store` and `X-Robots-Tag: noindex` before `updateSession`.
+4. Tests, lint, typecheck, build, version trio.
+
+## Done when
+
+- Listed probe paths 404 with a short `Not found` body and are not cached as documents.
+- `/`, `/ask`, `/about`, `/api/ask` are not classified as probes.
+- PR body names the paths, the soft-200 / non-404 root cause, and preview curl checks.
+- Build, lint, and tests pass. PR open. Not merged by the agent.
+
+---
+
+# Previous: Durable /ask question log (slice 1)
+
+Status: merged as PR #40. Do not apply the migration from that PR unless Tom's database desk already has.
 
 Tom, 29 Oct 2026: "We need to make logs if they are not stored."
 
