@@ -6,7 +6,7 @@ import { ContactMailLink } from "./ContactForm";
 export const metadata: Metadata = {
   title: "Contact Open People on Churchill Falls",
   description:
-    "Write Tom Lane at Open People — tom@openpeople.ai — about keeping firm power in Newfoundland and Labrador, or about the proposed Labrador campus.",
+    "Write Tom Lane at Open People — tom@openpeople.ai — about keeping firm power in Newfoundland and Labrador, or about the proposed Labrador AI campus.",
 };
 
 export default function ContactPage() {

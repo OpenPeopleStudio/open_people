@@ -2,6 +2,12 @@
 
 Public-site notes, newest first. Not a changelog of the parked SaaS shell.
 
+## 2026-11-19 — Data update: proposal to build
+
+Tom: change the proposal from a feasibility research study to a proposal to build. Copy now says Open People proposes to build a 500 MW Labrador AI campus, with every limit kept (not approved, not funded, not under construction, no megawatts reserved, no nation asked, no site chosen). `/ask` follows the 27 October proposal version, has no ACOA lines and names no candidate site. Budget 2026's 500 MW compute line replaces "Ottawa is looking for projects like this". The 28 October House motion (defeated 16–21) and the 13 and 16 November Québec and Premier quotes (reported) are on the tracker, brief, engage and the letter's editorial note. The "returns to the House" line is gone. Last verified stays 2026-10-14 until merge day.
+
+Tom, on PR #42: keep the Sept 18 "back to the House" clause removed. For `/ask` funding he chose option B — a Phase 1 budget with no funder named (Oct 27 v5.5 figures, ESTIMATE; total C$642,768; "Funding for Phase 1 is not secured"). `/ask` now says Phase 1, not "the study". Public pages that publish no budgets (`/about` near-term / vision copy) are unchanged. Preview only; Tom merges.
+
 ## 2026-10-29 — Durable /ask question log
 
 Questions at `/ask` were only in Vercel runtime logs (`ask.question`) plus a local `ASK_LOG_PATH` file. Those expire. `POST /api/ask` now writes `ask.received` at send, inserts a private `ask_questions` row (`received`), and updates it to `answered` or `failed`. Store misses fail-soft. The SQL file is in the repo; it is not applied in this PR. No IP or user-agent stored. Preview only; Tom merges.

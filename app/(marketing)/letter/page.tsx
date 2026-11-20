@@ -116,10 +116,13 @@ export default function LetterPage() {
               <strong className="font-semibold text-[var(--ink)]">31 December 2026</strong>; the DCIA
               instrument can run to{" "}
               <strong className="font-semibold text-[var(--ink)]">31 March 2027</strong>. The Premier
-              has said the deal returns to the House before then but has not promised a vote. Québec
+              has not promised a vote on them. On 28 October the House voted 16–21 against a motion
+              asking for one. Québec
               elected a Parti Québécois minority on{" "}
               <strong className="font-semibold text-[var(--ink)]">5 October</strong>. Churchill Falls
-              came up in the transition. No decision on the contracts. Innu Nation partnership and
+              came up in the transition. No decision on the contracts. In November, CBC and VOCM
+              reported, Québec&apos;s energy minister said the deal is not set in stone and the Premier
+              said it will not be renegotiated. Innu Nation partnership and
               the federal assessment scope remain unresolved.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">

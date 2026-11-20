@@ -76,12 +76,12 @@ export const GATES: Gate[] = [
   {
     id: "qc-cabinet",
     date: "2026-10-21",
-    label: "Québec cabinet sworn in",
+    label: "Québec cabinet date (passed)",
     short: "21 Oct",
     status: "open",
     kind: "fixed",
     body: {
-      plain: "The new Québec cabinet is to be sworn in. Until then the deal sits with a government in transition.",
+      plain: "The date the new Québec cabinet was due to be sworn in. It has passed.",
       technical:
         "Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon is to be sworn in with his cabinet on 21 October. No public decision on Churchill Falls at the 13 October transition meeting.",
     },
@@ -91,17 +91,17 @@ export const GATES: Gate[] = [
   {
     id: "qc-assembly",
     date: "2026-11-17",
-    label: "National Assembly returns",
+    label: "National Assembly returned",
     short: "17 Nov",
     status: "open",
     kind: "fixed",
     body: {
-      plain: "Québec’s National Assembly comes back. Any promised review or vote would have a floor to stand on.",
+      plain: "Québec’s National Assembly came back on 17 November. Days before, Québec’s energy minister said the deal is not set in stone (reported).",
       technical:
-        "National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. Whether Churchill Falls is debated or voted: UNKNOWN.",
+        "National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. Whether Churchill Falls was debated or voted there: UNKNOWN. CBC and VOCM, 16 Nov 2026: Energy Minister Stéphane Paquet said on 13 November the deal is not set in stone (REPORTED).",
     },
     trackerId: "qc-gate",
-    sources: ["assnatReturn", "lactualiteTransition"],
+    sources: ["assnatReturn", "lactualiteTransition", "cbcPaquet16Nov", "vocmRenegotiate16Nov"],
   },
   {
     id: "binding",

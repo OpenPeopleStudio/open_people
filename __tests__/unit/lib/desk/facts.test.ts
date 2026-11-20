@@ -223,10 +223,13 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
     expect(window?.body.plain).toMatch(/exclusive/i);
   });
 
-  it("carries the post-vote return-to-House gap and the Québec Innu file as open rows", () => {
+  it("carries the no-promised-vote gap and the Québec Innu file as open rows", () => {
     const back = TRACKER_ITEMS.find((item) => item.id === "house-return");
     expect(back?.status).toBe("open");
     expect(back?.body.technical).toMatch(/would not commit to a vote/);
+    expect(back?.body.technical).toMatch(/16, nays 21/);
+    expect(back?.sources).toContain("hansard28Oct");
+    expect(`${back?.title} ${back?.body.plain}`).not.toMatch(/back to the House|comes back/i);
     expect(back?.body.technical).toMatch(/UNKNOWN/);
     const qcInnu = TRACKER_ITEMS.find((item) => item.id === "qc-innu");
     expect(qcInnu?.status).toBe("open");
