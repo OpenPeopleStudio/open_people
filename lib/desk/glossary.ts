@@ -39,7 +39,7 @@ const GLOSSARY_DATA = {
     term: "framework",
     what: "A paper that sets out how later contracts will be written, without being those contracts.",
     why: "The House voted on a framework. Voters have not seen the binding text the framework points to.",
-    where: { href: "/tracker#house-return", label: "Tracker · Back to the House" },
+    where: { href: "/tracker#house-return", label: "Tracker · No promised vote" },
   },
   "firm-power": {
     term: "firm power",
@@ -200,7 +200,7 @@ const GLOSSARY_DATA = {
   compute: {
     term: "compute",
     what: "Data-centre load for AI training or hosting.",
-    why: "Not a named use in the DCIA. Open People leads a proposed 500 MW Labrador AI campus, in feasibility. Mines are a real constraint on the same power.",
+    why: "Not a named use in the DCIA. Open People proposes to build a 500 MW Labrador AI campus. Mines are a real constraint on the same power.",
     where: { href: "/compute", label: "Proposed campus (Open People leads)" },
   },
 } as const satisfies Record<string, GlossaryEntry>;

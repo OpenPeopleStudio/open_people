@@ -76,9 +76,9 @@ test("home names the company and offers a way into each track", async ({ page, i
   );
   await expect(main).toContainText("Open People is an AI company in Newfoundland and Labrador.");
   await expect(main).toContainText(
-    "The company's project is a proposed 500 MW Labrador AI campus, in feasibility.",
+    "The company proposes to build a 500 MW Labrador AI campus.",
   );
-  await expect(main).toContainText("Ottawa is looking for projects like this");
+  await expect(main).toContainText("Budget 2026 plans access to 500 MW of sovereign AI compute");
   await expect(main).not.toContainText("Ottawa is already paying");
   for (const job of [
     "The campus and the research campus.",

@@ -7,7 +7,7 @@ export const SITE_NAME = "Open People";
 export const SITE_ALTERNATE_NAME = "openpeople.ai";
 
 export const SITE_ORG_DESCRIPTION =
-  "Open People is an AI company in Newfoundland and Labrador. It leads a proposed 500 MW Labrador AI campus, in feasibility.";
+  "Open People is an AI company in Newfoundland and Labrador. It proposes to build a 500 MW Labrador AI campus.";
 
 export const SITE_ORG_KNOWS_ABOUT = [
   "artificial intelligence",

@@ -10,7 +10,7 @@ import { SCALE_ANCHORS } from "@/lib/voice-mode";
 export const metadata = deskMetadata({
   title: "Churchill Falls — mining first",
   description:
-    "Open People puts mining and Labrador industry first. They are real constraints on the same power. We lead a proposed 500 MW campus, in feasibility.",
+    "Open People puts mining and Labrador industry first. They are real constraints on the same power. We propose to build a 500 MW Labrador AI campus.",
   path: "/industries",
 });
 
@@ -112,7 +112,7 @@ export default function IndustriesPage() {
 
       <DeskSection id="compute" num="Proposed campus" title={undefined}>
         <aside className="border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
-          <p className="desk-kicker">Open People leads · in feasibility</p>
+          <p className="desk-kicker">Open People leads · a proposal to build</p>
           <Unfold
             id="compute-line"
             className="mt-3"

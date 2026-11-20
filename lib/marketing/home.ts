@@ -1,6 +1,6 @@
 /**
  * Home front door. Open People is an AI company.
- * The Labrador campus is the company's proposed project, in feasibility.
+ * Open People proposes to build a Labrador AI campus. It is a proposal, not approved.
  * Churchill Falls is background.
  * Do not name a nation as a partner. Do not invent figures.
  */
@@ -12,7 +12,7 @@ export const HOME_LEDE_COMPANY =
   "Open People is an AI company in Newfoundland and Labrador. Tom Lane is the founder.";
 
 export const HOME_LEDE_CAMPUS =
-  "The company's project is a proposed 500 MW Labrador AI campus, in feasibility.";
+  "The company proposes to build a 500 MW Labrador AI campus.";
 
 export const HOME_ASK_LABEL = "Ask the proposal";
 
@@ -21,13 +21,13 @@ export const HOME_SEARCH_TITLE = "Open People, an AI company in Newfoundland and
 
 /** Canonical campus line. Use after a sentence that names the power. */
 export const HOME_CAMPUS_CANONICAL =
-  "Open People leads a proposed 500 MW Labrador AI campus on that power, in feasibility.";
+  "Open People proposes to build a 500 MW Labrador AI campus on that power.";
 
 export const HOME_POWER_CONTEXT =
   "The firm, clean power that can host it already exists in this province.";
 
 export const HOME_POWER_LINE =
-  "The campus is proposed and in feasibility. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved.";
+  "The campus is a proposal to build. Phase 1 is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are reserved.";
 
 export const HOME_CONSENT = "Partnership, if any, will be on terms each nation sets.";
 
@@ -40,7 +40,10 @@ export const HOME_STATUS =
 export const HOME_RESEARCH =
   "We also lead a proposed research campus beside it: residencies, fellowships, gatherings, in the spirit of the Perimeter Institute and the Banff Centre.";
 
-export const HOME_OTTAWA_HEADING = "Ottawa is looking for projects like this";
+export const HOME_OTTAWA_HEADING = "Budget 2026 plans access to 500 MW of sovereign AI compute";
+
+export const HOME_OTTAWA_BUDGET =
+  "Budget 2026 says Ottawa will enable Canadian AI companies to access 500 MW of sovereign AI compute through new financial tools, such as backstops and offtake agreements. That is a plan, not a call for projects.";
 
 export const HOME_OTTAWA_CALL =
   "ISED invited proposals for sovereign, large-scale AI data centres with planned capacity greater than 100 MW. The call ran from 15 January to 15 February 2026. It is now closed. Selected projects may enter a non-binding memorandum of understanding.";
@@ -61,6 +64,7 @@ export const HOME_OTTAWA_SOURCES = [
   "isedDataCentreCall",
   "isedDataCentreIntake",
   "isedComputeStrategy",
+  "budget2026Compute",
 ] as const;
 
 export function homePublicText() {
@@ -79,6 +83,7 @@ export function homePublicText() {
     HOME_STATUS,
     HOME_RESEARCH,
     HOME_OTTAWA_HEADING,
+    HOME_OTTAWA_BUDGET,
     HOME_OTTAWA_CALL,
     HOME_OTTAWA_STRATEGY,
     HOME_CHURCHILL,

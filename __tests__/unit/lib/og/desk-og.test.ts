@@ -85,12 +85,12 @@ describe("desk Open Graph", () => {
       expect(blob.toLowerCase()).not.toMatch(/horizon desk|hyperscale/);
     }
     expect(DESK_OG.home.headline).toBe("An AI company. A proposed Labrador AI campus.");
-    expect(DESK_OG.home.accent).toBe("Proposed. In feasibility.");
+    expect(DESK_OG.home.accent).toBe("A proposal to build. Not approved.");
     expect(`${DESK_OG.home.kicker} · ${DESK_OG.home.kickerAccent}`.toUpperCase()).toBe(
       "OPEN PEOPLE · COMPANY AND CAMPUS",
     );
     expect(DESK_OG.home.alt).toBe(
-      "Open People — an AI company, and a proposed Labrador AI campus, in feasibility.",
+      "Open People — an AI company that proposes to build a Labrador AI campus.",
     );
     expect(deskOgKicker(DESK_OG.home)).toBe("OPEN PEOPLE · COMPANY AND CAMPUS");
     expect(DESK_OG.build.headline).toBe("The campus and the research campus.");
@@ -98,7 +98,7 @@ describe("desk Open Graph", () => {
     expect(DESK_OG.consent.headline).toBe("Indigenous partnership.");
     expect(DESK_OG.power.headline).toBe("Power for the campus.");
     expect(deskOgFooterUrl(DESK_OG.home)).toBe("OPENPEOPLE.AI");
-    expect(DESK_OG.compute.headline).toBe("A 500 MW Labrador campus.");
+    expect(DESK_OG.compute.headline).toBe("A proposed 500 MW Labrador AI campus.");
     expect(DESK_OG.compute.accent).toBe("Open People leads.");
     expect(DESK_OG.compute.quiet).toBe(true);
     expect(DESK_OG.coalition.accent).toBe("Open People leads. Mining first.");
@@ -125,7 +125,8 @@ describe("desk Open Graph", () => {
 
     const compute = deskOgSvg(DESK_OG.compute);
     expect(compute).toContain(OG_COLOR.steel);
-    expect(compute).toContain("A 500 MW Labrador");
+    expect(compute).toContain("A proposed 500 MW");
+    expect(compute).toContain("Labrador AI campus.");
     expect(compute).toContain("campus.");
     expect(compute).toContain("Open People leads.");
     expect(compute).not.toMatch(/¢/);
@@ -162,7 +163,7 @@ describe("desk Open Graph", () => {
     expect(svg).toContain("#f2501f");
     expect(svg).toContain("An AI company.");
     expect(svg).toContain("A proposed Labrador AI campus.");
-    expect(svg).toContain("Proposed. In feasibility.");
+    expect(svg).toContain("A proposal to build. Not approved.");
     expect(svg).toContain("OPEN PEOPLE");
     expect(svg).toContain("COMPANY AND CAMPUS");
     expect(svg).not.toMatch(/¢/);

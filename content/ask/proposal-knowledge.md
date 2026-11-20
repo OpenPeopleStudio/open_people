@@ -1,6 +1,6 @@
 # Open People: proposal knowledge
 
-**Status:** filled. Source: Open People's chapter-2 proposal master (working draft dated 24 October 2026, the two-page leave-behind and the proposed term sheet), checked against the figure check of 25 October 2026.
+**Status:** filled. Source: Open People's proposal, version of 27 October 2026 (the proposal, the two-page leave-behind and the proposed term sheet).
 
 ## How to use this file
 
@@ -10,7 +10,7 @@
   - REPORTED: from press, secondary or summary sources, or not yet official.
   - ESTIMATE: Open People's own calculation or assumption.
   - UNKNOWN: not published, or not in this file.
-- The proposal is a working draft. It has not been sent to ACOA. Figures may change before it is.
+- Figures in the proposal may change.
 - Nothing in this file is built, signed, funded or agreed unless this file says so. Almost nothing is.
 - Do not add numbers that are not in this file. Do not round them.
 - If a question is not covered, say so, label it UNKNOWN and point to the follow-up form on the /ask page. Contact: tom@openpeople.ai.
@@ -18,9 +18,9 @@
 ## The short version
 
 - Open People is a new Newfoundland and Labrador AI company, based in St. John's, NL. (CONFIRMED)
-- It proposes a staged AI data campus in Labrador, of up to 500 MW, and a national research campus beside it. Both are proposals. Neither is built. (CONFIRMED that this is the proposal; the campus itself is proposed.)
+- It proposes to build a staged Labrador AI campus, of up to 500 MW, and a national research campus beside it. Both are proposals. Neither is built. (CONFIRMED that this is the proposal; the campus itself is proposed.)
 - 500 MW is the ceiling the study would test, not the first step. The first step would be a single pilot server. (CONFIRMED as stated in the proposal)
-- The first real step is an eight-month feasibility study. Open People plans to ask ACOA to co-fund it. (CONFIRMED as stated in the proposal)
+- The build starts with Phase 1: eight months of work on power, site, costs and partners. The proposal calls it the study. (CONFIRMED as stated in the proposal)
 - The study ends with a go or no-go decision. The study can say no. (CONFIRMED as stated in the proposal)
 - No partner, customer, tenant, nation, utility, funder or government has agreed to anything. No power has been allocated. (CONFIRMED as stated in the proposal)
 
@@ -28,26 +28,25 @@
 
 - Open People is a Newfoundland and Labrador AI company based in St. John's, NL. (CONFIRMED)
 - It works on sovereign, self-hosted computing: software and AI that run on infrastructure its users control. (CONFIRMED)
-- It does its research and analysis in-house, with its own AI tools, called tōm. (CONFIRMED)
+- It does its research and analysis in-house, with its own AI agents. (CONFIRMED)
 - Tom Lane is the founder. He leads the project full time. (CONFIRMED)
 - Open People is a new company. It is pre-revenue and has no financial statements to date. (CONFIRMED)
 - It has one person today, Tom Lane. (CONFIRMED)
-- It has had no prior ACOA assistance. (CONFIRMED)
 - Open People's role in the proposal: proponent and developer. It would lead the work, own the business case, and carry the project from study to build and operation, if the study says go. (CONFIRMED as the proposed role)
 - Website: openpeople.ai. Contact: tom@openpeople.ai, or the follow-up form on /ask.
 
 ## The proposal in brief
 
-- What is proposed: a staged, up to 500 MW sovereign AI data campus in Labrador, and a national research campus. (CONFIRMED as the proposal)
-- What comes first: an eight-month Phase 1 feasibility study, with Labrador fieldwork, engagement and early market sounding. (CONFIRMED as the proposal)
+- What is proposed: to build a staged, up to 500 MW sovereign Labrador AI campus, and a national research campus. (CONFIRMED as the proposal)
+- What comes first: an eight-month Phase 1, with Labrador fieldwork, engagement and early market sounding. (CONFIRMED as the proposal)
 - The question the study answers: should this go ahead, where, on what power, and with whom? (CONFIRMED as the proposal)
 - Who does the study: a small Open People team in St. John's and in Labrador, with independent third-party review where a professional opinion matters (power and grid, engineering costs, economics, legal structure). (CONFIRMED as planned)
-- How it would be decided: seven go or no-go gates, scored at month 8. (CONFIRMED as planned)
+- How it would be decided: seven gates, scored at month 8. Six are go or no-go and must all pass. The seventh picks the operating model. (CONFIRMED as planned)
 - If the answer is go: Open People would move into pre-development with partners and a funding stack. If no: the report would say so plainly and publish why. (CONFIRMED as planned)
 
 ### What Phase 1 does not do
 
-- It does not buy hardware. (CONFIRMED as planned)
+- It does not buy data-centre hardware. The only equipment is team laptops and phones. (CONFIRMED as planned)
 - It does not reserve power. (CONFIRMED as planned)
 - It does not displace mining. Mines and Labrador industry come first; the study sizes compute to what remains. (CONFIRMED as planned)
 - It does not assume any partner, customer or power allocation exists today. None does. (CONFIRMED)
@@ -55,7 +54,7 @@
 ## Where it would be
 
 - Somewhere in Labrador with power, road and fibre access. (CONFIRMED as the plan)
-- Churchill Falls and Happy Valley-Goose Bay are candidate areas. Nothing is chosen. (CONFIRMED)
+- Nothing is chosen. (CONFIRMED)
 - Labrador is the starting point because the power is generated there, and a Labrador site would not depend on the subsea Labrador-Island Link. (CONFIRMED as the proposal's reasoning)
 - A site shortlist is a planned study deliverable, around month 3. (ESTIMATE, planned timing)
 - Open People itself is in St. John's, NL. The study team would work from St. John's, with fieldwork in Labrador.
@@ -66,13 +65,16 @@
 
 - The Churchill Falls / Gull Island framework (the DCIA, 17 August 2026) lets the province keep up to 2,350 MW of hydro, plus 400 MW of wind if built. (CONFIRMED)
 - The House of Assembly endorsed the framework 21–18 on 17 September 2026. An endorsement is not a signed contract. (CONFIRMED as stated in the proposal)
+- On 28 October 2026 the House voted 16–21 against an Opposition motion to bring the final agreements back for a debate and vote before they are signed. (CONFIRMED, House of Assembly Hansard, 28 October 2026, p. 2886)
+- On 13 November 2026 Québec's energy minister said the deal is not set in stone. On 16 November Premier Wakeham said it will not be renegotiated. (REPORTED, CBC and VOCM, 16 November 2026)
 - The framework aims for definitive agreements by 31 December 2026. Its term ends 31 March 2027 unless both utilities extend it in writing. (CONFIRMED)
 - The framework's material terms give Hydro-Québec purchase options on unused retained power, including a default sale at 95% of the contract price with no notice. (REPORTED)
 - NL Hydro's Labrador Industrial rate has two energy components: C$29.22/MWh (Development Block) and C$78.61/MWh (Market Block). (CONFIRMED)
 - The all-in rate for a new large customer is not published. (UNKNOWN)
 - There is no data-centre rate class in NL, and no power allocation for compute today. (CONFIRMED)
 - Mines and Labrador industry come first. (CONFIRMED as stated in the proposal)
-- Ottawa's Sovereign AI Compute Strategy commits C$2 billion. (CONFIRMED) Its call for projects over 100 MW drew more than 160 proposals. (CONFIRMED) Open People found no Newfoundland and Labrador project in the public record.
+- Ottawa's Canadian Sovereign AI Compute Strategy is a C$2 billion Budget 2024 plan. (CONFIRMED) Separately, ISED ran a call for AI data centres over 100 MW from 15 January to 15 February 2026. It is closed. It drew more than 160 proposals. (CONFIRMED) Open People found no Newfoundland and Labrador project in the public record.
+- Budget 2026 says Ottawa will enable Canadian AI companies to access 500 MW of sovereign AI compute through new financial tools, such as backstops and offtake agreements. That is a plan, not a call for projects. (CONFIRMED, Budget 2026, chapter 5)
 
 ### What the proposal says about power
 
@@ -130,25 +132,18 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 - Power, not price per token, is the binding limit. Whoever holds firm, clean megawatts holds the scarce input. (ESTIMATE, the proposal's conclusion)
 - The main long-run risk: if demand stalls, the same output needs fewer megawatts. The model cannot settle this. (ESTIMATE)
 
-## Capital and the ask of ACOA
+## Capital
 
 ### What is being asked, in general terms
 
-- Open People plans to ask ACOA to co-fund the eight-month feasibility study. The proposal has not been sent yet. (CONFIRMED)
-- The lead program is ACOA's Business Development Program (BDP), or REGI if ACOA advises. (CONFIRMED as proposed)
-- BDP funds up to 75% of eligible growth activities, interest-free. (CONFIRMED, ACOA's published program terms)
-- The proposal asks ACOA for 75% of the study cost. Open People would pay at least 25%. (CONFIRMED as the request; the rate is for ACOA to confirm)
 - The source of Open People's 25% is to be confirmed. (UNKNOWN)
-- Most of the study cost is people: wages and payroll for a small St. John's team are about 64% of the recommended budget. (ESTIMATE)
-- The rest: independent grid, engineering and economic review; Labrador fieldwork and market-sounding travel; legal and report production; and a 10% contingency. (ESTIMATE, budget lines)
-- The proposed form is a conditionally repayable contribution, open to ACOA's guidance, because the study is pre-commercial. (CONFIRMED as proposed)
-- ACOA has not approved anything. No meeting with a loan officer had been booked as of the draft. (CONFIRMED as of 24 October 2026)
-- A later commercial pilot could suit ACOA's Regional AI Initiative (RAII), once Open People is eligible. It is not part of this ask. Open People is likely not yet eligible. (CONFIRMED as stated)
+- Most of the study cost is people: wages and payroll for a small St. John's team are about 63% of the recommended budget. (ESTIMATE)
+- The rest: independent grid, engineering and economic review; Labrador fieldwork and market-sounding travel; legal and report production; team laptops, phones, mobile plans and AI/API services; and a 10% contingency. (ESTIMATE, budget lines)
 - Exact dollar amounts of the request: not in this file. Ask via the follow-up form.
 
 ### The wider funding stack (if the study says go)
 
-- ACOA would fund the on-ramp only. Later phases would need partner equity, federal programs (ISED, the Canada Infrastructure Bank), anchor customers and project finance. No split is assumed. None is secured. (CONFIRMED as the plan; funding UNKNOWN)
+- Later phases would need partner equity, federal programs (ISED, the Canada Infrastructure Bank), anchor customers and project finance. No split is assumed. None is secured. (CONFIRMED as the plan; funding UNKNOWN)
 - Estimated costs by phase (all ESTIMATE, wide ranges):
   - Phase 1b, pre-development to FEED-ready: about C$26.0M / C$52.5M / C$70.1M (low / mid / high). (ESTIMATE)
   - FEED (front-end engineering): about C$62.6M to C$327.5M. (ESTIMATE)
@@ -173,7 +168,7 @@ All timing is planned and starts on approval. (ESTIMATE, planned timing)
 - Month 3: site shortlist; first claim.
 - Month 5: cost ranges; partnership structure.
 - Month 6: economic impact; chip procurement plan; second claim.
-- Month 7: draft report to ACOA for comment.
+- Month 7: draft report for comment.
 - Month 8: final report with go or no-go, and a public summary.
 
 ### Five study workstreams
@@ -232,7 +227,7 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 - During the study: about six skilled jobs in St. John's for eight months, at Job Bank median wages or better. (ESTIMATE, recommended scenario)
 - Lean scope would mean four half-time roles; full scope seven. (ESTIMATE)
 - Planned study roles: energy and grid analyst; data-centre engineer; financial and economic analyst; Indigenous relations and community lead; research-campus programme lead; project coordinator. Tom Lane leads. (CONFIRMED as the hiring plan) None of these hires has been made. Roles start only if funding is approved.
-- Wages and payroll in NL during the study are about 64% of the budget. (ESTIMATE)
+- Wages and payroll in NL during the study are about 63% of the budget. (ESTIMATE)
 - Spending in Labrador communities during fieldwork. (CONFIRMED as planned; amount ESTIMATE)
 - Construction and operations jobs later: not yet estimated for NL. That is a study deliverable. (UNKNOWN)
 - Comparables elsewhere, not a forecast: from almost 400 operations jobs, including indirect ones, for 230 MW in Narvik, to 580 per 100 MW in a Pembina Institute study. (REPORTED)
@@ -267,16 +262,15 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 
 ## Status right now (as of 24–25 October 2026)
 
-- The proposal is a working draft for review. It has not been submitted to ACOA. (CONFIRMED)
-- Figures will change before anything goes to ACOA. (CONFIRMED)
-- Nothing is built. No site is chosen. No power is allocated. No hardware is bought. (CONFIRMED)
+- Figures in the proposal may change. (CONFIRMED)
+- Nothing is built. No site is chosen. No power is allocated. No data-centre hardware is bought. (CONFIRMED)
 - No partner, tenant, customer, investor, nation, utility or government has agreed to anything. No letters of support have been received. (CONFIRMED)
 - Letters of support and expressions of interest are outputs the study would seek, not inputs. (CONFIRMED as planned)
 - Open People is a new company with no financial statements and no revenue. (CONFIRMED)
 
 ## What is not decided or not known
 
-- Whether the study goes ahead (depends on ACOA). (UNKNOWN)
+- Whether Phase 1 goes ahead, and how it is funded. (UNKNOWN)
 - Firm megawatts available for compute, from what year, at what all-in price. (UNKNOWN)
 - Whether any policy will cover data-centre loads in NL. (UNKNOWN)
 - NL Hydro's large-load interconnection process, timelines and costs. (UNKNOWN)
@@ -302,13 +296,13 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 ## Frequently asked questions
 
 **Is the campus built yet?**
-No. Nothing is built. The proposal is to fund an eight-month feasibility study first, ending in a go or no-go decision. (CONFIRMED)
+No. Nothing is built. Open People proposes to build it in stages, starting with an eight-month Phase 1 that ends in a go or no-go decision. (CONFIRMED)
 
 **Is this happening?**
-Not yet. It is a proposal. The study itself has not been funded or approved, and the proposal has not been sent to ACOA. (CONFIRMED)
+Not yet. It is a proposal to build. Nothing is approved or funded. (CONFIRMED)
 
 **Where would it be?**
-Somewhere in Labrador with power, road and fibre access. Churchill Falls and Happy Valley-Goose Bay are candidates. Nothing is chosen. Open People is based in St. John's, NL. (CONFIRMED)
+Somewhere in Labrador with power, road and fibre access. Nothing is chosen. Open People is based in St. John's, NL. (CONFIRMED)
 
 **How much power would it use?**
 Staged, up to 500 MW at most, starting with one pilot server. 500 MW is the ceiling the study tests, not the first step. At full load 500 MW would use about 4.38 TWh a year. (ESTIMATE) No power is allocated or promised. (CONFIRMED)
@@ -330,9 +324,6 @@ None yet. Possible tenants include AI labs, hyperscalers and chipmakers. They ar
 
 **How many jobs?**
 About six skilled jobs in St. John's for eight months during the study, if it is funded. (ESTIMATE) Construction and operations jobs later are not yet estimated; the study would estimate them. (UNKNOWN)
-
-**What does ACOA fund?**
-The proposal plans to ask ACOA's Business Development Program to co-fund 75% of the eight-month study, mostly team wages, with Open People paying at least 25%. BDP funds up to 75% of eligible growth activities, interest-free. ACOA has not approved anything. (CONFIRMED as the planned request)
 
 **How much does it cost?**
 The full campus is estimated at C$6.26B to C$16.38B for the facility, or C$24.6B to C$42.2B with chips. (ESTIMATE) These are wide ranges. The study's job is to narrow them.

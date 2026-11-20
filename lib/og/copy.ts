@@ -5,9 +5,9 @@
  * Home card:
  *   Kicker:    OPEN PEOPLE · COMPANY AND CAMPUS
  *   Dominant:  An AI company. A proposed Labrador AI campus.
- *   Secondary: Proposed. In feasibility.
+ *   Secondary: A proposal to build. Not approved.
  *   Footer:    OPENPEOPLE.AI
- * Compute: A 500 MW Labrador campus. / Open People leads.
+ * Compute: A proposed 500 MW Labrador AI campus. / Open People leads.
  */
 
 import {
@@ -42,54 +42,54 @@ export const HOME_DESCRIPTION = HOME_META_DESCRIPTION;
 export const BRIEF_TITLE = "Keep the power here: the Labrador case";
 /**
  * Search snippet for /brief. Matched to page body: hydro-dominated /
- * cleanest large power; campus proposed, in feasibility; first facility kept
+ * cleanest large power; campus a proposal to build; first facility kept
  * deliberately small; not a reserved block. Does not name a nation, quote
  * 5,428 MW, or imply that plant is for sale. Phase 1 (written request /
  * non-firm pilot) stays on the page, not in this snippet.
  */
 export const BRIEF_DESCRIPTION =
-  "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, not a reserved block.";
+  "Labrador runs on clean hydro. Open People proposes to build a Labrador AI campus that starts small, not a reserved block.";
 
 export const DESK_OG = {
   home: {
     kicker: "OPEN PEOPLE",
     kickerAccent: "COMPANY AND CAMPUS",
     headline: `${HOME_HEADLINE_COMPANY} ${HOME_HEADLINE_CAMPUS}`,
-    accent: "Proposed. In feasibility.",
+    accent: "A proposal to build. Not approved.",
     footer: "OPENPEOPLE.AI",
-    alt: "Open People — an AI company, and a proposed Labrador AI campus, in feasibility.",
+    alt: "Open People — an AI company that proposes to build a Labrador AI campus.",
   },
   build: {
     kicker: "Build",
     kickerAccent: "Open People",
     headline: "The campus and the research campus.",
-    accent: "Proposed. In feasibility.",
+    accent: "A proposal to build. Not approved.",
     footer: "openpeople.ai/build",
-    alt: "Open People build — the campus and the research campus. Proposed. In feasibility.",
+    alt: "Open People build — the campus and the research campus. A proposal to build. Not approved.",
   },
   capital: {
     kicker: "Capital",
     kickerAccent: "Open People",
     headline: "The money for the project.",
-    accent: "Proposed. In feasibility.",
+    accent: "A proposal to build. Not approved.",
     footer: "openpeople.ai/capital",
-    alt: "Open People capital — the money for the project. Proposed. In feasibility.",
+    alt: "Open People capital — the money for the project. A proposal to build. Not approved.",
   },
   consent: {
     kicker: "Consent",
     kickerAccent: "Open People",
     headline: "Indigenous partnership.",
-    accent: "Proposed. In feasibility.",
+    accent: "A proposal to build. Not approved.",
     footer: "openpeople.ai/consent",
-    alt: "Open People consent — Indigenous partnership. Proposed. In feasibility.",
+    alt: "Open People consent — Indigenous partnership. A proposal to build. Not approved.",
   },
   power: {
     kicker: "Power",
     kickerAccent: "Open People",
     headline: "Power for the campus.",
-    accent: "Proposed. In feasibility.",
+    accent: "A proposal to build. Not approved.",
     footer: "openpeople.ai/power",
-    alt: "Open People power — power for the campus. Proposed. In feasibility.",
+    alt: "Open People power — power for the campus. A proposal to build. Not approved.",
   },
   tracker: {
     kicker: "Tracker",
@@ -141,11 +141,11 @@ export const DESK_OG = {
   },
   compute: {
     kicker: "Compute",
-    kickerAccent: "Proposed · in feasibility",
-    headline: "A 500 MW Labrador campus.",
+    kickerAccent: "A proposal to build",
+    headline: "A proposed 500 MW Labrador AI campus.",
     accent: "Open People leads.",
     footer: "openpeople.ai/compute",
-    alt: "Open People — a proposed 500 MW Labrador AI campus, in feasibility. Open People leads.",
+    alt: "Open People proposes to build a 500 MW Labrador AI campus. Open People leads.",
     quiet: true,
   },
   ask: {

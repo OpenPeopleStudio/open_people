@@ -74,7 +74,7 @@ export const INDUSTRY_CARDS: IndustryCard[] = [
 
 export const COMPUTE_SECONDARY_LINE: DeskVoice = {
   plain:
-    "Open People leads a proposed 500 MW AI campus in Labrador, in feasibility. Mines and existing industry are real constraints on the same power. The campus page is /compute.",
+    "Open People proposes to build a 500 MW Labrador AI campus. Mines and existing industry are real constraints on the same power. The campus page is /compute.",
   technical:
-    "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Mining and Labrador industry remain first as constraints. Open People is the proponent of a proposed 500 MW campus — proposed / in feasibility, not a reserved block. Detail on /compute.",
+    "No firm MW, price, queue, or policy preference for Labrador compute is confirmed in the DCIA Material Terms. Mining and Labrador industry remain first as constraints. Open People is the proponent of a proposed 500 MW Labrador AI campus — a proposal to build, not a reserved block. Detail on /compute.",
 };

@@ -52,19 +52,19 @@ export const TRACKER_ITEMS: DeskItem[] = [
   },
   {
     id: "house-return",
-    title: "Back to the House — but no promised vote",
-    when: "18 Sep 2026",
+    title: "No promised vote on the final contracts",
+    when: "18 Sep · 28 Oct 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://ntv.ca/politics/breaking-house-of-assembly-votes-in-favour-of-churchill-falls-deal-21-18/",
     hrefLabel: "NTV — Premier on next steps",
     body: {
       plain:
-        "The Premier says the deal comes back to the House before the binding contracts are signed. He has not said MHAs will get a vote. The next decision point may have no vote attached.",
+        "The Premier has not said MHAs will get a vote on the binding contracts. On 28 October an Opposition motion asked for a debate and vote on the final agreements before they are signed. It was defeated 16–21.",
       technical:
-        "On 18 September 2026 Premier Wakeham said the deal “will return to the House of Assembly prior to definitive agreements” but would not commit to a vote on them (NTV; VOCM). The Oversight Committee (Dan Levert, Julia Mullaley, Mike Jardine) stays on. Liberal leader Hogan called the absence of a further approval mechanism “discouraging”; NDP leader Dinn noted movement on PUB involvement. The NDP’s three unmet conditions (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. UNKNOWN: whether the definitive agreements will be voted on, or only tabled.",
+        "On 18 September 2026 Premier Wakeham would not commit to a vote on the definitive agreements (NTV; VOCM). The Oversight Committee (Dan Levert, Julia Mullaley, Mike Jardine) stays on. Liberal leader Hogan called the absence of a further approval mechanism “discouraging”; NDP leader Dinn noted movement on PUB involvement. The NDP’s three unmet conditions (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. Hansard, 28 Oct 2026, p. 2886: Official Opposition private Member’s resolution (J. Hogan) asking that final DCIA / Churchill River agreements come to the House for debate and a vote before they are signed or binding; defeated on Division, ayes 16, nays 21. UNKNOWN: whether the definitive agreements will be voted on.",
     },
-    sources: ["ntvVote", "vocmOpposition", "ndpConditions"],
+    sources: ["ntvVote", "vocmOpposition", "ndpConditions", "hansard28Oct"],
   },
   {
     id: "binding-window",
@@ -85,16 +85,16 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "qc-gate",
     title: "Québec elected a PQ minority",
-    when: "5 Oct 2026 · transition 13 Oct",
+    when: "5 Oct 2026 · 13–16 Nov",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://www.cbc.ca/news/canada/montreal/livestory/quebec-election-2026-results-9.7369473",
     hrefLabel: "CBC election night",
     body: {
       plain:
-        "Québec elected a Parti Québécois minority on 5 October. St-Pierre Plamondon met Fréchette on 13 October; Churchill Falls came up; no decision was announced. Cabinet is to be sworn in 21 October. The National Assembly returns 17 November.",
+        "Québec elected a Parti Québécois minority on 5 October. St-Pierre Plamondon met Fréchette on 13 October; Churchill Falls came up; no decision was announced. Cabinet was due to be sworn in on 21 October. The National Assembly returned on 17 November. On 13 November Québec’s energy minister said the deal is not set in stone. On 16 November Premier Wakeham said it will not be renegotiated, and the negotiating teams are back at work on the final contracts.",
       technical:
-        "CBC, 5 Oct 2026: Parti Québécois projected 59 of 127 seats, a minority government. Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon met outgoing premier Christine Fréchette for a transition meeting of under an hour; he listed Churchill Falls among the subjects; they made statements and took no questions; no decision on the deal. Same CP report: cabinet to be sworn in 21 October. National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. Whether the PQ’s promised due-diligence review, or any Assembly vote, changes the Material Terms: UNKNOWN.",
+        "CBC, 5 Oct 2026: Parti Québécois projected 59 of 127 seats, a minority government. Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon met outgoing premier Christine Fréchette for a transition meeting of under an hour; he listed Churchill Falls among the subjects; they made statements and took no questions; no decision on the deal. Same CP report: cabinet to be sworn in 21 October. National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. CBC, 16 Nov 2026 (REPORTED): Energy Minister Stéphane Paquet told Montreal radio 98.5FM on 13 November that the deal is not set in stone; Premier Wakeham told the House on 16 November, “The deal will not be renegotiated.” VOCM, 16 Nov 2026, reports the same exchange. Whether the PQ’s promised due-diligence review, or any Assembly vote, changes the Material Terms: UNKNOWN.",
     },
     sources: [
       "qcElectionResult",
@@ -102,6 +102,8 @@ export const TRACKER_ITEMS: DeskItem[] = [
       "assnatReturn",
       "cbcWilliamsTerms",
       "qcElection",
+      "cbcPaquet16Nov",
+      "vocmRenegotiate16Nov",
     ],
   },
   {

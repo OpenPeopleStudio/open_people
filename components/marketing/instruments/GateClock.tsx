@@ -66,8 +66,8 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
             </title>
             <desc>
               Dates on the rail: 17 August framework signed, 17 September House
-              endorsement, 5 October Québec election, 21 October Québec cabinet,
-              17 November National Assembly returns, 31 December binding target,
+              endorsement, 5 October Québec election, 21 October Québec cabinet (passed),
+              17 November National Assembly returned (passed), 31 December binding target,
               31 March term end. Full names sit in the tracker.
             </desc>
             <line
@@ -130,8 +130,8 @@ export function GateClock({ compact = false }: { compact?: boolean }) {
           <desc id="gc-desc">
             A time rail from 17 August 2026, when the framework was signed, to
             31 March 2027, when its term ends. Gates: House vote 17 September,
-            Québec PQ minority 5 October, cabinet 21 October, National Assembly
-            17 November, binding target 31 December, term end 31 March. First
+            Québec PQ minority 5 October, cabinet 21 October and National Assembly
+            17 November (both passed), binding target 31 December, term end 31 March. First
             Gull Island power is pencilled for 2036, off the scale.
           </desc>
           <defs>

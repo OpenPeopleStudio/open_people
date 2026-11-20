@@ -139,7 +139,7 @@ export const DESK_SOURCES = {
   },
   ntvVote: {
     id: "ntv-vote",
-    label: "NTV — House votes 21–18; Premier on return to the House before definitive agreements, 17–18 Sep 2026",
+    label: "NTV — House votes 21–18; Premier on next steps, 17–18 Sep 2026",
     href: "https://ntv.ca/politics/breaking-house-of-assembly-votes-in-favour-of-churchill-falls-deal-21-18/",
     date: "2026-09-18",
     kind: "press",
@@ -205,6 +205,34 @@ export const DESK_SOURCES = {
     label: "National Assembly of Québec — summoned 17 Nov 2026, 2 p.m.",
     href: "https://www.assnat.qc.ca/en/travaux-parlementaires/assemblee-nationale/index.html",
     date: "2026-10-14",
+    kind: "primary",
+  },
+  hansard28Oct: {
+    id: "hansard-1028",
+    label: "House of Assembly Hansard, 28 Oct 2026, p. 2886 — Opposition motion for a vote on the final agreements, defeated 16–21",
+    href: "https://www.assembly.nl.ca/HouseBusiness/Hansard/ga51session1/PDFs/2026-10-28.pdf",
+    date: "2026-10-28",
+    kind: "primary",
+  },
+  cbcPaquet16Nov: {
+    id: "cbc-paquet-1116",
+    label: "CBC — N.L. premier waiting to hear from Quebec on Churchill River power deal, 16 Nov 2026",
+    href: "https://www.cbc.ca/news/canada/newfoundland-labrador/nl-churchill-river-9.7424046",
+    date: "2026-11-16",
+    kind: "press",
+  },
+  vocmRenegotiate16Nov: {
+    id: "vocm-renegotiate-1116",
+    label: "VOCM — Churchill Falls will not be renegotiated, Premier asserts, 16 Nov 2026",
+    href: "https://vocm.com/2026/11/16/churchill-falls-will-not-be-renegotiated-premier-asserts-following-reports-quebec-minister-wants-to-rework-certain-parts-of-agreement/",
+    date: "2026-11-16",
+    kind: "press",
+  },
+  budget2026Compute: {
+    id: "budget-2026-compute",
+    label: "Budget 2026, chapter 5 — access to 500 MW of sovereign AI compute",
+    href: "https://budget.canada.ca/2026/report-rapport/chap5-en.html",
+    date: "2026-11-05",
     kind: "primary",
   },
   pubTechConf: {

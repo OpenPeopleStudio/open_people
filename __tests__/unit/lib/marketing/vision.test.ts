@@ -18,7 +18,7 @@ describe("vision copy", () => {
     );
   });
 
-  it("states the public thesis, campus, research campus, and near-term feasibility", () => {
+  it("states the public thesis, campus, research campus, and near-term build case", () => {
     expect(VISION_TITLE).toBe("Vision — Open People");
     expect(VISION_DESCRIPTION).toMatch(/Newfoundland and Labrador hydro/i);
     expect(VISION_DESCRIPTION).toMatch(/sovereign AI compute/i);
@@ -30,7 +30,8 @@ describe("vision copy", () => {
     expect(text).toMatch(/500 MW/);
     expect(text).toMatch(/Labrador/);
     expect(text).toMatch(/proposed/i);
-    expect(text).toMatch(/feasibility/i);
+    expect(text).toMatch(/proposes to build/i);
+    expect(text).not.toMatch(/feasibility/i);
     expect(text).toMatch(/research campus/i);
     expect(text).toMatch(/residencies/i);
     expect(text).toMatch(/fellowships/i);

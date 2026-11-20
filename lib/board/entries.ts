@@ -43,7 +43,7 @@ export const BOARD_ENTRIES: readonly BoardEntry[] = [
     track: "power",
     cleared: "2026-10-14",
     plain:
-      "Open People is not a party to the Churchill Falls agreement. We lead the proposed campus, in feasibility. Mines and existing industry are real constraints on the same power.",
+      "Open People is not a party to the Churchill Falls agreement. We propose to build the Labrador AI campus. Mines and existing industry are real constraints on the same power.",
     technical:
       "Open People is the proponent of the campus and is not a party to the Churchill Falls / Gull Island framework. No allocation is signed. Mines and existing industry remain real constraints on Labrador firm power.",
     kind: "company",

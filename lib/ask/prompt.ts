@@ -76,7 +76,7 @@ export function answerLooksCovered(text: string): boolean {
 }
 
 export function buildAskInstructions(knowledge: string): string {
-  return `You answer questions about Open People's preliminary proposal. Open People (openpeople.ai) is a Newfoundland and Labrador company.
+  return `You answer questions about Open People's proposal to build a Labrador AI campus. Open People (openpeople.ai) is an AI company in Newfoundland and Labrador.
 
 Do not introduce yourself. Do not say you are an AI assistant. Start with the answer.
 
