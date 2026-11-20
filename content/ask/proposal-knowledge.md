@@ -19,9 +19,9 @@
 
 - Open People is a new Newfoundland and Labrador AI company, based in St. John's, NL. (CONFIRMED)
 - It proposes to build a staged Labrador AI campus, of up to 500 MW, and a national research campus beside it. Both are proposals. Neither is built. (CONFIRMED that this is the proposal; the campus itself is proposed.)
-- 500 MW is the ceiling the study would test, not the first step. The first step would be a single pilot server. (CONFIRMED as stated in the proposal)
-- The build starts with Phase 1: eight months of work on power, site, costs and partners. The proposal calls it the study. (CONFIRMED as stated in the proposal)
-- The study ends with a go or no-go decision. The study can say no. (CONFIRMED as stated in the proposal)
+- 500 MW is the ceiling Phase 1 would test, not the first step. The first step would be a single pilot server. (CONFIRMED as stated in the proposal)
+- The build starts with Phase 1: eight months of work on power, site, costs and partners. (CONFIRMED as stated in the proposal)
+- Phase 1 ends with a go or no-go decision. Phase 1 can say no. (CONFIRMED as stated in the proposal)
 - No partner, customer, tenant, nation, utility, funder or government has agreed to anything. No power has been allocated. (CONFIRMED as stated in the proposal)
 
 ## What Open People is
@@ -32,15 +32,15 @@
 - Tom Lane is the founder. He leads the project full time. (CONFIRMED)
 - Open People is a new company. It is pre-revenue and has no financial statements to date. (CONFIRMED)
 - It has one person today, Tom Lane. (CONFIRMED)
-- Open People's role in the proposal: proponent and developer. It would lead the work, own the business case, and carry the project from study to build and operation, if the study says go. (CONFIRMED as the proposed role)
+- Open People's role in the proposal: proponent and developer. It would lead the work, own the business case, and carry the project from Phase 1 to build and operation, if Phase 1 says go. (CONFIRMED as the proposed role)
 - Website: openpeople.ai. Contact: tom@openpeople.ai, or the follow-up form on /ask.
 
 ## The proposal in brief
 
 - What is proposed: to build a staged, up to 500 MW sovereign Labrador AI campus, and a national research campus. (CONFIRMED as the proposal)
 - What comes first: an eight-month Phase 1, with Labrador fieldwork, engagement and early market sounding. (CONFIRMED as the proposal)
-- The question the study answers: should this go ahead, where, on what power, and with whom? (CONFIRMED as the proposal)
-- Who does the study: a small Open People team in St. John's and in Labrador, with independent third-party review where a professional opinion matters (power and grid, engineering costs, economics, legal structure). (CONFIRMED as planned)
+- The question Phase 1 answers: should this go ahead, where, on what power, and with whom? (CONFIRMED as the proposal)
+- Who does the Phase 1 work: a small Open People team in St. John's and in Labrador, with independent third-party review where a professional opinion matters (power and grid, engineering costs, economics, legal structure). (CONFIRMED as planned)
 - How it would be decided: seven gates, scored at month 8. Six are go or no-go and must all pass. The seventh picks the operating model. (CONFIRMED as planned)
 - If the answer is go: Open People would move into pre-development with partners and a funding stack. If no: the report would say so plainly and publish why. (CONFIRMED as planned)
 
@@ -48,7 +48,7 @@
 
 - It does not buy data-centre hardware. The only equipment is team laptops and phones. (CONFIRMED as planned)
 - It does not reserve power. (CONFIRMED as planned)
-- It does not displace mining. Mines and Labrador industry come first; the study sizes compute to what remains. (CONFIRMED as planned)
+- It does not displace mining. Mines and Labrador industry come first; Phase 1 sizes compute to what remains. (CONFIRMED as planned)
 - It does not assume any partner, customer or power allocation exists today. None does. (CONFIRMED)
 
 ## Where it would be
@@ -56,8 +56,8 @@
 - Somewhere in Labrador with power, road and fibre access. (CONFIRMED as the plan)
 - Nothing is chosen. (CONFIRMED)
 - Labrador is the starting point because the power is generated there, and a Labrador site would not depend on the subsea Labrador-Island Link. (CONFIRMED as the proposal's reasoning)
-- A site shortlist is a planned study deliverable, around month 3. (ESTIMATE, planned timing)
-- Open People itself is in St. John's, NL. The study team would work from St. John's, with fieldwork in Labrador.
+- A site shortlist is a planned Phase 1 deliverable, around month 3. (ESTIMATE, planned timing)
+- Open People itself is in St. John's, NL. The Phase 1 team would work from St. John's, with fieldwork in Labrador.
 
 ## Power
 
@@ -81,10 +81,10 @@
 - No power is promised. No firm power has been offered or reserved. No megawatts, price, queue or policy for compute exist. (CONFIRMED)
 - The campus would use only power that is actually available after mines and towns. (CONFIRMED as the proposal's commitment)
 - Each later stage would be sized to power that is actually available. (CONFIRMED as planned)
-- If NL Hydro indicates no feasible path to Labrador supply before new generation, the study would narrow to a pilot node and the policy case. (CONFIRMED as planned, month 3 check)
+- If NL Hydro indicates no feasible path to Labrador supply before new generation, Phase 1 would narrow to a pilot node and the policy case. (CONFIRMED as planned, month 3 check)
 - At full load, 500 MW would use about 4.38 TWh a year (500 MW x 8,760 hours). That is about 10% of 2023 provincial generation and about 21% of the retained hydro block. (ESTIMATE, Open People's arithmetic)
 - If Churchill Falls upgrades and Gull Island are built, they would add to what the province can allocate. Both are years away. (CONFIRMED as stated in the proposal)
-- Firm megawatts NL Hydro could offer, from what year, and at what all-in price: UNKNOWN. This is the first question the study asks (Gate 1).
+- Firm megawatts NL Hydro could offer, from what year, and at what all-in price: UNKNOWN. This is the first question Phase 1 asks (Gate 1).
 
 ### Will it raise power bills?
 
@@ -113,7 +113,7 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 - Price benchmark: wholesale colocation in primary North American markets averaged US$196.25 per kW-month in H2 2025 (CBRE). (REPORTED) That is C$275.87 at 1.4057 CAD per USD. (ESTIMATE, conversion)
 - Rates for a new remote market like Labrador: UNKNOWN.
 - A hybrid is likely: BYOC halls for tenants, plus a small owner-operated block for Open People's own sovereign inference service and the research campus. (ESTIMATE, the proposal's view)
-- Which model to use (BYOC, owner-operated or hybrid) is decided by Gate 7 in the study. (CONFIRMED as planned)
+- Which model to use (BYOC, owner-operated or hybrid) is decided by Gate 7 in Phase 1. (CONFIRMED as planned)
 - A cold climate may allow free cooling with outside air. Labrador's climate data are not yet analysed. (UNKNOWN)
 
 ## The value of AI inference per unit of power (the value model)
@@ -122,7 +122,7 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 - Fully loaded (chips, building, financing, staff, energy), the base case nets about C$502 per MWh. The low case is a loss. (ESTIMATE)
 - Energy is a small share of the value: about 3% of GPU-hour revenue at the Market Block rate. (ESTIMATE)
 - Owner-operated compute lives or dies on utilization, GPU prices and the cost of capital. That is the case for BYOC and for signing customers before buying hardware. (ESTIMATE, the proposal's conclusion)
-- This is a model, not a forecast. The study would replace it with an NL-specific model. (CONFIRMED as stated)
+- This is a model, not a forecast. Phase 1 would replace it with an NL-specific model. (CONFIRMED as stated)
 
 ## 25-year view (2027 to 2051)
 
@@ -134,14 +134,21 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 
 ## Capital
 
-### What is being asked, in general terms
+### Phase 1 budget, in general terms
 
-- The source of Open People's 25% is to be confirmed. (UNKNOWN)
-- Most of the study cost is people: wages and payroll for a small St. John's team are about 63% of the recommended budget. (ESTIMATE)
-- The rest: independent grid, engineering and economic review; Labrador fieldwork and market-sounding travel; legal and report production; team laptops, phones, mobile plans and AI/API services; and a 10% contingency. (ESTIMATE, budget lines)
-- Exact dollar amounts of the request: not in this file. Ask via the follow-up form.
+- Phase 1: eight months from start, one go/no-go at month 8. (ESTIMATE)
+- Funding for Phase 1 is not secured. (CONFIRMED)
+- Team wages and payroll costs (six hires): C$307,481 (48%). (ESTIMATE)
+- CEO salary, Tom Lane (Job Bank NL low wage, senior business managers, C$65.87/h, with payroll costs): C$96,885 (15%). (ESTIMATE)
+- Independent third-party validation: C$48,429 (8%). (ESTIMATE)
+- Labrador fieldwork and market-sounding travel: C$62,322 (10%). (ESTIMATE)
+- Legal and report production: C$21,300 (3%). (ESTIMATE)
+- Team laptops, phones, mobile plans and AI/API services: C$47,918 (7%). (ESTIMATE)
+- Contingency (10%): C$58,433 (9%). (ESTIMATE)
+- Total: C$642,768. Wages and payroll including CEO: C$404,366 (63%). (ESTIMATE)
+- Range: lean C$256,964 to full C$904,311. (ESTIMATE)
 
-### The wider funding stack (if the study says go)
+### The wider funding stack (if Phase 1 says go)
 
 - Later phases would need partner equity, federal programs (ISED, the Canada Infrastructure Bank), anchor customers and project finance. No split is assumed. None is secured. (CONFIRMED as the plan; funding UNKNOWN)
 - Estimated costs by phase (all ESTIMATE, wide ranges):
@@ -155,12 +162,12 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 ### Investing
 
 - The proposal does not offer shares or investment to the public. (CONFIRMED that no public offer is described)
-- Capital providers would be sounded during the study. No investor has committed. (CONFIRMED)
+- Capital providers would be sounded during Phase 1. No investor has committed. (CONFIRMED)
 - Anyone interested should use the follow-up form or email tom@openpeople.ai. Nothing on this site is an offer of securities.
 
 ## Build timeline and phases
 
-### Phase 1 study, month by month (planned)
+### Phase 1, month by month (planned)
 
 All timing is planned and starts on approval. (ESTIMATE, planned timing)
 
@@ -171,7 +178,7 @@ All timing is planned and starts on approval. (ESTIMATE, planned timing)
 - Month 7: draft report for comment.
 - Month 8: final report with go or no-go, and a public summary.
 
-### Five study workstreams
+### Five Phase 1 workstreams
 
 - A. Power and grid: supply available, firm or non-firm, when, at what price, through what interconnection process.
 - B. Site and engineering: where; cost to build and run a pilot node, a first tranche and a full campus; chip plan; BYOC shell specs.
@@ -179,7 +186,7 @@ All timing is planned and starts on approval. (ESTIMATE, planned timing)
 - D. Secure, sovereign inference: a security design, from site to model. Design only; no certifications yet.
 - E. Partners and engagement: Labrador communities; Indigenous governments and organizations (no contact to date; partnership, if any, on terms each nation sets); project structure with NL Hydro and capital providers; research-campus partners; the 20% public-mission compute reserve.
 
-### Later phases (only if the study says go)
+### Later phases (only if Phase 1 says go)
 
 - Phase 1b: pre-development to FEED-ready (engineering, interconnection studies, environmental assessment, Indigenous engagement capacity, legal, site control).
 - FEED: front-end engineering before a final investment decision.
@@ -190,7 +197,7 @@ All timing is planned and starts on approval. (ESTIMATE, planned timing)
 ### When would it open?
 
 - No opening date is set. Nothing would be built in Phase 1. (CONFIRMED)
-- A build depends on the study passing all six required gates, then pre-development, engineering, approvals and capital. No date is in the proposal. (UNKNOWN)
+- A build depends on Phase 1 passing all six required gates, then pre-development, engineering, approvals and capital. No date is in the proposal. (UNKNOWN)
 
 ## The seven go or no-go gates
 
@@ -219,21 +226,21 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 - The Crown has a duty to consult on decisions a campus would need, such as land, power supply and environmental assessment. (CONFIRMED, as stated in the proposal)
 - Community benefit agreements: proposed, one with each host community, negotiated with them, not for them. None exists yet. (CONFIRMED that none exists)
 - Proposed public reporting: power use, water use, jobs and local spending each year; corrections published when Open People gets something wrong. These are proposals for discussion. (CONFIRMED as proposed)
-- Labrador municipalities: engagement planned from month 2 of the study. (ESTIMATE, planned timing)
+- Labrador municipalities: engagement planned from month 2 of Phase 1. (ESTIMATE, planned timing)
 - Churchill Falls history matters, and the 2026 agreement is contested. Labrador communities and mines come before a data campus for new power. (CONFIRMED as the proposal's position)
 
 ## Jobs and local benefit
 
-- During the study: about six skilled jobs in St. John's for eight months, at Job Bank median wages or better. (ESTIMATE, recommended scenario)
+- During Phase 1: about six skilled jobs in St. John's for eight months, at Job Bank median wages or better. (ESTIMATE, recommended scenario)
 - Lean scope would mean four half-time roles; full scope seven. (ESTIMATE)
-- Planned study roles: energy and grid analyst; data-centre engineer; financial and economic analyst; Indigenous relations and community lead; research-campus programme lead; project coordinator. Tom Lane leads. (CONFIRMED as the hiring plan) None of these hires has been made. Roles start only if funding is approved.
-- Wages and payroll in NL during the study are about 63% of the budget. (ESTIMATE)
+- Planned Phase 1 roles: energy and grid analyst; data-centre engineer; financial and economic analyst; Indigenous relations and community lead; research-campus programme lead; project coordinator. Tom Lane leads. (CONFIRMED as the hiring plan) None of these hires has been made. Roles start only if funding is approved.
+- Wages and payroll in NL during Phase 1, including the CEO, are 63% of the Phase 1 budget. (ESTIMATE)
 - Spending in Labrador communities during fieldwork. (CONFIRMED as planned; amount ESTIMATE)
-- Construction and operations jobs later: not yet estimated for NL. That is a study deliverable. (UNKNOWN)
+- Construction and operations jobs later: not yet estimated for NL. That is a Phase 1 deliverable. (UNKNOWN)
 - Comparables elsewhere, not a forecast: from almost 400 operations jobs, including indirect ones, for 230 MW in Narvik, to 580 per 100 MW in a Pembina Institute study. (REPORTED)
 - A typical large data centre may have about 50 full-time workers, about half of them contractors. Data centres have few permanent jobs per megawatt. (REPORTED)
 - Tax revenue to NL: not estimated. (UNKNOWN)
-- Other proposed benefits, if the study says go: a home use for retained power; Canadian compute under Canadian control; a research campus; a 20% public-mission compute reserve. (CONFIRMED as proposed)
+- Other proposed benefits, if Phase 1 says go: a home use for retained power; Canadian compute under Canadian control; a research campus; a 20% public-mission compute reserve. (CONFIRMED as proposed)
 
 ## The research campus
 
@@ -245,7 +252,7 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 ## The 20% public-mission compute reserve
 
 - Proposed: keep 20% of the campus's compute for problems Newfoundland and Labrador and Canada face. (CONFIRMED as proposed)
-- It is a design idea to test in the study, not a commitment. No partner, funder or user has been approached. (CONFIRMED)
+- It is a design idea to test in Phase 1, not a commitment. No partner, funder or user has been approached. (CONFIRMED)
 - Candidate areas: rural health care access; oceans and fisheries, including northern cod; Arctic and climate change; the electricity grid; housing; Indigenous languages. Candidate areas, not promises. (CONFIRMED as proposed)
 - Proposed governance: an independent allocation board, with Open People holding a minority of seats, open calls scored on merit, and a set share for projects led by Indigenous governments and organizations and Labrador communities, on terms each sets. (CONFIRMED as proposed)
 
@@ -265,7 +272,7 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 - Figures in the proposal may change. (CONFIRMED)
 - Nothing is built. No site is chosen. No power is allocated. No data-centre hardware is bought. (CONFIRMED)
 - No partner, tenant, customer, investor, nation, utility or government has agreed to anything. No letters of support have been received. (CONFIRMED)
-- Letters of support and expressions of interest are outputs the study would seek, not inputs. (CONFIRMED as planned)
+- Letters of support and expressions of interest are outputs Phase 1 would seek, not inputs. (CONFIRMED as planned)
 - Open People is a new company with no financial statements and no revenue. (CONFIRMED)
 
 ## What is not decided or not known
@@ -291,7 +298,7 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 - Labrador construction may cost more than comparables. Muskrat Falls is the local cost precedent.
 - AI demand could correct. A correction would hit expensive, marginal sites first.
 - GPU prices fall as new chips arrive.
-- A Labrador crypto operator went bankrupt in 2019 owing the utility and public agencies. (REPORTED) That is why this starts with a study and gates, not a building.
+- A Labrador crypto operator went bankrupt in 2019 owing the utility and public agencies. (REPORTED) That is why this starts with Phase 1 and gates, not a building.
 
 ## Frequently asked questions
 
@@ -305,13 +312,13 @@ Not yet. It is a proposal to build. Nothing is approved or funded. (CONFIRMED)
 Somewhere in Labrador with power, road and fibre access. Nothing is chosen. Open People is based in St. John's, NL. (CONFIRMED)
 
 **How much power would it use?**
-Staged, up to 500 MW at most, starting with one pilot server. 500 MW is the ceiling the study tests, not the first step. At full load 500 MW would use about 4.38 TWh a year. (ESTIMATE) No power is allocated or promised. (CONFIRMED)
+Staged, up to 500 MW at most, starting with one pilot server. 500 MW is the ceiling Phase 1 tests, not the first step. At full load 500 MW would use about 4.38 TWh a year. (ESTIMATE) No power is allocated or promised. (CONFIRMED)
 
 **Does it have power from NL Hydro or Hydro-Québec?**
 No. No utility has agreed to supply power. There is no data-centre rate class or allocation for compute in NL today. (CONFIRMED)
 
 **Will it take power from mines or raise my bill?**
-Mines and Labrador industry come first; the study sizes compute to what remains. The proposal says a campus must pay the full cost of its power and grid, and residents should not pay for it. Price terms are not set. (CONFIRMED as the proposal's position; price UNKNOWN)
+Mines and Labrador industry come first; Phase 1 sizes compute to what remains. The proposal says a campus must pay the full cost of its power and grid, and residents should not pay for it. Price terms are not set. (CONFIRMED as the proposal's position; price UNKNOWN)
 
 **Does Innu Nation, NunatuKavut or Nunatsiavut support it?**
 No nation has been asked. There has been no contact to date, so no nation has agreed to, supported or partnered on it. Partnership, if any, would be on terms each nation sets. Nothing proceeds without consent. (CONFIRMED)
@@ -323,22 +330,22 @@ The proposal calls it bring your own compute (BYOC). Open People would build and
 None yet. Possible tenants include AI labs, hyperscalers and chipmakers. They are targets only. None has been approached or has agreed to anything. (CONFIRMED)
 
 **How many jobs?**
-About six skilled jobs in St. John's for eight months during the study, if it is funded. (ESTIMATE) Construction and operations jobs later are not yet estimated; the study would estimate them. (UNKNOWN)
+About six skilled jobs in St. John's for eight months during Phase 1, if it is funded. (ESTIMATE) Construction and operations jobs later are not yet estimated; Phase 1 would estimate them. (UNKNOWN)
 
 **How much does it cost?**
-The full campus is estimated at C$6.26B to C$16.38B for the facility, or C$24.6B to C$42.2B with chips. (ESTIMATE) These are wide ranges. The study's job is to narrow them.
+Phase 1 is estimated at C$642,768, range C$256,964 to C$904,311. (ESTIMATE) Funding for Phase 1 is not secured. (CONFIRMED) The full campus is estimated at C$6.26B to C$16.38B for the facility, or C$24.6B to C$42.2B with chips. (ESTIMATE) These are wide ranges. Phase 1's job is to narrow them.
 
 **When would it open?**
-No date is set. Nothing is built in the study phase. A build would need the study to pass its gates, then pre-development, engineering, approvals and capital. (UNKNOWN)
+No date is set. Nothing is built in Phase 1. A build would need Phase 1 to pass its gates, then pre-development, engineering, approvals and capital. (UNKNOWN)
 
 **Who is behind it?**
 Open People, a new Newfoundland and Labrador AI company in St. John's. Tom Lane is the founder. (CONFIRMED)
 
 **How do I invest?**
-The proposal does not offer investment to the public, and nothing here is an offer of securities. Capital providers would be sounded during the study. Use the follow-up form or email tom@openpeople.ai. (CONFIRMED that no public offer exists)
+The proposal does not offer investment to the public, and nothing here is an offer of securities. Capital providers would be sounded during Phase 1. Use the follow-up form or email tom@openpeople.ai. (CONFIRMED that no public offer exists)
 
 **Can I work for Open People?**
-The study plans about six roles, starting only if funding is approved. Use the follow-up form or email tom@openpeople.ai. (CONFIRMED as planned; no hires made)
+Phase 1 plans about six roles, starting only if funding is approved. Use the follow-up form or email tom@openpeople.ai. (CONFIRMED as planned; no hires made)
 
 **Is it secure? Who controls the data?**
 Security would be designed in from the start: Canadian jurisdiction, customer-held keys as an option, tenant isolation, chip provenance. Design only; nothing is built or certified. (CONFIRMED as the design intent)
@@ -347,7 +354,7 @@ Security would be designed in from the start: Canadian jurisdiction, customer-he
 Cold-climate air cooling is the starting point. Water, land, noise and wildlife would be studied site by site, with full environmental assessment before any build. (CONFIRMED as the plan)
 
 **What if it fails?**
-The study can say no. No building, chips or power contract are bought in Phase 1. If the answer is no, the report says why. (CONFIRMED as planned)
+Phase 1 can say no. No building, chips or power contract are bought in Phase 1. If the answer is no, the report says why. (CONFIRMED as planned)
 
 **Who profits?**
 Open People as developer, its investors and lenders, if it proceeds. Any Indigenous ownership would be on terms each nation sets. (CONFIRMED as the proposal's answer)

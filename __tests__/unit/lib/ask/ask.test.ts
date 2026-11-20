@@ -43,6 +43,7 @@ describe("ask prompt", () => {
     expect(instructions).toMatch(/UNKNOWN/);
     expect(instructions).toMatch(/Never invent numbers/);
     expect(instructions).toMatch(/Never claim a partner/);
+    expect(instructions).toMatch(/Do not name a funder, programme, or cost-share split for Phase 1/);
     expect(instructions).toMatch(/SWL/);
     expect(instructions).toMatch(/follow-up form/);
     expect(instructions).toMatch(/Do not introduce yourself/);

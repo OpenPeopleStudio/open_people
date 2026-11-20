@@ -25,11 +25,11 @@
 - **First slice:**
   - A CloudAgent applies the spec on the branch, regenerates the OG images, runs the checks, pushes and opens the PR.
   - It reports the PR link and preview URL to site, which relays to op hub.
-  - The /ask study-funding block stays as the spec leaves it (ACOA lines out). Tom picks option A, B or C later.
+  - The /ask study-funding block: Tom chose option B (Phase 1 budget, no funder named). Applied on this branch.
 - **Not in this slice:**
   - Re-dating `DESK_VERIFIED` and the /ask "as of" heading (merge day, after a source re-check).
   - The Mac master update (Tom or research).
-  - The /ask "study" wording beyond the framing lines (after Tom's A/B/C).
+  - ~~The /ask "study" wording beyond the framing lines (after Tom's A/B/C).~~ Done: Phase 1 wording.
   - /coalition.
   - The probe-path PR.
 - **Done when:**

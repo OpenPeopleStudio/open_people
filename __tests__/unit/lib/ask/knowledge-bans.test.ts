@@ -45,4 +45,24 @@ describe("ask knowledge bans", () => {
   it("does not mention OpenAI", () => {
     expect(text).not.toMatch(/OpenAI/i);
   });
+
+  it("states a Phase 1 budget with no funder or cost-share", () => {
+    expect(text).toMatch(/### Phase 1 budget, in general terms/);
+    expect(text).toMatch(/Funding for Phase 1 is not secured/);
+    expect(text).toMatch(/C\$642,768/);
+    expect(text).toMatch(/C\$404,366 \(63%\)/);
+    expect(text).not.toMatch(/75%/);
+    expect(text).not.toMatch(/Open People's 25%/);
+    expect(text).not.toMatch(/share requested/i);
+    expect(text).not.toMatch(/The proposal calls it the study/);
+  });
+
+  it("uses Phase 1 wording instead of the study, except third-party uses", () => {
+    const leftover = lines.filter((line) => {
+      if (/Pembina Institute study/.test(line)) return false;
+      if (/interconnection studies/.test(line)) return false;
+      return /\bstud(?:y|ies)\b/i.test(line);
+    });
+    expect(leftover).toEqual([]);
+  });
 });
