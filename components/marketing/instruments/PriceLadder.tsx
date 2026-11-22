@@ -7,9 +7,9 @@ import {
   LADDER_POINTS,
   type LadderFamily,
 } from "@/lib/desk";
-import { InstDetail, instHit } from "./InstDetail";
-import { staggerByX } from "./layout";
-import { SvgLines } from "./svg";
+import { InstDetail, useInstSelect } from "./InstDetail";
+import { clampLabelX, staggerByX } from "./layout";
+import { InstFit, SvgLines } from "./svg";
 
 /**
  * I3 — the Price Ladder. One ¢/kWh axis, each price family on its own row.
@@ -49,7 +49,8 @@ function cx(cents: number): number {
 }
 
 export function PriceLadder() {
-  const [active, setActive] = useState(LADDER_POINTS[0].id);
+  const { active, select, hit } = useInstSelect(LADDER_POINTS[0].id);
+  const [showAll, setShowAll] = useState(false);
   const point = LADDER_POINTS.find((item) => item.id === active);
   const H = TOP + LADDER_FAMILIES.length * ROW_H + 32;
   const reported = LADDER_POINTS.filter(
@@ -60,7 +61,8 @@ export function PriceLadder() {
 
   return (
     <div className="inst price-ladder">
-      <div className="inst-scroll">
+      <InstFit
+        wide={
         <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Price ladder">
           <title id="pl-title">The price ladder</title>
           <desc id="pl-desc">
@@ -118,11 +120,9 @@ export function PriceLadder() {
                 ) : null}
                 {fam.id === "signed" ? (
                   <g {...(pts.find((p) => p.cents === null)
-                    ? instHit(
+                    ? hit(
                         pts.find((p) => p.cents === null)!.id,
                         "Signed industrial rate, not published",
-                        active,
-                        setActive,
                       )
                     : {})}>
                     <rect
@@ -143,7 +143,7 @@ export function PriceLadder() {
                     <g
                       key={p.id}
                       transform={`translate(${cx(p.cents!)} ${y})`}
-                      {...instHit(p.id, `${p.value} cents, ${p.label}`, active, setActive)}
+                      {...hit(p.id, `${p.value} cents, ${p.label}`)}
                     >
                       <circle r={12} fill="transparent" />
                       <circle r={active === p.id ? 6 : 4} className={tone} />
@@ -170,22 +170,30 @@ export function PriceLadder() {
             );
           })}
         </svg>
-        <span className="inst-scroll-hint" aria-hidden>
-          scroll sideways →
-        </span>
-      </div>
+        }
+        narrow={<NarrowLadder active={active} hit={hit} />}
+      />
 
-      <div className="ladder-rows" role="list" aria-label="Price ladder rungs">
+      <div className="ladder-rows" data-all={showAll ? "true" : "false"} role="list" aria-label="Price ladder rungs">
         {LADDER_FAMILIES.map((fam) => {
           const pts = LADDER_POINTS.filter((p) => p.family === fam.id);
           const groupOn =
             pts.some((p) => p.id === active) ||
             (fam.id === "labrador" && active === "lab-ind-1");
           return (
-            <div key={fam.id} className="ladder-group">
-              <p className="ladder-group-name" data-on={groupOn ? "true" : "false"}>
+            <div key={fam.id} className="ladder-group" data-open={groupOn ? "true" : "false"}>
+              <button
+                type="button"
+                className="ladder-family"
+                data-on={groupOn ? "true" : "false"}
+                aria-expanded={showAll || groupOn}
+                onClick={() => {
+                  const first = pts[0];
+                  if (first) select(first.id);
+                }}
+              >
                 {fam.label}
-              </p>
+              </button>
               <p className="ladder-group-measures">{fam.measures}</p>
               {pts.map((p) => (
                 <button
@@ -195,7 +203,7 @@ export function PriceLadder() {
                   id={`ladder-${p.id}`}
                   aria-pressed={active === p.id}
                   data-on={active === p.id ? "true" : "false"}
-                  onClick={() => setActive(p.id)}
+                  onClick={() => select(p.id)}
                 >
                   <span className="v">
                     {p.value}
@@ -210,7 +218,7 @@ export function PriceLadder() {
                   className="ladder-row"
                   aria-pressed={active === "lab-ind-1"}
                   data-on={active === "lab-ind-1" ? "true" : "false"}
-                  onClick={() => setActive("lab-ind-1")}
+                  onClick={() => select("lab-ind-1")}
                 >
                   <span className="v">LAB-IND-1</span>
                   <span className="fam">Mine rate, a formula</span>
@@ -219,6 +227,14 @@ export function PriceLadder() {
             </div>
           );
         })}
+        <button
+          type="button"
+          className="inst-chunk-btn"
+          aria-expanded={showAll}
+          onClick={() => setShowAll((open) => !open)}
+        >
+          {showAll ? "Show this family" : "Show every rung"}
+        </button>
       </div>
 
       {point ? (
@@ -250,5 +266,95 @@ export function PriceLadder() {
         under its number.
       </p>
     </div>
+  );
+}
+
+function NarrowLadder({
+  active,
+  hit,
+}: {
+  active: string;
+  hit: ReturnType<typeof useInstSelect<string>>["hit"];
+}) {
+  const fam =
+    LADDER_FAMILIES.find((family) =>
+      LADDER_POINTS.some((point) => point.family === family.id && point.id === active),
+    ) ??
+    (active === "lab-ind-1"
+      ? LADDER_FAMILIES.find((family) => family.id === "labrador")
+      : undefined) ??
+    LADDER_FAMILIES[0]!;
+  const placed = LADDER_POINTS.filter((point) => point.family === fam.id && point.cents !== null);
+  const missing = LADDER_POINTS.find((point) => point.family === fam.id && point.cents === null);
+  const width = 400;
+  const height = 176;
+  const left = 28;
+  const right = 28;
+  const axisY = 108;
+  const axisW = width - left - right;
+  const xOf = (cents: number) => left + (Math.min(cents, MAX_C) / MAX_C) * axisW;
+  const sides = staggerByX(
+    placed.map((point) => xOf(point.cents!)),
+    72,
+  );
+  const tone = toneClass(fam.tone);
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label={`${fam.label} on the price ladder`}>
+      <title>{fam.label}</title>
+      <text x={left} y={32} className="lbl-read">
+        {fam.short}
+      </text>
+      <text x={width - right} y={32} textAnchor="end" className="lbl">
+        0–18¢
+      </text>
+      <line x1={left} x2={width - right} y1={axisY} y2={axisY} className="hair" />
+      {[0, 9, 18].map((tick) => (
+        <text key={tick} x={xOf(tick)} y={axisY + 46} textAnchor="middle" className="lbl">
+          {tick}¢
+        </text>
+      ))}
+      {missing ? (
+        <g {...hit(missing.id, `${missing.value}, ${missing.label}`)}>
+          <rect
+            x={left}
+            y={axisY - 18}
+            width={axisW}
+            height={36}
+            fill="transparent"
+            className="stroke-alert"
+            strokeDasharray="4 4"
+            strokeWidth={active === missing.id ? 1.5 : 1}
+          />
+          <text x={width / 2} y={axisY + 5} textAnchor="middle" className="num" style={{ fontSize: 14 }}>
+            {missing.value}
+          </text>
+        </g>
+      ) : null}
+      {placed.map((point, index) => {
+        const px = xOf(point.cents!);
+        const label = clampLabelX(px, width, 48);
+        const above = sides[index] !== "below";
+        const on = active === point.id;
+        return (
+          <g key={point.id} {...hit(point.id, `${point.value} cents, ${point.label}`)}>
+            <circle cx={px} cy={axisY} r={18} fill="transparent" />
+            <circle cx={px} cy={axisY} r={on ? 6 : 4} className={tone} />
+            {on ? (
+              <circle cx={px} cy={axisY} r={10} fill="none" stroke="var(--ink)" strokeWidth={1.5} />
+            ) : null}
+            <text
+              x={label.x}
+              y={above ? axisY - 16 : axisY + 22}
+              textAnchor={label.anchor}
+              className="num"
+              style={{ fontSize: 14 }}
+            >
+              {point.value}¢
+            </text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }

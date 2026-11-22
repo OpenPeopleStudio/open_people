@@ -71,7 +71,7 @@ export default function IndustriesPage() {
         <div className="grid gap-4">
           {INDUSTRY_CARDS.map((card) => (
             <section key={card.id} id={card.id} className="desk-surface p-6 sm:p-7" data-rise>
-              <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="desk-pair">
                 <div>
                   <StatusPill status={card.rank} />
                   <h2 className="desk-h3 mt-3">{card.title}</h2>

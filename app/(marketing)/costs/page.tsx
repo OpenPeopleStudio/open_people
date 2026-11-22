@@ -161,7 +161,7 @@ export default function CostsPage() {
           {COST_MARKERS.map((row) => (
             <section key={row.id} id={row.id} className="desk-surface p-6 sm:p-7" data-rise
               style={{ scrollMarginTop: "calc(var(--desk-nav-offset) + 1rem)" }}>
-              <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="desk-pair">
                 <div>
                   <StatusPill status={row.status} />
                   <h3 className="desk-h3 mt-3">{row.label}</h3>

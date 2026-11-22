@@ -12,8 +12,12 @@ export function Fig({ id, children }: { id: "a" | "b" | "c" | "d"; children: Rea
   const set = (e: React.SyntheticEvent<HTMLElement>, on: boolean) => {
     const root = e.currentTarget.closest<HTMLElement>(".unfold");
     if (!root) return;
-    if (on) root.dataset.activeFig = id;
-    else delete root.dataset.activeFig;
+    if (on) {
+      root.dataset.activeFig = id;
+      return;
+    }
+    if (root.dataset.stickFig) root.dataset.activeFig = root.dataset.stickFig;
+    else if (root.dataset.activeFig === id) delete root.dataset.activeFig;
   };
   return (
     <mark
@@ -23,6 +27,17 @@ export function Fig({ id, children }: { id: "a" | "b" | "c" | "d"; children: Rea
       onMouseLeave={(e) => set(e, false)}
       onFocus={(e) => set(e, true)}
       onBlur={(e) => set(e, false)}
+      onClick={(e) => {
+        const root = e.currentTarget.closest<HTMLElement>(".unfold");
+        if (!root) return;
+        if (root.dataset.stickFig === id) {
+          delete root.dataset.stickFig;
+          if (root.dataset.activeFig === id) delete root.dataset.activeFig;
+          return;
+        }
+        root.dataset.stickFig = id;
+        root.dataset.activeFig = id;
+      }}
     >
       {children}
     </mark>

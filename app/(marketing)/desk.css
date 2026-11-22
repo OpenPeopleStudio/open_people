@@ -85,7 +85,7 @@
 
   /* Chrome */
   --nav-h: 3.5rem;
-  --strip-h: 2.75rem;
+  --strip-h: 3.25rem;
   --desk-nav-offset: calc(var(--nav-h) + var(--strip-h));
   --rail-w: 13.5rem;
   --gutter: 1rem;
@@ -450,8 +450,8 @@
 
 .desk-nav-burger {
   margin-left: auto;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -672,6 +672,37 @@
   border-radius: var(--radius-sm);
 }
 
+.desk-pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+}
+
+.desk-pair > :first-child {
+  min-width: min(100%, 16rem);
+  flex: 1 1 16rem;
+}
+
+@media (max-width: 640px) {
+  .desk-pair {
+    flex-direction: column;
+  }
+}
+
+.compute-rules {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .compute-rules {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+  }
+}
+
 .desk-grid-hair {
   display: grid;
   gap: 1px;
@@ -860,8 +891,9 @@
   appearance: none;
   background: transparent;
   border: 0;
-  padding: 0;
-  margin-top: 0.7rem;
+  padding: 0.35rem 0;
+  margin-top: 0.35rem;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -956,6 +988,7 @@
   color: inherit;
   font-variant-numeric: tabular-nums;
   border-bottom: 1px solid transparent;
+  cursor: pointer;
   transition: border-color 200ms ease, color 200ms ease;
 }
 
@@ -1107,12 +1140,20 @@
   appearance: none;
   background: transparent;
   border: 0;
-  padding: 0;
+  padding: 0.15rem 0;
   margin: 0;
+  min-height: 44px;
   text-align: left;
   color: inherit;
   cursor: pointer;
   font: inherit;
+}
+
+.figure-btn[aria-expanded="true"] .figure-value {
+  text-decoration: underline;
+  text-decoration-color: var(--plasma);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
 }
 
 .figure-value {
@@ -1272,13 +1313,15 @@
 
 .desk-strip .walk-launch {
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 11px;
+  min-height: 44px;
 }
 
 .desk-strip .depth button {
-  padding: 0.45rem 0.55rem;
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
+  min-height: 44px;
+  padding: 0 0.55rem;
+  font-size: 10px;
+  letter-spacing: 0.06em;
 }
 
 /* Never let a stray overflow widen the mobile layout viewport. */
@@ -1361,6 +1404,8 @@ html:has(.desk-root) {
   --inst-ink-2: var(--ink-3);
   --inst-line: var(--hairline-strong);
   position: relative;
+  container-type: inline-size;
+  container-name: inst;
 }
 
 .inst svg {
@@ -1370,36 +1415,20 @@ html:has(.desk-root) {
   overflow: visible;
 }
 
-/* On phones the 1000-unit drawings scroll sideways instead of shrinking
-   their labels below legibility. The legend lists under each stay in flow. */
-.inst-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+/* Stacked drawing under 800px of the instrument. The wide drawing stays
+   when the column can hold it. No sideways scroll. */
+
+.inst-fit-narrow {
+  display: none;
 }
 
-@media (max-width: 719px) {
-  .inst-scroll > svg {
-    min-width: 880px;
-  }
-  .inst-scroll {
-    margin-inline: calc(-1 * var(--gutter));
-    padding-inline: var(--gutter);
-  }
-  .inst-scroll-hint {
-    display: block;
-    margin-top: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-  }
-}
-
-@media (min-width: 720px) {
-  .inst-scroll-hint {
+@container inst (max-width: 800px) {
+  .inst-fit-wide {
     display: none;
+  }
+
+  .inst-fit-narrow {
+    display: block;
   }
 }
 
@@ -1410,10 +1439,17 @@ html:has(.desk-root) {
 }
 
 .inst .lbl {
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  fill: var(--inst-ink-2);
+  fill: var(--ink-2);
+}
+
+.inst .lbl-read {
+  font-size: 15px;
+  letter-spacing: 0;
+  text-transform: none;
+  fill: var(--ink);
 }
 
 .inst .lbl-strong {
@@ -1500,6 +1536,45 @@ html:has(.desk-root) {
 @keyframes inst-draw {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+.inst .bar-grow {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: bar-in 680ms ease-out both;
+}
+
+.inst .bar-rise {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: bar-rise 680ms ease-out both;
+}
+
+@keyframes bar-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes bar-rise {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes inst-read {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -1629,6 +1704,10 @@ html:has(.desk-root) {
   gap: 2rem;
 }
 
+.unknown-count {
+  animation: inst-read 420ms ease-out both;
+}
+
 @media (min-width: 900px) {
   .unknown-board {
     grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
@@ -1647,14 +1726,21 @@ html:has(.desk-root) {
 .unknown-slot {
   display: grid;
   grid-template-columns: 6.5rem 1fr;
-  gap: 1rem;
+  gap: 0.35rem 1rem;
   align-items: start;
+  min-height: 44px;
   padding: 0.85rem 1rem;
   border: 1px dashed rgba(224, 122, 95, 0.6);
   border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;
   transition: border-color 150ms ease, background 150ms ease;
+}
+
+@media (max-width: 560px) {
+  .unknown-slot {
+    grid-template-columns: 1fr;
+  }
 }
 
 .unknown-slot:hover {
@@ -1784,6 +1870,7 @@ html:has(.desk-root) {
 button.ladder-row {
   width: 100%;
   margin: 0;
+  min-height: 44px;
   background: transparent;
   color: inherit;
   font: inherit;
@@ -1794,8 +1881,54 @@ button.ladder-row {
   border-top: 0;
 }
 
+@media (hover: hover) {
+  button.ladder-row:hover {
+    background: var(--surface-1);
+  }
+
+  button.ladder-row:hover .v {
+    color: var(--ink);
+  }
+}
+
 button.ladder-row[data-on="true"] {
-  box-shadow: inset 2px 0 0 var(--ink);
+  box-shadow: inset 3px 0 0 var(--plasma);
+  background: var(--surface-1);
+}
+
+.ladder-rows:not([data-all="true"]) .ladder-group:not([data-open="true"]) .ladder-row,
+.ladder-rows:not([data-all="true"]) .ladder-group:not([data-open="true"]) .ladder-group-measures {
+  display: none;
+}
+
+.ladder-family,
+.inst-chunk-btn {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.75rem 0 0.75rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ladder-family[data-on="true"],
+.inst-chunk-btn[aria-expanded="true"] {
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--plasma);
 }
 
 button.ladder-row[data-on="true"] .v,
@@ -1813,7 +1946,7 @@ button.ladder-row[data-on="true"] .fam {
   outline-offset: 3px;
 }
 
-.inst-hit[data-on="true"] > rect {
+.inst-hit[data-on="true"] > rect:not([fill="transparent"]) {
   stroke: var(--ink);
   stroke-width: 1.5px;
 }
@@ -1823,6 +1956,10 @@ button.ladder-row[data-on="true"] .fam {
   padding-top: 0.9rem;
   border-top: 1px solid var(--hairline);
   max-width: 68ch;
+}
+
+.inst-detail-live {
+  animation: inst-read 240ms ease-out both;
 }
 
 .inst-detail-kicker {
@@ -1857,9 +1994,11 @@ button.ladder-row[data-on="true"] .fam {
 .inst-choice {
   appearance: none;
   width: 100%;
+  min-height: 44px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.25rem 1rem;
   align-items: baseline;
   padding: 0.8rem 0;
   border: 0;
@@ -1873,7 +2012,7 @@ button.ladder-row[data-on="true"] .fam {
 
 .inst-choice[aria-pressed="true"] {
   color: var(--ink);
-  box-shadow: inset 2px 0 0 var(--ink);
+  box-shadow: inset 3px 0 0 var(--plasma);
   padding-left: 0.75rem;
 }
 
@@ -1882,7 +2021,7 @@ button.ladder-row[data-on="true"] .fam {
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--ink-3);
-  white-space: nowrap;
+  text-align: right;
 }
 
 /* ─── Tracker board & contested strip ────────────────────────────────────── */
@@ -1914,6 +2053,16 @@ button.ladder-row[data-on="true"] .fam {
   gap: 0.75rem;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--hairline);
+}
+
+@media (max-width: 1099px) {
+  .desk-board-head {
+    position: sticky;
+    top: var(--desk-nav-offset);
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.94);
+    padding-top: 0.65rem;
+  }
 }
 
 .desk-board-stack {
@@ -1979,6 +2128,14 @@ button.ladder-row[data-on="true"] .fam {
   }
   .inst .draw {
     stroke-dashoffset: 0;
+  }
+  .inst .bar-grow,
+  .inst .bar-rise,
+  .inst-detail-live,
+  .unknown-count {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -2079,6 +2236,12 @@ button.ladder-row[data-on="true"] .fam {
   gap: var(--space-3);
   padding: var(--space-6) 0;
   border-bottom: 1px solid var(--hairline);
+}
+
+@media (hover: hover) {
+  .board-row:hover {
+    box-shadow: inset 2px 0 0 var(--ink);
+  }
 }
 
 .board-row > * {

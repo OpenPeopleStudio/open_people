@@ -19,7 +19,7 @@ export function UnknownBoard({
     <div className="unknown-board">
       <div>
         <p
-          className="desk-num-xl"
+          className="desk-num-xl unknown-count"
           style={{ color: "var(--alert)" }}
           aria-hidden
         >

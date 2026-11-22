@@ -1,5 +1,18 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { wrapLabel, type LabelAnchor } from "./layout";
+
+/**
+ * Wide drawing when the instrument has room; stacked drawing when it does not.
+ * CSS switches on the container, so the first paint does not scroll sideways.
+ */
+export function InstFit({ wide, narrow }: { wide: ReactNode; narrow: ReactNode }) {
+  return (
+    <div className="inst-fit">
+      <div className="inst-fit-wide">{wide}</div>
+      <div className="inst-fit-narrow">{narrow}</div>
+    </div>
+  );
+}
 
 /** Multiline SVG label, vertically centred on `y`. */
 export function SvgLines({

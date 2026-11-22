@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { DESK_SOURCES, DESK_VERIFIED } from "@/lib/desk";
-import { InstDetail, instHit, type InstFigure } from "./InstDetail";
+import { InstDetail, useInstSelect, type InstFigure } from "./InstDetail";
+import { InstFit } from "./svg";
 
 /**
  * I5 — Corridor Schematic. Not a map. The drawing shows the route and one
@@ -65,7 +65,7 @@ const PARTS: Record<
 };
 
 export function CorridorSchematic() {
-  const [active, setActive] = useState<PartId>("west");
+  const { active, hit } = useInstSelect<PartId>("west");
   const W = 1000;
   const H = 400;
   const lw = { x: 150, y: 128 };
@@ -77,7 +77,8 @@ export function CorridorSchematic() {
 
   return (
     <div className="inst corridor">
-      <div className="inst-scroll">
+      <InstFit
+        wide={
         <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="The corridor the mines need">
           <title id="cs-title">The corridor the mines need</title>
           <desc id="cs-desc">
@@ -113,7 +114,7 @@ export function CorridorSchematic() {
             at limit
           </text>
 
-          <g {...instHit("proposed", "735 kV proposed", active, setActive)}>
+          <g {...hit("proposed", "735 kV proposed")}>
             <rect x={lw.x - 20} y={lw.y + 32} width={cf.x - lw.x + 40} height={150} fill="transparent" />
             <line
               x1={lw.x}
@@ -186,7 +187,7 @@ export function CorridorSchematic() {
             strokeWidth={1.5}
           />
 
-          <g transform={`translate(${lw.x} ${lw.y})`} {...instHit("west", "Labrador West", active, setActive)}>
+          <g transform={`translate(${lw.x} ${lw.y})`} {...hit("west", "Labrador West")}>
             <rect
               x={-44}
               y={-32}
@@ -204,7 +205,7 @@ export function CorridorSchematic() {
             </text>
           </g>
 
-          <g transform={`translate(${cf.x} ${cf.y})`} {...instHit("plant", "Churchill Falls", active, setActive)}>
+          <g transform={`translate(${cf.x} ${cf.y})`} {...hit("plant", "Churchill Falls")}>
             <rect
               x={-44}
               y={-32}
@@ -225,7 +226,7 @@ export function CorridorSchematic() {
             </text>
           </g>
 
-          <g transform={`translate(${qc.x} ${qc.y})`} {...instHit("export", "Québec", active, setActive)}>
+          <g transform={`translate(${qc.x} ${qc.y})`} {...hit("export", "Québec")}>
             <rect
               x={-50}
               y={-32}
@@ -241,7 +242,7 @@ export function CorridorSchematic() {
             </text>
           </g>
 
-          <g transform={`translate(${hvgb.x} ${hvgb.y})`} {...instHit("town", "Happy Valley–Goose Bay", active, setActive)}>
+          <g transform={`translate(${hvgb.x} ${hvgb.y})`} {...hit("town", "Happy Valley–Goose Bay")}>
             <circle
               r={5}
               fill="var(--surface-2)"
@@ -253,15 +254,65 @@ export function CorridorSchematic() {
             </text>
           </g>
         </svg>
-        <span className="inst-scroll-hint" aria-hidden>
-          scroll sideways →
-        </span>
-      </div>
+        }
+        narrow={<NarrowCorridor active={active} hit={hit} />}
+      />
 
       <InstDetail {...PARTS[active]} />
       <p className="inst-caption">
         Schematic only. Line lengths and positions are not a map. Select a part. Open the number for its source.
       </p>
     </div>
+  );
+}
+
+function NarrowCorridor({
+  active,
+  hit,
+}: {
+  active: PartId;
+  hit: ReturnType<typeof useInstSelect<PartId>>["hit"];
+}) {
+  const width = 400;
+  const cards: { id: PartId; y: number; h: number; title: string; value?: string | undefined }[] = [
+    { id: "west", y: 12, h: 76, title: "Labrador West", value: PARTS.west.figure?.value },
+    { id: "proposed", y: 132, h: 64, title: "735 kV proposed", value: PARTS.proposed.figure?.value },
+    { id: "plant", y: 248, h: 76, title: "Churchill Falls", value: PARTS.plant.figure?.value },
+    { id: "export", y: 348, h: 64, title: "Québec", value: PARTS.export.figure?.value },
+    { id: "town", y: 436, h: 56, title: "Happy Valley–Goose Bay" },
+  ];
+  return (
+    <svg viewBox={`0 0 ${width} 508`} role="group" aria-label="The corridor the mines need">
+      <title>The corridor, top to bottom</title>
+      <text x={28} y={112} className="lbl">
+        2 × 230 kV · at limit
+      </text>
+      <text x={28} y={224} className="lbl">
+        export east
+      </text>
+      {cards.map((card) => {
+        const on = active === card.id;
+        return (
+          <g key={card.id} {...hit(card.id, card.value ? `${card.title}, ${card.value}` : card.title)}>
+            <rect
+              x={12}
+              y={card.y}
+              width={width - 24}
+              height={card.h}
+              fill={on ? "var(--surface-2)" : "var(--surface-1)"}
+              stroke="var(--hairline-strong)"
+            />
+            <text x={28} y={card.y + (card.value ? 28 : 34)} className="lbl-read">
+              {card.title}
+            </text>
+            {card.value ? (
+              <text x={28} y={card.y + 54} className="num" style={{ fontSize: 18 }}>
+                {card.value}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </svg>
   );
 }
