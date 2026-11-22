@@ -930,8 +930,9 @@ export default function BriefPage() {
                 plain={
                   <p className="desk-takeaway">
                     <Term k="innu-nation">Innu Nation</Term> wrote MHAs on 17 September urging a no
-                    vote, and says the paper cuts its benefits by more than half. On 21 September the
-                    Grand Chief said the Innu are ready to meet. No meeting is scheduled. Grand Chief
+                    vote, and says the paper cuts its benefits by more than half. On 4 November the
+                    Grand Chief and the Premier met in St. John&apos;s after she confronted him at a
+                    mining conference. Further talks are to be in Sheshatshiu. Grand Chief
                     Ashini of Innu Nation has said Innu were{" "}
                     <a
                       href={DESK_SOURCES.vocmInnuContact.href}
