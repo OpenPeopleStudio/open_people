@@ -429,7 +429,7 @@ export default function BriefPage() {
               vote does not create contracts. Binding agreements are targeted around{" "}
               <Fig id="c">31 December 2026</Fig>. That date is a goal and can slip. The framework
               can run to <Fig id="d">31 March 2027</Fig>. Québec elected a Parti Québécois minority
-              on 5 October. Its cabinet was due to be sworn in on 21 October, and the National Assembly
+              on 5 October. Its cabinet was sworn in on 21 October, and the National Assembly
               returned on 17 November. On 28 October the House voted 16–21 against a motion to bring
               the final agreements back for a vote. CBC and VOCM reported that on 13 November
               Québec&apos;s energy minister said the deal is not set in stone, and that on 16 November
@@ -1358,7 +1358,7 @@ export default function BriefPage() {
             title="Nothing large proceeds without Innu consent, nor should it"
             label="consent"
             status={INNU.status}
-            plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. The Premier says he looks forward to sitting down; as of 21 September nothing is scheduled. That is a start, not consent, and not a partnership structure."
+            plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. On 4 November the Premier and the Grand Chief met in St. John’s; further talks are to be in Sheshatshiu. That meeting is not consent, and not a partnership structure."
             requires="Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
             technical={INNU.body.technical}
             caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not an item in our source registry."

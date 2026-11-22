@@ -1204,8 +1204,10 @@ export default function CoalitionPage() {
                 <>
                   <Term k="innu-nation">Innu Nation</Term> partnership, royalty and Gull Island
                   tariff path are unresolved after the vote. Innu Nation says its benefits were cut
-                  by more than half; no meeting is scheduled. Innu communities on the Québec side say
-                  their consent is mandatory too. We engage on their timeline, not ours.
+                  by more than half. On 4 November the Premier and the Grand Chief met in St.
+                  John&apos;s; further talks are to be in Sheshatshiu. That meeting is not consent.
+                  Innu communities on the Québec side say their consent is mandatory too. We engage
+                  on their timeline, not ours.
                 </>
               }
               technical={

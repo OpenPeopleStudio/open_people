@@ -123,6 +123,27 @@ export const DESK_SOURCES = {
     date: "2026-09-21",
     kind: "press",
   },
+  vocmInnuNov4: {
+    id: "vocm-innu-1104",
+    label: "VOCM — Grand Chief confronts the Premier at the Minerals Resource Review, 4 Nov 2026",
+    href: "https://vocm.com/2026/11/04/315614/",
+    date: "2026-11-04",
+    kind: "press",
+  },
+  vocmInnuMeet: {
+    id: "vocm-innu-meet",
+    label: "VOCM — Wakeham meets Innu Nation; further talks in Sheshatshiu, 4 Nov 2026",
+    href: "https://vocm.com/2026/11/04/315670/",
+    date: "2026-11-04",
+    kind: "press",
+  },
+  ntvInnuNov4: {
+    id: "ntv-innu-1104",
+    label: "NTV — Premier met the Grand Chief at a St. John’s mining conference; no resolution, 4 Nov 2026",
+    href: "https://ntv.ca/news/innu-nation-confronts-premier-about-historical-timelines-churchill-falls-at-mining-conference/",
+    date: "2026-11-04",
+    kind: "press",
+  },
   radioCanadaInnu: {
     id: "rc-innu-royalties",
     label: "Radio-Canada — Innu Nation says DCIA cuts benefits by more than half vs the 2024 MOU, 18 Sep 2026",
@@ -200,6 +221,13 @@ export const DESK_SOURCES = {
     date: "2026-10-13",
     kind: "press",
   },
+  cbcQcCabinet: {
+    id: "cbc-qc-cabinet",
+    label: "CBC — Paul St-Pierre Plamondon sworn in with a 23-minister cabinet, 21 Oct 2026",
+    href: "https://www.cbc.ca/news/canada/montreal/livestory/quebec-cabinet-swearing-in-ceremony-live-paul-st-pierre-plamondon-2026-9.7389054",
+    date: "2026-10-21",
+    kind: "press",
+  },
   assnatReturn: {
     id: "assnat-return",
     label: "National Assembly of Québec — summoned 17 Nov 2026, 2 p.m.",
@@ -213,6 +241,20 @@ export const DESK_SOURCES = {
     href: "https://www.assembly.nl.ca/HouseBusiness/Hansard/ga51session1/PDFs/2026-10-28.pdf",
     date: "2026-10-28",
     kind: "primary",
+  },
+  govNlSmith: {
+    id: "govnl-1028",
+    label: "Government of NL — Gary Smith lead negotiator; definitive agreements tabled once completed, 28 Oct 2026",
+    href: "https://www.gov.nl.ca/releases/2026/exec/1028n03/",
+    date: "2026-10-28",
+    kind: "primary",
+  },
+  saltwireHouseOct28: {
+    id: "saltwire-house-1028",
+    label: "Saltwire/Telegram — debate after the agreements are finalized; no vote to pass them; March window, 28 Oct 2026",
+    href: "https://www.saltwire.com/newfoundland-labrador/churchill-falls-wont-go-back-to-legislature",
+    date: "2026-10-28",
+    kind: "press",
   },
   cbcPaquet16Nov: {
     id: "cbc-paquet-1116",

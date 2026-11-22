@@ -68,25 +68,25 @@ export const GATES: Gate[] = [
     body: {
       plain: "Québec elected a Parti Québécois minority. Churchill Falls came up in the transition meeting. No decision.",
       technical:
-        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet 21 Oct; National Assembly 17 Nov.",
+        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet sworn in 21 Oct (23 ministers, CBC). National Assembly 17 Nov.",
     },
     trackerId: "qc-gate",
-    sources: ["qcElectionResult", "lactualiteTransition", "assnatReturn"],
+    sources: ["qcElectionResult", "lactualiteTransition", "cbcQcCabinet", "assnatReturn"],
   },
   {
     id: "qc-cabinet",
     date: "2026-10-21",
-    label: "Québec cabinet date (passed)",
+    label: "Québec cabinet sworn in",
     short: "21 Oct",
     status: "open",
     kind: "fixed",
     body: {
-      plain: "The date the new Québec cabinet was due to be sworn in. It has passed.",
+      plain: "Paul St-Pierre Plamondon and a 23-minister cabinet were sworn in. Churchill Falls still has no public decision from the new government.",
       technical:
-        "Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon is to be sworn in with his cabinet on 21 October. No public decision on Churchill Falls at the 13 October transition meeting.",
+        "CBC, 21 Oct 2026: Paul St-Pierre Plamondon was sworn in as premier with a cabinet of 23 ministers. Canadian Press via L’actualité, 13 Oct 2026: no public decision on Churchill Falls at the transition meeting. Whether a due-diligence review changes the Material Terms: UNKNOWN.",
     },
     trackerId: "qc-gate",
-    sources: ["lactualiteTransition"],
+    sources: ["cbcQcCabinet", "lactualiteTransition"],
   },
   {
     id: "qc-assembly",

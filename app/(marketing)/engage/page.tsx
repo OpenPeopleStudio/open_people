@@ -93,13 +93,20 @@ const OPEN = [
     plain: (
       <>
         <Term k="innu-nation">Innu Nation</Term> urged MHAs not to vote and says the paper cuts its
-        benefits by more than half. The Premier says he looks forward to sitting down; as of 21
-        September nothing is scheduled. Royalty and Gull Island tariff path remain unsettled. Nothing
-        large in Labrador proceeds without that work.
+        benefits by more than half. On 4 November the Grand Chief confronted the Premier at a St.
+        John&apos;s mining conference and they met the same morning. Further talks are to be in
+        Sheshatshiu. Royalty and Gull Island tariff path remain unsettled. Nothing large in Labrador
+        proceeds without that work.
       </>
     ),
     technical: TRACKER_ITEMS.find((i) => i.id === "innu")?.body.technical ?? "",
-    sources: [DESK_SOURCES.vocmInnuContact, DESK_SOURCES.radioCanadaInnu, DESK_SOURCES.vocmInnuReady],
+    sources: [
+      DESK_SOURCES.vocmInnuContact,
+      DESK_SOURCES.radioCanadaInnu,
+      DESK_SOURCES.vocmInnuReady,
+      DESK_SOURCES.vocmInnuMeet,
+      DESK_SOURCES.ntvInnuNov4,
+    ],
   },
   {
     id: "eng-federal",

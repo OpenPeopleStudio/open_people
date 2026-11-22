@@ -56,15 +56,15 @@ export const TRACKER_ITEMS: DeskItem[] = [
     when: "18 Sep · 28 Oct 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
-    href: "https://ntv.ca/politics/breaking-house-of-assembly-votes-in-favour-of-churchill-falls-deal-21-18/",
-    hrefLabel: "NTV — Premier on next steps",
+    href: "https://www.gov.nl.ca/releases/2026/exec/1028n03/",
+    hrefLabel: "Government of NL, 28 Oct",
     body: {
       plain:
-        "The Premier has not said MHAs will get a vote on the binding contracts. On 28 October an Opposition motion asked for a debate and vote on the final agreements before they are signed. It was defeated 16–21.",
+        "On 28 October the government said the finished contracts will be tabled, with briefings and a proposed special debate. It has not promised MHAs a vote before those contracts are completed. Gary Smith is lead negotiator. Barry Perry stays on as special advisor. On 28 October an Opposition motion asked for a debate and vote on the final agreements before they are signed. It was defeated 16–21.",
       technical:
-        "On 18 September 2026 Premier Wakeham would not commit to a vote on the definitive agreements (NTV; VOCM). The Oversight Committee (Dan Levert, Julia Mullaley, Mike Jardine) stays on. Liberal leader Hogan called the absence of a further approval mechanism “discouraging”; NDP leader Dinn noted movement on PUB involvement. The NDP’s three unmet conditions (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. Hansard, 28 Oct 2026, p. 2886: Official Opposition private Member’s resolution (J. Hogan) asking that final DCIA / Churchill River agreements come to the House for debate and a vote before they are signed or binding; defeated on Division, ayes 16, nays 21. UNKNOWN: whether the definitive agreements will be voted on.",
+        "On 18 September 2026 Premier Wakeham would not commit to a vote on the definitive agreements (NTV; VOCM). The Oversight Committee (Dan Levert, Julia Mullaley, Mike Jardine) stays on. Liberal leader Hogan called the absence of a further approval mechanism “discouraging”; NDP leader Dinn noted movement on PUB involvement. The NDP’s three unmet conditions (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. On 28 October the Government of NL said that, once completed, the definitive agreements will be tabled, Members will get technical briefings, and government will propose a special debate. The three Oversight Committee members continue. The province is reviewing recommendations from the Chair of the PUB on adding members to that committee. Barry Perry moves from lead negotiator to Special Advisor. Gary Smith, former executive vice-president of operations and technology at Fortis Inc. and former president and CEO of Newfoundland Power, is lead negotiator. Hansard, 28 Oct 2026, p. 2886: Official Opposition private Member’s resolution (J. Hogan) asking that final DCIA / Churchill River agreements come to the House for debate and a vote before they are signed or binding; defeated on Division, ayes 16, nays 21. Saltwire/Telegram, 28 Oct 2026 (REPORTED): debate after the agreements are finalized; no vote to pass them. UNKNOWN: whether the definitive agreements will be voted on.",
     },
-    sources: ["ntvVote", "vocmOpposition", "ndpConditions", "hansard28Oct"],
+    sources: ["ntvVote", "vocmOpposition", "ndpConditions", "hansard28Oct", "govNlSmith", "saltwireHouseOct28"],
   },
   {
     id: "binding-window",
@@ -85,21 +85,22 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "qc-gate",
     title: "Québec elected a PQ minority",
-    when: "5 Oct 2026 · 13–16 Nov",
+    when: "5 Oct 2026 · 21 Oct · 13–16 Nov",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://www.cbc.ca/news/canada/montreal/livestory/quebec-election-2026-results-9.7369473",
     hrefLabel: "CBC election night",
     body: {
       plain:
-        "Québec elected a Parti Québécois minority on 5 October. St-Pierre Plamondon met Fréchette on 13 October; Churchill Falls came up; no decision was announced. Cabinet was due to be sworn in on 21 October. The National Assembly returned on 17 November. On 13 November Québec’s energy minister said the deal is not set in stone. On 16 November Premier Wakeham said it will not be renegotiated, and the negotiating teams are back at work on the final contracts.",
+        "Québec elected a Parti Québécois minority on 5 October. St-Pierre Plamondon met Fréchette on 13 October; Churchill Falls came up; no decision was announced. He was sworn in with a 23-minister cabinet on 21 October. The National Assembly returned on 17 November. On 13 November Québec’s energy minister said the deal is not set in stone. On 16 November Premier Wakeham said it will not be renegotiated, and the negotiating teams are back at work on the final contracts.",
       technical:
-        "CBC, 5 Oct 2026: Parti Québécois projected 59 of 127 seats, a minority government. Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon met outgoing premier Christine Fréchette for a transition meeting of under an hour; he listed Churchill Falls among the subjects; they made statements and took no questions; no decision on the deal. Same CP report: cabinet to be sworn in 21 October. National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. CBC, 16 Nov 2026 (REPORTED): Energy Minister Stéphane Paquet told Montreal radio 98.5FM on 13 November that the deal is not set in stone; Premier Wakeham told the House on 16 November, “The deal will not be renegotiated.” VOCM, 16 Nov 2026, reports the same exchange. Whether the PQ’s promised due-diligence review, or any Assembly vote, changes the Material Terms: UNKNOWN.",
+        "CBC, 5 Oct 2026: Parti Québécois projected 59 of 127 seats, a minority government. Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon met outgoing premier Christine Fréchette for a transition meeting of under an hour; he listed Churchill Falls among the subjects; they made statements and took no questions; no decision on the deal. CBC, 21 Oct 2026 (REPORTED): he was sworn in as premier with a cabinet of 23 ministers. National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. CBC, 16 Nov 2026 (REPORTED): Energy Minister Stéphane Paquet told Montreal radio 98.5FM on 13 November that the deal is not set in stone; Premier Wakeham told the House on 16 November, “The deal will not be renegotiated.” VOCM, 16 Nov 2026, reports the same exchange. Whether the PQ’s promised due-diligence review, or any Assembly vote, changes the Material Terms: UNKNOWN.",
     },
     sources: [
       "qcElectionResult",
       "lactualiteTransition",
       "assnatReturn",
+      "cbcQcCabinet",
       "cbcWilliamsTerms",
       "qcElection",
       "cbcPaquet16Nov",
@@ -203,16 +204,16 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "innu",
     title: "Innu Nation issues still open",
-    when: "15–21 Sep 2026",
+    when: "4 Nov 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
-    href: "https://vocm.com/2026/09/21/premier-has-yet-to-contact-innu-about-hydro-deal-says-grand-chief/",
-    hrefLabel: "VOCM — Grand Chief, 21 Sep",
+    href: "https://vocm.com/2026/11/04/315670/",
+    hrefLabel: "VOCM — meeting, 4 Nov",
     body: {
       plain:
-        "Innu Nation urged MHAs not to vote and says the paper cuts its benefits by more than half. The Premier said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open. As of 21 September the Grand Chief said the Innu are ready to meet, no meeting is scheduled, and it is always the Innu reaching out. Nothing large on that land proceeds without that work.",
+        "Innu Nation urged MHAs not to vote and says the paper cuts its benefits by more than half. On 4 November the Grand Chief confronted the Premier at a St. John’s mining conference and they met the same morning. Further talks are to be in Sheshatshiu. Partnership remains open. Nothing large on that land proceeds without that work.",
       technical:
-        "On 15 September 2026 Innu Nation, Sheshatshiu and Natuashish wrote asserting Churchill River waterway rights (VOCM). On 17 September Innu Nation wrote MHAs urging a no vote, delivered minutes before the vote, citing serious concerns over Gull Island payments; Grand Chief Jodie Ashini said benefits were cut “by over half” versus the 2024 MOU (CBC; Radio-Canada 18 Sep; no figures released). Premier Wakeham said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open — not a ratified Innu Nation partnership, royalty, or GI tariff path. VOCM (21 Sep): Ashini said Premier Wakeham has yet to contact the Innu Nation after the House vote — “it’s always us reaching out to him” — that the Innu are “ready and willing to meet”, and that Grand Chief Ashini of Innu Nation has said Innu were “never invited to the table”. Independent MHA Keith Russell (Lake Melville) cited “ultimate disrespect” to the Innu in explaining his no vote. DCIA fundamental principles commit the parties to consulting Indigenous communities. Contact gap and partnership path: unresolved.",
+        "On 15 September 2026 Innu Nation, Sheshatshiu and Natuashish wrote asserting Churchill River waterway rights (VOCM). On 17 September Innu Nation wrote MHAs urging a no vote, delivered minutes before the vote, citing serious concerns over Gull Island payments; Grand Chief Jodie Ashini said benefits were cut “by over half” versus the 2024 MOU (CBC; Radio-Canada 18 Sep; no figures released). Premier Wakeham said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open — not a ratified Innu Nation partnership, royalty, or GI tariff path. VOCM (21 Sep): Ashini said Premier Wakeham has yet to contact the Innu Nation after the House vote — “it’s always us reaching out to him” — that the Innu are “ready and willing to meet”, and that Grand Chief Ashini of Innu Nation has said Innu were “never invited to the table”. Independent MHA Keith Russell (Lake Melville) cited “ultimate disrespect” to the Innu in explaining his no vote. VOCM, 4 Nov 2026: at the Minerals Resource Review, Delta Hotel, St. John’s, Ashini said Churchill Falls will not go ahead unless the Innu get their meeting, and raised the province’s contention that Innu presence in Labrador dates back 300 years. Wakeham then met Innu Nation for nearly two hours. He said “I have not spoken about 300 years, nor do I intend to,” that the Innu had requested the meeting on the Monday and the government agreed, and that further talks would be in Sheshatshiu. Ashini said the Innu are not against the project, are not an afterthought, and have not been at the table. NTV, 4 Nov: they met; there is still no resolution. DCIA fundamental principles commit the parties to consulting Indigenous communities. Partnership path: unresolved; not a ratified partnership.",
     },
     sources: [
       "vocmInnu",
@@ -222,6 +223,9 @@ export const TRACKER_ITEMS: DeskItem[] = [
       "radioCanadaInnu",
       "vocmInnuWaterway",
       "vocmRussell",
+      "vocmInnuNov4",
+      "vocmInnuMeet",
+      "ntvInnuNov4",
       "dciaHq",
     ],
   },
