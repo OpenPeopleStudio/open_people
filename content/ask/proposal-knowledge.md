@@ -139,7 +139,7 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 - Phase 1: eight months from start, one go/no-go at month 8. (ESTIMATE)
 - Funding for Phase 1 is not secured. (CONFIRMED)
 - Team wages and payroll costs (six hires): C$307,481 (48%). (ESTIMATE)
-- CEO salary, Tom Lane (Job Bank NL low wage, senior business managers, C$65.87/h, with payroll costs): C$96,885 (15%). (ESTIMATE)
+- Founder salary: C$96,885 (15%). (ESTIMATE)
 - Independent third-party validation: C$48,429 (8%). (ESTIMATE)
 - Labrador fieldwork and market-sounding travel: C$62,322 (10%). (ESTIMATE)
 - Legal and report production: C$21,300 (3%). (ESTIMATE)
