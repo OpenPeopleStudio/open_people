@@ -145,7 +145,7 @@ The proposal calls this "bring your own compute" (BYOC). It is a form of colocat
 - Legal and report production: C$21,300 (3%). (ESTIMATE)
 - Team laptops, phones, mobile plans and AI/API services: C$47,918 (7%). (ESTIMATE)
 - Contingency (10%): C$58,433 (9%). (ESTIMATE)
-- Total: C$642,768. Wages and payroll including CEO: C$404,366 (63%). (ESTIMATE)
+- Total: C$642,768. Wages and payroll including founder: C$404,366 (63%). (ESTIMATE)
 - Range: lean C$256,964 to full C$904,311. (ESTIMATE)
 
 ### The wider funding stack (if Phase 1 says go)
@@ -234,7 +234,7 @@ Scored pass or fail at month 8. Gates 1 to 6 must all pass for a go. Gate 7 pick
 - During Phase 1: about six skilled jobs in St. John's for eight months, at Job Bank median wages or better. (ESTIMATE, recommended scenario)
 - Lean scope would mean four half-time roles; full scope seven. (ESTIMATE)
 - Planned Phase 1 roles: energy and grid analyst; data-centre engineer; financial and economic analyst; Indigenous relations and community lead; research-campus programme lead; project coordinator. Tom Lane leads. (CONFIRMED as the hiring plan) None of these hires has been made. Roles start only if funding is approved.
-- Wages and payroll in NL during Phase 1, including the CEO, are 63% of the Phase 1 budget. (ESTIMATE)
+- Wages and payroll in NL during Phase 1, including the founder, are 63% of the Phase 1 budget. (ESTIMATE)
 - Spending in Labrador communities during fieldwork. (CONFIRMED as planned; amount ESTIMATE)
 - Construction and operations jobs later: not yet estimated for NL. That is a Phase 1 deliverable. (UNKNOWN)
 - Comparables elsewhere, not a forecast: from almost 400 operations jobs, including indirect ones, for 230 MW in Narvik, to 580 per 100 MW in a Pembina Institute study. (REPORTED)
