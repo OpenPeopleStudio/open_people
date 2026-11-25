@@ -433,7 +433,10 @@ export default function BriefPage() {
               returned on 17 November. On 28 October the House voted 16–21 against a motion to bring
               the final agreements back for a vote. CBC and VOCM reported that on 13 November
               Québec&apos;s energy minister said the deal is not set in stone, and that on 16 November
-              the Premier said it will not be renegotiated. The province&apos;s stated industrial use is critical minerals. Mining
+              the Premier said it will not be renegotiated. On 17 November the Premier said he would
+              be patient while Québec reviews the deal. A meeting with Québec&apos;s premier is being
+              arranged. On 18 November the energy minister said the 31 December goal and 31 March
+              fallback have not changed. The province&apos;s stated industrial use is critical minerals. Mining
               matters, and it is first — a real constraint. Open People proposes to build a 500 MW
               Labrador AI campus on the same power. That campus is not confirmed as reserved megawatts, price,
               queue or policy preference.
@@ -932,7 +935,10 @@ export default function BriefPage() {
                     <Term k="innu-nation">Innu Nation</Term> wrote MHAs on 17 September urging a no
                     vote, and says the paper cuts its benefits by more than half. On 4 November the
                     Grand Chief and the Premier met in St. John&apos;s after she confronted him at a
-                    mining conference. Further talks are to be in Sheshatshiu. Grand Chief
+                    mining conference. Further talks are to be in Sheshatshiu. On 19 November the
+                    Premier told the House that ministers met the Grand Chief that day. Innu Nation
+                    has not said publicly what was discussed. The Sheshatshiu visit has no public
+                    date. That is contact, not consent. Grand Chief
                     Ashini of Innu Nation has said Innu were{" "}
                     <a
                       href={DESK_SOURCES.vocmInnuContact.href}
@@ -1162,7 +1168,10 @@ export default function BriefPage() {
                 <p className="desk-takeaway">
                   Budget 2026 says Ottawa will enable Canadian AI companies to access 500 MW of
                   sovereign AI compute through new financial tools, such as backstops and offtake
-                  agreements. That is a plan, not a call for projects. Separately, ISED ran a call for 100 MW-plus data-centre projects from 15 January to 15 February
+                  agreements. That is a plan, not a call for projects. CBC reported on 20 November that
+                  an ISED spokesperson said it would be premature to confirm specific timelines,
+                  projects or locations, and that pricing and access arrangements have not yet been
+                  decided. Separately, ISED ran a call for 100 MW-plus data-centre projects from 15 January to 15 February
                   2026. That intake is closed. It can lead to a non-binding MOU, not a contract and
                   not funding. A separate program, the Canadian Sovereign AI Compute Strategy, is a
                   $2 billion Budget 2024 plan. ISED lists Indigenous participation as one of the 100
@@ -1196,6 +1205,7 @@ export default function BriefPage() {
                 "isedLargeScale",
                 "isedLargeScaleIntake",
                 "isedSovereignStrategy",
+                "cbcSovereignCompute20Nov",
               ])}
             />
           </div>
@@ -1359,7 +1369,7 @@ export default function BriefPage() {
             title="Nothing large proceeds without Innu consent, nor should it"
             label="consent"
             status={INNU.status}
-            plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. On 4 November the Premier and the Grand Chief met in St. John’s; further talks are to be in Sheshatshiu. That meeting is not consent, and not a partnership structure."
+            plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. On 4 November the Premier and the Grand Chief met in St. John’s; further talks are to be in Sheshatshiu. On 19 November the Premier told the House that ministers met the Grand Chief that day. That is contact, not consent, and not a partnership structure."
             requires="Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
             technical={INNU.body.technical}
             caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not an item in our source registry."

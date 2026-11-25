@@ -33,13 +33,20 @@ const OPEN = [
       <>
         The House said yes <Fig id="a">21–18</Fig> in September. That vote does not write the
         power-purchase contracts. Binding paper is aimed at around <Fig id="b">year-end</Fig>. The
-        framework clock can run into March 2027, and the Premier has not promised MHAs a vote on the
-        final text. On 28 October the House voted 16–21 against a motion asking for that vote.
+        framework clock can run to 31 March 2027. On 18 November the energy minister told the House
+        those dates have not been extended. The Premier has not promised MHAs a vote on the final
+        text. On 28 October the House voted 16–21 against a motion asking for that vote.
       </>
     ),
     technical:
-      "The House endorsed the DCIA framework 21–18 on 17 September 2026. That vote does not create PPAs. Definitive Agreements are targeted by 31 December 2026 (Art. 2.1); the DCIA Term runs to 31 March 2027 unless extended (§6.3(a)), with HQ Gull Island exclusivity during the Term (§6.3(b)). On 18 September the Premier would not commit to a vote on the definitive agreements. On 28 October the House defeated 16–21 an Opposition motion for a debate and vote before signing (Hansard, p. 2886).",
-    sources: [DESK_SOURCES.dciaHq, DESK_SOURCES.ntvVote, DESK_SOURCES.vocmOpposition, DESK_SOURCES.hansard28Oct],
+      "The House endorsed the DCIA framework 21–18 on 17 September 2026. That vote does not create PPAs. Definitive Agreements are targeted by 31 December 2026 (Art. 2.1); the DCIA Term runs to 31 March 2027 unless extended (§6.3(a)), with HQ Gull Island exclusivity during the Term (§6.3(b)). Hansard, 18 Nov 2026 (CONFIRMED, partially edited): Parrott said the dates have not been extended. On 18 September the Premier would not commit to a vote on the definitive agreements. On 28 October the House defeated 16–21 an Opposition motion for a debate and vote before signing (Hansard, p. 2886).",
+    sources: [
+      DESK_SOURCES.dciaHq,
+      DESK_SOURCES.ntvVote,
+      DESK_SOURCES.vocmOpposition,
+      DESK_SOURCES.hansard28Oct,
+      DESK_SOURCES.hansard18Nov,
+    ],
   },
   {
     id: "eng-qc",
@@ -56,7 +63,13 @@ const OPEN = [
       </>
     ),
     technical: TRACKER_ITEMS.find((i) => i.id === "qc-gate")?.body.technical ?? "",
-    sources: [DESK_SOURCES.qcElectionResult, DESK_SOURCES.lactualiteTransition, DESK_SOURCES.assnatReturn],
+    sources: [
+      DESK_SOURCES.qcElectionResult,
+      DESK_SOURCES.lactualiteTransition,
+      DESK_SOURCES.assnatReturn,
+      DESK_SOURCES.cbcPatient17Nov,
+      DESK_SOURCES.laPresseCarneyPspp15Nov,
+    ],
   },
   {
     id: "eng-inprovince",
@@ -95,8 +108,10 @@ const OPEN = [
         <Term k="innu-nation">Innu Nation</Term> urged MHAs not to vote and says the paper cuts its
         benefits by more than half. On 4 November the Grand Chief confronted the Premier at a St.
         John&apos;s mining conference and they met the same morning. Further talks are to be in
-        Sheshatshiu. Royalty and Gull Island tariff path remain unsettled. Nothing large in Labrador
-        proceeds without that work.
+        Sheshatshiu. On 19 November the Premier told the House that ministers met the Grand Chief
+        that day. Innu Nation has not said publicly what was discussed. The Sheshatshiu visit has
+        no public date. That is contact, not consent. Royalty and Gull Island tariff path remain
+        unsettled. Nothing large in Labrador proceeds without that work.
       </>
     ),
     technical: TRACKER_ITEMS.find((i) => i.id === "innu")?.body.technical ?? "",
@@ -106,6 +121,7 @@ const OPEN = [
       DESK_SOURCES.vocmInnuReady,
       DESK_SOURCES.vocmInnuMeet,
       DESK_SOURCES.ntvInnuNov4,
+      DESK_SOURCES.hansard19Nov,
     ],
   },
   {

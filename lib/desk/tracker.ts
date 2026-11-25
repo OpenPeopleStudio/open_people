@@ -21,18 +21,18 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "material-terms-lock",
     title: "Material terms will not be reopened",
-    when: "6 Oct 2026",
+    when: "6 Oct · 17 Nov 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://www.cbc.ca/news/canada/newfoundland-labrador/nl-quebec-churchill-falls-9.7371016",
     hrefLabel: "CBC — Williams and Wakeham, 6 Oct",
     body: {
       plain:
-        "NL Hydro’s CEO says the two utilities already agreed the material terms and will not reopen them. About 17 or 18 definitive agreements are still being finished. That is a utility posture, not signed contracts.",
+        "NL Hydro’s CEO says the two utilities already agreed the material terms and will not reopen them. About 17 or 18 definitive agreements are still being finished. On 17 November the energy minister said those agreements are coming based on the DCIA, with small language still to be worked out. That is a utility and ministerial posture, not signed contracts.",
       technical:
-        "CBC, 6 Oct 2026: Newfoundland and Labrador Hydro president Jennifer Williams said the 2026 agreement “dealt with all the material issues between the two utilities” and that both utilities have agreed they will not renegotiate the material terms already agreed. Premier Wakeham said there are around 17 to 18 definitive agreements still being worked. Liberal leader Hogan called Williams’s no-renegotiation line “troubling”. These are reported positions. The Definitive Agreements are not signed.",
+        "CBC, 6 Oct 2026: Newfoundland and Labrador Hydro president Jennifer Williams said the 2026 agreement “dealt with all the material issues between the two utilities” and that both utilities have agreed they will not renegotiate the material terms already agreed. Premier Wakeham said there are around 17 to 18 definitive agreements still being worked. Liberal leader Hogan called Williams’s no-renegotiation line “troubling”. These are reported positions. Hansard, 17 Nov 2026 (CONFIRMED): Energy Minister Parrott said “The definitive agreements are coming and they are coming based on the DCIA. The DCIA lays out the material terms for the contract.” He also said small language is still to be worked out. The Definitive Agreements are not signed.",
     },
-    sources: ["cbcWilliamsTerms"],
+    sources: ["cbcWilliamsTerms", "hansard17Nov", "vocmComing18Nov"],
   },
   {
     id: "house",
@@ -53,18 +53,29 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "house-return",
     title: "No promised vote on the final contracts",
-    when: "18 Sep · 28 Oct 2026",
+    when: "18 Sep · 28 Oct · 17 Nov 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://www.gov.nl.ca/releases/2026/exec/1028n03/",
     hrefLabel: "Government of NL, 28 Oct",
     body: {
       plain:
-        "On 28 October the government said the finished contracts will be tabled, with briefings and a proposed special debate. It has not promised MHAs a vote before those contracts are completed. Gary Smith is lead negotiator. Barry Perry stays on as special advisor. On 28 October an Opposition motion asked for a debate and vote on the final agreements before they are signed. It was defeated 16–21.",
+        "On 28 October the government said the finished contracts will be tabled, with briefings and a proposed special debate. It has not promised MHAs a vote before those contracts are completed. Gary Smith is lead negotiator. Barry Perry stays on as special advisor. On 28 October an Opposition motion asked for a debate and vote on the final agreements before they are signed. It was defeated 16–21. On 17 November the energy minister said the definitive agreements are coming based on the DCIA, with small language still to be worked out.",
       technical:
-        "On 18 September 2026 Premier Wakeham would not commit to a vote on the definitive agreements (NTV; VOCM). The Oversight Committee (Dan Levert, Julia Mullaley, Mike Jardine) stays on. Liberal leader Hogan called the absence of a further approval mechanism “discouraging”; NDP leader Dinn noted movement on PUB involvement. The NDP’s three unmet conditions (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. On 28 October the Government of NL said that, once completed, the definitive agreements will be tabled, Members will get technical briefings, and government will propose a special debate. The three Oversight Committee members continue. The province is reviewing recommendations from the Chair of the PUB on adding members to that committee. Barry Perry moves from lead negotiator to Special Advisor. Gary Smith, former executive vice-president of operations and technology at Fortis Inc. and former president and CEO of Newfoundland Power, is lead negotiator. Hansard, 28 Oct 2026, p. 2886: Official Opposition private Member’s resolution (J. Hogan) asking that final DCIA / Churchill River agreements come to the House for debate and a vote before they are signed or binding; defeated on Division, ayes 16, nays 21. Saltwire/Telegram, 28 Oct 2026 (REPORTED): debate after the agreements are finalized; no vote to pass them. UNKNOWN: whether the definitive agreements will be voted on.",
+        "On 18 September 2026 Premier Wakeham would not commit to a vote on the definitive agreements (NTV; VOCM). The Oversight Committee (Dan Levert, Julia Mullaley, Mike Jardine) stays on. Liberal leader Hogan called the absence of a further approval mechanism “discouraging”; NDP leader Dinn noted movement on PUB involvement. The NDP’s three unmet conditions (17 Sep): PUB-appointed oversight experts, a debate and vote on the final agreements, Innu approval. On 28 October the Government of NL said that, once completed, the definitive agreements will be tabled, Members will get technical briefings, and government will propose a special debate. The three Oversight Committee members continue. The province is reviewing recommendations from the Chair of the PUB on adding members to that committee. Barry Perry moves from lead negotiator to Special Advisor. Gary Smith, former executive vice-president of operations and technology at Fortis Inc. and former president and CEO of Newfoundland Power, is lead negotiator. Hansard, 28 Oct 2026, p. 2886: Official Opposition private Member’s resolution (J. Hogan) asking that final DCIA / Churchill River agreements come to the House for debate and a vote before they are signed or binding; defeated on Division, ayes 16, nays 21. Saltwire/Telegram, 28 Oct 2026 (REPORTED): debate after the agreements are finalized; no vote to pass them. Hansard, 17 Nov 2026 (CONFIRMED): Parrott said the definitive agreements are “coming based on the DCIA,” with small language still to be worked out. VOCM, 17 Nov 2026 (REPORTED): Opposition ministers were asked repeatedly whether final agreements would come back to the House before they were signed. Hansard, 18 and 24 Nov 2026 (CONFIRMED, partially edited): referendum questions continued; nothing was voted on Churchill Falls in this window. UNKNOWN: whether the definitive agreements will be voted on.",
     },
-    sources: ["ntvVote", "vocmOpposition", "ndpConditions", "hansard28Oct", "govNlSmith", "saltwireHouseOct28"],
+    sources: [
+      "ntvVote",
+      "vocmOpposition",
+      "ndpConditions",
+      "hansard28Oct",
+      "govNlSmith",
+      "saltwireHouseOct28",
+      "hansard17Nov",
+      "vocmQp17Nov",
+      "hansard18Nov",
+      "hansard24Nov",
+    ],
   },
   {
     id: "binding-window",
@@ -72,29 +83,36 @@ export const TRACKER_ITEMS: DeskItem[] = [
     when: "~31 Dec 2026 / term to ~31 Mar 2027",
     status: "open",
     lastVerified: DESK_VERIFIED,
-    href: "https://www.abetterdealnl.ca/files/DEFINITIVE-COOPERATION-AND-IMPLEMENTATION-AGREEMENT.pdf",
-    hrefLabel: "DCIA PDF — Art. 2.1, §6.3, Material Terms",
+    href: "https://www.assembly.nl.ca/HouseBusiness/Hansard/ga51session1/26-11-18.htm",
+    hrefLabel: "Hansard, 18 Nov — no extension",
     body: {
       plain:
-        "The parties still say they want the real contracts around year-end. That date is a goal. The mines minister has said slipping past 31 December is not the end of the world: the framework clock can run to 31 March 2027. While it runs, Hydro-Québec holds exclusive rights on Gull Island.",
+        "The parties still say they want the real contracts around year-end. That date is a goal. On 18 November the energy minister told the House the 31 December goal and the 31 March fallback have not been extended. The mines minister has said slipping past 31 December is not the end of the world: the framework clock can run to 31 March 2027. While it runs, Hydro-Québec holds exclusive rights on Gull Island.",
       technical:
-        "DCIA Article 2.1 sets the goal of entering into Definitive Agreements by 31 December 2026 and in any event by the end of the Term. Under §6.3(a) the Term ends on the earliest of execution of the Definitive Agreements, mutual termination, or 31 March 2027 (unless mutually extended in writing). §6.3(b) grants Hydro-Québec exclusivity on Gull Island during the Term. Saltwire/Telegram, 9 Oct 2026, quoting Mines and Energy Minister Lloyd Parrott: if the deal cannot be done by 31 December, “that’s not the end of the world.” No loadable Saltwire URL in this pass — cited by outlet and date. Until those PPAs exist, public retain megawatts are not a signed industrial queue.",
+        "DCIA Article 2.1 sets the goal of entering into Definitive Agreements by 31 December 2026 and in any event by the end of the Term. Under §6.3(a) the Term ends on the earliest of execution of the Definitive Agreements, mutual termination, or 31 March 2027 (unless mutually extended in writing). §6.3(b) grants Hydro-Québec exclusivity on Gull Island during the Term. Saltwire/Telegram, 9 Oct 2026, quoting Mines and Energy Minister Lloyd Parrott: if the deal cannot be done by 31 December, “that’s not the end of the world.” No loadable Saltwire URL in this pass — cited by outlet and date. Hansard, 18 Nov 2026 (CONFIRMED, partially edited): Parrott said “there has been no extension” and “We never extended the date.” The goal remains 31 December, with 31 March as the fallback. VOCM, 23 Nov 2026 (REPORTED): the fall fiscal update books no Churchill Falls income. Government of NL, 23 Nov 2026 (CONFIRMED): a projected surplus of $78 million; the ministerial statement names Churchill River developments as a reason for optimism, not booked revenue. Until those PPAs exist, public retain megawatts are not a signed industrial queue.",
     },
-    sources: ["dciaHq", "dciaNl", "saltwireParrott"],
+    sources: [
+      "dciaHq",
+      "dciaNl",
+      "saltwireParrott",
+      "hansard18Nov",
+      "vocmFiscalUpdate23Nov",
+      "govNlFallUpdate23Nov",
+    ],
   },
   {
     id: "qc-gate",
     title: "Québec elected a PQ minority",
-    when: "5 Oct 2026 · 21 Oct · 13–16 Nov",
+    when: "5 Oct 2026 · 15–17 Nov",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://www.cbc.ca/news/canada/montreal/livestory/quebec-election-2026-results-9.7369473",
     hrefLabel: "CBC election night",
     body: {
       plain:
-        "Québec elected a Parti Québécois minority on 5 October. St-Pierre Plamondon met Fréchette on 13 October; Churchill Falls came up; no decision was announced. He was sworn in with a 23-minister cabinet on 21 October. The National Assembly returned on 17 November. On 13 November Québec’s energy minister said the deal is not set in stone. On 16 November Premier Wakeham said it will not be renegotiated, and the negotiating teams are back at work on the final contracts.",
+        "Québec elected a Parti Québécois minority on 5 October. St-Pierre Plamondon met Fréchette on 13 October; Churchill Falls came up; no decision was announced. He was sworn in with a 23-minister cabinet on 21 October. The National Assembly returned on 17 November. On 13 November Québec’s energy minister said the deal is not set in stone. On 16 November Premier Wakeham said it will not be renegotiated, and the negotiating teams are back at work on the final contracts. On 17 November he said he would be patient while Québec reviews the deal. Québec has not named the clauses it disputes. A meeting with Québec’s premier is being arranged; no date is public. Prime Minister Carney and St-Pierre Plamondon discussed Churchill Falls on 15 November in Phnom Penh. A further meeting is planned for December in Québec City.",
       technical:
-        "CBC, 5 Oct 2026: Parti Québécois projected 59 of 127 seats, a minority government. Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon met outgoing premier Christine Fréchette for a transition meeting of under an hour; he listed Churchill Falls among the subjects; they made statements and took no questions; no decision on the deal. CBC, 21 Oct 2026 (REPORTED): he was sworn in as premier with a cabinet of 23 ministers. National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. CBC, 16 Nov 2026 (REPORTED): Energy Minister Stéphane Paquet told Montreal radio 98.5FM on 13 November that the deal is not set in stone; Premier Wakeham told the House on 16 November, “The deal will not be renegotiated.” VOCM, 16 Nov 2026, reports the same exchange. Whether the PQ’s promised due-diligence review, or any Assembly vote, changes the Material Terms: UNKNOWN.",
+        "CBC, 5 Oct 2026: Parti Québécois projected 59 of 127 seats, a minority government. Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon met outgoing premier Christine Fréchette for a transition meeting of under an hour; he listed Churchill Falls among the subjects; they made statements and took no questions; no decision on the deal. CBC, 21 Oct 2026 (REPORTED): he was sworn in as premier with a cabinet of 23 ministers. National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. CBC, 16 Nov 2026 (REPORTED): Energy Minister Stéphane Paquet told Montreal radio 98.5FM on 13 November that the deal is not set in stone; Premier Wakeham told the House on 16 November, “The deal will not be renegotiated.” VOCM, 16 Nov 2026, reports the same exchange. CBC, 17 Nov 2026 (REPORTED): Wakeham said he is prepared to be patient while Québec’s new government scrutinizes the deal they inherited, and that the deal will not be renegotiated. CBC: Québec has not clarified what it would like changed. Saltwire/Telegram and Radio-Canada, 17 Nov 2026 (REPORTED): a Wakeham–St-Pierre Plamondon meeting is being arranged; no date. Radio-Canada: one phone call since 5 Oct. La Presse, 15–16 Nov 2026 (REPORTED): Carney and St-Pierre Plamondon met about 45 minutes in Phnom Penh; Churchill Falls was discussed; a further meeting is set for December in Québec City. Whether Churchill Falls was debated or voted in the National Assembly: UNKNOWN. Whether the PQ’s promised due-diligence review changes the Material Terms: UNKNOWN.",
     },
     sources: [
       "qcElectionResult",
@@ -105,6 +123,11 @@ export const TRACKER_ITEMS: DeskItem[] = [
       "qcElection",
       "cbcPaquet16Nov",
       "vocmRenegotiate16Nov",
+      "cbcPatient17Nov",
+      "radioCanadaNoRequest17Nov",
+      "saltwireSetInStone17Nov",
+      "vocmNoRework17Nov",
+      "laPresseCarneyPspp15Nov",
     ],
   },
   {
@@ -133,9 +156,9 @@ export const TRACKER_ITEMS: DeskItem[] = [
       plain:
         "Public paper describes a new Churchill River plant in a range — not one locked size — and says studies still have to finish. First power is pencilled for the mid-2030s. The project is still not filed with the federal impact assessment agency. The Innu dispute is unresolved. Do not treat a press headline as a commissioned megawatt.",
       technical:
-        "Schedule A §2 describes Gull Island as approximately 2,250 MW or 2,700 MW depending on final configuration (5 or 6 units), subject to technical and environmental studies. Schedule B §2(e): NLH’s GI volume interpolates on a straight line between 266 MW and 432 MW (example 2,475 MW → 349 MW). Annex B (2,700 MW case) shows first Gull volumes in 2036 (1,350 MW) and the full 2,700 MW from 2037; Canada.ca says “online target of 2036–2037”. That is a preliminary schedule, not a locked COD. Gull Island is still not filed with the Impact Assessment Agency of Canada. The 2012 Lower Churchill federal review was on the order of 2,000 MW; IAAC confirmation that 2026 equals 2012 is not in the DCIA PDF. Innu Nation partnership, royalty, and GI tariff path remain unresolved — see the Innu row.",
+        "Schedule A §2 describes Gull Island as approximately 2,250 MW or 2,700 MW depending on final configuration (5 or 6 units), subject to technical and environmental studies. Schedule B §2(e): NLH’s GI volume interpolates on a straight line between 266 MW and 432 MW (example 2,475 MW → 349 MW). Annex B (2,700 MW case) shows first Gull volumes in 2036 (1,350 MW) and the full 2,700 MW from 2037; Canada.ca says “online target of 2036–2037”. That is a preliminary schedule, not a locked COD. Gull Island is still not filed with the Impact Assessment Agency of Canada. The 2012 Lower Churchill federal review was on the order of 2,000 MW; IAAC confirmation that 2026 equals 2012 is not in the DCIA PDF. The Narwhal, 24 Nov 2026 (REPORTED), and Budget 2026 chapter 2 (CONFIRMED): the Labrador Trough corridor was referred to the Major Projects Office in August. That is a federal process, not an IAAC filing. Innu Nation partnership, royalty, and GI tariff path remain unresolved — see the Innu row.",
     },
-    sources: ["dciaHq", "dciaNl", "canadaDcia", "cbcIaac"],
+    sources: ["dciaHq", "dciaNl", "canadaDcia", "cbcIaac", "narwhalMastersNov24", "budget2026Chap2"],
   },
   {
     id: "cf-upgrades",
@@ -156,18 +179,25 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "labrador-west",
     title: "New line to the mining corridor",
-    when: "October 2026 contractor notice",
+    when: "Oct 2026 · 6 Nov cost",
     status: "framework",
     lastVerified: DESK_VERIFIED,
     href: "https://nlhydro.com/wp-content/uploads/2026/10/Notice-to-Contractors-OCT2026_V3.pdf",
     hrefLabel: "NL Hydro Notice to Contractors, Oct 2026",
     body: {
       plain:
-        "Hydro’s October contractor notice describes a 735 kV line from Churchill Falls to Labrador West with a 1,500 MW maximum — a ceiling, not a guaranteed block. Design work is aimed at December 2026. Construction contracts are expected early 2028. Nobody has published when it switches on.",
+        "Hydro’s October contractor notice describes a 735 kV line from Churchill Falls to Labrador West with a 1,500 MW maximum — a ceiling, not a guaranteed block. Design work is aimed at December 2026. Construction contracts are expected early 2028. The finance minister said in November the line now costs about $3 billion, up from $2.6 billion in August (reported). That is not an NL Hydro estimate. Nobody has published when it switches on.",
       technical:
-        "NL Hydro Notice to Contractors, October 2026: preferred option is a single 735 kV line from Churchill Falls to Labrador West, maximum transfer approximately 1,500 MW. That 1,500 MW is a ceiling, not a reserved industrial block. Front End Engineering Design (FEED) for the line and stage-one Flora Lake terminal is targeted for December 2026. Construction RFPs for the Churchill Falls terminal, Flora Lake terminal, and the transmission line are listed as project-approval pending, anticipated Q1 2028. Government of NL (17 Aug 2026) lists $1 billion (2026 NPV) in federal support for construction of the line as publicly described. Existing 230 kV lines serving IOC / Tacora remain at operational limits. In-service date: not published.",
+        "NL Hydro Notice to Contractors, October 2026: preferred option is a single 735 kV line from Churchill Falls to Labrador West, maximum transfer approximately 1,500 MW. That 1,500 MW is a ceiling, not a reserved industrial block. Front End Engineering Design (FEED) for the line and stage-one Flora Lake terminal is targeted for December 2026. Construction RFPs for the Churchill Falls terminal, Flora Lake terminal, and the transmission line are listed as project-approval pending, anticipated Q1 2028. Government of NL (17 Aug 2026) lists $1 billion (2026 NPV) in federal support for construction of the line as publicly described. Radio-Canada, 6 Nov 2026 (REPORTED): Finance Minister Pardy said the Churchill Falls–Wabush line now comes to $3 billion, up from $2.6 billion in August, mainly because of inflation. Financing would come from the federal government, NL Hydro and private interests. Pardy: Ottawa has promised $1 billion. That $3 billion is a ministerial figure via press, not an NL Hydro estimate. Existing 230 kV lines serving IOC / Tacora remain at operational limits. In-service date: not published.",
     },
-    sources: ["nlhContractorOct", "nlhLabWest", "govNlDcia", "canadaDcia", "cbcMining"],
+    sources: [
+      "nlhContractorOct",
+      "nlhLabWest",
+      "govNlDcia",
+      "canadaDcia",
+      "cbcMining",
+      "radioCanadaLabWestCost6Nov",
+    ],
   },
   {
     id: "mine-queue",
@@ -204,16 +234,16 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "innu",
     title: "Innu Nation issues still open",
-    when: "4 Nov 2026",
+    when: "4 Nov · 19 Nov 2026",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://vocm.com/2026/11/04/315670/",
     hrefLabel: "VOCM — meeting, 4 Nov",
     body: {
       plain:
-        "Innu Nation urged MHAs not to vote and says the paper cuts its benefits by more than half. On 4 November the Grand Chief confronted the Premier at a St. John’s mining conference and they met the same morning. Further talks are to be in Sheshatshiu. Partnership remains open. Nothing large on that land proceeds without that work.",
+        "Innu Nation urged MHAs not to vote and says the paper cuts its benefits by more than half. On 4 November the Grand Chief confronted the Premier at a St. John’s mining conference and they met the same morning. Further talks are to be in Sheshatshiu. On 19 November the Premier told the House that ministers met the Grand Chief that day. Innu Nation has not said publicly what was discussed. The Sheshatshiu visit has no public date. That is contact, not consent. Partnership remains open. Nothing large on that land proceeds without that work.",
       technical:
-        "On 15 September 2026 Innu Nation, Sheshatshiu and Natuashish wrote asserting Churchill River waterway rights (VOCM). On 17 September Innu Nation wrote MHAs urging a no vote, delivered minutes before the vote, citing serious concerns over Gull Island payments; Grand Chief Jodie Ashini said benefits were cut “by over half” versus the 2024 MOU (CBC; Radio-Canada 18 Sep; no figures released). Premier Wakeham said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open — not a ratified Innu Nation partnership, royalty, or GI tariff path. VOCM (21 Sep): Ashini said Premier Wakeham has yet to contact the Innu Nation after the House vote — “it’s always us reaching out to him” — that the Innu are “ready and willing to meet”, and that Grand Chief Ashini of Innu Nation has said Innu were “never invited to the table”. Independent MHA Keith Russell (Lake Melville) cited “ultimate disrespect” to the Innu in explaining his no vote. VOCM, 4 Nov 2026: at the Minerals Resource Review, Delta Hotel, St. John’s, Ashini said Churchill Falls will not go ahead unless the Innu get their meeting, and raised the province’s contention that Innu presence in Labrador dates back 300 years. Wakeham then met Innu Nation for nearly two hours. He said “I have not spoken about 300 years, nor do I intend to,” that the Innu had requested the meeting on the Monday and the government agreed, and that further talks would be in Sheshatshiu. Ashini said the Innu are not against the project, are not an afterthought, and have not been at the table. NTV, 4 Nov: they met; there is still no resolution. DCIA fundamental principles commit the parties to consulting Indigenous communities. Partnership path: unresolved; not a ratified partnership.",
+        "On 15 September 2026 Innu Nation, Sheshatshiu and Natuashish wrote asserting Churchill River waterway rights (VOCM). On 17 September Innu Nation wrote MHAs urging a no vote, delivered minutes before the vote, citing serious concerns over Gull Island payments; Grand Chief Jodie Ashini said benefits were cut “by over half” versus the 2024 MOU (CBC; Radio-Canada 18 Sep; no figures released). Premier Wakeham said outstanding issues need to be resolved and that he looks forward to sitting down. Partnership remains open — not a ratified Innu Nation partnership, royalty, or GI tariff path. VOCM (21 Sep): Ashini said Premier Wakeham has yet to contact the Innu Nation after the House vote — “it’s always us reaching out to him” — that the Innu are “ready and willing to meet”, and that Grand Chief Ashini of Innu Nation has said Innu were “never invited to the table”. Independent MHA Keith Russell (Lake Melville) cited “ultimate disrespect” to the Innu in explaining his no vote. VOCM, 4 Nov 2026: at the Minerals Resource Review, Delta Hotel, St. John’s, Ashini said Churchill Falls will not go ahead unless the Innu get their meeting, and raised the province’s contention that Innu presence in Labrador dates back 300 years. They met for two to three hours (VOCM: nearly two; CBC: nearly three). He said “I have not spoken about 300 years, nor do I intend to,” that the Innu had requested the meeting on the Monday and the government agreed, and that further talks would be in Sheshatshiu. Ashini said the Innu are not against the project, are not an afterthought, and have not been at the table. NTV, 4 Nov: they met; there is still no resolution. Hansard, 19 Nov 2026 (CONFIRMED as the Premier’s statement only, partially edited): Wakeham told the House that “Today, the Innu Nation, a couple of my ministers had meetings with the Grand Chief.” He did not answer whether Innu support will come before signing. No Innu Nation statement of that meeting was found. The Sheshatshiu visit has no public date. Contact, not consent. The Narwhal, 24 Nov 2026 (REPORTED): Innu Nation’s 2020 suit against Hydro-Québec, quoted as “$4 billion”, is still in court; “A settlement failed in 2025 because too few members voted.” Do not treat those quotes as a new position. DCIA fundamental principles commit the parties to consulting Indigenous communities. Partnership path: unresolved; not a ratified partnership.",
     },
     sources: [
       "vocmInnu",
@@ -226,6 +256,8 @@ export const TRACKER_ITEMS: DeskItem[] = [
       "vocmInnuNov4",
       "vocmInnuMeet",
       "ntvInnuNov4",
+      "hansard19Nov",
+      "narwhalMastersNov24",
       "dciaHq",
     ],
   },
@@ -239,11 +271,11 @@ export const TRACKER_ITEMS: DeskItem[] = [
     hrefLabel: "APTN",
     body: {
       plain:
-        "Innu communities on the Québec side say their consent is required too, and their older court case over Churchill Falls is still alive. That is a second Indigenous file on the same river.",
+        "Innu communities on the Québec side say their consent is required too, and their older court case over Churchill Falls is still alive. That is a second Indigenous file on the same river. Pessamit is a further Québec Innu voice, quoted, not a position imputed to any nation.",
       technical:
-        "Uashat mak Mani-utenam and Matimekush-Lac John have said their consent is mandatory for the Churchill Falls arrangements; their reparations case over the original development remains before the Québec courts (APTN). Distinct from Innu Nation (Labrador). No settlement or accommodation step tied to the DCIA has been published. UNKNOWN: how the Definitive Agreements treat this.",
+        "Uashat mak Mani-utenam and Matimekush-Lac John have said their consent is mandatory for the Churchill Falls arrangements; their reparations case over the original development remains before the Québec courts (APTN). Distinct from Innu Nation (Labrador). The Narwhal, 24 Nov 2026 (REPORTED): Pessamit vice-chief Audrey-Lise Rock-Hervieux said, “When I hear ‘chez nous,’ I think, ‘Nitassinan.’” The same piece quotes that “the word ‘consent’ appears only once in the budget.” Those are quotes. They do not stand for any nation’s position on the DCIA. No settlement or accommodation step tied to the DCIA has been published. UNKNOWN: how the Definitive Agreements treat this.",
     },
-    sources: ["aptnQcInnu"],
+    sources: ["aptnQcInnu", "narwhalMastersNov24", "budget2026Chap2"],
   },
   {
     id: "metering",
@@ -276,18 +308,18 @@ export const TRACKER_ITEMS: DeskItem[] = [
   {
     id: "cpi-vs-market",
     title: "Inflation path is not a market path",
-    when: "Material Terms Annex F · LAB-IND-1",
+    when: "Material Terms Annex F · 23–24 Nov",
     status: "open",
     lastVerified: DESK_VERIFIED,
     href: "https://nlhydro.com/wp-content/uploads/2026/07/Schedule-of-Rates-Rules-and-Regulations_Jul_2026.pdf",
     hrefLabel: "NL Hydro rates (Jul 2026)",
     body: {
       plain:
-        "Export payments on the new paper move with a Canadian inflation band. Labrador industrial energy already splits a development block from a market block. Those are different machines. Do not mash them into one “cheap power” number.",
+        "Export payments on the new paper move with a Canadian inflation band. Labrador industrial energy already splits a development block from a market block. Those are different machines. Do not mash them into one “cheap power” number. In November the finance minister told the House that market-based pricing did not fit the deal. The Premier said export payments on the Upper Churchill rise every year.",
       technical:
-        "DCIA Annex F: HQ target payments for existing CF adjust from a 2027 CPI base (Statistics Canada All-items, Canada) with a deadband centred on 2.06% ± 0.40% (1.66–2.46%), cumulative and reviewed annually from 2028. LAB-IND-1 (Jul 2026): firm energy is RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL — Development and Market block rates are 2026 formula inputs, not a single industrial ¢/kWh. See /costs#contested: CP24 1.8¢ start (2027) vs 7.4¢ 50-year average — different measurements. Annex D $ → industrial ¢: UNKNOWN.",
+        "DCIA Annex F: HQ target payments for existing CF adjust from a 2027 CPI base (Statistics Canada All-items, Canada) with a deadband centred on 2.06% ± 0.40% (1.66–2.46%), cumulative and reviewed annually from 2028. LAB-IND-1 (Jul 2026): firm energy is RFIRM = {(ED × RD) + (EM × RM)} / ETOTAL — Development and Market block rates are 2026 formula inputs, not a single industrial ¢/kWh. See /costs#contested: CP24 1.8¢ start (2027) vs 7.4¢ 50-year average — different measurements. Annex D $ → industrial ¢: UNKNOWN. Hansard, 23 Nov 2026 (CONFIRMED, partially edited): Finance Minister Pardy said market-based pricing “didn't fit with the deal.” Hansard, 24 Nov 2026 (CONFIRMED, partially edited): Hogan quoted that line; Wakeham said the deal “has certainty that every single year the power that we sell to Quebec for the Upper Churchill will go up.” That is political confirmation that CF export pricing is an escalator, not market-indexed.",
     },
-    sources: ["dciaHq", "nlhRates2026"],
+    sources: ["dciaHq", "nlhRates2026", "hansard23Nov", "hansard24Nov"],
   },
   {
     id: "unused-retain",
