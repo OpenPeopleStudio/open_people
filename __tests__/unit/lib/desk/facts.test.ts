@@ -223,10 +223,13 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
     expect(window?.body.plain).toMatch(/exclusive/i);
   });
 
-  it("carries the post-vote return-to-House gap and the Québec Innu file as open rows", () => {
+  it("carries the no-promised-vote gap and the Québec Innu file as open rows", () => {
     const back = TRACKER_ITEMS.find((item) => item.id === "house-return");
     expect(back?.status).toBe("open");
     expect(back?.body.technical).toMatch(/would not commit to a vote/);
+    expect(back?.body.technical).toMatch(/16, nays 21/);
+    expect(back?.sources).toContain("hansard28Oct");
+    expect(`${back?.title} ${back?.body.plain}`).not.toMatch(/back to the House|comes back/i);
     expect(back?.body.technical).toMatch(/UNKNOWN/);
     const qcInnu = TRACKER_ITEMS.find((item) => item.id === "qc-innu");
     expect(qcInnu?.status).toBe("open");
@@ -236,7 +239,6 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
   it("does not ship a source URL nobody has opened (SaltWire guess replaced by a loadable mirror)", () => {
     for (const source of Object.values(DESK_SOURCES)) {
       if (source.href) {
-        expect(source.href).not.toMatch(/saltwire\.com/);
         expect(source.href).toMatch(/^https?:\/\//);
       } else {
         expect(source.label.length).toBeGreaterThan(10);
@@ -246,6 +248,12 @@ describe("horizon desk facts — 22 Sep 2026 verification pass", () => {
     expect(DESK_SOURCES.cbcMining.date).toBe("2025-01-15");
     expect(DESK_SOURCES.cerNl.href).toMatch(/province-territory-energy-profiles\/newfoundland-labrador/);
     expect(DESK_SOURCES.saltwireParrott.href).toBeUndefined();
+    expect(DESK_SOURCES.saltwireHouseOct28.href).toBe(
+      "https://www.saltwire.com/newfoundland-labrador/churchill-falls-wont-go-back-to-legislature",
+    );
+    expect(DESK_SOURCES.saltwireSetInStone17Nov.href).toBe(
+      "https://www.saltwire.com/newfoundland-labrador/is-churchill-falls-deal-set",
+    );
     expect(DESK_SOURCES.pubTechConf.href).toBeUndefined();
   });
 
@@ -270,14 +278,24 @@ describe("horizon desk facts — 14 Oct 2026 verification pass", () => {
     expect(row?.body.technical).toMatch(/will not renegotiate the material terms/i);
     expect(row?.body.technical).toMatch(/17 to 18/);
     expect(row?.sources).toContain("cbcWilliamsTerms");
+    expect(row?.body.plain).toMatch(/coming based on the DCIA/);
+    expect(row?.sources).toContain("hansard17Nov");
   });
 
   it("treats 31 December as a soft target that can run to the 31 March 2027 Term", () => {
     const window = TRACKER_ITEMS.find((item) => item.id === "binding-window");
     expect(window?.body.plain).toMatch(/not the end of the world/i);
+    expect(window?.body.plain).toMatch(/have not been extended/);
     expect(window?.body.technical).toMatch(/Saltwire\/Telegram, 9 Oct 2026/);
     expect(window?.body.technical).toMatch(/31 March 2027/);
-    expect(window?.sources).toEqual(expect.arrayContaining(["dciaHq", "saltwireParrott"]));
+    expect(window?.body.technical).toMatch(/We never extended the date/);
+    expect(window?.body.technical).not.toMatch(/next April/i);
+    expect(window?.href).toBe(
+      "https://www.assembly.nl.ca/HouseBusiness/Hansard/ga51session1/26-11-18.htm",
+    );
+    expect(window?.sources).toEqual(
+      expect.arrayContaining(["dciaHq", "saltwireParrott", "hansard18Nov"]),
+    );
   });
 
   it("records the PQ minority, the 13 Oct transition meeting, cabinet 21 Oct, and Assembly 17 Nov", () => {
@@ -287,10 +305,79 @@ describe("horizon desk facts — 14 Oct 2026 verification pass", () => {
     expect(qc?.body.plain).toMatch(/13 October/);
     expect(qc?.body.plain).toMatch(/21 October/);
     expect(qc?.body.plain).toMatch(/17 November/);
+    expect(qc?.body.plain).toMatch(/23-minister cabinet/);
+    expect(qc?.body.plain).toMatch(/was sworn in/);
+    expect(qc?.body.plain).not.toMatch(/due to be sworn in/);
+    expect(qc?.body.technical).not.toMatch(/to be sworn in/);
     expect(qc?.body.technical).toMatch(/no decision/i);
+    expect(qc?.body.plain).toMatch(/patient/);
+    expect(qc?.body.plain).toMatch(/no date is public/);
+    expect(qc?.body.plain).toMatch(/Phnom Penh/);
+    expect(qc?.body.technical).toMatch(/Whether Churchill Falls was debated or voted in the National Assembly: UNKNOWN/);
     expect(qc?.sources).toEqual(
-      expect.arrayContaining(["qcElectionResult", "lactualiteTransition", "assnatReturn"]),
+      expect.arrayContaining([
+        "qcElectionResult",
+        "lactualiteTransition",
+        "assnatReturn",
+        "cbcQcCabinet",
+        "cbcPaquet16Nov",
+        "vocmRenegotiate16Nov",
+        "cbcPatient17Nov",
+        "laPresseCarneyPspp15Nov",
+      ]),
     );
+  });
+
+  it("records Gary Smith as lead negotiator and keeps the Hansard 16–21 defeat", () => {
+    const back = TRACKER_ITEMS.find((item) => item.id === "house-return");
+    expect(back?.body.plain).toMatch(/Gary Smith/);
+    expect(back?.body.plain).toMatch(/special advisor/);
+    expect(back?.body.plain).toMatch(/defeated 16–21/);
+    expect(back?.body.technical).toMatch(/Newfoundland Power/);
+    expect(back?.body.technical).toMatch(/16, nays 21/);
+    expect(back?.body.plain).toMatch(/coming based on the DCIA/);
+    expect(back?.sources).toEqual(
+      expect.arrayContaining([
+        "govNlSmith",
+        "hansard28Oct",
+        "saltwireHouseOct28",
+        "hansard17Nov",
+      ]),
+    );
+    expect(`${back?.title} ${back?.body.plain}`).not.toMatch(/back to the House|comes back/i);
+  });
+
+  it("records the 4 Nov Innu meeting as contact, not consent", () => {
+    const innu = TRACKER_ITEMS.find((item) => item.id === "innu");
+    expect(innu?.when).toMatch(/4 Nov/);
+    expect(innu?.when).toMatch(/19 Nov/);
+    expect(innu?.body.plain).toMatch(/4 November/);
+    expect(innu?.body.plain).toMatch(/19 November/);
+    expect(innu?.body.plain).toMatch(/Sheshatshiu/);
+    expect(innu?.body.plain).toMatch(/contact, not consent/);
+    expect(innu?.body.plain).toMatch(/Partnership remains open/);
+    expect(innu?.body.technical).toMatch(/two to three hours/);
+    expect(innu?.body.technical).toMatch(/no resolution/);
+    expect(innu?.body.technical).toMatch(/not a ratified Innu Nation partnership/);
+    expect(innu?.body.technical).toMatch(/yet to contact/);
+    expect(innu?.body.technical).toMatch(/Premier’s statement only|Premier's statement only/);
+    expect(innu?.sources).toEqual(
+      expect.arrayContaining(["vocmInnuNov4", "vocmInnuMeet", "ntvInnuNov4", "hansard19Nov"]),
+    );
+  });
+
+  it("records November QP that CF export pricing is an escalator, not market-indexed", () => {
+    const row = TRACKER_ITEMS.find((item) => item.id === "cpi-vs-market");
+    expect(row?.body.technical).toMatch(/didn't fit with the deal/);
+    expect(row?.body.plain).toMatch(/rise every year/);
+    expect(row?.sources).toEqual(expect.arrayContaining(["hansard23Nov", "hansard24Nov"]));
+  });
+
+  it("quotes Pessamit without imputing a nation's DCIA position", () => {
+    const qcInnu = TRACKER_ITEMS.find((item) => item.id === "qc-innu");
+    expect(qcInnu?.body.technical).toMatch(/Nitassinan/);
+    expect(qcInnu?.body.technical).toMatch(/do not stand for any nation’s position|do not stand for any nation's position/);
+    expect(qcInnu?.sources).toEqual(expect.arrayContaining(["aptnQcInnu", "narwhalMastersNov24"]));
   });
 
   it("records the cancelled PUB technical conference without inventing a URL", () => {
@@ -307,7 +394,11 @@ describe("horizon desk facts — 14 Oct 2026 verification pass", () => {
     expect(line?.body.technical).toMatch(/1,500 MW/);
     expect(line?.body.technical).toMatch(/December 2026/);
     expect(line?.body.technical).toMatch(/Q1 2028/);
-    expect(line?.sources).toContain("nlhContractorOct");
+    expect(line?.body.plain).toMatch(/\$3 billion/);
+    expect(line?.body.technical).toMatch(/\$2\.6 billion/);
+    expect(line?.sources).toEqual(
+      expect.arrayContaining(["nlhContractorOct", "radioCanadaLabWestCost6Nov"]),
+    );
   });
 
   it("sources NECEC in-service and hold-back, and CHPE commercial then outage", () => {

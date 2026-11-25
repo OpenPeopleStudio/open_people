@@ -36,6 +36,15 @@ describe("Open People public role copy", () => {
     }
   });
 
+  it("does not leave a stale Innu no-meeting line on public pages", () => {
+    for (const rel of PUBLIC_ROLE_FILES) {
+      const blob = readFileSync(resolve(ROOT, rel), "utf8");
+      expect(blob, rel).not.toMatch(/No meeting is scheduled/i);
+      expect(blob, rel).not.toMatch(/nothing is scheduled/i);
+      expect(blob, rel).not.toMatch(/no meeting with the Premier is scheduled/i);
+    }
+  });
+
   it("keeps /brief as proponent of the proposed campus", () => {
     const brief = readFileSync(resolve(ROOT, "app/(marketing)/brief/page.tsx"), "utf8");
     expect(brief).toMatch(/Open People leads/i);

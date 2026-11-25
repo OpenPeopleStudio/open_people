@@ -15,13 +15,14 @@ import { VISION_CONTACT } from "@/lib/marketing/vision";
 
 export const metadata = {
   ...deskMetadata({
-    title: "Churchill Falls data centre",
+    title: "Labrador AI campus",
     description:
-      "Open People leads a proposed 500 MW Labrador data centre, in feasibility, and a research campus. Mining comes first. Not approved, not funded, and not under construction.",
+      "Open People proposes to build a 500 MW Labrador AI campus and a research campus. Mining comes first. Not approved, not funded, and not under construction.",
     path: "/compute",
     robots: { index: true, follow: true },
   }),
   keywords: [
+    "Labrador AI campus",
     "Churchill Falls",
     "Churchill Falls data centre",
     "Labrador data centre",
@@ -37,8 +38,8 @@ export default function ComputePage() {
       quiet
       verified={COMPUTE_LAST_VERIFIED}
       parent={{ label: "Build", href: "/build" }}
-      kicker="Proposed campus · in feasibility"
-      title="Open People leads a 500 MW Labrador AI campus."
+      kicker="Proposed campus · a proposal to build"
+      title="Open People proposes to build a 500 MW Labrador AI campus."
       lede={
         <Unfold
           id="compute-lede"
@@ -118,7 +119,7 @@ export default function ComputePage() {
           ))}
         </ul>
         <p className="mt-10 text-sm leading-relaxed text-[var(--ink-3)]">
-          Open People leads. Proposed. In feasibility. No reserved megawatts. No named customers.
+          Open People leads. A proposal to build. No reserved megawatts. No named customers.
           We intend to seek early, respectful engagement with each nation. No partnership or
           agreement exists. Partnership, if any, is on terms each nation sets. This page does not
           jump the line: mines and existing industry remain the constraint, and the public ask is to

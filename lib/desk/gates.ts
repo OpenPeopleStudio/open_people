@@ -68,10 +68,10 @@ export const GATES: Gate[] = [
     body: {
       plain: "Québec elected a Parti Québécois minority. Churchill Falls came up in the transition meeting. No decision.",
       technical:
-        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet 21 Oct; National Assembly 17 Nov.",
+        "Québec general election, 5 October 2026: PQ minority (59 of 127, CBC). St-Pierre Plamondon met Fréchette 13 Oct; Churchill Falls raised; no decision (Canadian Press / L’actualité). Cabinet sworn in 21 Oct (23 ministers, CBC). National Assembly 17 Nov.",
     },
     trackerId: "qc-gate",
-    sources: ["qcElectionResult", "lactualiteTransition", "assnatReturn"],
+    sources: ["qcElectionResult", "lactualiteTransition", "cbcQcCabinet", "assnatReturn"],
   },
   {
     id: "qc-cabinet",
@@ -81,27 +81,39 @@ export const GATES: Gate[] = [
     status: "open",
     kind: "fixed",
     body: {
-      plain: "The new Québec cabinet is to be sworn in. Until then the deal sits with a government in transition.",
+      plain: "Paul St-Pierre Plamondon and a 23-minister cabinet were sworn in. Churchill Falls still has no public decision from the new government. Québec has not named the clauses it disputes. A meeting with Premier Wakeham is being arranged; no date is public.",
       technical:
-        "Canadian Press via L’actualité, 13 Oct 2026: Paul St-Pierre Plamondon is to be sworn in with his cabinet on 21 October. No public decision on Churchill Falls at the 13 October transition meeting.",
+        "CBC, 21 Oct 2026: Paul St-Pierre Plamondon was sworn in as premier with a cabinet of 23 ministers. Canadian Press via L’actualité, 13 Oct 2026: no public decision on Churchill Falls at the transition meeting. CBC, 17 Nov 2026 (REPORTED): Québec has not clarified what it would like changed. Saltwire/Telegram and Radio-Canada, 17 Nov 2026 (REPORTED): a Wakeham–St-Pierre Plamondon meeting is being arranged; no date. Whether a due-diligence review changes the Material Terms: UNKNOWN.",
     },
     trackerId: "qc-gate",
-    sources: ["lactualiteTransition"],
+    sources: [
+      "cbcQcCabinet",
+      "lactualiteTransition",
+      "cbcPatient17Nov",
+      "radioCanadaNoRequest17Nov",
+      "saltwireSetInStone17Nov",
+    ],
   },
   {
     id: "qc-assembly",
     date: "2026-11-17",
-    label: "National Assembly returns",
+    label: "National Assembly returned",
     short: "17 Nov",
     status: "open",
     kind: "fixed",
     body: {
-      plain: "Québec’s National Assembly comes back. Any promised review or vote would have a floor to stand on.",
+      plain: "Québec’s National Assembly came back on 17 November. Days before, Québec’s energy minister said the deal is not set in stone (reported). A Carney–St-Pierre Plamondon meeting in December is planned. Whether Churchill Falls was debated there is unknown.",
       technical:
-        "National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. Whether Churchill Falls is debated or voted: UNKNOWN.",
+        "National Assembly of Québec: summoned to meet Tuesday 17 November 2026 at 2 p.m., first sitting of the 44th Legislature. Whether Churchill Falls was debated or voted there: UNKNOWN. CBC and VOCM, 16 Nov 2026: Energy Minister Stéphane Paquet said on 13 November the deal is not set in stone (REPORTED). La Presse, 15–16 Nov 2026 (REPORTED): Carney and St-Pierre Plamondon discussed Churchill Falls in Phnom Penh; a further meeting is set for December in Québec City.",
     },
     trackerId: "qc-gate",
-    sources: ["assnatReturn", "lactualiteTransition"],
+    sources: [
+      "assnatReturn",
+      "lactualiteTransition",
+      "cbcPaquet16Nov",
+      "vocmRenegotiate16Nov",
+      "laPresseCarneyPspp15Nov",
+    ],
   },
   {
     id: "binding",
@@ -111,12 +123,12 @@ export const GATES: Gate[] = [
     status: "open",
     kind: "target",
     body: {
-      plain: "The date the parties say they want the real contracts signed. A goal, not a deadline.",
+      plain: "The date the parties say they want the real contracts signed. A goal, not a deadline. On 18 November the energy minister said it has not been extended.",
       technical:
-        "DCIA Art. 2.1: goal of entering into Definitive Agreements by 31 December 2026, and in any event by the end of the Term.",
+        "DCIA Art. 2.1: goal of entering into Definitive Agreements by 31 December 2026, and in any event by the end of the Term. Hansard, 18 Nov 2026 (CONFIRMED, partially edited): Parrott said “We never extended the date.”",
     },
     trackerId: "binding-window",
-    sources: ["dciaHq"],
+    sources: ["dciaHq", "hansard18Nov"],
   },
   {
     id: "term",
@@ -126,12 +138,12 @@ export const GATES: Gate[] = [
     status: "open",
     kind: "target",
     body: {
-      plain: "The framework clock runs out unless the parties extend it in writing. Until then Hydro-Québec holds Gull Island exclusively.",
+      plain: "The framework clock runs out unless the parties extend it in writing. Until then Hydro-Québec holds Gull Island exclusively. On 18 November the energy minister said 31 March is still the fallback.",
       technical:
-        "DCIA §6.3(a): Term ends on the earliest of execution of Definitive Agreements, mutual termination, or 31 March 2027 unless mutually extended in writing. §6.3(b): HQ Gull Island exclusivity during the Term.",
+        "DCIA §6.3(a): Term ends on the earliest of execution of Definitive Agreements, mutual termination, or 31 March 2027 unless mutually extended in writing. §6.3(b): HQ Gull Island exclusivity during the Term. Hansard, 18 Nov 2026 (CONFIRMED, partially edited): Parrott said the goal is 31 December, “in lieu of December 31 we would like to have them in place not later than March 31,” and “We never extended the date.”",
     },
     trackerId: "binding-window",
-    sources: ["dciaHq"],
+    sources: ["dciaHq", "hansard18Nov"],
   },
   {
     id: "gull",

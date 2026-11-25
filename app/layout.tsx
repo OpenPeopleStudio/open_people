@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "in-province power",
     "firm power",
     "Gull Island",
-    "Labrador campus",
+    "Labrador AI campus",
   ],
   openGraph: {
     title: HOME_TITLE,

@@ -14,6 +14,7 @@ import {
   HOME_ISED_CRITERIA,
   HOME_LEDE_CAMPUS,
   HOME_LEDE_COMPANY,
+  HOME_OTTAWA_BUDGET,
   HOME_OTTAWA_CALL,
   HOME_OTTAWA_HEADING,
   HOME_OTTAWA_STRATEGY,
@@ -36,6 +37,7 @@ const OTTAWA_SOURCES = sourceList([
   "isedDataCentreCall",
   "isedDataCentreIntake",
   "isedComputeStrategy",
+  "budget2026Compute",
 ]);
 
 export default function HomePage() {
@@ -89,7 +91,7 @@ export default function HomePage() {
         </p>
       </DeskSection>
 
-      <DeskSection id="campus" num="02 — The campus" title="Proposed. In feasibility.">
+      <DeskSection id="campus" num="02 — The campus" title="A proposal to build.">
         <p className="desk-body">{HOME_POWER_CONTEXT}</p>
         <p className="desk-body mt-5">{HOME_CAMPUS_CANONICAL}</p>
         <p className="desk-body mt-5">{HOME_POWER_LINE}</p>
@@ -106,7 +108,8 @@ export default function HomePage() {
       </DeskSection>
 
       <DeskSection id="ottawa" num="03 — Ottawa" title={HOME_OTTAWA_HEADING}>
-        <p className="desk-body">{HOME_OTTAWA_CALL}</p>
+        <p className="desk-body">{HOME_OTTAWA_BUDGET}</p>
+        <p className="desk-body mt-5">{HOME_OTTAWA_CALL}</p>
         <p className="desk-body mt-5">{HOME_ISED_CRITERIA}</p>
         <p className="desk-body mt-5">{HOME_OTTAWA_STRATEGY}</p>
         <SourceLinks sources={OTTAWA_SOURCES} />

@@ -33,13 +33,20 @@ const OPEN = [
       <>
         The House said yes <Fig id="a">21–18</Fig> in September. That vote does not write the
         power-purchase contracts. Binding paper is aimed at around <Fig id="b">year-end</Fig>. The
-        framework clock can run into March 2027, and the Premier has not promised MHAs a vote on the
-        final text.
+        framework clock can run to 31 March 2027. On 18 November the energy minister told the House
+        those dates have not been extended. The Premier has not promised MHAs a vote on the final
+        text. On 28 October the House voted 16–21 against a motion asking for that vote.
       </>
     ),
     technical:
-      "The House endorsed the DCIA framework 21–18 on 17 September 2026. That vote does not create PPAs. Definitive Agreements are targeted by 31 December 2026 (Art. 2.1); the DCIA Term runs to 31 March 2027 unless extended (§6.3(a)), with HQ Gull Island exclusivity during the Term (§6.3(b)). On 18 September the Premier said the deal will return to the House before definitive agreements but would not commit to a vote.",
-    sources: [DESK_SOURCES.dciaHq, DESK_SOURCES.ntvVote, DESK_SOURCES.vocmOpposition],
+      "The House endorsed the DCIA framework 21–18 on 17 September 2026. That vote does not create PPAs. Definitive Agreements are targeted by 31 December 2026 (Art. 2.1); the DCIA Term runs to 31 March 2027 unless extended (§6.3(a)), with HQ Gull Island exclusivity during the Term (§6.3(b)). Hansard, 18 Nov 2026 (CONFIRMED, partially edited): Parrott said the dates have not been extended. On 18 September the Premier would not commit to a vote on the definitive agreements. On 28 October the House defeated 16–21 an Opposition motion for a debate and vote before signing (Hansard, p. 2886).",
+    sources: [
+      DESK_SOURCES.dciaHq,
+      DESK_SOURCES.ntvVote,
+      DESK_SOURCES.vocmOpposition,
+      DESK_SOURCES.hansard28Oct,
+      DESK_SOURCES.hansard18Nov,
+    ],
   },
   {
     id: "eng-qc",
@@ -56,7 +63,13 @@ const OPEN = [
       </>
     ),
     technical: TRACKER_ITEMS.find((i) => i.id === "qc-gate")?.body.technical ?? "",
-    sources: [DESK_SOURCES.qcElectionResult, DESK_SOURCES.lactualiteTransition, DESK_SOURCES.assnatReturn],
+    sources: [
+      DESK_SOURCES.qcElectionResult,
+      DESK_SOURCES.lactualiteTransition,
+      DESK_SOURCES.assnatReturn,
+      DESK_SOURCES.cbcPatient17Nov,
+      DESK_SOURCES.laPresseCarneyPspp15Nov,
+    ],
   },
   {
     id: "eng-inprovince",
@@ -93,13 +106,23 @@ const OPEN = [
     plain: (
       <>
         <Term k="innu-nation">Innu Nation</Term> urged MHAs not to vote and says the paper cuts its
-        benefits by more than half. The Premier says he looks forward to sitting down; as of 21
-        September nothing is scheduled. Royalty and Gull Island tariff path remain unsettled. Nothing
-        large in Labrador proceeds without that work.
+        benefits by more than half. On 4 November the Grand Chief confronted the Premier at a St.
+        John&apos;s mining conference and they met the same morning. Further talks are to be in
+        Sheshatshiu. On 19 November the Premier told the House that ministers met the Grand Chief
+        that day. Innu Nation has not said publicly what was discussed. The Sheshatshiu visit has
+        no public date. That is contact, not consent. Royalty and Gull Island tariff path remain
+        unsettled. Nothing large in Labrador proceeds without that work.
       </>
     ),
     technical: TRACKER_ITEMS.find((i) => i.id === "innu")?.body.technical ?? "",
-    sources: [DESK_SOURCES.vocmInnuContact, DESK_SOURCES.radioCanadaInnu, DESK_SOURCES.vocmInnuReady],
+    sources: [
+      DESK_SOURCES.vocmInnuContact,
+      DESK_SOURCES.radioCanadaInnu,
+      DESK_SOURCES.vocmInnuReady,
+      DESK_SOURCES.vocmInnuMeet,
+      DESK_SOURCES.ntvInnuNov4,
+      DESK_SOURCES.hansard19Nov,
+    ],
   },
   {
     id: "eng-federal",
@@ -135,28 +158,12 @@ const CHECK_ROWS = ["metering", "domestic-load", "unused-retain", "binding-windo
 
 const DOORS = [
   {
-    when: "From Mon 26 Oct 2026",
+    when: "Fall sitting, 2026",
     title: "House of Assembly fall sitting",
     how: "Confederation Building East Block. Public galleries (photo ID, visitor card, phones checked) or watch the webcast. Order paper unknown until published — Churchill Falls may recur in Question Period. Calendar sitting days start 26 October.",
     href: "https://www.assembly.nl.ca/HouseBusiness/Webcast/",
     hrefLabel: "HOA webcast",
     paid: false,
-  },
-  {
-    when: "Tue 3 – Fri 6 Nov 2026",
-    title: "Mineral Resources Review 2026",
-    how: "Delta Hotels St. John’s Conference Centre. Conference registration (newfoundland@cim.org). Site notes a public session; exact time unknown until the program drops.",
-    href: "https://www.gov.nl.ca/em/mines/mineral/",
-    hrefLabel: "Event page",
-    paid: true,
-  },
-  {
-    when: "Wed 4 Nov 2026, 6–10 pm",
-    title: "Energy NL Industry Achievement Awards",
-    how: "Paid / ticketed industry gala. Venue not published on the public page — register for location.",
-    href: "https://energynl.ca/industry-achievement-awards/",
-    hrefLabel: "Paid registration",
-    paid: true,
   },
 ];
 
@@ -181,7 +188,7 @@ export default function EngagePage() {
       }
       meta={
         <p className="text-[15px] leading-relaxed text-[var(--ink-3)]">
-          Open People leads a proposed 500 MW Labrador AI campus and a research campus, in feasibility.
+          Open People proposes to build a 500 MW Labrador AI campus and a research campus.
           We are not a party to the Churchill Falls agreement. Mines and existing industry are real
           constraints. If you want in-province use kept in writing, this is the page.
         </p>
@@ -322,8 +329,7 @@ export default function EngagePage() {
         title="Doors you can still walk through."
         intro={
           <p>
-            Only confirmed public items, with how to get in. Dates before 25 October 2026 from the
-            22 September check are off this list. The EngageNL Churchill Falls questionnaire closed
+            Only confirmed public items, with how to get in. Past dates are off this list. The EngageNL Churchill Falls questionnaire closed
             10 September. No successor energy portal is open.
           </p>
         }
@@ -396,8 +402,8 @@ export default function EngagePage() {
       <DeskSection id="close">
         <p className="desk-h2">Keep what we can still keep. Use it on loads that live here.</p>
         <p className="desk-body mt-5">
-          Mining and Labrador industry first — they are real constraints. Open People leads a
-          proposed 500 MW <Term k="compute">campus</Term>, in feasibility. The window is open until
+          Mining and Labrador industry first — they are real constraints. Open People proposes to
+          build a 500 MW Labrador AI <Term k="compute">campus</Term>. The window is open until
           the contracts lock. Write in before it closes.
         </p>
         <div className="desk-fact mt-8 leading-relaxed text-[var(--ink-2)]">

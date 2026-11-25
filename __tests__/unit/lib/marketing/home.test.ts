@@ -12,6 +12,7 @@ import {
   HOME_ISED_CRITERIA,
   HOME_LEDE_CAMPUS,
   HOME_LEDE_COMPANY,
+  HOME_OTTAWA_BUDGET,
   HOME_OTTAWA_CALL,
   HOME_OTTAWA_HEADING,
   HOME_OTTAWA_STRATEGY,
@@ -32,7 +33,7 @@ describe("home front door", () => {
     expect(HOME_HEADLINE_COMPANY).toBe("An AI company.");
     expect(HOME_HEADLINE_CAMPUS).toBe("A proposed Labrador AI campus.");
     expect(HOME_LEDE_COMPANY).toMatch(/AI company in Newfoundland and Labrador/);
-    expect(HOME_LEDE_CAMPUS).toMatch(/company's project is a proposed 500 MW Labrador AI campus, in feasibility/);
+    expect(HOME_LEDE_CAMPUS).toBe("The company proposes to build a 500 MW Labrador AI campus.");
     expect(HOME_TITLE).toBe("Open People — An AI company. A proposed Labrador AI campus.");
     expect(HOME_SEARCH_TITLE).toBe("Open People, an AI company in Newfoundland and Labrador");
     expect(HOME_SEARCH_TITLE).toMatch(/AI/);
@@ -60,7 +61,7 @@ describe("home front door", () => {
 
   it("uses the canonical campus line, Phase 1 power line, and consent sentence", () => {
     expect(HOME_CAMPUS_CANONICAL).toBe(
-      "Open People leads a proposed 500 MW Labrador AI campus on that power, in feasibility.",
+      "Open People proposes to build a 500 MW Labrador AI campus on that power.",
     );
     expect(HOME_POWER_LINE).toMatch(/written request to NL Hydro/);
     expect(HOME_POWER_LINE).toMatch(/non-firm, interruptible pilot/);
@@ -85,7 +86,13 @@ describe("home front door", () => {
   });
 
   it("keeps the two federal programmes separate and cites official pages", () => {
-    expect(HOME_OTTAWA_HEADING).toBe("Ottawa is looking for projects like this");
+    expect(HOME_OTTAWA_HEADING).toBe("Budget 2026 plans access to 500 MW of sovereign AI compute");
+    expect(HOME_OTTAWA_BUDGET).toMatch(/access 500 MW of sovereign AI compute through new financial tools, such as backstops and offtake agreements/);
+    expect(HOME_OTTAWA_BUDGET).toMatch(/not a call for projects/);
+    expect(DESK_SOURCES.budget2026Compute.href).toBe("https://budget.canada.ca/2026/report-rapport/chap5-en.html");
+    expect(page).toMatch(/HOME_OTTAWA_BUDGET/);
+    expect(page).toMatch(/budget2026Compute/);
+    expect(text).not.toMatch(/in feasibility/i);
     expect(text).not.toMatch(/already paying/i);
     expect(text).not.toMatch(/federal programs reward/i);
     expect(HOME_OTTAWA_CALL).toMatch(/greater than 100 MW/);

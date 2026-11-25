@@ -172,7 +172,7 @@ const KIND_LABEL: Record<string, string> = {
 const ASKS = [
   {
     title: "A named block",
-    body: "A scheduled allocation of Labrador capacity that can serve industrial load, including the 500 MW campus Open People proposes to lead. Drawn from the publicly framed retain from Churchill Falls and Gull Island (section 02), plus wind if built. No firm megawatts, price or queue for Labrador compute is confirmed. 500 MW is an Open People proposal, not a government figure. Mines and existing industry are real constraints on the same power.",
+    body: "A scheduled allocation of Labrador capacity that can serve industrial load, including the 500 MW Labrador AI campus Open People proposes to build. Drawn from the publicly framed retain from Churchill Falls and Gull Island (section 02), plus wind if built. No firm megawatts, price or queue for Labrador compute is confirmed. 500 MW is an Open People proposal, not a government figure. Mines and existing industry are real constraints on the same power.",
   },
   {
     title: "A transparent tariff",
@@ -184,11 +184,11 @@ const ASKS = [
   },
   {
     title: "An infrastructure audit",
-    body: "Direct NL Hydro to publish Labrador dark-fibre capacity and recall-block headroom, and commission a diverse-route fibre feasibility study. Near-term work on this campus is feasibility on costs and impact, in general terms.",
+    body: "Direct NL Hydro to publish Labrador dark-fibre capacity and recall-block headroom, and commission a diverse-route fibre feasibility study. Near-term work on this campus is the build case: costs and impact, in general terms.",
   },
   {
     title: "A federal handshake",
-    body: "Align the province’s in-province use with federal sovereign-AI goals, so a Labrador campus is not a leftover of someone else’s intake. That is a policy alignment, not a funding ask on this page.",
+    body: "Align the province’s in-province use with federal sovereign-AI goals, so a Labrador AI campus is not a leftover of someone else’s intake. That is a policy alignment, not a funding ask on this page.",
   },
 ];
 
@@ -215,7 +215,7 @@ const STACK = [
   {
     label: "Proponent",
     us: true,
-    body: "Open People leads. We are the organisation proposing to build a 500 MW AI data campus in Labrador and a research campus beside it. Proposed. In feasibility. Not approved, not funded, not under construction.",
+    body: "Open People leads. We are the organisation proposing to build a 500 MW Labrador AI campus and a research campus beside it. Not approved, not funded, not under construction.",
   },
   {
     label: "Power and site",
@@ -238,7 +238,7 @@ const NOT_PROVEN = [
   "That the province will allocate firm Labrador power to compute over mining. Critical minerals are named first. Compute has to earn peer status on the merits. No firm megawatts, price, queue or policy preference for Labrador compute is confirmed.",
   "That fibre economics support a training cluster at hyperscale path diversity. A first node likely fits. Hyperscale is unproven until the route studies exist.",
   "That public-sector demand alone is large enough to bank a facility. It almost certainly needs commercial and federal co-funding alongside.",
-  "That binding definitive agreements will be signed on the announced timeline, or that they will free near-term megawatts for a compute node. House endorsement of the framework is not that signature, and the Premier has not promised a vote on the final text.",
+  "That binding definitive agreements will be signed on the announced timeline, or that they will free near-term megawatts for a compute node. House endorsement of the framework is not that signature, and the Premier has not promised a vote on the final text. On 28 October the House voted 16–21 against a motion asking for one.",
   "That a single industrial cent exists for Labrador mines. The current Labrador industrial schedule is a formula, demand charges plus a monthly energy mix. We do not flatten it, and we do not quote the 2015 schedule as current.",
   "The reconciliation between the public retain figure and other published splits of the existing plant. Public releases also give Gull Island as a range. We do not pick a number.",
   "That a three-year notice recall, as described to the House, appears in signed contract text. It rests on testimony. UNKNOWN.",
@@ -282,8 +282,8 @@ export default function BriefPage() {
               <Term k="dcia">DCIA</Term>, signed 17 August 2026, is a{" "}
               <Term k="framework">framework</Term>, not binding <Term k="ppa">PPAs</Term>. The House
               endorsed that framework <Fig id="b">21–18</Fig> on 17 September. Binding paper is
-              still ahead. Mining and Labrador industry come first. We lead a proposed 500 MW
-              Labrador <Term k="compute">campus</Term> on that power, in feasibility — a named use,
+              still ahead. Mining and Labrador industry come first. We propose to build a 500 MW
+              Labrador AI <Term k="compute">campus</Term> on that power — a named use,
               not the opener. Mines are a real constraint. Detail on{" "}
               <Link href="/compute" className="desk-link">
                 /compute
@@ -429,10 +429,16 @@ export default function BriefPage() {
               vote does not create contracts. Binding agreements are targeted around{" "}
               <Fig id="c">31 December 2026</Fig>. That date is a goal and can slip. The framework
               can run to <Fig id="d">31 March 2027</Fig>. Québec elected a Parti Québécois minority
-              on 5 October; cabinet is sworn in 21 October; the National Assembly returns 17
-              November. The province&apos;s stated industrial use is critical minerals. Mining
-              matters, and it is first — a real constraint. Open People leads a proposed 500 MW
-              campus on the same power. That campus is not confirmed as reserved megawatts, price,
+              on 5 October. Its cabinet was sworn in on 21 October, and the National Assembly
+              returned on 17 November. On 28 October the House voted 16–21 against a motion to bring
+              the final agreements back for a vote. CBC and VOCM reported that on 13 November
+              Québec&apos;s energy minister said the deal is not set in stone, and that on 16 November
+              the Premier said it will not be renegotiated. On 17 November the Premier said he would
+              be patient while Québec reviews the deal. A meeting with Québec&apos;s premier is being
+              arranged. On 18 November the energy minister said the 31 December goal and 31 March
+              fallback have not changed. The province&apos;s stated industrial use is critical minerals. Mining
+              matters, and it is first — a real constraint. Open People proposes to build a 500 MW
+              Labrador AI campus on the same power. That campus is not confirmed as reserved megawatts, price,
               queue or policy preference.
             </p>
           }
@@ -459,7 +465,7 @@ export default function BriefPage() {
         />
         <aside className="mt-10 border-l-2 border-[var(--plasma)] bg-[var(--plasma-soft)] p-5 sm:p-6">
           <p className="desk-h3">
-            Labrador is not an infinite battery. The campus is proposed and in feasibility. Phase 1
+            Labrador is not an infinite battery. The campus is a proposal to build. Phase 1
             is a written request to NL Hydro and a non-firm, interruptible pilot. No megawatts are
             reserved — not a reserved block. Mines and existing industry are real constraints.
           </p>
@@ -874,7 +880,7 @@ export default function BriefPage() {
             specifically to enable energy-intensive industry. The August framework attaches money to
             that line. What is still missing is a public allocation: year, megawatts, place, price
             and line. Mines first — a real constraint — then other industrial load, including the
-            500 MW campus Open People proposes to lead.
+            500 MW Labrador AI campus Open People proposes to build.
           </p>
         </div>
         <div className="mt-8" data-rise>
@@ -927,8 +933,12 @@ export default function BriefPage() {
                 plain={
                   <p className="desk-takeaway">
                     <Term k="innu-nation">Innu Nation</Term> wrote MHAs on 17 September urging a no
-                    vote, and says the paper cuts its benefits by more than half. On 21 September the
-                    Grand Chief said the Innu are ready to meet. No meeting is scheduled. Grand Chief
+                    vote, and says the paper cuts its benefits by more than half. On 4 November the
+                    Grand Chief and the Premier met in St. John&apos;s after she confronted him at a
+                    mining conference. Further talks are to be in Sheshatshiu. On 19 November the
+                    Premier told the House that ministers met the Grand Chief that day. Innu Nation
+                    has not said publicly what was discussed. The Sheshatshiu visit has no public
+                    date. That is contact, not consent. Grand Chief
                     Ashini of Innu Nation has said Innu were{" "}
                     <a
                       href={DESK_SOURCES.vocmInnuContact.href}
@@ -1048,8 +1058,8 @@ export default function BriefPage() {
               campus page
             </Link>
             . They are context. They are not a Labrador reservation. The Material Terms still do
-            not name compute as an industrial class. Open People leads a proposed campus anyway,
-            in feasibility, against real mine and industry constraints.
+            not name compute as an industrial class. Open People proposes to build a campus anyway,
+            against real mine and industry constraints.
           </p>
         }
       >
@@ -1149,14 +1159,19 @@ export default function BriefPage() {
           </div>
 
           <div>
-            <h3 className="desk-h3">Ottawa is looking for projects like this</h3>
+            <h3 className="desk-h3">Budget 2026 plans access to 500 MW of sovereign AI compute</h3>
             <Unfold
               id="buyer-ottawa"
               className="mt-3"
-              label="two federal programs"
+              label="federal programs"
               plain={
                 <p className="desk-takeaway">
-                  ISED ran a call for 100 MW-plus data-centre projects from 15 January to 15 February
+                  Budget 2026 says Ottawa will enable Canadian AI companies to access 500 MW of
+                  sovereign AI compute through new financial tools, such as backstops and offtake
+                  agreements. That is a plan, not a call for projects. CBC reported on 20 November that
+                  an ISED spokesperson said it would be premature to confirm specific timelines,
+                  projects or locations, and that pricing and access arrangements have not yet been
+                  decided. Separately, ISED ran a call for 100 MW-plus data-centre projects from 15 January to 15 February
                   2026. That intake is closed. It can lead to a non-binding MOU, not a contract and
                   not funding. A separate program, the Canadian Sovereign AI Compute Strategy, is a
                   $2 billion Budget 2024 plan. ISED lists Indigenous participation as one of the 100
@@ -1185,7 +1200,13 @@ export default function BriefPage() {
                   </p>
                 </>
               }
-              sources={sourceList(["isedLargeScale", "isedLargeScaleIntake", "isedSovereignStrategy"])}
+              sources={sourceList([
+                "budget2026Compute",
+                "isedLargeScale",
+                "isedLargeScaleIntake",
+                "isedSovereignStrategy",
+                "cbcSovereignCompute20Nov",
+              ])}
             />
           </div>
         </div>
@@ -1348,7 +1369,7 @@ export default function BriefPage() {
             title="Nothing large proceeds without Innu consent, nor should it"
             label="consent"
             status={INNU.status}
-            plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. The Premier says he looks forward to sitting down; as of 21 September nothing is scheduled. That is a start, not consent, and not a partnership structure."
+            plain="Ratification of any Innu Nation partnership on Gull Island remains unresolved. Innu Nation asked MHAs not to vote and says its benefits were cut by more than half. On 4 November the Premier and the Grand Chief met in St. John’s; further talks are to be in Sheshatshiu. On 19 November the Premier told the House that ministers met the Grand Chief that day. That is contact, not consent, and not a partnership structure."
             requires="Partnership, if any, will be on terms each nation sets. No nation has been asked about this project. ISED lists Indigenous participation as one of its criteria. Any role is for each nation to decide."
             technical={INNU.body.technical}
             caveat="Geotechnical work at Gull Island was halted by an Innu blockade in July 2025, as reported. That event is not an item in our source registry."
@@ -1375,10 +1396,10 @@ export default function BriefPage() {
       {/* ── 09 ── */}
       <DeskSection id="who" num="09 — Who we are" title="Open People.">
         <p className="desk-body">
-          Open People is a Newfoundland and Labrador company. We lead a proposed 500 MW AI data
-          campus in Labrador, and a research campus beside it: residencies, fellowships, gatherings,
-          in the spirit of the Perimeter Institute and the Banff Centre. Proposed. In feasibility.
-          Not approved, not funded, not under construction.
+          Open People is an AI company in Newfoundland and Labrador. We propose to build a 500 MW
+          Labrador AI campus, and a research campus beside it: residencies, fellowships, gatherings,
+          in the spirit of the Perimeter Institute and the Banff Centre. Not approved, not funded, not
+          under construction.
         </p>
         <p className="desk-body mt-5">
           We are not a party to the DCIA. We are the proponent of the campus. Partnership, if any,
@@ -1501,7 +1522,7 @@ export default function BriefPage() {
         </p>
         <p className="desk-body mt-5">
           If you want firm power kept in Newfoundland and Labrador — for mines, towns, other
-          industry, and the proposed 500 MW campus we lead — there is a public path while this paper
+          industry, and the 500 MW Labrador AI campus we propose to build — there is a public path while this paper
           is still paper.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">

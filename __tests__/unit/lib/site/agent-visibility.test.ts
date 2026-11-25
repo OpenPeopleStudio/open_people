@@ -19,10 +19,11 @@ describe("search and agent visibility", () => {
     expect(copy).toMatch(/HOME_SEARCH_TITLE/);
   });
 
-  it("gives /compute the data centre search title without calling it built", () => {
+  it("gives /compute the Labrador AI campus search title without calling it built", () => {
     const compute = source("app/(marketing)/compute/page.tsx");
-    expect(compute).toMatch(/title: "Churchill Falls data centre"/);
-    expect(compute).toMatch(/proposed 500 MW Labrador data centre, in feasibility/);
+    expect(compute).toMatch(/title: "Labrador AI campus"/);
+    expect(compute).toMatch(/proposes to build a 500 MW Labrador AI campus/);
+    expect(compute).toMatch(/"Churchill Falls data centre"/);
     expect(compute).toMatch(/Mining comes first/);
     expect(compute).toMatch(/Not approved, not funded, and not under construction/);
   });
@@ -30,7 +31,8 @@ describe("search and agent visibility", () => {
   it("publishes an llms.txt that leads with the AI company and lists /ask", () => {
     const llms = source("public/llms.txt");
     expect(llms).toMatch(/Open People is an AI company/);
-    expect(llms).toMatch(/company's project is a proposed 500 MW Labrador AI campus, in feasibility/);
+    expect(llms).toMatch(/company proposes to build a 500 MW Labrador AI campus/);
+    expect(llms).not.toMatch(/in feasibility/i);
     expect(llms).toMatch(/https:\/\/www\.openpeople\.ai\/ask/);
     expect(llms).toMatch(/Ask the proposal/);
     expect(llms).toMatch(/Churchill Falls/);

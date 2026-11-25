@@ -11,7 +11,7 @@ export const APPROACH_SECTIONS = [
     body: [
       "Open People is the proponent of a proposed 500 MW Labrador AI campus and a research campus.",
       "We intend to seek early, respectful engagement with each nation. No partnership or agreement exists. Partnership, if any, is on terms each nation sets. Capital is unnamed here. None of those is a signed allocation, a signed impact-benefit agreement, or a named funder.",
-      "We are not a party to the Churchill Falls / Gull Island framework. We lead the campus. Proposed. In feasibility. Not approved, not funded, not under construction.",
+      "We are not a party to the Churchill Falls / Gull Island framework. We lead the campus. A proposal to build. Not approved, not funded, not under construction.",
     ],
   },
   {

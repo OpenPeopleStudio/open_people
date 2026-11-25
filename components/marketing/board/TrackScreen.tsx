@@ -12,7 +12,7 @@ export function trackMetadata(id: TrackId) {
   const track = trackById(id);
   return deskMetadata({
     title: track.label,
-    description: `${track.job} Proposed. In feasibility.`,
+    description: `${track.job} A proposal to build. Not approved.`,
     path: `/${id}`,
   });
 }

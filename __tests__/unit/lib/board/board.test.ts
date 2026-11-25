@@ -88,12 +88,12 @@ describe("project board", () => {
     expect(`${consent?.plain}\n${consent?.technical}`).not.toMatch(/Proposed partners/i);
   });
 
-  it("seeds the build track with the public feasibility line", () => {
+  it("seeds the build track with the public proposal-to-build line", () => {
     const build = statusFor("build");
     expect(build?.kind).toBe("company");
     expect(build?.plain).toBe(COMPUTE_HERO.plain);
-    expect(build?.plain).toMatch(/proposed/i);
-    expect(build?.plain).toMatch(/feasibility/i);
+    expect(build?.plain).toMatch(/proposes to build/i);
+    expect(build?.plain).not.toMatch(/feasibility/i);
     expect(build?.plain).toMatch(/not approved/i);
     expect(build?.plain).toMatch(/not funded/i);
     expect(build?.plain).toMatch(/not under construction/i);

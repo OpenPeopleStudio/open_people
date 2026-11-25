@@ -7,9 +7,9 @@ import { APPROACH_LEDE, APPROACH_SECTIONS } from "@/lib/marketing/approach";
 import { VISION_CONTACT, VISION_SECTIONS, VISION_SENTENCES } from "@/lib/marketing/vision";
 
 export const metadata: Metadata = {
-  title: "About our Churchill Falls work",
+  title: "About Open People and the Labrador AI campus",
   description:
-    "Open People is building a proposed 500 MW Labrador AI campus and a research campus, in feasibility. Tom Lane, St. John’s.",
+    "Open People is an AI company. It proposes to build a 500 MW Labrador AI campus and a research campus. Tom Lane, St. John’s.",
 };
 
 const COMPANY_SECTIONS = VISION_SECTIONS.filter(
@@ -38,8 +38,8 @@ export default function AboutPage() {
       <DeskSection id="who" num="01 — Who" title="Open People leads the proposed campus.">
         <div className="space-y-5 desk-body">
           <p>
-            Open People is a Newfoundland and Labrador company. Tom Lane is the founder. We lead a
-            proposed 500 MW AI data campus in Labrador, and a research campus beside it. Partnership,
+            Open People is an AI company in Newfoundland and Labrador. Tom Lane is the founder. We
+            propose to build a 500 MW Labrador AI campus, and a research campus beside it. Partnership,
             if any, will be on terms each nation sets. No nation has been asked about this project. Capital is
             unnamed here. That structure is proposed, not signed.
           </p>

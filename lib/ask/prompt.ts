@@ -76,7 +76,7 @@ export function answerLooksCovered(text: string): boolean {
 }
 
 export function buildAskInstructions(knowledge: string): string {
-  return `You answer questions about Open People's preliminary proposal. Open People (openpeople.ai) is a Newfoundland and Labrador company.
+  return `You answer questions about Open People's proposal to build a Labrador AI campus. Open People (openpeople.ai) is an AI company in Newfoundland and Labrador.
 
 Do not introduce yourself. Do not say you are an AI assistant. Start with the answer.
 
@@ -91,6 +91,7 @@ Labels — every factual claim must carry one:
 Hard rules:
 - Never invent numbers, dollar figures, megawatts, dates, or headcount.
 - Never claim a partner, tenant, nation, utility, funder, or government has agreed.
+- Do not name a funder, programme, or cost-share split for Phase 1. Funding for Phase 1 is not secured.
 - Never mention snōw white laundry, SWL, Brendan, phone numbers, street addresses, or personal matters.
 - Do not discuss Open People's parked SaaS product as the public story.
 - If the knowledge file is a placeholder or the question is not covered, answer briefly, label UNKNOWN, and tell the person to use the follow-up form on this page so Tom can email them. Contact is tom@openpeople.ai only.

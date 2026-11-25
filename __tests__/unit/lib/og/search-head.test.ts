@@ -23,7 +23,7 @@ describe("/brief search metadata", () => {
   it("uses the locked title and a description that does not name a nation or 5,428 MW", () => {
     expect(BRIEF_TITLE).toBe("Keep the power here: the Labrador case");
     expect(BRIEF_DESCRIPTION).toBe(
-      "Labrador runs on clean hydro. Open People's proposed campus starts small, in feasibility, not a reserved block.",
+      "Labrador runs on clean hydro. Open People proposes to build a Labrador AI campus that starts small, not a reserved block.",
     );
     expect(BRIEF_TITLE).not.toMatch(NATION);
     expect(BRIEF_DESCRIPTION).not.toMatch(NATION);
@@ -55,7 +55,8 @@ describe("/brief search metadata", () => {
     expect(brief).not.toMatch(/ogDescription/);
     expect(brief).toMatch(/hydro-dominated/);
     expect(brief).toMatch(/cleanest large power systems/);
-    expect(brief).toMatch(/in feasibility/);
+    expect(brief).toMatch(/proposal to build/);
+    expect(brief).not.toMatch(/in feasibility/);
     expect(brief).toMatch(/deliberately small/);
     expect(brief).toMatch(/No megawatts are reserved/);
     expect(brief).toMatch(/not a reserved block/);
@@ -94,7 +95,7 @@ describe("site-wide JSON-LD", () => {
       },
     });
     expect(SITE_ORG_DESCRIPTION).toMatch(/AI company in Newfoundland and Labrador/);
-    expect(SITE_ORG_DESCRIPTION).toMatch(/proposed 500 MW Labrador AI campus, in feasibility/);
+    expect(SITE_ORG_DESCRIPTION).toMatch(/proposes to build a 500 MW Labrador AI campus/);
     expect(JSON.stringify(org)).not.toMatch(/streetAddress|postalCode|telephone|contactPoint|email/i);
     expect(SITE_NAME).toBe("Open People");
     expect(SITE_ALTERNATE_NAME).toBe("openpeople.ai");

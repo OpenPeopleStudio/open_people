@@ -2,7 +2,7 @@
 
 Public site for Open People. Production host: `www.openpeople.ai`. Vercel project: `open-people`.
 
-The live story is the Churchill River desk and a proposed Labrador campus, in feasibility. Open People leads that proposal. It is not a signed allocation.
+The live story is the Churchill River desk and a proposal to build a Labrador AI campus. Open People leads that proposal. It is not a signed allocation.
 
 ## Where to work
 
